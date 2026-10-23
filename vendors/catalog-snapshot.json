@@ -1,7 +1,7 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-23T18:00:43.294Z",
-  "sourceCommit": "435232d",
+  "generatedAt": "2026-10-23T19:31:25.020Z",
+  "sourceCommit": "f4f0160",
   "count": 937,
   "vendors": [
     {
@@ -445,7 +445,7 @@
       },
       "createdAt": "2026-02-09T00:01:28.964Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 20,
+      "dpaComplianceScore": 16,
       "dpaGdprScore": 13,
       "dpaCcpaScore": 33
     },
@@ -789,9 +789,9 @@
       },
       "createdAt": "2026-02-09T00:01:29.608Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleepx8n0005kov2gve3qvji",
@@ -1564,9 +1564,9 @@
       },
       "createdAt": "2026-02-09T00:01:30.105Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleepxq0000akov2h9rlqrx0",
@@ -1780,9 +1780,9 @@
       },
       "createdAt": "2026-03-01T17:11:48.369Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleepxtb000bkov2t20m4nqc",
@@ -3564,9 +3564,9 @@
       },
       "createdAt": "2026-03-01T17:19:28.321Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleepy7z000fkov2v1ns1mhj",
@@ -3712,9 +3712,9 @@
       },
       "createdAt": "2026-02-09T00:01:31.008Z",
       "updatedAt": "2026-10-23T15:28:41.000Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleepybh000gkov2mmz0p9k6",
@@ -4409,9 +4409,9 @@
       },
       "createdAt": "2026-02-09T00:01:31.759Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleepywc000mkov2b8g2q2r2",
@@ -4604,9 +4604,9 @@
       },
       "createdAt": "2026-02-27T13:25:45.630Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleepyzr000nkov27d5l4e20",
@@ -4707,9 +4707,9 @@
       },
       "createdAt": "2026-02-09T00:01:32.007Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "75a350d7-b975-48ca-afb6-f29737087ae6",
@@ -5130,8 +5130,8 @@
       },
       "createdAt": "2026-03-01T17:19:35.199Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 13,
-      "dpaGdprScore": 25,
+      "dpaComplianceScore": 23,
+      "dpaGdprScore": 38,
       "dpaCcpaScore": 0
     },
     {
@@ -5949,9 +5949,9 @@
       },
       "createdAt": "2026-02-27T13:25:50.518Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp594q5000sj5c595n81bc6",
@@ -6220,9 +6220,9 @@
       },
       "createdAt": "2026-07-17T16:20:11.693Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm4xdiec0001xcj82tmns5wc",
@@ -6590,9 +6590,9 @@
       },
       "createdAt": "2026-02-09T00:01:32.130Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 66,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm80lwe00005rjj8airirmgk",
@@ -7312,9 +7312,9 @@
       },
       "createdAt": "2026-08-17T18:37:27.538Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 53,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 69,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm4xdihw0002xcj8imr4er5f",
@@ -7410,9 +7410,9 @@
       },
       "createdAt": "2026-02-27T13:25:44.036Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 72,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm4xdob1001mxcj8siepp7o7",
@@ -7489,9 +7489,9 @@
       },
       "createdAt": "2026-02-27T13:25:51.565Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 72,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleepza7000qkov2d4j7c4yo",
@@ -8425,9 +8425,9 @@
       },
       "createdAt": "2026-02-09T00:01:32.384Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 60,
-      "dpaGdprScore": 38,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 57,
+      "dpaGdprScore": 50,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmrp595qt001oj5c5lgajz6hg",
@@ -9093,9 +9093,9 @@
       },
       "createdAt": "2026-02-09T00:01:32.513Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm4xdp4e001uxcj81dan4nmu",
@@ -9344,9 +9344,9 @@
       },
       "createdAt": "2026-02-27T13:25:52.622Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 66,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleepzh7000skov2tzu6mlqm",
@@ -9459,9 +9459,9 @@
       },
       "createdAt": "2026-02-09T00:01:32.636Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm80m247000rrjj8rgkg34zq",
@@ -9538,8 +9538,8 @@
       },
       "createdAt": "2026-03-01T17:19:40.087Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -9614,8 +9614,8 @@
       },
       "createdAt": "2026-02-09T00:01:32.757Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 32,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 29,
+      "dpaGdprScore": 50,
       "dpaCcpaScore": 0
     },
     {
@@ -10499,8 +10499,8 @@
       },
       "createdAt": "2026-02-27T13:25:50.123Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -10781,9 +10781,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.759Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleepzuy000wkov2h6ks497y",
@@ -11182,9 +11182,9 @@
       },
       "createdAt": "2026-02-27T13:25:49.859Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmsxv3lbc000au4c5hfhzcqd6",
@@ -11451,9 +11451,9 @@
       },
       "createdAt": "2026-03-04T13:01:40.314Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleepzyh000xkov2fz96n77s",
@@ -11685,8 +11685,8 @@
       "createdAt": "2026-02-27T13:25:47.984Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
       "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "a4f2872d-c644-46a1-b370-9846961e3eec",
@@ -12957,9 +12957,9 @@
       },
       "createdAt": "2026-02-09T00:01:34.117Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxv3kxu0007u4c50mduydaj",
@@ -13226,9 +13226,9 @@
       },
       "createdAt": "2026-02-09T00:01:34.242Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmsxv3mso000mu4c5tf30vyos",
@@ -13364,9 +13364,9 @@
       },
       "createdAt": "2026-03-04T13:01:47.215Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxksxd00001otc51b29np4n",
@@ -13457,9 +13457,9 @@
       },
       "createdAt": "2026-08-17T18:37:21.252Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 73,
-      "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm4xdjf7000axcj8i8dhnzoc",
@@ -14078,7 +14078,7 @@
       },
       "createdAt": "2026-08-30T23:56:11.324Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
@@ -14690,8 +14690,8 @@
       },
       "createdAt": "2026-02-09T00:01:34.863Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -15098,9 +15098,9 @@
       },
       "createdAt": "2026-03-01T17:19:37.046Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeq1en001ckov21mhiwgr0",
@@ -15613,9 +15613,9 @@
       },
       "createdAt": "2026-02-09T00:01:35.628Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 43,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 65,
+      "dpaGdprScore": 75,
+      "dpaCcpaScore": 50
     },
     {
       "id": "feebaaee-d5c6-46ef-9da0-455886bb67ea",
@@ -15960,9 +15960,9 @@
       },
       "createdAt": "2026-02-09T00:01:35.889Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 59,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdr0a002cxcj8y2k3xuce",
@@ -16397,9 +16397,9 @@
       },
       "createdAt": "2026-08-17T18:37:24.465Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeq23l001jkov24m3px7on",
@@ -18039,9 +18039,9 @@
       },
       "createdAt": "2026-03-01T17:06:50.190Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm4xdnpa001gxcj8v5a69n8d",
@@ -19450,7 +19450,7 @@
       },
       "createdAt": "2026-03-01T17:19:33.170Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -19620,9 +19620,9 @@
       },
       "createdAt": "2026-02-09T00:01:37.043Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeq2zb001skov2o6ycy97n",
@@ -19709,8 +19709,8 @@
       },
       "createdAt": "2026-02-09T00:01:37.176Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -19777,9 +19777,9 @@
       },
       "createdAt": "2026-02-09T00:01:37.299Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "ac8efe66-fdf9-4610-acf0-686380535c9c",
@@ -20427,9 +20427,9 @@
       },
       "createdAt": "2026-03-01T23:48:58.795Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmmc1q0gx0029daj8mrhqojjg",
@@ -20578,8 +20578,8 @@
       },
       "createdAt": "2026-03-01T23:48:55.379Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 32,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 29,
+      "dpaGdprScore": 50,
       "dpaCcpaScore": 0
     },
     {
@@ -20878,8 +20878,8 @@
       },
       "createdAt": "2026-03-04T13:01:40.573Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -21280,7 +21280,7 @@
       },
       "createdAt": "2026-02-09T00:01:37.802Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -21365,9 +21365,9 @@
       },
       "createdAt": "2026-02-09T00:01:37.923Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleeq3nl001zkov21b4kwnrw",
@@ -22250,9 +22250,9 @@
       },
       "createdAt": "2026-02-09T00:01:38.173Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 18,
-      "dpaGdprScore": 25,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 33,
+      "dpaGdprScore": 38,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmnv64pfj0000thc5njh5y2hv",
@@ -22973,9 +22973,9 @@
       },
       "createdAt": "2026-08-17T18:37:27.380Z",
       "updatedAt": "2026-10-23T04:27:27.830Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeq3ug0021kov214t2yaim",
@@ -23114,9 +23114,9 @@
       },
       "createdAt": "2026-02-09T00:01:38.297Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeq3y50022kov2uy3a2zzv",
@@ -23340,9 +23340,9 @@
       },
       "createdAt": "2026-08-17T23:25:37.097Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm80luti0003rjj81mhsdq6e",
@@ -23604,9 +23604,9 @@
       },
       "createdAt": "2026-03-01T17:19:30.630Z",
       "updatedAt": "2026-10-23T04:27:06.925Z",
-      "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "5d193fcf-1b3d-4999-a534-a2eb5af44626",
@@ -24984,9 +24984,9 @@
       },
       "createdAt": "2026-03-01T17:06:46.781Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp594z00010j5c5u3uwr9bo",
@@ -25123,9 +25123,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.012Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm4xdnlk001fxcj8pja0ef3i",
@@ -25690,8 +25690,8 @@
       },
       "createdAt": "2026-02-09T00:01:39.809Z",
       "updatedAt": "2026-10-22T16:57:50.679Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -26161,9 +26161,9 @@
       },
       "createdAt": "2026-02-09T00:01:40.054Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 83
     },
     {
       "id": "97c7655a-3120-4aa4-b993-55d6b3c6066c",
@@ -26563,7 +26563,7 @@
       },
       "createdAt": "2026-02-09T00:01:40.315Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
@@ -26799,9 +26799,9 @@
       },
       "createdAt": "2026-02-09T00:01:40.566Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmt34jmqf0000kuj8e2rx3of7",
@@ -27056,9 +27056,9 @@
       },
       "createdAt": "2026-02-27T13:25:47.078Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmmc1ptju000cdaj8hvx75fkp",
@@ -28133,9 +28133,9 @@
       },
       "createdAt": "2026-02-09T00:01:41.514Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 34,
-      "dpaGdprScore": 38,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 49,
+      "dpaGdprScore": 50,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeq6f8002qkov2hhgd6fd1",
@@ -28253,9 +28253,9 @@
       },
       "createdAt": "2026-02-09T00:01:41.637Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 67,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 71,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm4xdpiw001yxcj8y09hbu4u",
@@ -28625,8 +28625,8 @@
       },
       "createdAt": "2026-02-09T00:01:42.029Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -29187,8 +29187,8 @@
       },
       "createdAt": "2026-02-27T13:25:51.699Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 86,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -29357,9 +29357,9 @@
       },
       "createdAt": "2026-02-09T00:01:42.153Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 100
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1pzdr001ydaj8h7act9e3",
@@ -29665,9 +29665,9 @@
       },
       "createdAt": "2026-03-04T13:01:47.487Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 100
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp593ys0004j5c5mxvc9mgp",
@@ -29874,9 +29874,9 @@
       },
       "createdAt": "2026-03-04T13:01:41.846Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 72,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqt0c0092kov228sx10wl",
@@ -29948,9 +29948,9 @@
       },
       "createdAt": "2026-02-09T00:02:10.908Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdom2001pxcj8kakblkdt",
@@ -30053,9 +30053,9 @@
       },
       "createdAt": "2026-02-27T13:25:51.962Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeq6x1002vkov2rl0bi7xe",
@@ -30242,9 +30242,9 @@
       },
       "createdAt": "2026-02-09T00:01:42.400Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxv3lfu000bu4c5ykyi75kd",
@@ -30516,9 +30516,9 @@
       },
       "createdAt": "2026-08-17T23:25:35.178Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm80bzak0003opj8nsc0tdmu",
@@ -31588,9 +31588,9 @@
       },
       "createdAt": "2026-02-09T00:01:42.520Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 86,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleepylz000jkov2elqj60qk",
@@ -32422,9 +32422,9 @@
       },
       "createdAt": "2026-02-27T13:25:44.842Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 71,
+      "dpaComplianceScore": 70,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmm4xdo04001jxcj8q2irmxbu",
@@ -32755,9 +32755,9 @@
       },
       "createdAt": "2026-02-27T13:25:51.172Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 96,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeq7e90030kov2cfizou4s",
@@ -32890,8 +32890,8 @@
       },
       "createdAt": "2026-02-09T00:01:42.898Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -33389,9 +33389,9 @@
       },
       "createdAt": "2026-02-09T00:01:43.146Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 100
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1px29001bdaj800wr628g",
@@ -33594,8 +33594,8 @@
       },
       "createdAt": "2026-02-09T00:01:43.301Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -33660,9 +33660,9 @@
       },
       "createdAt": "2026-02-09T00:01:43.428Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 68,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm4xdqwm002bxcj8lm1kp1gu",
@@ -33741,8 +33741,8 @@
       },
       "createdAt": "2026-02-27T13:25:54.934Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 57,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 71,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 17
     },
     {
@@ -34574,9 +34574,9 @@
       },
       "createdAt": "2026-02-09T00:01:43.684Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeq83g0037kov29syqhzdk",
@@ -35224,7 +35224,7 @@
       },
       "createdAt": "2026-02-09T00:01:43.929Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -36053,8 +36053,8 @@
       },
       "createdAt": "2026-02-09T00:01:44.560Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 84,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -36398,8 +36398,8 @@
       },
       "createdAt": "2026-02-09T00:01:44.938Z",
       "updatedAt": "2026-10-19T02:06:21.805Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
     {
@@ -36526,9 +36526,9 @@
       },
       "createdAt": "2026-07-17T16:20:10.754Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeq95v003hkov2ujgtvsp8",
@@ -36766,9 +36766,9 @@
       },
       "createdAt": "2026-02-09T00:01:45.187Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeq996003ikov2p92cpbaw",
@@ -36834,8 +36834,8 @@
       },
       "createdAt": "2026-02-09T00:01:45.307Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 49,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 55,
+      "dpaGdprScore": 75,
       "dpaCcpaScore": 17
     },
     {
@@ -36902,8 +36902,8 @@
       },
       "createdAt": "2026-02-09T00:01:45.427Z",
       "updatedAt": "2026-10-19T01:36:12.094Z",
-      "dpaComplianceScore": 49,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 55,
+      "dpaGdprScore": 75,
       "dpaCcpaScore": 17
     },
     {
@@ -36971,8 +36971,8 @@
       },
       "createdAt": "2026-02-09T00:01:45.686Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 49,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 55,
+      "dpaGdprScore": 75,
       "dpaCcpaScore": 17
     },
     {
@@ -37318,8 +37318,8 @@
       },
       "createdAt": "2026-02-09T00:01:45.829Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 86,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -37404,9 +37404,9 @@
       },
       "createdAt": "2026-03-04T13:01:46.452Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 55,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 66,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeq9ro003nkov2n1puok33",
@@ -38007,9 +38007,9 @@
       },
       "createdAt": "2026-03-01T17:06:44.287Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeq9v9003okov2v97uyio3",
@@ -38189,9 +38189,9 @@
       },
       "createdAt": "2026-02-09T00:01:48.307Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 69,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 17
     },
     {
       "id": "2bb96fad-af97-4df3-a0fb-96eab4a3805e",
@@ -38266,9 +38266,9 @@
       "senecaLitigation": null,
       "createdAt": "2026-09-29T16:54:55.444Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmsxv3lk7000cu4c5g57v5z08",
@@ -38419,9 +38419,9 @@
       },
       "createdAt": "2026-08-17T23:25:35.335Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 59,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm4xdoid001oxcj8vdb903y7",
@@ -39648,9 +39648,9 @@
       },
       "createdAt": "2026-03-04T13:01:45.232Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1q1dm002idaj88n1idzd9",
@@ -39958,9 +39958,9 @@
       },
       "createdAt": "2026-03-04T13:01:50.074Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqa5s003rkov26x33oyoa",
@@ -40194,9 +40194,9 @@
       },
       "createdAt": "2026-02-09T00:01:46.480Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm4xdq1i0023xcj868myzidp",
@@ -40455,9 +40455,9 @@
       },
       "createdAt": "2026-02-27T13:25:53.814Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1ptqv000edaj8rxm6t0wd",
@@ -40652,9 +40652,9 @@
       },
       "createdAt": "2026-03-04T13:01:40.183Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1pu5i000idaj8ur22h90k",
@@ -40881,9 +40881,9 @@
       },
       "createdAt": "2026-03-04T13:01:40.709Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm805d4g0006mmj867xlv13u",
@@ -41218,9 +41218,9 @@
       },
       "createdAt": "2026-03-01T17:06:41.200Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp595pf001nj5c5mu944d62",
@@ -41421,9 +41421,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.963Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqacl003tkov215oqc8jg",
@@ -41563,9 +41563,9 @@
       },
       "createdAt": "2026-02-09T00:01:46.725Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqag0003ukov2zbmsv36u",
@@ -42039,9 +42039,9 @@
       },
       "createdAt": "2026-02-09T00:01:46.848Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm8eioh3000bfyj8585h0efy",
@@ -42113,8 +42113,8 @@
       },
       "createdAt": "2026-03-01T23:48:57.063Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 61,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 17
     },
     {
@@ -42183,9 +42183,9 @@
       },
       "createdAt": "2026-03-04T13:01:45.952Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 67,
+      "dpaComplianceScore": 84,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm8eipdh000dfyj8izto397g",
@@ -42615,8 +42615,8 @@
       },
       "createdAt": "2026-03-01T23:48:58.228Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -43624,8 +43624,8 @@
       },
       "createdAt": "2026-02-09T00:01:47.339Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 59,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
     {
@@ -43692,9 +43692,9 @@
       },
       "createdAt": "2026-02-27T13:25:46.551Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 62,
+      "dpaComplianceScore": 60,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 0
     },
     {
       "id": "cmm805guw000jmmj8ramziits",
@@ -43999,9 +43999,9 @@
       },
       "createdAt": "2026-03-01T17:06:46.040Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeqax5003zkov2jk6ds94z",
@@ -44207,9 +44207,9 @@
       },
       "createdAt": "2026-02-09T00:01:47.466Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm805h1x000kmmj8rzrvobz1",
@@ -44625,9 +44625,9 @@
       },
       "createdAt": "2026-02-09T00:01:47.726Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 44,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 70,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 33
     },
     {
       "id": "99ef1ac2-9626-4807-8168-ac991777af55",
@@ -45243,9 +45243,9 @@
       },
       "createdAt": "2026-03-01T17:19:33.936Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqbgv0044kov2mtk970yw",
@@ -48544,9 +48544,9 @@
       },
       "createdAt": "2026-02-27T13:25:52.754Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 100
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm4xdr3x002dxcj8ivagwooe",
@@ -50063,9 +50063,9 @@
       },
       "createdAt": "2026-03-04T13:01:39.428Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqcjn004fkov2syvwg2jl",
@@ -50419,9 +50419,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.628Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 91,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqcn4004gkov22ddrf0yj",
@@ -50709,9 +50709,9 @@
       },
       "createdAt": "2026-02-09T00:01:49.829Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 78,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmsxv3kt90006u4c5py22itcj",
@@ -51632,9 +51632,9 @@
       },
       "createdAt": "2026-02-27T13:25:53.951Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdj7z0008xcj8af93z0ge",
@@ -51740,9 +51740,9 @@
       },
       "createdAt": "2026-02-27T13:25:44.975Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqd83004mkov212h28mah",
@@ -52366,8 +52366,8 @@
       },
       "createdAt": "2026-02-09T00:01:50.584Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 86,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -52645,9 +52645,9 @@
       },
       "createdAt": "2026-02-09T00:01:50.844Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqdmu004qkov2fqtpzfn8",
@@ -53201,9 +53201,9 @@
       },
       "createdAt": "2026-02-09T00:01:51.122Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqduk004skov2gdyoo9gs",
@@ -53626,9 +53626,9 @@
       },
       "createdAt": "2026-02-09T00:01:51.521Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqe8s004wkov2doeeuaj1",
@@ -53859,9 +53859,9 @@
       },
       "createdAt": "2026-02-09T00:01:51.772Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp595cv001cj5c5220r7rvf",
@@ -54662,9 +54662,9 @@
       },
       "createdAt": "2026-10-23T15:28:34.749Z",
       "updatedAt": "2026-10-23T18:00:25.670Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 100
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmsxkt089000ootc520hte3kz",
@@ -54732,9 +54732,9 @@
       },
       "createdAt": "2026-08-17T18:37:24.969Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 68,
-      "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 69,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleeqemy0050kov26d90aacg",
@@ -56140,7 +56140,7 @@
       },
       "createdAt": "2026-03-01T17:19:37.558Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -56342,9 +56342,9 @@
       },
       "createdAt": "2026-08-17T23:25:33.722Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm8eoo4v0002kyj8dtnf6gps",
@@ -56559,9 +56559,9 @@
       },
       "createdAt": "2026-02-09T00:01:52.779Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm8eonxl0001kyj8rtbmewpn",
@@ -57361,9 +57361,9 @@
       },
       "createdAt": "2026-02-09T00:01:53.277Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "6b6e6e43-10cc-4bc9-a7a5-3332c3ad323f",
@@ -57641,9 +57641,9 @@
       },
       "createdAt": "2026-08-17T23:25:35.496Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqfll005akov2qhyz74yh",
@@ -58574,9 +58574,9 @@
       },
       "createdAt": "2026-03-01T17:06:46.532Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1pu8y000jdaj8gulqfmr4",
@@ -58860,9 +58860,9 @@
       },
       "createdAt": "2026-03-04T13:01:40.834Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1pxzr001kdaj8iynppuz8",
@@ -59354,9 +59354,9 @@
       },
       "createdAt": "2026-03-01T23:53:37.100Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqfpb005bkov2mqg3wmh5",
@@ -59636,8 +59636,8 @@
       },
       "createdAt": "2026-03-04T13:01:46.945Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 22,
-      "dpaGdprScore": 25,
+      "dpaComplianceScore": 12,
+      "dpaGdprScore": 13,
       "dpaCcpaScore": 17
     },
     {
@@ -60501,9 +60501,9 @@
       },
       "createdAt": "2026-07-17T16:20:10.837Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqg6t005gkov23p8paac2",
@@ -60621,9 +60621,9 @@
       },
       "createdAt": "2026-02-09T00:01:54.294Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 96,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "e7849db2-fcb9-4a38-af62-2405f71455e5",
@@ -60756,7 +60756,7 @@
       },
       "createdAt": "2026-07-17T16:20:10.620Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -61433,8 +61433,8 @@
       },
       "createdAt": "2026-02-09T00:01:54.784Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -61509,9 +61509,9 @@
       },
       "createdAt": "2026-07-17T16:20:11.130Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "552d28ff-83c6-4c76-a42c-fad89bdc0d34",
@@ -61648,9 +61648,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.921Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm4xdpu00021xcj84nqwb85d",
@@ -61982,9 +61982,9 @@
       },
       "createdAt": "2026-03-01T17:06:51.439Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqgo2005lkov2uqepomoe",
@@ -62097,9 +62097,9 @@
       },
       "createdAt": "2026-02-09T00:01:54.914Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 62,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 71,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleeqgrq005mkov2wm5ujju2",
@@ -63201,8 +63201,8 @@
       },
       "createdAt": "2026-02-09T00:01:55.295Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -63355,9 +63355,9 @@
       },
       "createdAt": "2026-02-09T00:01:55.418Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 72,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm805hmf000nmmj8bh8gm6vq",
@@ -63668,7 +63668,7 @@
       },
       "createdAt": "2026-03-01T17:06:47.031Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 83
     },
@@ -64046,8 +64046,8 @@
       },
       "createdAt": "2026-03-01T23:48:53.367Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -64793,8 +64793,8 @@
       },
       "createdAt": "2026-02-09T00:01:55.544Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -66066,8 +66066,8 @@
       },
       "createdAt": "2026-02-09T00:01:56.074Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -66193,9 +66193,9 @@
       },
       "createdAt": "2026-02-09T00:01:56.215Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 81,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "5b0306cd-6c58-40c2-b897-1c92772cfd13",
@@ -66907,9 +66907,9 @@
       },
       "createdAt": "2026-03-01T17:06:49.937Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqhyj005ykov24o5rgngv",
@@ -67931,9 +67931,9 @@
       },
       "createdAt": "2026-03-04T13:01:50.639Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 81,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeqi8u0061kov2k4n0lbqv",
@@ -68085,9 +68085,9 @@
       },
       "createdAt": "2026-02-09T00:01:57.085Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleepypd000kkov2ujb6uk09",
@@ -68694,9 +68694,9 @@
       },
       "createdAt": "2026-02-09T00:01:57.220Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqiju0064kov2n1zxbo6x",
@@ -68802,9 +68802,9 @@
       },
       "createdAt": "2026-02-09T00:01:57.355Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "363e1516-b0ff-471d-bf6c-3e10f489c7de",
@@ -69300,7 +69300,7 @@
       },
       "createdAt": "2026-03-01T23:49:00.616Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -69457,9 +69457,9 @@
       },
       "createdAt": "2026-03-04T13:01:47.867Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm8eopsd0007kyj8apdyygl5",
@@ -69532,9 +69532,9 @@
       },
       "createdAt": "2026-03-01T23:53:38.701Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqixj0068kov2dmr3j0i1",
@@ -69634,8 +69634,8 @@
       },
       "createdAt": "2026-02-09T00:01:57.847Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 88,
       "dpaCcpaScore": 50
     },
     {
@@ -70108,9 +70108,9 @@
       },
       "createdAt": "2026-03-04T13:01:43.183Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqj8c006bkov2cst3ahk6",
@@ -70207,9 +70207,9 @@
       },
       "createdAt": "2026-02-09T00:01:58.236Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqjbw006ckov25neqz4yw",
@@ -70277,9 +70277,9 @@
       },
       "createdAt": "2026-02-09T00:01:58.364Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmrp594kp000nj5c5nraz5dco",
@@ -71548,9 +71548,9 @@
       },
       "createdAt": "2026-02-09T00:01:59.135Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmsxv3mo6000lu4c5m3ffh7kr",
@@ -72938,8 +72938,8 @@
       },
       "createdAt": "2026-03-01T17:06:41.452Z",
       "updatedAt": "2026-10-23T04:27:10.882Z",
-      "dpaComplianceScore": 49,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 55,
+      "dpaGdprScore": 75,
       "dpaCcpaScore": 17
     },
     {
@@ -74465,9 +74465,9 @@
       },
       "createdAt": "2026-03-04T13:01:45.108Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmmc1pujj000mdaj8q5tanppw",
@@ -74574,9 +74574,9 @@
       },
       "createdAt": "2026-03-04T13:01:41.215Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeql34006tkov2fhve7bp0",
@@ -74838,9 +74838,9 @@
       },
       "createdAt": "2026-02-09T00:02:00.767Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 96,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmmc1pv4m000sdaj88j2hmg8g",
@@ -75591,7 +75591,7 @@
       },
       "createdAt": "2026-02-27T13:25:45.889Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 72,
+      "dpaComplianceScore": 76,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
@@ -75886,9 +75886,9 @@
       },
       "createdAt": "2026-02-27T13:25:50.254Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqlhz006xkov25jv9fl4i",
@@ -75971,8 +75971,8 @@
       },
       "createdAt": "2026-02-09T00:02:01.175Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 90,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -76276,9 +76276,9 @@
       },
       "createdAt": "2026-03-01T17:06:40.179Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 67,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm8en7sp0008jvj8tjdcwx06",
@@ -76620,9 +76620,9 @@
       },
       "createdAt": "2026-02-09T00:02:01.300Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 75,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeqlox006zkov2bo2l7tda",
@@ -77013,8 +77013,8 @@
       },
       "createdAt": "2026-02-09T00:02:01.551Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 63,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
     {
@@ -77111,9 +77111,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.033Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "f2dfc023-9958-4f58-8ea0-a301821c4fc9",
@@ -77307,9 +77307,9 @@
       },
       "createdAt": "2026-02-09T00:02:01.679Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqlzi0072kov28ppw6gse",
@@ -78322,9 +78322,9 @@
       },
       "createdAt": "2026-02-27T13:25:44.577Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmsxksy3o0007otc5ipxlwseg",
@@ -78606,9 +78606,9 @@
       },
       "createdAt": "2026-03-04T13:01:48.512Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmsxkt0ur000totc5ahp6v4aa",
@@ -79063,9 +79063,9 @@
       },
       "createdAt": "2026-02-09T00:02:02.440Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqmkn0078kov286epuqi7",
@@ -79775,9 +79775,9 @@
       },
       "createdAt": "2026-03-01T23:52:27.964Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmm4xdlg1000uxcj8n50uz40l",
@@ -80676,9 +80676,9 @@
       },
       "createdAt": "2026-02-09T00:02:03.452Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqng3007hkov2lhnge7bb",
@@ -80816,9 +80816,9 @@
       },
       "createdAt": "2026-02-27T13:25:48.114Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm805cxg0005mmj8jbvvdadk",
@@ -80955,7 +80955,7 @@
       },
       "createdAt": "2026-03-01T17:06:40.948Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 88,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -81135,8 +81135,8 @@
       },
       "createdAt": "2026-02-27T13:25:46.942Z",
       "updatedAt": "2026-10-23T15:28:41.000Z",
-      "dpaComplianceScore": 66,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -81462,7 +81462,7 @@
       },
       "createdAt": "2026-02-27T13:25:52.487Z",
       "updatedAt": "2026-10-22T16:57:50.679Z",
-      "dpaComplianceScore": 24,
+      "dpaComplianceScore": 28,
       "dpaGdprScore": 38,
       "dpaCcpaScore": 17
     },
@@ -83200,9 +83200,9 @@
       },
       "createdAt": "2026-02-09T00:02:04.578Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeqo80007pkov2mcpakul7",
@@ -84222,9 +84222,9 @@
       },
       "createdAt": "2026-07-17T16:20:11.731Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 64,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 76,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm80lx660009rjj8l48kcmfk",
@@ -84290,7 +84290,7 @@
       },
       "createdAt": "2026-03-01T17:19:33.677Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -84759,8 +84759,8 @@
       },
       "createdAt": "2026-02-27T13:25:49.458Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 81,
+      "dpaGdprScore": 88,
       "dpaCcpaScore": 83
     },
     {
@@ -85188,9 +85188,9 @@
       },
       "createdAt": "2026-02-27T13:25:51.301Z",
       "updatedAt": "2026-10-22T16:57:50.679Z",
-      "dpaComplianceScore": 61,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmsxv3kfx0003u4c5mhrsef8y",
@@ -85462,9 +85462,9 @@
       },
       "createdAt": "2026-02-09T00:02:04.953Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "352c9377-c5c9-4142-b66c-7d0b66190615",
@@ -86117,9 +86117,9 @@
       },
       "createdAt": "2026-02-09T00:02:05.201Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 100
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqop7007ukov2cuelzqiy",
@@ -86724,9 +86724,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.841Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 81,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdlr1000xxcj8g4gi5x2x",
@@ -87122,9 +87122,9 @@
       },
       "createdAt": "2026-02-27T13:25:48.253Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 100
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqozl007xkov27pb2kpdi",
@@ -87755,9 +87755,9 @@
       },
       "createdAt": "2026-03-04T13:01:46.578Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmleeqpaq0080kov2nf7ttbsr",
@@ -88009,7 +88009,7 @@
       },
       "createdAt": "2026-03-01T23:48:59.062Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -88184,8 +88184,8 @@
       },
       "createdAt": "2026-02-09T00:02:06.224Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 41,
-      "dpaGdprScore": 63,
+      "dpaComplianceScore": 51,
+      "dpaGdprScore": 75,
       "dpaCcpaScore": 17
     },
     {
@@ -89153,8 +89153,8 @@
       },
       "createdAt": "2026-02-09T00:02:06.603Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 84,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -89687,7 +89687,7 @@
       },
       "createdAt": "2026-03-01T17:06:52.065Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -89990,9 +89990,9 @@
       },
       "createdAt": "2026-02-27T13:25:51.042Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqq2k0088kov2ix6z1szy",
@@ -90066,8 +90066,8 @@
       },
       "createdAt": "2026-02-09T00:02:07.100Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 86,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -90325,8 +90325,8 @@
       },
       "createdAt": "2026-02-09T00:02:07.230Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 52,
-      "dpaGdprScore": 38,
+      "dpaComplianceScore": 72,
+      "dpaGdprScore": 63,
       "dpaCcpaScore": 83
     },
     {
@@ -90479,9 +90479,9 @@
       },
       "createdAt": "2026-02-09T00:02:07.348Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 83,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmmc1pzvh0023daj843xtmd3n",
@@ -91035,7 +91035,7 @@
       },
       "createdAt": "2026-02-09T00:02:07.470Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -91794,9 +91794,9 @@
       },
       "createdAt": "2026-02-09T00:02:07.858Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 35,
-      "dpaGdprScore": 13,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 56,
+      "dpaGdprScore": 50,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmrp594bt000fj5c5pjdmk0sz",
@@ -92128,9 +92128,9 @@
       },
       "createdAt": "2026-08-17T18:37:21.733Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "f76aeb1b-9ac8-41fe-be8d-5d8e5c931de4",
@@ -92947,9 +92947,9 @@
       },
       "createdAt": "2026-02-09T00:02:07.988Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqqum008gkov20h8uw173",
@@ -94692,7 +94692,7 @@
       },
       "createdAt": "2026-07-17T16:20:11.048Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -95044,9 +95044,9 @@
       "senecaLitigation": null,
       "createdAt": "2026-09-29T16:54:55.444Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 96,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqrmk008okov2p51onjju",
@@ -95267,7 +95267,7 @@
       },
       "createdAt": "2026-08-30T23:56:11.324Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
@@ -95567,9 +95567,9 @@
       },
       "createdAt": "2026-03-01T23:52:27.446Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 72,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 92,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm80lwl30006rjj82twkp182",
@@ -95819,9 +95819,9 @@
       },
       "createdAt": "2026-02-09T00:02:09.246Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqrto008qkov27go3ivk8",
@@ -96257,7 +96257,7 @@
       },
       "createdAt": "2026-03-01T17:06:40.442Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 24,
+      "dpaComplianceScore": 28,
       "dpaGdprScore": 38,
       "dpaCcpaScore": 17
     },
@@ -96966,7 +96966,7 @@
       },
       "createdAt": "2026-02-27T13:25:50.913Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
@@ -97122,9 +97122,9 @@
       },
       "createdAt": "2026-02-09T00:02:09.883Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 56,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 76,
+      "dpaGdprScore": 63,
+      "dpaCcpaScore": 83
     },
     {
       "id": "e1513080-2306-4743-8c57-5e83992a352f",
@@ -97421,7 +97421,7 @@
       },
       "createdAt": "2026-02-09T00:02:10.007Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -98187,8 +98187,8 @@
       },
       "createdAt": "2026-07-17T16:20:11.302Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -98266,9 +98266,9 @@
       },
       "createdAt": "2026-02-27T13:25:54.802Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmmc1q16k002gdaj8or48mqbz",
@@ -98530,9 +98530,9 @@
       },
       "createdAt": "2026-02-09T00:02:10.135Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 67,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqsie008xkov2fb47leh9",
@@ -98599,9 +98599,9 @@
       },
       "createdAt": "2026-02-09T00:02:10.262Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 56,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 0
+      "dpaComplianceScore": 71,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleeqslz008ykov214gdma3s",
@@ -98886,7 +98886,7 @@
       },
       "createdAt": "2026-02-09T00:02:10.392Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -100519,9 +100519,9 @@
       },
       "createdAt": "2026-03-01T17:06:39.670Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqt790094kov2icad0hgt",
@@ -100585,9 +100585,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.158Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqtax0095kov2t72pflue",
@@ -100686,9 +100686,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.289Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqtei0096kov2l226fk5o",
@@ -100752,9 +100752,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.418Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqthy0097kov24341leas",
@@ -100927,9 +100927,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.543Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdq900025xcj8l82v63hx",
@@ -101130,9 +101130,9 @@
       },
       "createdAt": "2026-02-27T13:25:54.084Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm8eorfm0008kyj8pad1ixii",
@@ -101311,9 +101311,9 @@
       },
       "createdAt": "2026-03-01T23:53:40.834Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqtou0099kov2hfdyrfis",
@@ -101385,9 +101385,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.790Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqts8009akov2hx10ud6u",
@@ -101572,9 +101572,9 @@
       },
       "createdAt": "2026-02-09T00:02:11.913Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqtvq009bkov2ilzh95w5",
@@ -101669,8 +101669,8 @@
       },
       "createdAt": "2026-02-09T00:02:12.039Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 65,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -102990,9 +102990,9 @@
       },
       "createdAt": "2026-02-09T00:01:44.815Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 85,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmt34jn5w0003kuj8kju9bbyj",
@@ -103585,9 +103585,9 @@
       },
       "createdAt": "2026-03-04T13:01:44.604Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleequjw009ikov2mczt517i",
@@ -103759,9 +103759,9 @@
       },
       "createdAt": "2026-02-09T00:02:12.909Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 16,
-      "dpaGdprScore": 13,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 32,
+      "dpaGdprScore": 25,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmsxkt1h4000yotc5wez1y4fx",
@@ -104234,7 +104234,7 @@
       },
       "createdAt": "2026-03-01T17:19:34.692Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -104637,9 +104637,9 @@
       },
       "createdAt": "2026-02-27T13:25:48.924Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 68,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 94,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 100
     },
     {
       "id": "745247e7-ae60-40e9-9bbf-4717cb8a6cfc",
@@ -104837,8 +104837,8 @@
       },
       "createdAt": "2026-02-09T00:02:20.134Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -104974,9 +104974,9 @@
       },
       "createdAt": "2026-02-09T00:02:13.297Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "6ac39f5c-b5fd-42d7-84f4-ffa591debc70",
@@ -105395,9 +105395,9 @@
       },
       "createdAt": "2026-02-27T13:25:49.327Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 96,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm805c500001mmj8u4qtcxue",
@@ -105676,9 +105676,9 @@
       },
       "createdAt": "2026-08-17T23:25:34.856Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 64,
+      "dpaGdprScore": 63,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqvca009qkov2ixhw8buw",
@@ -106112,7 +106112,7 @@
       },
       "createdAt": "2026-08-21T15:48:52.381Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -106489,7 +106489,7 @@
       },
       "createdAt": "2026-02-27T13:25:45.107Z",
       "updatedAt": "2026-10-22T16:57:50.679Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -106697,9 +106697,9 @@
       },
       "createdAt": "2026-02-09T00:02:14.189Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "d5a032ff-eeb7-4b5d-83e6-57e1f36d9a06",
@@ -107323,9 +107323,9 @@
       },
       "createdAt": "2026-08-17T18:37:26.902Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmm80lyqe000grjj89bpunelo",
@@ -108324,7 +108324,7 @@
       },
       "createdAt": "2026-07-17T16:20:11.342Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 73,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -108410,9 +108410,9 @@
       },
       "createdAt": "2026-08-17T23:25:33.560Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 66,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 94,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqw0p009wkov25p0iascg",
@@ -108582,9 +108582,9 @@
       },
       "createdAt": "2026-02-09T00:02:14.810Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqw44009xkov24iukvvll",
@@ -108784,9 +108784,9 @@
       },
       "createdAt": "2026-03-01T23:52:26.009Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqw7j009ykov2htrkb3z7",
@@ -109032,9 +109032,9 @@
       },
       "createdAt": "2026-03-04T13:01:44.982Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 57,
+      "dpaComplianceScore": 70,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 17
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmm4xdlyj000zxcj8s28bdqm9",
@@ -109933,8 +109933,8 @@
       },
       "createdAt": "2026-03-01T17:19:30.360Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
     {
@@ -110001,8 +110001,8 @@
       },
       "createdAt": "2026-02-09T00:02:15.427Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 33
     },
     {
@@ -110723,9 +110723,9 @@
       },
       "createdAt": "2026-02-09T00:02:15.803Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 81,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmsxksyuo000dotc5d4sy4z9k",
@@ -110832,8 +110832,8 @@
       },
       "createdAt": "2026-08-17T18:37:23.184Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 55,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 17
     },
     {
@@ -111257,9 +111257,9 @@
       },
       "createdAt": "2026-07-17T16:20:10.886Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 47,
-      "dpaGdprScore": 38,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 68,
+      "dpaGdprScore": 63,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqwvz00a5kov29kdxlp6c",
@@ -111743,9 +111743,9 @@
       },
       "createdAt": "2026-03-04T13:01:47.993Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxkt1ui0011otc51d5gvaoz",
@@ -112006,7 +112006,7 @@
       },
       "createdAt": "2026-03-01T23:49:00.353Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 91,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
@@ -112562,9 +112562,9 @@
       },
       "createdAt": "2026-02-09T00:02:16.215Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 38,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 40,
+      "dpaGdprScore": 63,
+      "dpaCcpaScore": 0
     },
     {
       "id": "cmleeqx7800a8kov2kpdy6233",
@@ -113625,9 +113625,9 @@
       },
       "createdAt": "2026-02-27T13:25:45.760Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmm4xdk8g000ixcj8cdmsns7h",
@@ -113709,9 +113709,9 @@
       },
       "createdAt": "2026-02-27T13:25:46.288Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1puxl000qdaj8me7m98im",
@@ -114090,9 +114090,9 @@
       },
       "createdAt": "2026-08-21T15:48:52.054Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 62,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 75,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmrp5951q0012j5c5m22jcpj0",
@@ -114774,9 +114774,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.149Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 72,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleeqxrx00aekov2cq7esxwh",
@@ -115817,9 +115817,9 @@
       },
       "createdAt": "2026-02-27T13:25:45.492Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 90,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 100
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1q02l0025daj85gxmpn1m",
@@ -116529,9 +116529,9 @@
       },
       "createdAt": "2026-03-04T13:01:48.381Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 80,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmm4xdmvy0018xcj896qcealo",
@@ -116635,7 +116635,7 @@
       },
       "createdAt": "2026-02-27T13:25:49.726Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -116965,9 +116965,9 @@
       },
       "createdAt": "2026-03-01T17:06:40.697Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm805kg3000smmj8rnc3lc5a",
@@ -117209,9 +117209,9 @@
       },
       "createdAt": "2026-03-01T17:06:50.691Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 96,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmt34jnf20005kuj8bynv2bhu",
@@ -117869,9 +117869,9 @@
       },
       "createdAt": "2026-02-27T13:25:52.225Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 50
     },
     {
       "id": "cmleeqxyr00agkov27xtvecrm",
@@ -118240,7 +118240,7 @@
       },
       "createdAt": "2026-07-17T16:20:10.970Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
     },
@@ -119094,7 +119094,7 @@
       },
       "createdAt": "2026-02-09T00:02:17.979Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -119514,9 +119514,9 @@
       },
       "createdAt": "2026-02-27T13:25:47.599Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 63,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmm805i0m000pmmj86qduzp68",
@@ -119745,9 +119745,9 @@
       },
       "createdAt": "2026-03-01T17:06:42.692Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 59,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1px97001ddaj8cmeac6q7",
@@ -119819,7 +119819,7 @@
       },
       "createdAt": "2026-03-04T13:01:44.731Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -119902,9 +119902,9 @@
       },
       "createdAt": "2026-02-09T00:02:18.490Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 72,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 83
+      "dpaComplianceScore": 88,
+      "dpaGdprScore": 75,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqyyv00aqkov2p117pdig",
@@ -120124,9 +120124,9 @@
       },
       "createdAt": "2026-02-09T00:02:18.757Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 47,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 33
+      "dpaComplianceScore": 26,
+      "dpaGdprScore": 25,
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm805dia0008mmj8x08igenl",
@@ -120503,9 +120503,9 @@
       },
       "createdAt": "2026-02-09T00:02:19.010Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 51,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 43,
+      "dpaGdprScore": 50,
+      "dpaCcpaScore": 33
     },
     {
       "id": "fcb65083-d71c-4d18-94bb-fdc113982d8e",
@@ -121193,9 +121193,9 @@
       },
       "createdAt": "2026-03-01T23:48:58.483Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 84,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "0af135e5-f6d5-4429-9ce4-ba734e740d93",
@@ -121341,9 +121341,9 @@
       },
       "createdAt": "2026-08-17T18:37:23.666Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 77,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleeqzk500awkov2kz9o8yz6",
@@ -121494,7 +121494,7 @@
       },
       "createdAt": "2026-02-09T00:02:19.397Z",
       "updatedAt": "2026-10-15T15:11:58.042Z",
-      "dpaComplianceScore": 92,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -121698,9 +121698,9 @@
       },
       "createdAt": "2026-07-17T16:20:10.518Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "a624dbd0-fd7a-4cda-b474-948ec5b3fdaf",
@@ -121904,9 +121904,9 @@
       },
       "createdAt": "2026-08-30T23:56:11.324Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 70,
-      "dpaGdprScore": 75,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 88,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqzr300aykov2c676u4y4",
@@ -122076,9 +122076,9 @@
       },
       "createdAt": "2026-02-09T00:02:19.648Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 82,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleeqzug00azkov2a3dcs3wd",
@@ -122665,7 +122665,7 @@
       },
       "createdAt": "2026-02-27T13:25:47.341Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 90,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
@@ -122894,7 +122894,7 @@
       },
       "createdAt": "2026-03-01T23:52:26.670Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 57,
+      "dpaComplianceScore": 65,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 17
     },
@@ -123599,8 +123599,8 @@
       },
       "createdAt": "2026-02-27T13:25:48.388Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
     {
@@ -123924,9 +123924,9 @@
       },
       "createdAt": "2026-03-01T23:48:53.634Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 64,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer08800b3kov2j2rurl9i",
@@ -123990,9 +123990,9 @@
       },
       "createdAt": "2026-02-09T00:02:20.264Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 64,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer0f200b5kov2mr2mrtw6",
@@ -124056,9 +124056,9 @@
       },
       "createdAt": "2026-02-09T00:02:20.510Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 64,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer0ig00b6kov2xa4k0peo",
@@ -124221,8 +124221,8 @@
       },
       "createdAt": "2026-02-09T00:02:20.633Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 74,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -125607,9 +125607,9 @@
       },
       "createdAt": "2026-02-09T00:02:21.281Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmt34jnaf0004kuj8b5tiw1u6",
@@ -125763,9 +125763,9 @@
       },
       "createdAt": "2026-02-27T13:25:47.212Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer13z00bckov2bmkbt6ma",
@@ -126229,9 +126229,9 @@
       },
       "createdAt": "2026-03-01T23:53:42.453Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 96,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleer1av00bekov2gh5tku05",
@@ -126631,9 +126631,9 @@
       },
       "createdAt": "2026-02-09T00:02:21.784Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 87,
+      "dpaComplianceScore": 96,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 83
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmleer1hy00bgkov215gl0ssy",
@@ -127085,7 +127085,7 @@
       },
       "createdAt": "2026-03-04T13:01:44.353Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -127538,9 +127538,9 @@
       },
       "createdAt": "2026-02-27T13:25:44.437Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxksxut0005otc5gyxqkvo8",
@@ -127820,9 +127820,9 @@
       },
       "createdAt": "2026-02-09T00:02:22.157Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 67,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmmc1pxqt001idaj8uann1ovz",
@@ -128515,7 +128515,7 @@
       },
       "createdAt": "2026-03-01T23:48:55.896Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 81,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
@@ -128773,9 +128773,9 @@
       },
       "createdAt": "2026-02-09T00:02:22.533Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 71,
+      "dpaComplianceScore": 74,
       "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmm8eip67000cfyj8rmzvqh9j",
@@ -128847,9 +128847,9 @@
       },
       "createdAt": "2026-03-01T23:48:57.967Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 50
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer22p00bmkov2qpcfn6zg",
@@ -129180,9 +129180,9 @@
       },
       "createdAt": "2026-07-17T16:20:12.881Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmleer26500bnkov2x7unbuuj",
@@ -129519,8 +129519,8 @@
       },
       "createdAt": "2026-02-09T00:02:22.782Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 71,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 50
     },
     {
@@ -130923,8 +130923,8 @@
       },
       "createdAt": "2026-03-01T23:53:42.719Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 55,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 65,
+      "dpaGdprScore": 88,
       "dpaCcpaScore": 17
     },
     {
@@ -131604,7 +131604,7 @@
       },
       "createdAt": "2026-07-17T16:20:10.928Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 96,
+      "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
     },
@@ -132362,9 +132362,9 @@
       },
       "createdAt": "2026-03-04T13:01:39.678Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 63,
+      "dpaComplianceScore": 85,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 17
+      "dpaCcpaScore": 50
     },
     {
       "id": "70ba5690-a04f-4f22-afa9-2506af503e56",
@@ -133361,9 +133361,9 @@
       },
       "createdAt": "2026-03-04T13:01:42.681Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 100,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxv3mfc000ju4c51bndtf8s",
@@ -133864,9 +133864,9 @@
       },
       "createdAt": "2026-03-01T17:06:42.201Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 64,
-      "dpaGdprScore": 63,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "aed3881b-a946-44d5-ad8b-f3f23cf284d5",
@@ -134313,9 +134313,9 @@
       },
       "createdAt": "2026-03-04T13:01:49.949Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 56,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 0
+      "dpaComplianceScore": 80,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 33
     },
     {
       "id": "cmsxksyz4000eotc5hn1dgrot",
@@ -135094,8 +135094,8 @@
       },
       "createdAt": "2026-02-09T00:02:24.575Z",
       "updatedAt": "2026-10-22T04:17:18.297Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 90,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 67
     },
     {
@@ -135544,7 +135544,7 @@
       },
       "createdAt": "2026-03-04T13:01:44.092Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
-      "dpaComplianceScore": 58,
+      "dpaComplianceScore": 70,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 33
     },
@@ -135995,8 +135995,8 @@
       },
       "createdAt": "2026-08-30T23:56:11.324Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 81,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -136463,9 +136463,9 @@
       },
       "createdAt": "2026-02-27T13:25:53.682Z",
       "updatedAt": "2026-10-22T16:57:50.679Z",
-      "dpaComplianceScore": 65,
+      "dpaComplianceScore": 66,
       "dpaGdprScore": 75,
-      "dpaCcpaScore": 50
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleer41j00c6kov2za5crglo",
@@ -137254,8 +137254,8 @@
       },
       "createdAt": "2026-02-27T13:25:48.657Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 85,
-      "dpaGdprScore": 88,
+      "dpaComplianceScore": 95,
+      "dpaGdprScore": 100,
       "dpaCcpaScore": 83
     },
     {
@@ -137705,9 +137705,9 @@
       },
       "createdAt": "2026-03-01T17:11:47.371Z",
       "updatedAt": "2026-10-22T16:35:19.329Z",
-      "dpaComplianceScore": 86,
+      "dpaComplianceScore": 95,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 67
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmleer4bv00c9kov2s75tttze",
@@ -138236,9 +138236,9 @@
       },
       "createdAt": "2026-02-27T13:25:53.276Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
+      "dpaComplianceScore": 75,
       "dpaGdprScore": 100,
-      "dpaCcpaScore": 33
+      "dpaCcpaScore": 17
     },
     {
       "id": "cmm80lwz70008rjj8n0rwpg5t",
@@ -138434,9 +138434,9 @@
       },
       "createdAt": "2026-03-01T17:19:33.427Z",
       "updatedAt": "2026-10-22T23:27:59.531Z",
-      "dpaComplianceScore": 76,
-      "dpaGdprScore": 88,
-      "dpaCcpaScore": 67
+      "dpaComplianceScore": 85,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 50
     }
   ],
   "aliases": {
