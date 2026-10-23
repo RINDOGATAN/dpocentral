@@ -216,7 +216,9 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await expect(page.getByTestId("board-kpi-vendors-flag")).toContainText(
     es ? "1 de riesgo alto o crítico sin ese contrato" : "1 high or critical risk without one",
   );
-  await expect(page.getByTestId("board-programme").locator("dt")).toHaveCount(6);
+  // Five areas: "Policies and people" is not covered yet and is left out.
+  await expect(page.getByTestId("board-programme").locator("dt")).toHaveCount(5);
+  await expect(page.getByTestId("board-programme")).not.toContainText(es ? "Aún no en DPO Central" : "Not in DPO Central yet");
   const incidents = page.getByTestId("board-incidents");
   await expect(incidents).toContainText(es ? "Notificados a la autoridad en 72 horas" : "Notified to the authority within 72 hours");
   const incidentValues = await incidents.locator("dd").allInnerTexts();
