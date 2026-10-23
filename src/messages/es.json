@@ -1799,17 +1799,17 @@
         "placeholder": "p. ej. Programa de privacidad de Ejemplo Logística"
       },
       "applies": {
-        "title": "Qué se te aplica",
+        "title": "Normativa aplicable",
         "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
         "skip": "Omitir por ahora",
         "continue": "Guardar y continuar",
         "placesQuestion": "¿Dónde opera tu organización?",
-        "placesHint": "Elige todos los lugares donde tienes clientes, personal o usuarios. Determina qué leyes comprobamos. Puedes cambiarlo más adelante en la página «Qué se te aplica».",
+        "placesHint": "Elige todos los lugares donde tienes clientes, personal o usuarios. Determina qué leyes comprobamos. Puedes cambiarlo más adelante en la página «Normativa aplicable».",
         "placesUnsure": "Todavía no lo sé",
-        "placesFailed": "No se ha podido guardar dónde operas. Puedes indicarlo en la página «Qué se te aplica»."
+        "placesFailed": "No se ha podido guardar dónde operas. Puedes indicarlo en la página «Normativa aplicable»."
       },
       "steps": {
-        "applies": "Qué se te aplica",
+        "applies": "Normativa aplicable",
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
         "yourVendors": "Tus proveedores",
@@ -2055,7 +2055,7 @@
       }
     },
     "regulations": {
-      "title": "Qué se te aplica",
+      "title": "Normativa aplicable",
       "subtitle": "Las jurisdicciones y leyes de privacidad que se te aplican, y sus requisitos (centro normativo)",
       "exportReport": "Exportar informe",
       "wizard": "Asistente de aplicabilidad",
@@ -9968,7 +9968,7 @@
         "do": "Usa el inicio rápido para configurar jurisdicciones, una plantilla y tus primeros proveedores."
       },
       "applies": {
-        "label": "Qué se te aplica",
+        "label": "Normativa aplicable",
         "why": "Indica dónde operas y qué leyes se te aplican, para acotar el resto del programa a tu caso.",
         "do": "Declara las jurisdicciones y las leyes que se aplican a tu organización."
       },
@@ -10177,7 +10177,7 @@
       "heading": "Plazos de tus leyes",
       "period": "{law}: {period} desde la recepción.",
       "periodWithExtension": "{law}: {period} desde la recepción, prorrogable otros {extension}.",
-      "none": "Aún no has declarado ninguna ley: las solicitudes nuevas siguen el mes del RGPD, prorrogable otros dos meses. Declara tus leyes en Qué se te aplica.",
+      "none": "Aún no has declarado ninguna ley: las solicitudes nuevas siguen el mes del RGPD, prorrogable otros dos meses. Declara tus leyes en la página «Normativa aplicable».",
       "ccpaFifteen": "CCPA: las solicitudes de exclusión de la venta o el intercambio y de limitación del uso de la información personal sensible, lo antes posible y, como máximo, en 15 días hábiles.",
       "ccpaConfirm": "CCPA: confirma la recepción de una solicitud de saber, eliminar o corregir en un plazo de 10 días hábiles.",
       "strictest": "Con varias leyes, una solicitud nueva toma el plazo de tu jurisdicción principal o, si no hay ninguna principal, el más breve.",
@@ -10219,7 +10219,7 @@
     "sortNote": "Ordenados por el plazo más próximo, el más cercano primero; después, los clientes sin plazo, por nombre."
   },
   "applicability": {
-    "cardTitle": "Qué se te aplica",
+    "cardTitle": "Normativa aplicable",
     "cardDescription": "Unas preguntas sencillas sobre cómo usas los datos personales. Junto con las jurisdicciones en las que operas, muestran qué leyes y obligaciones se te aplican. Todo sigue siendo editable.",
     "intro": "Responde lo que puedas. «Aún no lo sé» es válido: aparece como algo por comprobar, nunca como algo resuelto.",
     "roleTitle": "Tu papel",
@@ -10259,12 +10259,12 @@
         "hint": "Las autoridades públicas deben designar un delegado de protección de datos."
       }
     },
-    "appliesTitle": "Lo que se te aplica",
+    "appliesTitle": "Normativa aplicable",
     "appliesEmpty": "De momento tus respuestas no activan nada. Añade dónde operas o responde más preguntas.",
     "appliesNoneCheckBelow": "Con tus respuestas actuales, nada se aplica con seguridad. Debajo tienes lo que conviene comprobar.",
     "checkTitle": "Conviene comprobar",
     "whyLabel": "Por qué",
-    "noJurisdictions": "Añade dónde operas en la página «Qué se te aplica», para poder mostrar las leyes que dependen del lugar.",
+    "noJurisdictions": "Añade dónde operas en la página «Normativa aplicable», para poder mostrar las leyes que dependen del lugar.",
     "noJurisdictionsAbove": "Elige arriba dónde opera tu organización para ver las leyes que dependen del lugar.",
     "editableNote": "Información meramente orientativa, con las correspondencias aún pendientes de revisión. Puedes cambiar tus respuestas cuando quieras.",
     "items": {
