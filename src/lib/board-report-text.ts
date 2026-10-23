@@ -81,17 +81,21 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
   const date = (d: string | Date) => formatBoardDate(d, locale);
   const num = (n: number) => String(n);
 
-  // The programme: the one figure, its parts and the six areas.
+  // The programme: the one figure, its parts and the areas. An area the
+  // product does not cover yet ("coming") says nothing to an executive, so it
+  // is left out, as on the dashboard's Areas panel.
   const f = report.figure;
   const parts = [
     f.toConfirm > 0 ? guided("figure.toConfirm", { count: f.toConfirm }) : null,
     f.started > 0 ? guided("figure.started", { count: f.started }) : null,
     f.notStarted > 0 ? guided("figure.notStarted", { count: f.notStarted }) : null,
   ].filter((p): p is string => !!p);
-  const areas = report.areas.map((a) => ({
-    label: guided(`stages.${a.stageId}`),
-    value: a.word === "coming" ? guided("areas.coming") : guided(`stageState.${a.word}`),
-  }));
+  const areas = report.areas
+    .filter((a) => a.word !== "coming")
+    .map((a) => ({
+      label: guided(`stages.${a.stageId}`),
+      value: guided(`stageState.${a.word}`),
+    }));
 
   // Documents: ready, and the others DPO Central produces with what they lack.
   const { ready, missing } = documentSplit(report.documents);

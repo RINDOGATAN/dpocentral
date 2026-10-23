@@ -444,6 +444,11 @@ const SAMPLE: BoardReport = {
 };
 
 describe("the words, the same on the page and in the PDF", () => {
+  it("leaves out an area the product does not cover yet", () => {
+    const text = boardReportText(SAMPLE, tr(en, "en"), "en");
+    expect(text.programme.areas.map((a) => a.label)).not.toContain(en.guided.stages.people);
+    expect(text.programme.areas).toHaveLength(5);
+  });
   it("reads in English", () => {
     const text = boardReportText(SAMPLE, tr(en, "en"), "en");
     expect(text.title).toBe("Executive report");
@@ -452,7 +457,6 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(text.programme.figure).toBe("4 of 10 steps confirmed");
     expect(text.programme.areas.map((a) => a.value)).toEqual([
       "done",
-      "Not in DPO Central yet",
       "to confirm",
       "in progress",
       "needs action",
