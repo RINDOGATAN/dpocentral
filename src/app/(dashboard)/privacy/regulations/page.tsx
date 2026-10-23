@@ -47,6 +47,9 @@ export default function RegulationsPage() {
   const orgId = organization?.id ?? "";
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  // Opens on what applies once something does; the catalogue otherwise. A tab
+  // the person picks stays picked.
+  const [tabChoice, setTabChoice] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
 
   const { data: catalog, isLoading } = trpc.regulations.listAvailable.useQuery(
@@ -73,6 +76,7 @@ export default function RegulationsPage() {
 
   const catalogItems = (catalog?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
   const appliedItems = (applied?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
+  const tab = tabChoice ?? (appliedItems.length > 0 ? "applied" : "catalog");
 
   const utils = trpc.useUtils();
 
@@ -124,7 +128,7 @@ export default function RegulationsPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="catalog">
+      <Tabs value={tab} onValueChange={setTabChoice}>
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="catalog">{t("tabs.catalog")}</TabsTrigger>
           <TabsTrigger value="applied">

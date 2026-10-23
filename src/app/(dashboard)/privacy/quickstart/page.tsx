@@ -44,6 +44,7 @@ import {
   ExternalLink,
   ShieldCheck,
   Bot,
+  Plus,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -92,16 +93,19 @@ type WizardStep = "applies" | "welcome" | "choose" | "vendors" | "industry" | "r
 // PAGE COMPONENT
 // ============================================================
 
-/** Common names offered before the first catalogue search (all in the catalogue). */
+/**
+ * Common vendors offered while the search box is empty (all in the catalogue,
+ * by slug). One press adds the vendor, as picking it from the search would.
+ */
 const VENDOR_SEARCH_EXAMPLES = [
-  "Microsoft 365",
-  "Google Workspace",
-  "Salesforce",
-  "HubSpot",
-  "Stripe",
-  "Mailchimp",
-  "Slack",
-  "Zoom",
+  { name: "Microsoft 365", slug: "microsoft-365" },
+  { name: "Google Workspace", slug: "google-workspace" },
+  { name: "Salesforce", slug: "salesforce" },
+  { name: "HubSpot", slug: "hubspot" },
+  { name: "Stripe", slug: "stripe" },
+  { name: "Mailchimp", slug: "mailchimp" },
+  { name: "Slack", slug: "slack" },
+  { name: "Zoom", slug: "zoom" },
 ] as const;
 
 export default function QuickstartPage() {
@@ -458,47 +462,74 @@ export default function QuickstartPage() {
         </div>
       </div>
 
-      {/* Step indicator — hidden on welcome step */}
+      {/* Step indicator, hidden on the welcome step. Outside the Vendor.Watch
+          flow all five steps show from the start: before a path is chosen,
+          vendors and industry depend on it; after, the one not taken is
+          shown as skipped, so the numbering never changes. */}
       {step !== "welcome" && (
-        <div className="flex items-center gap-2 text-sm flex-wrap">
-          {[
-            { key: "applies", label: tp("steps.applies") },
-            ...(!fromVendorWatch
-              ? [{ key: "choose", label: tp("steps.choose") }]
-              : []),
-            ...(useVendors
-              ? [{ key: "vendors", label: fromVendorWatch ? tp("steps.yourVendors") : tp("steps.vendors") }]
-              : []),
-            ...(useIndustry
-              ? [{ key: "industry", label: tp("steps.industry") }]
-              : []),
-            { key: "review", label: tp("steps.review") },
-          ].map((s, i, arr) => (
-            <span key={s.key} className="flex items-center gap-2">
-              <span
-                className={`px-2 py-0.5 rounded text-xs font-medium ${
-                  step === s.key
-                    ? "bg-primary text-primary-foreground"
-                    : step === "success" || arr.findIndex((x) => x.key === step) > i
-                    ? "bg-primary/15 text-primary"
-                    : "bg-muted text-muted-foreground"
-                }`}
+        <ol className="flex items-center gap-2 text-sm flex-wrap" data-testid="quickstart-steps">
+          {(() => {
+            const pathChosen = useVendors || useIndustry;
+            type Indicator = { key: string; label: string; state: "on" | "pending" | "skipped" };
+            const items: Indicator[] = fromVendorWatch
+              ? [
+                  { key: "applies", label: tp("steps.applies"), state: "on" },
+                  ...(useVendors ? [{ key: "vendors", label: tp("steps.yourVendors"), state: "on" as const }] : []),
+                  ...(useIndustry ? [{ key: "industry", label: tp("steps.industry"), state: "on" as const }] : []),
+                  { key: "review", label: tp("steps.review"), state: "on" },
+                ]
+              : [
+                  { key: "applies", label: tp("steps.applies"), state: "on" },
+                  { key: "choose", label: tp("steps.choose"), state: "on" },
+                  { key: "vendors", label: tp("steps.vendors"), state: !pathChosen ? "pending" : useVendors ? "on" : "skipped" },
+                  { key: "industry", label: tp("steps.industry"), state: !pathChosen ? "pending" : useIndustry ? "on" : "skipped" },
+                  { key: "review", label: tp("steps.review"), state: "on" },
+                ];
+            const current = items.findIndex((x) => x.key === step);
+            return items.map((s, i) => (
+              <li
+                key={s.key}
+                className="flex items-center gap-2"
+                data-state={s.state}
+                title={s.state === "pending" ? tp("steps.dependsOnPath") : s.state === "skipped" ? tp("steps.skipped") : undefined}
               >
-                {i + 1}
-              </span>
-              <span
-                className={
-                  step === s.key ? "font-medium" : "text-muted-foreground"
-                }
-              >
-                {s.label}
-              </span>
-              {i < arr.length - 1 && (
-                <ArrowRight className="w-3 h-3 text-muted-foreground" />
-              )}
-            </span>
-          ))}
-        </div>
+                <span
+                  className={`px-2 py-0.5 rounded text-xs font-medium ${
+                    step === s.key
+                      ? "bg-primary text-primary-foreground"
+                      : s.state !== "on"
+                      ? "border border-dashed border-muted-foreground/40 text-muted-foreground"
+                      : step === "success" || current > i
+                      ? "bg-primary/15 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                <span
+                  className={
+                    step === s.key
+                      ? "font-medium"
+                      : s.state === "skipped"
+                      ? "text-muted-foreground line-through"
+                      : s.state === "pending"
+                      ? "text-muted-foreground italic"
+                      : "text-muted-foreground"
+                  }
+                >
+                  {s.label}
+                  {s.state !== "on" && (
+                    <span className="sr-only">
+                      {" "}
+                      ({s.state === "pending" ? tp("steps.dependsOnPath") : tp("steps.skipped")})
+                    </span>
+                  )}
+                </span>
+                {i < items.length - 1 && <ArrowRight className="w-3 h-3 text-muted-foreground" aria-hidden />}
+              </li>
+            ));
+          })()}
+        </ol>
       )}
 
       {/* Programme name — asked first, prefilled with the organisation's name */}
@@ -904,15 +935,9 @@ export default function QuickstartPage() {
           ════════════════════════════════════════════════ */}
       {step === "vendors" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">{tp("vendors.title")}</h2>
-              <p className="text-sm text-muted-foreground">{tp("vendors.subtitle")}</p>
-            </div>
-            <Button variant="ghost" size="sm" onClick={() => setStep(fromVendorWatch && portfolio?.hasPortfolio ? "welcome" : "choose")}>
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              {tp("vendors.back")}
-            </Button>
+          <div>
+            <h2 className="text-lg font-semibold">{tp("vendors.title")}</h2>
+            <p className="text-sm text-muted-foreground">{tp("vendors.subtitle")}</p>
           </div>
 
           {/* Selected vendors */}
@@ -1034,24 +1059,23 @@ export default function QuickstartPage() {
             )}
           </div>
 
-          {/* Before the first search: a few names to start from, so the empty
-              catalogue search is not a blank box. A name only fills the search. */}
-          {!vendorSearch && selectedSlugs.length === 0 && (
-            <div className="flex flex-wrap items-center gap-2 text-sm">
+          {/* While the search box is empty: common vendors to add in one press,
+              so the catalogue search is not a blank box. Added ones drop out. */}
+          {!vendorSearch && VENDOR_SEARCH_EXAMPLES.some((v) => !selectedSlugs.includes(v.slug)) && (
+            <div className="flex flex-wrap items-center gap-2 text-sm" data-testid="vendor-examples">
               <span className="text-muted-foreground">{tp("vendors.examples")}</span>
-              {VENDOR_SEARCH_EXAMPLES.map((name) => (
+              {VENDOR_SEARCH_EXAMPLES.filter((v) => !selectedSlugs.includes(v.slug)).map((v) => (
                 <Button
-                  key={name}
+                  key={v.slug}
                   type="button"
                   variant="outline"
                   size="sm"
                   className="h-7 px-2 text-xs"
-                  onClick={() => {
-                    handleSearchChange(name);
-                    searchInputRef.current?.focus();
-                  }}
+                  aria-label={tp("vendors.addExample", { name: v.name })}
+                  onClick={() => toggleVendorSlug(v.slug)}
                 >
-                  {name}
+                  <Plus className="w-3 h-3 mr-1" aria-hidden />
+                  {v.name}
                 </Button>
               ))}
             </div>
@@ -1070,12 +1094,14 @@ export default function QuickstartPage() {
                         elements: vendorPreview.totals.elements,
                         activities: vendorPreview.totals.activities,
                         transfers: vendorPreview.totals.transfers,
+                        internal: vendorPreview.totals.internalSystems > 0 ? "yes" : "no",
                       })
                     : tp("vendors.previewSummary", {
                         vendors: vendorPreview.totals.vendors,
                         assets: vendorPreview.totals.assets,
                         elements: vendorPreview.totals.elements,
                         activities: vendorPreview.totals.activities,
+                        internal: vendorPreview.totals.internalSystems > 0 ? "yes" : "no",
                       })}
                 </CardDescription>
               </CardHeader>
@@ -1152,7 +1178,11 @@ export default function QuickstartPage() {
             </Card>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between gap-3">
+            <Button variant="ghost" onClick={() => setStep(fromVendorWatch && portfolio?.hasPortfolio ? "welcome" : "choose")}>
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              {tp("vendors.back")}
+            </Button>
             <Button
               onClick={handleProceedFromVendors}
               disabled={selectedSlugs.length === 0}
@@ -1169,19 +1199,9 @@ export default function QuickstartPage() {
           ════════════════════════════════════════════════ */}
       {step === "industry" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">{tp("industry.title")}</h2>
-              <p className="text-sm text-muted-foreground">{tp("industry.subtitle")}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setStep(useVendors ? "vendors" : "choose")}
-            >
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              {tp("industry.back")}
-            </Button>
+          <div>
+            <h2 className="text-lg font-semibold">{tp("industry.title")}</h2>
+            <p className="text-sm text-muted-foreground">{tp("industry.subtitle")}</p>
           </div>
 
           {/* Industry grid */}
@@ -1359,7 +1379,11 @@ export default function QuickstartPage() {
             </Card>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between gap-3">
+            <Button variant="ghost" onClick={() => setStep(useVendors ? "vendors" : "choose")}>
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              {tp("industry.back")}
+            </Button>
             <Button
               onClick={handleProceedFromIndustry}
               disabled={!selectedIndustryId}
@@ -1376,64 +1400,52 @@ export default function QuickstartPage() {
           ════════════════════════════════════════════════ */}
       {step === "review" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">{tp("review.title")}</h2>
-              <p className="text-sm text-muted-foreground">{tp("review.subtitle")}</p>
-              {programName.trim() && (
-                <p className="text-sm font-medium text-primary mt-0.5">
-                  {tp("review.forProgramme", { name: programName.trim() })}
-                </p>
-              )}
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                setStep(useIndustry ? "industry" : useVendors ? "vendors" : "choose")
-              }
-            >
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              {tp("review.back")}
-            </Button>
+          <div>
+            <h2 className="text-lg font-semibold">{tp("review.title")}</h2>
+            <p className="text-sm text-muted-foreground">{tp("review.subtitle")}</p>
+            {programName.trim() && (
+              <p className="text-sm font-medium text-primary mt-0.5">
+                {tp("review.forProgramme", { name: programName.trim() })}
+              </p>
+            )}
           </div>
 
           {/* Summary stats */}
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
             {[
               {
-                label: tp("review.stats.vendors"),
+                label: tp("review.stats.vendors", { count: reviewTotals.vendors }),
                 count: reviewTotals.vendors,
                 icon: Building2,
                 show: useVendors,
               },
-              { label: tp("review.stats.assets"), count: reviewTotals.assets, icon: Database, show: true },
+              { label: tp("review.stats.assets", { count: reviewTotals.assets }), count: reviewTotals.assets, icon: Database, show: true },
               {
-                label: tp("review.stats.elements"),
+                label: tp("review.stats.elements", { count: reviewTotals.elements }),
                 count: reviewTotals.elements,
                 icon: Package,
                 show: true,
               },
               {
-                label: tp("review.stats.activities"),
+                label: tp("review.stats.activities", { count: reviewTotals.activities }),
                 count: reviewTotals.activities,
                 icon: FileText,
                 show: true,
               },
               {
-                label: tp("review.stats.flows"),
+                label: tp("review.stats.flows", { count: reviewTotals.flows }),
                 count: reviewTotals.flows,
                 icon: ArrowRightLeft,
                 show: useIndustry || reviewTotals.flows > 0,
               },
               {
-                label: tp("review.stats.transfers"),
+                label: tp("review.stats.transfers", { count: reviewTotals.transfers }),
                 count: reviewTotals.transfers,
                 icon: ArrowRightLeft,
                 show: useVendors && reviewTotals.transfers > 0,
               },
               {
-                label: tp("review.stats.aiSystems"),
+                label: tp("review.stats.aiSystems", { count: reviewTotals.aiSystems }),
                 count: reviewTotals.aiSystems,
                 icon: Bot,
                 show: useVendors && reviewTotals.aiSystems > 0,
@@ -1452,19 +1464,6 @@ export default function QuickstartPage() {
                 </Card>
               ))}
           </div>
-
-          {/* Non-destructive notice */}
-          <Card className="border-primary/30 bg-primary/5">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <div className="text-sm">
-                  <p className="font-medium">{tp("review.nondestructiveTitle")}</p>
-                  <p className="text-muted-foreground mt-1">{tp("review.nondestructiveBody")}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* What's included */}
           {useVendors && vendorPreview && vendorPreview.totals.vendors > 0 && (
@@ -1541,7 +1540,14 @@ export default function QuickstartPage() {
             </Card>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => setStep(useIndustry ? "industry" : useVendors ? "vendors" : "choose")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              {tp("review.back")}
+            </Button>
             <Button
               onClick={handleExecute}
               disabled={executeMutation.isPending}
@@ -1560,6 +1566,7 @@ export default function QuickstartPage() {
               )}
             </Button>
           </div>
+          <p className="text-xs text-muted-foreground text-right">{tp("review.onlyNew")}</p>
         </div>
       )}
 

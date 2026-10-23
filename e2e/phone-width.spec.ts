@@ -45,11 +45,16 @@ test("the Guided screens fit a 390 px phone", async ({ page }, testInfo) => {
   await page.waitForURL("**/privacy/quickstart**");
 
   // Quick start, step by step.
-  await expect(page.getByRole("button", { name: /not sure yet: skip/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /skip for now/i })).toBeVisible();
+  // Five steps from the start; the United States and the rest of the world
+  // fold behind one line each, so the step stays short on a phone.
+  await expect(page.getByTestId("quickstart-steps").locator("li")).toHaveCount(5);
+  await expect(page.getByTestId("place-group-us")).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("#quickstart-place-CCPA")).toHaveCount(0);
   await expectNoSidewaysScroll(page, "quick start: what applies");
-  await page.getByRole("button", { name: /not sure yet: skip/i }).click();
+  await page.getByRole("button", { name: /skip for now/i }).click();
 
-  const industryPath = page.getByRole("button", { name: /start from industry template/i });
+  const industryPath = page.getByRole("button", { name: /start from (an )?industry template/i });
   await expect(industryPath).toBeVisible();
   await expectNoSidewaysScroll(page, "quick start: choose a path");
   await industryPath.press("Enter"); // a card button answers the keyboard

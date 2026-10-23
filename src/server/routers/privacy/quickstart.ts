@@ -391,6 +391,8 @@ export const quickstartRouter = createTRPCRouter({
         totals: {
           vendors: newPreviews.length,
           assets: newPreviews.length + internalAssetToCreate,
+          // 1 when the internal-systems record is among `assets` (the summary names it).
+          internalSystems: internalAssetToCreate,
           elements: newPreviews.reduce((sum, p) => sum + p.elementCount, 0),
           activities: newPreviews.length,
           flows,
@@ -710,6 +712,10 @@ export const quickstartRouter = createTRPCRouter({
 
         // Map from asset name → created asset ID (for linking)
         const assetNameToId = new Map<string, string>();
+        // Each new vendor system's processing activity, so the internal-systems
+        // record its flows start from is linked to it too (otherwise reports
+        // flag that record as a system with no activity).
+        const vendorActivityIdByAsset = new Map<string, string>();
 
         // ─── VENDOR PATH ──────────────────────────────
         for (const catalogVendor of catalogVendors) {
@@ -880,6 +886,7 @@ export const quickstartRouter = createTRPCRouter({
                   dataAssetId: asset.id,
                 },
               });
+              vendorActivityIdByAsset.set(asset.id, activity.id);
 
               // Create data transfers (batch) for the destinations outside
               // the EEA without a full adequacy decision. Catalogue locations
@@ -1003,6 +1010,17 @@ export const quickstartRouter = createTRPCRouter({
               entityId: internalAsset.id,
               action: "CREATE",
               changes: { source: "quickstart", type: "internal-systems" },
+            });
+          }
+
+          // The internal systems take part in each vendor activity they send
+          // data to: link them. Each of these activities was created in this
+          // run, so the link cannot exist yet.
+          for (const vaf of vendorAssetFlows) {
+            const activityId = vendorActivityIdByAsset.get(vaf.assetId);
+            if (!activityId) continue;
+            await tx.processingActivityAsset.create({
+              data: { processingActivityId: activityId, dataAssetId: internalAsset.id },
             });
           }
 

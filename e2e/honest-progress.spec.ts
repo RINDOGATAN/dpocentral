@@ -102,6 +102,8 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
 
   // d8: the first step asks where the organisation operates.
   await expect(page.getByTestId("jurisdiction-picker")).toBeVisible();
+  // The United States fold behind one line until opened.
+  await page.getByTestId("place-group-us").click();
   await page.locator("#quickstart-place-CCPA").click();
   await page.locator("#quickstart-place-GDPR").click();
   await expect(page.locator("#quickstart-place-CCPA")).toHaveAttribute("data-state", "checked");
@@ -110,7 +112,7 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await page.getByRole("button", { name: /^(save and continue|guardar y continuar)$/i }).click();
 
   // An industry template, as the walk's company would choose.
-  const industryPath = page.getByRole("button", { name: /start from industry template|comenzar con una plantilla sectorial/i });
+  const industryPath = page.getByRole("button", { name: /start from (an )?industry template|comenzar con una plantilla sectorial/i });
   await expect(industryPath).toBeVisible();
   await industryPath.press("Enter");
   await page.getByRole("button", { name: /^(continue|continuar)$/i }).click();

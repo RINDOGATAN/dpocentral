@@ -93,7 +93,7 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await page.locator("#quickstart-place-GDPR").click();
   await page.getByRole("button", { name: /^(save and continue|guardar y continuar)$/i }).click();
   await expect(
-    page.getByRole("button", { name: /start from industry template|comenzar con una plantilla sectorial/i }),
+    page.getByRole("button", { name: /start from (an )?industry template|comenzar con una plantilla sectorial/i }),
   ).toBeVisible();
 
   // Records of the last quarter.

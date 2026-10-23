@@ -124,7 +124,7 @@ test("the firm view by nearest deadline, and the document pack", async ({ page, 
   await expect(page.getByTestId("jurisdiction-picker")).toBeVisible();
   await page.locator("#quickstart-place-GDPR").click();
   await page.getByRole("button", { name: /^(save and continue|guardar y continuar)$/i }).click();
-  const industryPath = page.getByRole("button", { name: /start from industry template|comenzar con una plantilla sectorial/i });
+  const industryPath = page.getByRole("button", { name: /start from (an )?industry template|comenzar con una plantilla sectorial/i });
   await expect(industryPath).toBeVisible();
   await industryPath.press("Enter");
   await page.getByRole("button", { name: /^(continue|continuar)$/i }).click();

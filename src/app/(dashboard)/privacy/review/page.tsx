@@ -16,7 +16,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ListChecks, Loader2 } from "lucide-react";
+import { CheckCircle2, ChevronRight, ListChecks, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useUserType } from "@/lib/use-user-type";
 import { useCanConfirmDrafts, type DraftKind } from "@/components/privacy/draft-confirm";
 
 const KINDS: DraftKind[] = ["dataAsset", "processingActivity", "vendor"];
@@ -41,6 +42,9 @@ export default function ReviewDraftsPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const canConfirm = useCanConfirmDrafts();
+  // A firm copies records from one client to another; a company does not, so
+  // its intro does not mention other clients.
+  const { isProfessional } = useUserType();
   const utils = trpc.useUtils();
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -91,7 +95,7 @@ export default function ReviewDraftsPage() {
           <ListChecks className="w-6 h-6 text-primary shrink-0" aria-hidden="true" />
           {t("reviewTitle")}
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">{t("reviewSubtitle")}</p>
+        <p className="text-sm text-muted-foreground mt-1">{t(isProfessional ? "reviewSubtitle" : "reviewSubtitleCompany")}</p>
       </div>
 
       {isLoading ? (
@@ -166,9 +170,13 @@ export default function ReviewDraftsPage() {
                         )}
                         <Link
                           href={recordHref(row.kind, row.id)}
-                          className="flex-1 min-w-0 break-words text-sm font-medium hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                          className="group flex flex-1 min-w-0 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                         >
-                          {row.name}
+                          <span className="min-w-0 break-words">{row.name}</span>
+                          <ChevronRight
+                            className="w-4 h-4 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                          />
                         </Link>
                         {canConfirm && (
                           <Button
