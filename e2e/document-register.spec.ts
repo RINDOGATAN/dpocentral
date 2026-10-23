@@ -123,7 +123,8 @@ async function expectRemovedPieces(page: Page) {
   await expect(page.getByTestId("kpi-assets")).toHaveCount(0);
   await expect(page.getByText(es ? /Actividad reciente/ : /Recent activity/)).toHaveCount(0);
   await expect(page.getByText(es ? /Acciones rápidas/ : /Quick actions/)).toHaveCount(0);
-  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(6);
+  // Five areas: the one whose steps are all still coming is left out.
+  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(5);
 }
 
 test("documents you can produce today, the menu lines and the simpler dashboard", async ({ page, context }, testInfo) => {
@@ -150,7 +151,7 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   expect(states.programmeReport).toBe("draft");
   // d5: on this self-hosted build the DPIA module is not installed.
   expect(states.dpia).toBe("needsInput");
-  await expect(page.getByTestId("doc-dpia")).toContainText(es ? "necesita: el módulo de EIPD" : "needs: the DPIA module");
+  await expect(page.getByTestId("doc-dpia")).toContainText(es ? "Necesita: el módulo de EIPD" : "Needs: the DPIA module");
   await expect(page.getByTestId("doc-input-dpia")).toHaveAttribute("href", "/privacy/skills");
   await expect(page.getByTestId("doc-dpia")).not.toContainText(/[$€]\s?\d/);
   await expect(page.getByTestId("doc-not-yet")).toBeVisible();
@@ -257,9 +258,9 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
     await closeMenu(page);
   }
 
-  // Help keeps one line about experts.
+  // Help shows no line about experts while the directory is off.
   await page.getByTitle(es ? /Ayuda de esta página/i : /Help for this page/i).first().click();
-  await expect(page.getByTestId("help-experts-line")).toBeVisible();
+  await expect(page.getByTestId("help-experts-line")).toHaveCount(0);
   await page.keyboard.press("Escape");
 
   // The retired Classic cookie is ignored: the same dashboard opens.
