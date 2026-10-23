@@ -61,7 +61,8 @@ import { usePlanState, useProgramPath, useProgramPathRefresh } from "./use-progr
 import { planDayText } from "./plan-text";
 import { useProgrammeOverview } from "./use-programme-overview";
 import { recordCountsText, stepNoteText } from "./document-words";
-import { attentionStages, notYetEntries, stepDocumentRows } from "@/lib/programme-overview";
+import { isStandby } from "@/config/document-register";
+import { attentionStages, stepDocumentRows } from "@/lib/programme-overview";
 import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
 import { trpc } from "@/lib/trpc";
 import { lockedStepIds } from "@/lib/menu-locks";
@@ -144,9 +145,14 @@ export function GuidedLayout({
   };
   if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);
   const stepRows = overview ? stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents) : {};
-  const stepNotes = Object.fromEntries(
-    Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows, overview?.recordCounts ?? undefined)]),
-  );
+  // One quiet line at most under a step: its first document still missing
+  // something (the dashboard lists them all). None once they are all ready or
+  // ready for when they are needed.
+  const stepNotes: Record<string, string> = {};
+  for (const [id, rows] of Object.entries(stepRows)) {
+    const open = rows.find((row) => row.doc.status.state !== "ready" && !isStandby(row.doc.status));
+    if (open) stepNotes[id] = stepNoteText(td, [open], overview?.recordCounts ?? undefined);
+  }
   const inventoryNote = overview?.recordCounts
     ? recordCountsText(td, "dataInventory", overview.recordCounts.dataInventory, { onlyIfDrafts: true })
     : null;
@@ -154,7 +160,6 @@ export function GuidedLayout({
   // Hosted paid plan without the rights-request add-on: the step stays in the
   // menu with its price line (src/server/services/dsar/module.ts).
   if (dsarAccess?.gate === "inactive") stepNotes.dsar = tm("addOnLine", { price: priceInSentence(DSAR_ADDON_MONTHLY_PRICE) });
-  const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which
   // therefore never asks (src/lib/menu-locks.ts).
@@ -167,15 +172,15 @@ export function GuidedLayout({
     ...menuProps,
     stepNotes,
     attention: overview ? attentionStages(overview.needsAction) : [],
-    notYet:
-      missing.length > 0
-        ? { title: t("notYetGroup"), items: missing.map((entry) => td(`items.${entry.id}`)) }
-        : null,
+    // What DPO Central does not do yet is listed once, under the dashboard's
+    // documents panel; the menu does not repeat it.
     lockedSteps: lockedStepIds(menuProps.config, { entitledTypes: entitled?.entitledTypes, hosted }),
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    // `app-shell`: inside the app, the display face is for page titles only
+    // (globals.css); section and card headings use the body face.
+    <div className="app-shell min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-full items-center justify-between gap-2 px-4 sm:px-6">
           <div className="flex shrink-0 items-center gap-2">

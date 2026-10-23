@@ -138,6 +138,14 @@
     font-weight: 400;
     letter-spacing: -0.01em;
   }
+  /* In the app, one rule for headings: the display face for page titles (h1)
+     only; section and card headings in the body face, semibold, like every
+     card title (CardTitle). Utility classes on a heading still apply. */
+  .app-shell :is(h2, h3, h4, h5, h6) {
+    font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: normal;
+  }
   .font-body {
     font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   }

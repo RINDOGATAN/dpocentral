@@ -76,8 +76,11 @@ async function panelStates(page: Page): Promise<Record<string, string>> {
 }
 
 /**
- * The menu says what the panel says: for every step line, each document it
- * names is on the panel with the same state words. Returns the lines read.
+ * The menu says what the panel says: each step line names one document (the
+ * step's first one still missing something), and that document is on the
+ * panel with the same state words. Ready documents have no line. What is not
+ * in DPO Central yet is named once, on the panel, not in the menu. Returns
+ * the lines read.
  */
 async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   const panel = page.getByTestId("documents-panel");
@@ -99,25 +102,28 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   const lines = await menu.locator("[data-testid^='step-docs-']").evaluateAll((spans) =>
     Object.fromEntries(spans.map((s) => [s.getAttribute("data-testid")!, (s.textContent ?? "").trim()])),
   );
-  const notYet = (await menu.getByTestId("menu-not-yet").innerText()).trim();
+  await expect(menu.getByTestId("menu-not-yet")).toHaveCount(0);
   await closeMenu(page);
-  expect(Object.keys(lines).length, "menu document lines").toBeGreaterThan(4);
-  const all = Object.values(lines).join(" | ");
-  for (const row of rows) {
-    if (row.name === (es ? "Informe del programa de privacidad" : "Privacy program report")) continue;
+  for (const [id, line] of Object.entries(lines)) {
+    // The inventory step states its record counts, not a document.
+    if (!line.includes(" · ")) continue;
+    // One document per line.
+    expect(line.split("; ").length, `${id}: one document`).toBe(1);
+    const row = rows.find((r) => line.startsWith(`${r.name} · `));
+    expect(row, `${id}: "${line}" is a panel row`).toBeTruthy();
+    if (!row) continue;
+    expect(row.state, `${id}: a ready document has no menu line`).not.toBe(es ? "listo" : "ready");
     // The panel's own line is capitalised ("Needs: ..."); inline in the menu
-    // it reads "· needs: ...". Same words otherwise.
+    // it reads "· needs: ...". The activities and vendors registers state
+    // counts ("1 confirmed, 2 in draft") where the panel says "draft".
     const words =
-      row.kind === "needsInput" ? row.detail.charAt(0).toLowerCase() + row.detail.slice(1) : row.state;
-    // The activities and vendors registers state counts ("1 confirmed, 2 in
-    // draft") where the panel says "draft"; the state is the same.
-    const counted = row.kind === "draft" && all.includes(`${row.name} · `) && new RegExp(`${row.name.replace(/[()]/g, "\\$&")} · \\d+ `).test(all);
-    if (!counted) expect(all, `menu names ${row.name}`).toContain(`${row.name} · ${words}`);
+      row.kind === "needsInput" && row.detail.startsWith(es ? "Necesita" : "Needs")
+        ? row.detail.charAt(0).toLowerCase() + row.detail.slice(1)
+        : row.state;
+    const counted = row.kind === "draft" && /^\S.* · \d+ /.test(line);
+    if (!counted) expect(line, `${id}`).toBe(`${row.name} · ${words}`);
   }
-  // The foot group is the panel's last line.
-  const panelNotYet = (await page.getByTestId("doc-not-yet").innerText()).trim();
-  const names = panelNotYet.replace(/^[^:]+:\s*/, "").split(" · ");
-  for (const name of names) expect(notYet).toContain(name);
+  await expect(page.getByTestId("doc-not-yet")).toHaveCount(1);
   return lines;
 }
 
@@ -128,6 +134,8 @@ async function expectRemovedPieces(page: Page) {
   await expect(page.getByText(es ? /Acciones rápidas/ : /Quick actions/)).toHaveCount(0);
   // Five areas: the one whose steps are all still coming is left out.
   await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(5);
+  // What DPO Central does not do yet is said once (the panel's last line).
+  await expect(page.getByTestId("missing")).toHaveCount(0);
 }
 
 test("documents you can produce today, the menu lines and the simpler dashboard", async ({ page, context }, testInfo) => {
@@ -198,7 +206,8 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   await expect(page.getByTestId("area-inventory")).toHaveAttribute("data-word", "toConfirm");
   await expect(page.getByTestId("next-actions").getByTestId("next-action").first()).toBeVisible();
   const lines = await expectMenuAgrees(page);
-  expect(lines["step-docs-applies"]).toContain(es ? "Informe normativo · listo" : "Regulatory report · ready");
+  // The regulatory report is ready: its step has no document line.
+  expect(lines["step-docs-applies"]).toBeUndefined();
   await expectNoSidewaysScroll(page, "dashboard after the quick start");
   await shot(page, "02-after-quickstart", project);
   if (!wide(page)) {

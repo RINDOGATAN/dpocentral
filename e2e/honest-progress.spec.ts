@@ -34,6 +34,8 @@ function localDatabase(): boolean {
   return /@(localhost|127\.0\.0\.1|postgres)(:\d+)?\//.test(url);
 }
 
+// Nine counted steps: vendor due diligence is "coming" while its module is announced.
+const TOTAL = 9;
 const FIGURE = (done: number, total: number) =>
   es ? `${done} de ${total} pasos confirmados` : `${done} of ${total} steps confirmed`;
 
@@ -133,7 +135,7 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
 
   // d2 + d3: the figure stays low, and reads the same in the four places.
   const before = await figureEverywhere(page);
-  expect(before).toBe(FIGURE(2, 10));
+  expect(before).toBe(FIGURE(2, TOTAL));
   await page.goto("/privacy");
   await expect(page.getByTestId("program-figure-card")).toContainText(es ? "por confirmar" : "to confirm");
   await expectNoSidewaysScroll(page, "dashboard");
@@ -157,7 +159,7 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await expect(page.getByTestId("draft-badge")).toHaveCount(0);
   await expect(page.getByTestId("confirm-draft")).toHaveCount(0);
   const afterOne = await figureEverywhere(page);
-  expect(afterOne).toBe(FIGURE(3, 10));
+  expect(afterOne).toBe(FIGURE(3, TOTAL));
 
   // Then the rest together, on the review page.
   await page.goto("/privacy/review");
@@ -170,7 +172,7 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   const after = await figureEverywhere(page);
   const [done] = after.match(/\d+/)!.map(Number);
   expect(done).toBeGreaterThan(3);
-  expect(after).toBe(FIGURE(done, 10));
+  expect(after).toBe(FIGURE(done, TOTAL));
   await page.goto("/privacy");
   await expect(page.getByTestId("program-figure-card")).not.toContainText(es ? "por confirmar" : "to confirm");
   await shot(page, "08-dashboard-confirmed", project);

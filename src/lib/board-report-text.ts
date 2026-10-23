@@ -97,7 +97,8 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
   const { ready, missing } = documentSplit(report.documents);
   const produced = report.documents.filter((d) => d.status.state !== "notYet").length;
   const stateText = (status: (typeof report.documents)[number]["status"]) => {
-    if (status.state === "needsInput") return register("needs", { input: register(`inputs.${status.input}`) });
+    if (status.state === "needsInput")
+      return status.standby ? register("state.standby") : register("needs", { input: register(`inputs.${status.input}`) });
     const gaps = draftGaps(status).map((g) => register(`gaps.${g.key}`, { count: g.count }));
     return gaps.length > 0 ? `${register(`state.${status.state}`)} (${gaps.join("; ")})` : register(`state.${status.state}`);
   };

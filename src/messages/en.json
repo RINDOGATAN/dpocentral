@@ -5521,7 +5521,7 @@
           "figure": "The program figure, \"N of M steps confirmed\", with how many steps are to confirm, in progress and not started.",
           "areas": "Six area tiles, one for each stage of the path, each with its state word and its next action. A tile opens that action.",
           "documents": "Documents you can produce today, with the button \"Download ready documents\" (see Documents below).",
-          "next": "Next three actions, beside Deadlines at risk (see Next actions and deadlines below).",
+          "next": "Next three actions, beside Upcoming deadlines (see Next actions and deadlines below).",
           "missing": "What is missing: the steps not started and the documents that are not in DPO Central yet."
         },
         "calloutTitle": "Drafts count once confirmed",
@@ -9927,6 +9927,7 @@
     "stageProgress": "{done} of {total}",
     "stageState": {
       "todo": "not started",
+      "ready": "ready",
       "started": "in progress",
       "done": "done",
       "coming": "coming",
@@ -10114,7 +10115,8 @@
       "coming": "Not in DPO Central yet",
       "confirm": "Confirm the drafted records",
       "step": "Next: {step}",
-      "done": "Every step done"
+      "done": "Every step done",
+      "ready": "Ready for when it is needed"
     },
     "nextActions": {
       "title": "Next three actions",
@@ -10126,7 +10128,7 @@
       "toConfirm": "Drafted records count once a person confirms them."
     },
     "deadlines": {
-      "title": "Deadlines at risk",
+      "title": "Upcoming deadlines",
       "breachDecision": "Breach {ref}: decide whether to notify",
       "breachNotify": "Breach {ref}: notify",
       "dsarDue": "Rights request {ref} due",
@@ -10334,7 +10336,9 @@
     "needsAction": {
       "title": "Needs action",
       "subtitle": "Everything waiting for you, in one place.",
-      "empty": "Nothing needs action right now.",
+      "empty": "No deadlines, approvals or reviews are waiting.",
+    "nextSteps": "Next steps in your program",
+    "documentsToComplete": "{count, plural, one {# document to complete, on the overview} other {# documents to complete, on the overview}}",
       "deptNote": "Showing one department. Organization-wide items are on the full list.",
       "kind": {
         "review-due": "Reviews due",
@@ -10615,16 +10619,24 @@
       "ready": "ready",
       "draft": "draft",
       "needsInput": "needs an input",
+      "standby": "ready when needed",
+      "needsModule": "needs a module",
+      "needsSetting": "needs a setting",
       "notYet": "not in DPO Central yet"
     },
     "legend": {
       "ready": "Ready",
       "draft": "Draft, the gaps are listed",
       "needsInput": "Needs an input, named",
+      "standby": "Ready for when it is needed",
+      "needsModule": "Needs a module",
+      "needsSetting": "Needs a setting",
       "notYet": "Not in DPO Central yet"
     },
     "needs": "needs: {input}",
     "needsLine": "Needs: {input}",
+    "standbyLine": "Ready for when it is needed.",
+    "waitingLine": "{count, plural, one {# document to complete} other {# documents to complete}}",
     "inputs": {
       "jurisdiction": "where you operate",
       "activity": "a processing activity",
@@ -10642,9 +10654,9 @@
       "confirmDrafts": "the drafts confirmed"
     },
     "inputAction": {
-      "default": "Add it",
-      "dpiaModule": "How to get it",
-      "dpiaModuleHosted": "How to get it",
+      "default": "Add",
+      "dpiaModule": "See how to get it",
+      "dpiaModuleHosted": "See how to get it",
       "aiAssist": "Open settings",
       "dpaFacts": "Start",
       "dpiaStart": "Start",
@@ -10700,6 +10712,7 @@
       "privacyNotice": "Privacy notice",
       "dpoAppointment": "DPO appointment",
       "trainingRecord": "Staff training record",
+      "vendorReviewReport": "Vendor due diligence report",
       "consentRecords": "Notices and consent records",
       "responseLetter": "Response letter to a rights request",
       "boardReport": "Executive report"

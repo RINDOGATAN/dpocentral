@@ -271,7 +271,8 @@ describe("confirming drafts", () => {
 describe("d3: one programme figure", () => {
   it("after a quick start the figure stays low, with the drafts shown separately", () => {
     const figure = programFigure(DPO_CENTRAL_PATH, statuses(AFTER_QUICKSTART));
-    expect(figure.total).toBe(10);
+    // Ten steps less vendor due diligence, coming while its module is announced.
+    expect(figure.total).toBe(9);
     // Set up is done (the quick start ran and asked where the organisation operates).
     expect(figure.confirmed).toBe(2);
     expect(figure.toConfirm).toBe(4);

@@ -8,6 +8,8 @@
  *
  * The values:
  * - unset       → show on the first dashboard visit
+ * - "seen"      → shown once already (first visit only): hidden from the next
+ *                 page load on, even if "Got it" was never pressed
  * - "open"      → the reader asked to see it again
  * - "dismissed" → hidden
  *
@@ -26,10 +28,14 @@ export function parseIntroCookie(cookieString: string | null | undefined): strin
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-/** Show the introduction unless it has been dismissed. */
+/** Show the introduction unless it has been dismissed or already shown once. */
 export function shouldShowIntro(value: string | null | undefined): boolean {
-  return value !== "dismissed";
+  return value !== "dismissed" && value !== "seen";
 }
+
+// Set when this page load is the one that showed the card first: it stays up
+// for the rest of the visit while the cookie already says "seen".
+let shownOnThisLoad = false;
 
 export function readIntroCookie(): string | null {
   if (typeof document === "undefined") return null;
@@ -48,7 +54,20 @@ export function subscribeIntro(callback: () => void): () => void {
 
 /** Client snapshot: whether the introduction should show right now. */
 export function introSnapshot(): boolean {
-  return shouldShowIntro(readIntroCookie());
+  const value = readIntroCookie();
+  if (value === "seen" && shownOnThisLoad) return true;
+  return shouldShowIntro(value);
+}
+
+/**
+ * The card has been shown on a first visit: remember it, so it does not
+ * return on the next one. Listeners are not notified, so the card stays up
+ * for the rest of this visit.
+ */
+export function markIntroSeen() {
+  if (typeof document === "undefined" || readIntroCookie() !== null) return;
+  shownOnThisLoad = true;
+  document.cookie = `${INTRO_COOKIE}=seen; Path=/; Max-Age=${ONE_YEAR}; SameSite=Lax`;
 }
 
 /** Server snapshot: the cookie is unknown, so render nothing until hydration. */

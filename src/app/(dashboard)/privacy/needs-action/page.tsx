@@ -28,8 +28,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useMemberScope } from "@/lib/use-member-scope";
+import { useDsarAccess } from "@/lib/use-dsar-access";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import type { NeedsActionKind } from "@/lib/needs-action";
+import { nextActions, panelRows } from "@/lib/programme-overview";
+import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
+import { withoutSteps } from "@/components/guided/path";
+import { useProgramPathQuery } from "@/components/guided/use-program-path";
+import { useProgrammeOverview } from "@/components/guided/use-programme-overview";
+import { documentBadge } from "@/components/guided/document-words";
 
 const ICON: Record<NeedsActionKind, React.ElementType> = {
   "review-due": CalendarClock,
@@ -65,12 +73,15 @@ export default function NeedsActionPage() {
       {isLoading ? (
         <ListPageSkeleton count={2} />
       ) : !data || data.items.length === 0 ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            <CheckCircle2 className="w-10 h-10 mx-auto mb-3 opacity-60" aria-hidden="true" />
-            <p>{t("needsAction.empty")}</p>
-          </CardContent>
-        </Card>
+        <>
+          <Card>
+            <CardContent className="py-6 flex items-center gap-3 text-sm text-muted-foreground">
+              <CheckCircle2 className="w-5 h-5 shrink-0 opacity-60" aria-hidden="true" />
+              <p>{t("needsAction.empty")}</p>
+            </CardContent>
+          </Card>
+          {!dept && <ProgramNextSteps />}
+        </>
       ) : (
         <ul className="space-y-3">
           {data.items.map((item) => {
@@ -106,5 +117,63 @@ export default function NeedsActionPage() {
         <p className="text-xs text-muted-foreground">{t("needsAction.deptNote")}</p>
       )}
     </div>
+  );
+}
+
+/**
+ * With nothing waiting on a deadline, an approval or a review, the program's
+ * own next steps (the dashboard's) and the documents still to complete, so the
+ * page never reads "nothing pending" while the dashboard lists work.
+ */
+function ProgramNextSteps() {
+  const t = useTranslations("views");
+  const tg = useTranslations("guided");
+  const { orgWide } = useMemberScope();
+  const { canHandle: canHandleDsars } = useDsarAccess();
+  const { steps } = useProgramPathQuery();
+  const { overview } = useProgrammeOverview();
+  if (!orgWide || !steps || !overview) return null;
+  const config = canHandleDsars === false ? withoutSteps(DPO_CENTRAL_PATH, ["dsar"]) : DPO_CENTRAL_PATH;
+  const actions = nextActions(config, steps, [], 5).flatMap((a) => (a.kind === "step" && a.step.href ? [a] : []));
+  const toComplete = panelRows(overview.documents).produced.filter((row) => {
+    const badge = documentBadge(row.doc.status);
+    return badge !== "ready" && badge !== "standby" && badge !== "draft";
+  }).length;
+  if (actions.length === 0 && toComplete === 0) return null;
+  return (
+    <section className="space-y-3" data-testid="needs-action-next-steps">
+      <h2 className="text-base font-semibold">{t("needsAction.nextSteps")}</h2>
+      {actions.length > 0 && (
+        <ul className="space-y-3">
+          {actions.map((action) => (
+            <li key={action.step.id}>
+              <Link href={action.toConfirm ? "/privacy/review" : action.step.href!}>
+                <Card className="hover:border-primary/50 transition-colors">
+                  <CardContent className="flex items-center gap-4 p-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium">{tg(`steps.${action.step.id}.label`)}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {action.toConfirm ? tg("nextActions.toConfirm") : tg(`steps.${action.step.id}.why`)}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
+                  </CardContent>
+                </Card>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+      {toComplete > 0 && (
+        <Link
+          href="/privacy"
+          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline underline-offset-4"
+          data-testid="needs-action-documents"
+        >
+          {t("needsAction.documentsToComplete", { count: toComplete })}
+          <ArrowRight className="size-3.5 shrink-0" aria-hidden="true" />
+        </Link>
+      )}
+    </section>
   );
 }
