@@ -1,8 +1,8 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-22T23:35:12.029Z",
-  "sourceCommit": "6dcbac3",
-  "count": 933,
+  "generatedAt": "2026-10-23T15:29:18.720Z",
+  "sourceCommit": "230c752",
+  "count": 937,
   "vendors": [
     {
       "id": "cmm4xdpq60020xcj84de8yfg5",
@@ -3665,7 +3665,7 @@
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
       "transferSafeguards": "EU SCCs (June 2021); UK International Data Transfer Addendum; Swiss equivalent clauses (Adobe DPA, June 2024); Adobe certified to EU-U.S. DPF, UK Extension and Swiss-U.S. DPF",
-      "supportsDsars": null,
+      "supportsDsars": true,
       "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -3707,11 +3707,11 @@
         "cases": [],
         "found": false,
         "vendor": "Adobe Experience Manager",
-        "fetchedAt": "2026-09-08T00:26:32.211Z",
+        "fetchedAt": "2026-10-23T13:17:39.220Z",
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:31.008Z",
-      "updatedAt": "2026-10-22T23:30:43.707Z",
+      "updatedAt": "2026-10-23T15:28:41.000Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -20889,12 +20889,12 @@
       "legalName": "Microsoft Corporation (EU customers: Microsoft Ireland Operations Limited)",
       "category": "Analytics & BI",
       "subcategory": "Session Replay & Heatmaps",
-      "description": "Free website heatmap and session recording tool from Microsoft (Microsoft Clarity); data is stored in Microsoft Azure and retained for 30 days for site owners.",
-      "descriptionEs": "Herramienta gratuita de mapas de calor y grabación de sesiones en sitios web de Microsoft (Microsoft Clarity); los datos se almacenan en Microsoft Azure y se conservan durante 30 días para los propietarios de los sitios.",
+      "description": "Free website heatmap and session recording tool from Microsoft (Microsoft Clarity); Microsoft acts as a data controller for it. Data is stored in Microsoft Azure and recordings are kept for 30 days.",
+      "descriptionEs": "Herramienta gratuita de mapas de calor y grabación de sesiones en sitios web de Microsoft (Microsoft Clarity); Microsoft actúa como responsable del tratamiento. Los datos se almacenan en Microsoft Azure y las grabaciones se conservan durante 30 días.",
       "website": "https://clarity.microsoft.com/",
       "privacyPolicyUrl": "https://www.microsoft.com/en-us/privacy/privacystatement",
       "trustCenterUrl": "https://www.microsoft.com/en-us/trust-center",
-      "dpaUrl": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "termsUrl": "https://clarity.microsoft.com/terms",
       "certifications": [],
@@ -20946,12 +20946,12 @@
       "senecaLitigation": {
         "cases": [],
         "found": false,
-        "vendor": "Clarity",
-        "fetchedAt": "2026-09-08T00:21:21.381Z",
+        "vendor": "Microsoft Clarity",
+        "fetchedAt": "2026-10-23T14:00:47.779Z",
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:59.774Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T15:28:41.000Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -22683,11 +22683,11 @@
         "cases": [],
         "found": false,
         "vendor": "Cloudflare",
-        "fetchedAt": "2026-09-08T00:26:30.662Z",
+        "fetchedAt": "2026-10-23T04:27:28.874Z",
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:43.771Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T04:27:28.875Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -22968,11 +22968,11 @@
         "cases": [],
         "found": false,
         "vendor": "Cloudflare Bot Management",
-        "fetchedAt": "2026-09-08T00:27:20.376Z",
+        "fetchedAt": "2026-10-23T04:27:27.817Z",
         "riskProfile": null
       },
       "createdAt": "2026-08-17T18:37:27.380Z",
-      "updatedAt": "2026-10-22T23:27:59.531Z",
+      "updatedAt": "2026-10-23T04:27:27.830Z",
       "dpaComplianceScore": 86,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -23599,11 +23599,11 @@
         "cases": [],
         "found": false,
         "vendor": "Cloudinary",
-        "fetchedAt": "2026-09-08T00:26:00.422Z",
+        "fetchedAt": "2026-10-23T04:27:06.914Z",
         "riskProfile": null
       },
       "createdAt": "2026-03-01T17:19:30.630Z",
-      "updatedAt": "2026-10-22T23:27:59.531Z",
+      "updatedAt": "2026-10-23T04:27:06.925Z",
       "dpaComplianceScore": 75,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -39178,6 +39178,83 @@
       "dpaCcpaScore": null
     },
     {
+      "id": "c5ba9c18-28c9-4d69-a62c-6f59f2c697c8",
+      "slug": "font-awesome",
+      "name": "Font Awesome",
+      "legalName": "Fonticons, Inc.",
+      "category": "Cloud Infrastructure",
+      "subcategory": "Media & Assets",
+      "description": "Icon library and toolkit; websites load the icons from its own content delivery network through a kit script (kit.fontawesome.com) or self-host the files.",
+      "descriptionEs": "Biblioteca y kit de iconos; los sitios web cargan los iconos desde su propia red de distribución de contenidos mediante un script de kit (kit.fontawesome.com) o alojan ellos mismos los archivos.",
+      "website": "https://fontawesome.com",
+      "privacyPolicyUrl": "https://fontawesome.com/privacy",
+      "trustCenterUrl": null,
+      "dpaUrl": "https://fontawesome.com/dpa",
+      "securityPageUrl": null,
+      "termsUrl": "https://fontawesome.com/tos",
+      "certifications": [],
+      "frameworks": [],
+      "gdprCompliant": null,
+      "ccpaCompliant": null,
+      "hipaaCompliant": null,
+      "dataLocations": [
+        "US"
+      ],
+      "hasEuDataCenter": null,
+      "subprocessors": [
+        {
+          "name": "Cloudflare",
+          "source": "subprocessor-page",
+          "purpose": "Content delivery network serving Font Awesome icon files",
+          "location": "",
+          "sourceUrl": "https://fontawesome.com/privacy"
+        },
+        {
+          "name": "Amazon Web Services",
+          "source": "subprocessor-page",
+          "purpose": "Cloud servers and services for running websites",
+          "location": "",
+          "sourceUrl": "https://fontawesome.com/privacy"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-23T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "EU-U.S. Data Privacy Framework, UK Extension and Swiss-U.S. DPF (Fonticons, Inc.)",
+      "supportsDsars": true,
+      "hasDesignatedDpo": null,
+      "hasRecentBreach": null,
+      "euAiActCompliant": null,
+      "aiCapabilities": [],
+      "modelHosting": null,
+      "aiTechniques": [],
+      "euAiActRole": null,
+      "euAiActAnnexIIIDomains": [],
+      "iso42001Certified": null,
+      "supportsAuditLogs": null,
+      "supportsExplainability": null,
+      "hasBiasMonitoring": null,
+      "hasModelCard": null,
+      "aiIncidentNotificationSLA": null,
+      "dataProcessingTransparency": null,
+      "aiModels": null,
+      "trainingUse": null,
+      "retention": null,
+      "privacyTechnologies": [],
+      "tags": [],
+      "logoUrl": null,
+      "isVerified": false,
+      "publicProfileEnabled": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "source": "manual",
+      "senecaLitigation": null,
+      "createdAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:28:34.749Z",
+      "dpaComplianceScore": null,
+      "dpaGdprScore": null,
+      "dpaCcpaScore": null
+    },
+    {
       "id": "cmleeqa2d003qkov21w4wpp61",
       "slug": "forethought",
       "name": "Forethought",
@@ -45287,11 +45364,11 @@
         "cases": [],
         "found": false,
         "vendor": "Google",
-        "fetchedAt": "2026-09-08T00:28:31.357Z",
+        "fetchedAt": "2026-10-23T04:27:29.968Z",
         "riskProfile": null
       },
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T04:27:29.969Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -45438,11 +45515,11 @@
         "cases": [],
         "found": false,
         "vendor": "Google Ads",
-        "fetchedAt": "2026-09-08T00:26:36.960Z",
+        "fetchedAt": "2026-10-23T04:27:08.265Z",
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:48.434Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T04:27:08.266Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -45459,7 +45536,7 @@
       "website": "https://marketingplatform.google.com/about/analytics/",
       "privacyPolicyUrl": "https://policies.google.com/privacy",
       "trustCenterUrl": "https://support.google.com/analytics/answer/6004245",
-      "dpaUrl": "https://support.google.com/analytics/answer/3379636",
+      "dpaUrl": "https://business.safety.google/adsprocessorterms/",
       "securityPageUrl": null,
       "termsUrl": "https://marketingplatform.google.com/about/analytics/terms/us/",
       "certifications": [
@@ -45477,11 +45554,530 @@
         "EU"
       ],
       "hasEuDataCenter": true,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
-      "supportsDsars": null,
+      "subprocessors": [
+        {
+          "name": "Accenture Co. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "TW",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "PH",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture Japan Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "JP",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture LLP",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture Limited (formerly known as Accenture Public Limited Company)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture SAS",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "FR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture SL",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "ES",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Accenture Solutions Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Artefact S.A.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "FR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "ARTERIA S.A.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "PL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Atento Argentina S.A.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "AR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Serviços de Tecnologia e Software do Brasil S/A",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "BR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Technology Solutions de Argentina SRL",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "AR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Technology Solutions de Mexico S.A. de C.V.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "MX",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Technology Solutions India Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Technology Solutions Philippines, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "PH",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Cognizant Worldwide Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Competence Call Center İstanbul Çağrı Merkezi Hizmetleri Anonim Şirketi",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "TR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Concentrix Solutions Corporation (formerly known as Concentrix Corporation)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Concentrix Daksh Services India Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Converteo SAS",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "FR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "EPAM Systems Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "GlobalLogic Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "GlobalLogic Technologies Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "HCL (Ireland) Information Systems Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "HCL America Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "HCL Technologies Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "HCL (Brazil) Tecnologia da Informação Ltda (formerly known as HCL Tecnologia da Informação Ltda.)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "BR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Intelenet Global Services Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Internet Advantage Nederland B.V. dba Artefact Benelux",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "NL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Jellyfish U.K. Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "GB",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "K.K. Teledirect Japan",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "JP",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Majorel Ireland Limited formerly known as Arvato Finance Services Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Regalix Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "US",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Regalix India Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "SCSK Serviceware Corporation",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "JP",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "TDCX (MY) Sdn. Bhd. (formerly known as Teledirect Telecommerce Sdn. Bhd.)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "MY",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "TMJ, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "JP",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Trakken GmbH",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "DE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "TTEC Brasil Serviços Ltda. (formerly known as Teletech Brasil Serviços Ltda.)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "BR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "TTEC Customer Care Management (Ireland) Limited (formerly known as Teletech Customer Care Management (Ireland) Limited)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "TTEC Europe BV (formerly known as Teletech Europe BV)",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "NL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Wipro IT Services Poland Sp. z.o.o.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "PL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Zevas Communications Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "GGLE Portugal Lda",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "PT",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "GOC Philippines, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "PH",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "GOC Services India Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "IN",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Argentina S.R.L.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "AR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Infraestructura Argentina S.R.L.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "AR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Asia Pacific Pte. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "SG",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Australia Pty Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "AU",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Brasil Internet Ltda.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "BR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Canada Corporation",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "CA",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Colombia Limitada",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "CO",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Commerce Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Ireland Limited",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "IE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Czech Republic, s.r.o.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "CZ",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Denmark ApS",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "DK",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google France SARL",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "FR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google FZ LLC",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "AE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Germany GmbH",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "DE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Hrvatska D.o.o.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "HR",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Israel Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "IL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Italy S.r.l.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "IT",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Kenya Limited",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "KE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Netherlands B.V.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "NL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Green Box Computing B.V.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "NL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Norway AS",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "NO",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Peru S.R.L.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "PE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Poland Sp. z.o.o.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "PL",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Spain S.L.U.",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "ES",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Sweden AB",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "SE",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google Switzerland GmbH",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "CH",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        },
+        {
+          "name": "Google UK Ltd",
+          "source": "subprocessor-page",
+          "purpose": "service support, IT-facility management and customer support",
+          "location": "GB",
+          "sourceUrl": "https://business.safety.google/adssubprocessors/"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-23T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "Standard Contractual Clauses (Google Ads Data Processing Terms)",
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -45748,18 +46344,14 @@
             "ccpaCompliant": true,
             "gdprCompliant": true,
             "certifications": [
-              "ISO 27001",
-              "ISO 27017",
-              "ISO 27018",
-              "SOC 2",
-              "SOC 3"
+              "ISO 27001"
             ],
             "hipaaCompliant": null,
             "privacyPolicyUrl": "https://policies.google.com/privacy"
           },
           "categorySlug": "analytics"
         },
-        "fetchedAt": "2026-09-08T00:26:27.448Z",
+        "fetchedAt": "2026-10-23T04:27:09.457Z",
         "riskProfile": {
           "topLaws": [
             {
@@ -45799,7 +46391,7 @@
         "suggestedTechnology": "analytics"
       },
       "createdAt": "2026-02-09T00:01:48.562Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T15:28:41.000Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -47015,7 +47607,7 @@
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://developers.google.com/fonts/terms",
       "certifications": [],
       "frameworks": [],
       "gdprCompliant": null,
@@ -47054,9 +47646,15 @@
       "verifiedAt": null,
       "verifiedBy": null,
       "source": "manual",
-      "senecaLitigation": null,
+      "senecaLitigation": {
+        "cases": [],
+        "found": false,
+        "vendor": "Google Fonts",
+        "fetchedAt": "2026-10-23T14:00:46.682Z",
+        "riskProfile": null
+      },
       "createdAt": "2026-10-11T17:38:48.157Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T15:28:41.000Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -47233,6 +47831,73 @@
       },
       "createdAt": "2026-02-09T00:01:49.068Z",
       "updatedAt": "2026-10-02T07:01:11.247Z",
+      "dpaComplianceScore": null,
+      "dpaGdprScore": null,
+      "dpaCcpaScore": null
+    },
+    {
+      "id": "a5b297e8-4f87-4252-b0cb-c91a3dec0426",
+      "slug": "google-recaptcha",
+      "name": "Google reCAPTCHA",
+      "legalName": null,
+      "category": "Security & Identity",
+      "subcategory": "Bot Detection",
+      "description": "Bot and abuse detection for websites and apps: a script on the page collects signals and returns a risk score. Now part of Google Cloud Fraud Defense.",
+      "descriptionEs": "Detección de bots y abusos para sitios web y aplicaciones: un script en la página recoge señales y devuelve una puntuación de riesgo. Ahora forma parte de Google Cloud Fraud Defense.",
+      "website": "https://cloud.google.com/security/products/recaptcha",
+      "privacyPolicyUrl": null,
+      "trustCenterUrl": null,
+      "dpaUrl": "https://cloud.google.com/terms/data-processing-addendum",
+      "securityPageUrl": null,
+      "termsUrl": "https://cloud.google.com/terms/service-terms",
+      "certifications": [
+        "ISO 27001",
+        "ISO 27017",
+        "ISO 27018",
+        "ISO 27701",
+        "SOC 2 Type II",
+        "PCI DSS"
+      ],
+      "frameworks": [],
+      "gdprCompliant": null,
+      "ccpaCompliant": null,
+      "hipaaCompliant": null,
+      "dataLocations": [],
+      "hasEuDataCenter": null,
+      "subprocessors": null,
+      "subprocessorsCheckedAt": null,
+      "subprocessorsSourceStatus": null,
+      "transferSafeguards": "Standard Contractual Clauses (Google Cloud Data Processing Addendum)",
+      "supportsDsars": true,
+      "hasDesignatedDpo": null,
+      "hasRecentBreach": null,
+      "euAiActCompliant": null,
+      "aiCapabilities": [],
+      "modelHosting": null,
+      "aiTechniques": [],
+      "euAiActRole": null,
+      "euAiActAnnexIIIDomains": [],
+      "iso42001Certified": null,
+      "supportsAuditLogs": null,
+      "supportsExplainability": null,
+      "hasBiasMonitoring": null,
+      "hasModelCard": null,
+      "aiIncidentNotificationSLA": null,
+      "dataProcessingTransparency": null,
+      "aiModels": null,
+      "trainingUse": null,
+      "retention": null,
+      "privacyTechnologies": [],
+      "tags": [],
+      "logoUrl": null,
+      "isVerified": false,
+      "publicProfileEnabled": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "source": "manual",
+      "senecaLitigation": null,
+      "createdAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:28:34.749Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -53765,6 +54430,225 @@
       "dpaCcpaScore": null
     },
     {
+      "id": "8170a763-0f8a-4ccc-85cd-858cc05d8547",
+      "slug": "imperva",
+      "name": "Imperva",
+      "legalName": "Imperva, Inc.",
+      "category": "Security & Identity",
+      "subcategory": "Application Security",
+      "description": "Web application firewall, DDoS protection, bot management and CDN delivered through a global network, plus data security products. Part of Thales.",
+      "descriptionEs": "Cortafuegos de aplicaciones web, protección contra DDoS, gestión de bots y CDN a través de una red global, además de productos de seguridad de datos. Forma parte de Thales.",
+      "website": "https://www.imperva.com",
+      "privacyPolicyUrl": "https://www.imperva.com/trust-center/privacy-statement/",
+      "trustCenterUrl": "https://www.imperva.com/trust-center/",
+      "dpaUrl": "https://www.imperva.com/legal/wp-content/uploads/sites/14/2023/11/Imperva-EULA-Part-4.1-DPA.pdf",
+      "securityPageUrl": null,
+      "termsUrl": null,
+      "certifications": [
+        "ISO 27001",
+        "SOC 2",
+        "PCI DSS"
+      ],
+      "frameworks": [],
+      "gdprCompliant": null,
+      "ccpaCompliant": null,
+      "hipaaCompliant": null,
+      "dataLocations": [],
+      "hasEuDataCenter": null,
+      "subprocessors": [
+        {
+          "name": "Amazon Web Services, Inc. (AWS)",
+          "source": "subprocessor-page",
+          "purpose": "Cloud computing, analytic, and storage services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Atlassian Pty Ltd",
+          "source": "subprocessor-page",
+          "purpose": "Customer support management services",
+          "location": "AU",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Boomi",
+          "source": "subprocessor-page",
+          "purpose": "Connections between cloud and on-premises applications and data",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Box, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud hosting services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Datadog, Inc",
+          "source": "subprocessor-page",
+          "purpose": "Log management services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Google LLC",
+          "source": "subprocessor-page",
+          "purpose": "Cloud computing services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Intuition Machines, Inc. (hCaptcha)",
+          "source": "subprocessor-page",
+          "purpose": "Security Services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Kentik",
+          "source": "subprocessor-page",
+          "purpose": "Network observability and monitoring",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "MongoDB",
+          "source": "subprocessor-page",
+          "purpose": "Cloud database services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "NewRelic Inc",
+          "source": "subprocessor-page",
+          "purpose": "Performance and availability monitoring",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Salesforce, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer account management and support",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "ServiceNow Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Support and maintenance portal",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Stripe",
+          "source": "subprocessor-page",
+          "purpose": "Payment processing",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Talend Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data management platform",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "zAgile, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer support management services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Zendesk",
+          "source": "subprocessor-page",
+          "purpose": "Customer support management services",
+          "location": "US",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva Australia Pty Ltd",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "AU",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva B.V.",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "NL",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "IL",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva S. de R.L. de C.V.",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "MX",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva Singapore Pte. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "SG",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        },
+        {
+          "name": "Imperva UK Limited",
+          "source": "subprocessor-page",
+          "purpose": "Imperva Group company",
+          "location": "GB",
+          "sourceUrl": "https://www.imperva.com/trust-center/sub-processors/"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-23T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "Standard Contractual Clauses",
+      "supportsDsars": null,
+      "hasDesignatedDpo": null,
+      "hasRecentBreach": null,
+      "euAiActCompliant": null,
+      "aiCapabilities": [],
+      "modelHosting": null,
+      "aiTechniques": [],
+      "euAiActRole": null,
+      "euAiActAnnexIIIDomains": [],
+      "iso42001Certified": null,
+      "supportsAuditLogs": null,
+      "supportsExplainability": null,
+      "hasBiasMonitoring": null,
+      "hasModelCard": null,
+      "aiIncidentNotificationSLA": null,
+      "dataProcessingTransparency": null,
+      "aiModels": null,
+      "trainingUse": null,
+      "retention": null,
+      "privacyTechnologies": [],
+      "tags": [],
+      "logoUrl": null,
+      "isVerified": false,
+      "publicProfileEnabled": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "source": "manual",
+      "senecaLitigation": null,
+      "createdAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:28:34.749Z",
+      "dpaComplianceScore": null,
+      "dpaGdprScore": null,
+      "dpaCcpaScore": null
+    },
+    {
       "id": "cmsxkt089000ootc520hte3kz",
       "slug": "improve-digital",
       "name": "Improve Digital",
@@ -58083,6 +58967,95 @@
       },
       "createdAt": "2026-03-04T13:01:45.687Z",
       "updatedAt": "2026-10-22T23:30:43.707Z",
+      "dpaComplianceScore": null,
+      "dpaGdprScore": null,
+      "dpaCcpaScore": null
+    },
+    {
+      "id": "af50dcc8-5c1a-450b-aafe-6a2fc6659d07",
+      "slug": "jsdelivr",
+      "name": "jsDelivr",
+      "legalName": "Volentio JSD Limited",
+      "category": "Cloud Infrastructure",
+      "subcategory": "CDN & Edge",
+      "description": "Free public CDN for open-source files from npm and GitHub, served through several commercial CDN providers.",
+      "descriptionEs": "CDN pública y gratuita para archivos de código abierto de npm y GitHub, servida a través de varios proveedores comerciales de CDN.",
+      "website": "https://www.jsdelivr.com",
+      "privacyPolicyUrl": "https://www.jsdelivr.com/terms/privacy-policy",
+      "trustCenterUrl": null,
+      "dpaUrl": "https://www.jsdelivr.com/documents/data-processing-agreement.pdf",
+      "securityPageUrl": null,
+      "termsUrl": "https://www.jsdelivr.com/terms/terms-of-use",
+      "certifications": [],
+      "frameworks": [],
+      "gdprCompliant": null,
+      "ccpaCompliant": null,
+      "hipaaCompliant": null,
+      "dataLocations": [],
+      "hasEuDataCenter": null,
+      "subprocessors": [
+        {
+          "name": "Cloudflare",
+          "source": "subprocessor-page",
+          "purpose": "Serves jsDelivr CDN traffic",
+          "location": "",
+          "sourceUrl": "https://raw.githubusercontent.com/jsdelivr/jsdelivr/master/Sub-Processors.md"
+        },
+        {
+          "name": "Fastly",
+          "source": "subprocessor-page",
+          "purpose": "Serves jsDelivr CDN traffic",
+          "location": "",
+          "sourceUrl": "https://raw.githubusercontent.com/jsdelivr/jsdelivr/master/Sub-Processors.md"
+        },
+        {
+          "name": "Gcore",
+          "source": "subprocessor-page",
+          "purpose": "Serves jsDelivr CDN traffic",
+          "location": "",
+          "sourceUrl": "https://raw.githubusercontent.com/jsdelivr/jsdelivr/master/Sub-Processors.md"
+        },
+        {
+          "name": "Bunny",
+          "source": "subprocessor-page",
+          "purpose": "Serves legacy bootstrapcdn.com CDN endpoints only",
+          "location": "",
+          "sourceUrl": "https://raw.githubusercontent.com/jsdelivr/jsdelivr/master/Sub-Processors.md"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-23T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "EU Standard Contractual Clauses (Module 2 or 3); UK International Data Transfer Addendum",
+      "supportsDsars": true,
+      "hasDesignatedDpo": null,
+      "hasRecentBreach": null,
+      "euAiActCompliant": null,
+      "aiCapabilities": [],
+      "modelHosting": null,
+      "aiTechniques": [],
+      "euAiActRole": null,
+      "euAiActAnnexIIIDomains": [],
+      "iso42001Certified": null,
+      "supportsAuditLogs": null,
+      "supportsExplainability": null,
+      "hasBiasMonitoring": null,
+      "hasModelCard": null,
+      "aiIncidentNotificationSLA": null,
+      "dataProcessingTransparency": null,
+      "aiModels": null,
+      "trainingUse": null,
+      "retention": null,
+      "privacyTechnologies": [],
+      "tags": [],
+      "logoUrl": null,
+      "isVerified": false,
+      "publicProfileEnabled": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "source": "manual",
+      "senecaLitigation": null,
+      "createdAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:28:34.749Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -71892,16 +72865,13 @@
             "isVerified": false,
             "ccpaCompliant": null,
             "gdprCompliant": true,
-            "certifications": [
-              "ISO 27001",
-              "SOC 2"
-            ],
+            "certifications": [],
             "hipaaCompliant": null,
-            "privacyPolicyUrl": "https://www.facebook.com/login.php?next=https%3A%2F%2Fwww.facebook.com%2Fprivacy"
+            "privacyPolicyUrl": "https://www.facebook.com/privacy/policy/"
           },
           "categorySlug": "tracking-pixel"
         },
-        "fetchedAt": "2026-09-08T00:26:48.430Z",
+        "fetchedAt": "2026-10-23T04:27:10.881Z",
         "riskProfile": {
           "topLaws": [
             {
@@ -71943,7 +72913,7 @@
         "suggestedTechnology": "tracking-pixel"
       },
       "createdAt": "2026-03-01T17:06:41.452Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T04:27:10.882Z",
       "dpaComplianceScore": 49,
       "dpaGdprScore": 63,
       "dpaCcpaScore": 17
@@ -72183,11 +73153,11 @@
         "cases": [],
         "found": false,
         "vendor": "Microsoft",
-        "fetchedAt": "2026-09-08T00:26:34.595Z",
+        "fetchedAt": "2026-10-23T13:17:40.534Z",
         "riskProfile": null
       },
       "createdAt": "2026-03-01T23:48:54.293Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T13:17:40.534Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -79977,7 +80947,7 @@
       "website": "https://www.onetrust.com",
       "privacyPolicyUrl": "https://www.onetrust.com/privacy-notice/",
       "trustCenterUrl": "https://www.onetrust.com/trust/",
-      "dpaUrl": "https://legal.onetrust.com/#dpa",
+      "dpaUrl": "https://onetrust.pactsafe.io/versions/69c1e0cc26ea7890551abf6d.pdf",
       "securityPageUrl": "https://www.onetrust.com/solutions/security-and-risk-teams/",
       "termsUrl": "https://legal.onetrust.com/",
       "certifications": [
@@ -79985,7 +80955,7 @@
         "ISO 27701",
         "ISO 27017",
         "ISO 9001",
-        "SOC 2",
+        "SOC 2 Type II",
         "PCI DSS",
         "HITRUST",
         "CSA STAR"
@@ -80105,7 +81075,7 @@
       "subprocessorsCheckedAt": "2026-09-10T01:33:08.847Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": "Adequacy decisions, including EU-U.S. Data Privacy Framework self-certification; standard contractual clauses and supplementary measures otherwise",
-      "supportsDsars": null,
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -80136,11 +81106,11 @@
         "cases": [],
         "found": false,
         "vendor": "OneTrust",
-        "fetchedAt": "2026-09-08T00:26:31.446Z",
+        "fetchedAt": "2026-10-23T13:17:41.656Z",
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:46.942Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-23T15:28:41.000Z",
       "dpaComplianceScore": 42,
       "dpaGdprScore": 50,
       "dpaCcpaScore": 17
