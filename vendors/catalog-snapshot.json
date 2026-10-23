@@ -1,7 +1,7 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-23T19:31:25.020Z",
-  "sourceCommit": "f4f0160",
+  "generatedAt": "2026-10-23T23:32:23.169Z",
+  "sourceCommit": "99e3d9b",
   "count": 937,
   "vendors": [
     {
@@ -45537,8 +45537,8 @@
       "legalName": "Google LLC",
       "category": "Analytics & BI",
       "subcategory": "Web Analytics",
-      "description": "Web analytics service that tracks and reports website traffic, user behavior, conversions, and audience demographics. Part of Google Marketing Platform.",
-      "descriptionEs": "Servicio de analítica web que mide e informa sobre el tráfico del sitio web, el comportamiento de los usuarios, las conversiones y los datos demográficos de la audiencia. Forma parte de Google Marketing Platform.",
+      "description": "Web analytics service that tracks and reports website traffic, user behavior, conversions, and audience demographics. Part of Google Marketing Platform. Google processes Analytics data as a processor under its Ads Data Processing Terms, but it is an independent controller of the data a site owner chooses to share with Google products and services.",
+      "descriptionEs": "Servicio de analítica web que mide e informa sobre el tráfico del sitio web, el comportamiento de los usuarios, las conversiones y los datos demográficos de la audiencia. Forma parte de Google Marketing Platform. Google trata los datos de Analytics como encargado del tratamiento conforme a sus condiciones de tratamiento de datos de Google Ads, pero es responsable independiente de los datos que el titular del sitio decide compartir con los productos y servicios de Google.",
       "website": "https://marketingplatform.google.com/about/analytics/",
       "privacyPolicyUrl": "https://policies.google.com/privacy",
       "trustCenterUrl": "https://support.google.com/analytics/answer/6004245",
@@ -46397,7 +46397,7 @@
         "suggestedTechnology": "analytics"
       },
       "createdAt": "2026-02-09T00:01:48.562Z",
-      "updatedAt": "2026-10-23T15:28:41.000Z",
+      "updatedAt": "2026-10-23T21:07:57.235Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
