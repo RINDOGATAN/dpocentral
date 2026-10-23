@@ -17,7 +17,7 @@ import { DocSection } from "@/components/docs/doc-section";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
-import { isDsarModuleEnabled } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 
 export default async function DocsReportsPage() {
   const t = await getTranslations("docs.reports");
@@ -240,7 +240,10 @@ export default async function DocsReportsPage() {
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: t("nav.previous"), href: "/privacy/docs/experts" }}
+        previous={{
+          title: t("nav.previous"),
+          href: features.expertDirectoryEnabled ? "/privacy/docs/experts" : "/privacy/docs/vendors",
+        }}
         next={{ title: t("nav.next"), href: "/privacy/docs/dpia-auto-fill" }}
       />
     </div>

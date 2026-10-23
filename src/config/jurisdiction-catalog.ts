@@ -158,6 +158,71 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     dpaUrl: "https://www.edoeb.admin.ch",
     category: "comprehensive",
   },
+  {
+    // Llei 29/2021, qualificada de protecció de dades personals (BOPA 119/2021,
+    // 17 Nov 2021). In force six months after publication (final provision four).
+    code: "LQPD",
+    name: "Qualified Law 29/2021 on the Protection of Personal Data (LQPD)",
+    shortName: "LQPD",
+    region: "AD",
+    country: "AD",
+    effectiveDate: "2022-05-17",
+    dsarDeadlineDays: 30,
+    dsarDeadlineMonths: 1, // Art. 15.3: one month from the day after receipt
+    dsarExtensionMonths: 2, // "two further months where necessary"
+    breachNotificationHours: 72, // Art. 36.1
+    description:
+      "Andorra's data protection law, modelled on the GDPR, governing the processing of personal data by public and private bodies established in Andorra. Andorra holds an EU adequacy decision (2010/625/EU).",
+    keyRequirements: [
+      "Records of processing activities; private organisations under 50 employees are exempt unless the processing is risky, not occasional, or involves special categories or criminal data",
+      "Mandatory DPO for public bodies, and for private bodies whose processing involves automated decisions with legal effects, large-scale special categories, or large-scale high-risk processing; contact details notified to the APDA within ten working days",
+      "Data Protection Impact Assessments for high-risk processing",
+      "Breach notification to the APDA within 72 hours",
+      "Data subject rights: access, rectification, erasure, restriction, portability and objection, answered within one month",
+    ],
+    applicabilityCriteria: [
+      "Controllers or processors domiciled in Andorra or incorporated under Andorran law",
+      "Controllers or processors outside Andorra that use processing means located in Andorra (they must appoint a representative established in Andorra)",
+    ],
+    penalties:
+      "Very serious infringements EUR 30,001 to 100,000; serious EUR 15,001 to 30,000; minor EUR 500 to 15,000",
+    dpaName: "Agència Andorrana de Protecció de Dades (APDA)",
+    dpaUrl: "https://www.apda.ad",
+    category: "comprehensive",
+  },
+  {
+    // Ley Orgánica 3/2018 (BOE-A-2018-16673), in force 7 Dec 2018. It applies
+    // together with the GDPR: choosing it also applies GDPR
+    // (src/config/jurisdiction-places.ts, IMPLIED_LAWS).
+    code: "LOPDGDD",
+    name: "Organic Law 3/2018 on the Protection of Personal Data and Guarantee of Digital Rights (LOPDGDD)",
+    shortName: "LOPDGDD",
+    region: "ES",
+    country: "ES",
+    effectiveDate: "2018-12-07",
+    dsarDeadlineDays: 30,
+    dsarDeadlineMonths: 1, // As under GDPR art. 12(3)
+    dsarExtensionMonths: 2,
+    breachNotificationHours: 72, // As under GDPR art. 33
+    description:
+      "Spain's national law complementing the GDPR. It adapts the GDPR to Spanish law, adds specific rules (minors' consent from 14, video surveillance, blocking of data, a mandatory DPO for listed sectors) and a set of digital rights, including at work. It applies together with the GDPR.",
+    keyRequirements: [
+      "Mandatory DPO beyond GDPR art. 37.1 for listed entities, including credit institutions, insurers, investment firms, schools, health centres and advertisers that profile; appointments notified to the AEPD within ten days",
+      "Records of processing activities under GDPR art. 30; public bodies publish an inventory",
+      "Blocking of data when it is rectified or erased",
+      "Consent of minors valid only from age 14",
+      "Digital rights at work: use of devices, disconnection, video surveillance and geolocation",
+    ],
+    applicabilityCriteria: [
+      "Processing governed by the GDPR that falls under Spanish law, in particular by controllers or processors established in Spain",
+      "Processing supervised by the AEPD",
+    ],
+    penalties:
+      "GDPR fines (up to EUR 20 million or 4% of worldwide annual turnover); the Spanish law classes infringements as very serious, serious or minor, time-barred after three, two and one year; no fines on public bodies",
+    dpaName: "Agencia Española de Protección de Datos (AEPD)",
+    dpaUrl: "https://www.aepd.es",
+    category: "comprehensive",
+  },
 
   // ----------------------------------------------------------
   // US STATES

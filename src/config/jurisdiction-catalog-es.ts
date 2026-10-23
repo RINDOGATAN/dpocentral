@@ -105,6 +105,48 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     ],
     penalties: "Hasta 250.000 CHF para las personas físicas (sanciones penales); no hay multas directas a las empresas",
   },
+  LQPD: {
+    name: "Llei 29/2021, qualificada de protecció de dades personals (LQPD)",
+    shortName: "LQPD",
+    regionLabel: "Andorra",
+    description:
+      "La ley andorrana de protección de datos, inspirada en el RGPD, que regula el tratamiento de datos personales por organismos públicos y entidades privadas establecidos en Andorra. Andorra cuenta con una decisión de adecuación de la UE (2010/625/UE).",
+    keyRequirements: [
+      "Registro de las actividades de tratamiento; las organizaciones privadas de menos de 50 trabajadores están exentas salvo que el tratamiento suponga un riesgo, no sea ocasional o incluya categorías especiales o datos penales",
+      "Delegado de protección de datos obligatorio en el sector público y en las entidades privadas que tomen decisiones automatizadas con efectos jurídicos, traten categorías especiales a gran escala o realicen tratamientos de alto riesgo a gran escala; sus datos se comunican a la APDA en diez días hábiles",
+      "Evaluaciones de impacto relativas a la protección de datos para los tratamientos de alto riesgo",
+      "Notificación de brechas a la APDA en un plazo de 72 horas",
+      "Derechos de los interesados: acceso, rectificación, supresión, limitación, portabilidad y oposición, con respuesta en un mes",
+    ],
+    applicabilityCriteria: [
+      "Estar domiciliado en Andorra o constituido conforme a sus leyes",
+      "Usar medios de tratamiento situados en Andorra sin estar domiciliado allí (con un representante establecido en Andorra)",
+    ],
+    penalties:
+      "Infracciones muy graves, de 30.001 a 100.000 euros; graves, de 15.001 a 30.000 euros; leves, de 500 a 15.000 euros",
+    dpaName: "Agència Andorrana de Protecció de Dades (APDA)",
+  },
+  LOPDGDD: {
+    name: "Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)",
+    shortName: "LOPDGDD",
+    regionLabel: "España",
+    description:
+      "La ley española que complementa el RGPD. Lo adapta al Derecho español, añade reglas propias (consentimiento de los menores desde los 14 años, videovigilancia, bloqueo de datos, delegado de protección de datos obligatorio en determinados sectores) y un conjunto de derechos digitales, también en el ámbito laboral. Se aplica junto con el RGPD.",
+    keyRequirements: [
+      "Delegado de protección de datos obligatorio, además de los casos del art. 37.1 del RGPD, para las entidades que enumera la ley: entidades de crédito, aseguradoras, empresas de servicios de inversión, centros docentes, centros sanitarios y empresas de publicidad que elaboran perfiles, entre otras; los nombramientos se comunican a la AEPD en diez días",
+      "Registro de las actividades de tratamiento del art. 30 del RGPD; el sector público publica un inventario",
+      "Bloqueo de los datos al rectificarlos o suprimirlos",
+      "Consentimiento de los menores válido solo a partir de los 14 años",
+      "Derechos digitales en el trabajo: uso de dispositivos, desconexión, videovigilancia y geolocalización",
+    ],
+    applicabilityCriteria: [
+      "Tratamientos sujetos al RGPD a los que se aplica el Derecho español, en particular los de responsables o encargados establecidos en España",
+      "Tratamientos supervisados por la AEPD",
+    ],
+    penalties:
+      "Las multas del RGPD (hasta 20 millones de euros o el 4 % del volumen de negocio total anual mundial); la ley clasifica las infracciones en muy graves, graves y leves, que prescriben a los tres años, dos años y un año; no se imponen multas al sector público",
+    dpaName: "Agencia Española de Protección de Datos (AEPD)",
+  },
 
   // ---------------------------------------------------------- US STATES
   CCPA: {

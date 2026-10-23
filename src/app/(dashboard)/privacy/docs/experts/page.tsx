@@ -2,12 +2,16 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { Building2, Briefcase } from "lucide-react";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { features } from "@/config/features";
 import { DocSection } from "@/components/docs/doc-section";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
 export default async function DocsExpertsPage() {
+  // The guide follows the experts directory it describes.
+  if (!features.expertDirectoryEnabled) notFound();
   const t = await getTranslations("docs.experts");
 
   const directoryItems = ["search", "specialization", "countryLang", "certifications", "contact"] as const;

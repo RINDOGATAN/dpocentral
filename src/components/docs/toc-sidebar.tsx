@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { PremiumBadge } from "./premium-badge";
 import { cn } from "@/lib/utils";
-import { isDsarModuleEnabled } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 
 // Labels live in the message bundles under docs.toc.<key>.label and
 // docs.toc.<key>.items.<child key>, in every language the guide speaks.
@@ -231,9 +231,12 @@ const allTocSections: TocSection[] = [
 
 // The rights-request guide is left out when the module is not part of this
 // plan (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts).
-const tocSections: TocSection[] = isDsarModuleEnabled()
-  ? allTocSections
-  : allTocSections.filter((s) => s.href !== "/privacy/docs/dsar");
+// The experts guide follows the experts directory (expertDirectoryEnabled).
+const tocSections: TocSection[] = allTocSections.filter(
+  (s) =>
+    (isDsarModuleEnabled() || s.href !== "/privacy/docs/dsar") &&
+    (features.expertDirectoryEnabled || s.href !== "/privacy/docs/experts"),
+);
 
 export function TocSidebar() {
   const t = useTranslations("docs.toc");
