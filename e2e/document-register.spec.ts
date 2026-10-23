@@ -105,6 +105,8 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   await expect(menu.getByTestId("menu-not-yet")).toHaveCount(0);
   await closeMenu(page);
   for (const [id, line] of Object.entries(lines)) {
+    // The inventory step states its record counts, not a document.
+    if (!line.includes(" · ")) continue;
     // One document per line.
     expect(line.split("; ").length, `${id}: one document`).toBe(1);
     const row = rows.find((r) => line.startsWith(`${r.name} · `));
