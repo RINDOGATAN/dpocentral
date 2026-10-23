@@ -101,7 +101,8 @@ describe("honest progress", () => {
     expect(counts).toMatch(/template: \{ type: "VENDOR" as const \}/);
     const s = statuses({ assessments: 0, vendorAssessments: 0 });
     expect(s.assessments).toBe("todo");
-    expect(s.vendorDueDiligence).toBe("todo");
+    // Coming while the vendor risk assessment module is announced.
+    expect(s.vendorDueDiligence).toBe("coming");
   });
 
   it("the executive report is not ready after the quick start alone", () => {

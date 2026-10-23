@@ -22,7 +22,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, Download, ExternalLink, FileText, ListChecks } from "lucide-react";
+import { ArrowRight, ChevronRight, Download, ExternalLink, FileText, ListChecks } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -49,24 +49,34 @@ import {
   type NextAction,
   type RegisterRow,
 } from "@/lib/programme-overview";
-import { INPUTS, type DocumentState } from "@/config/document-register";
+import { INPUTS } from "@/config/document-register";
 import { DPO_CENTRAL_PATH, PLAN_WINDOWS, type PathCounts } from "./path-config";
-import { isCounted, isShown, withoutSteps, type PathStatuses, type StageWord } from "./path";
+import { withoutSteps, type PathStatuses, type StageWord } from "./path";
 import { ProgramFigureCard } from "./program-figure";
 import { planSummaryText } from "./plan-text";
 import { usePlanState, useProgramPathQuery } from "./use-program-path";
 import { useProgrammeOverview, type ProgrammeOverview } from "./use-programme-overview";
-import { documentName, documentStateText, gapsText } from "./document-words";
+import { documentBadge, documentName, gapsText, type DocumentBadge } from "./document-words";
 
-const DOC_TONE: Record<DocumentState, StatusTone> = {
+const DOC_TONE: Record<DocumentBadge, StatusTone> = {
   ready: "success",
+  standby: "success",
   draft: "info",
   needsInput: "warning",
+  needsModule: "neutral",
+  needsSetting: "neutral",
   notYet: "neutral",
 };
 
+/** The legend, in the order the rows are listed. */
+const LEGEND_ORDER: readonly DocumentBadge[] = ["ready", "standby", "draft", "needsInput", "needsModule", "needsSetting", "notYet"];
+
+/** Rows shown at once: those that can be produced now or are ready for when they are needed. */
+const SHOWN_BADGES: ReadonlySet<DocumentBadge> = new Set(["ready", "standby", "draft"]);
+
 const WORD_TONE: Record<StageWord, StatusTone> = {
   done: "success",
+  ready: "success",
   toConfirm: "warning",
   started: "info",
   todo: "neutral",
@@ -110,7 +120,6 @@ export function GuidedDashboard({ fromQuickstart = false }: { fromQuickstart?: b
             <NextActionsCard config={config} statuses={statuses} overview={ready} />
             <DeadlinesCard overview={ready} />
           </div>
-          <MissingCard config={config} statuses={statuses} overview={ready} />
         </>
       ) : (
         orgWide === false && <LimitedCard />
@@ -138,7 +147,8 @@ function areaHref(area: Area<PathCounts>): string | null {
   if (action.kind === "needsAction") return action.item.href;
   if (action.kind === "confirm") return "/privacy/review";
   if (action.kind === "step") return action.step.href;
-  if (action.kind === "done") return stage.steps.find((s) => s.href && !s.coming)?.href ?? null;
+  if (action.kind === "done" || action.kind === "ready")
+    return stage.steps.find((s) => s.href && !s.coming)?.href ?? null;
   return null;
 }
 
@@ -233,6 +243,12 @@ export function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOver
   const t = useTranslations("documentRegister");
   const rows = overview ? panelRows(overview.documents) : null;
   const produced = rows?.produced.filter((row) => !(hideDsar && row.entry.stepId === "dsar")) ?? [];
+  const shown = produced.filter((row) => SHOWN_BADGES.has(documentBadge(row.doc.status)));
+  const waiting = produced.filter((row) => !SHOWN_BADGES.has(documentBadge(row.doc.status)));
+  const badges = new Set<DocumentBadge>([
+    ...produced.map((row) => documentBadge(row.doc.status)),
+    ...(rows && rows.notYet.length > 0 ? (["notYet"] as const) : []),
+  ]);
 
   return (
     <Card data-testid="documents-panel" aria-busy={!rows}>
@@ -251,21 +267,45 @@ export function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOver
           <CardSkeleton rows={4} />
         ) : (
           <>
-            <ul className="divide-y divide-border">
-              {produced.map((row) => (
-                <DocumentRow key={row.entry.id} row={row} />
-              ))}
-              {rows.notYet.length > 0 && (
-                <li className="py-3 text-sm text-muted-foreground" data-testid="doc-not-yet">
-                  {t("notYetLine", { names: rows.notYet.map((r) => documentName(t, r.entry.id)).join(" · ") })}
-                </li>
-              )}
-            </ul>
-            <p className="mt-3 text-xs text-muted-foreground" data-testid="documents-legend">
-              {(["ready", "draft", "needsInput", "notYet"] as const).map((s, i) => (
-                <span key={s}>
+            {shown.length > 0 && (
+              <ul className="divide-y divide-border">
+                {shown.map((row) => (
+                  <DocumentRow key={row.entry.id} row={row} />
+                ))}
+              </ul>
+            )}
+            {waiting.length > 0 && (
+              // Open by default only when nothing else is listed, so the
+              // first screen is not a long list of what is missing.
+              <details
+                className={`group ${shown.length > 0 ? "border-t border-border" : ""}`}
+                open={shown.length === 0}
+                data-testid="doc-waiting"
+              >
+                <summary className="py-3 flex cursor-pointer list-none items-center gap-1.5 text-sm font-medium [&::-webkit-details-marker]:hidden">
+                  <ChevronRight
+                    className="size-4 shrink-0 text-muted-foreground motion-safe:transition-transform group-open:rotate-90"
+                    aria-hidden="true"
+                  />
+                  {t("waitingLine", { count: waiting.length })}
+                </summary>
+                <ul className="divide-y divide-border border-t border-border">
+                  {waiting.map((row) => (
+                    <DocumentRow key={row.entry.id} row={row} />
+                  ))}
+                </ul>
+              </details>
+            )}
+            {rows.notYet.length > 0 && (
+              <p className="border-t border-border py-3 text-sm text-muted-foreground" data-testid="doc-not-yet">
+                {t("notYetLine", { names: rows.notYet.map((r) => documentName(t, r.entry.id)).join(" · ") })}
+              </p>
+            )}
+            <p className="mt-1 text-xs text-muted-foreground" data-testid="documents-legend">
+              {LEGEND_ORDER.filter((b) => badges.has(b)).map((b, i) => (
+                <span key={b}>
                   {i > 0 && " · "}
-                  {t(`legend.${s}`)}
+                  {t(`legend.${b}`)}
                 </span>
               ))}
             </p>
@@ -329,10 +369,13 @@ function DocumentRow({ row }: { row: RegisterRow }) {
   const { entry, doc } = row;
   const status = doc.status;
   const name = documentName(t, entry.id);
+  const badge = documentBadge(status);
   const detail =
     status.state === "draft"
       ? gapsText(t, status.gaps)
-      : status.state === "needsInput"
+      : badge === "standby"
+        ? t("standbyLine")
+        : status.state === "needsInput"
         ? // Its own line, so capitalised like the other lines (the menu's
           // inline "· needs: ..." keeps the lower case).
           t("needsLine", { input: t(`inputs.${status.input}`) })
@@ -343,7 +386,16 @@ function DocumentRow({ row }: { row: RegisterRow }) {
   const orgId = organization?.id ?? "";
 
   let actions: React.ReactNode = null;
-  if (status.state === "needsInput") {
+  if (badge === "standby" && entry.href) {
+    // Nothing to add until the event happens: the register itself opens.
+    actions = (
+      <Link href={entry.href} data-testid={`doc-open-${entry.id}`}>
+        <Button size="sm" variant="outline" className="h-8">
+          {t("open")}
+        </Button>
+      </Link>
+    );
+  } else if (status.state === "needsInput") {
     const input = INPUTS[status.input];
     const href = input.href === "plans" ? plansUrl(locale) : input.href;
     const label = t.has(`inputAction.${status.input}`)
@@ -414,8 +466,8 @@ function DocumentRow({ row }: { row: RegisterRow }) {
         {detail && <p className="text-xs text-muted-foreground mt-0.5 break-words">{detail}</p>}
       </div>
       <div className="flex flex-wrap items-center gap-2 shrink-0">
-        <StatusChip tone={DOC_TONE[status.state]} className="text-xs" data-testid={`doc-state-${entry.id}`}>
-          {status.state === "needsInput" ? t("state.needsInput") : documentStateText(t, status)}
+        <StatusChip tone={DOC_TONE[badge]} className="text-xs" data-testid={`doc-state-${entry.id}`}>
+          {t(`state.${badge}`)}
         </StatusChip>
         {actions}
       </div>
@@ -523,7 +575,7 @@ function NextActionRow({ action, index, t, tv }: { action: NextAction; index: nu
 }
 
 // ---------------------------------------------------------------------------
-// Deadlines at risk
+// Upcoming deadlines
 // ---------------------------------------------------------------------------
 
 function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
@@ -603,46 +655,6 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
               </li>
             )}
           </ul>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// What is missing
-// ---------------------------------------------------------------------------
-
-function MissingCard({
-  config,
-  statuses,
-  overview,
-}: {
-  config: typeof DPO_CENTRAL_PATH;
-  statuses: PathStatuses | null;
-  overview: ProgrammeOverview | null;
-}) {
-  const t = useTranslations("guided");
-  const td = useTranslations("documentRegister");
-  if (!statuses || !overview) return null;
-  const notStarted = config.stages.flatMap((stage) =>
-    stage.steps.filter((s) => isCounted(s) && isShown(s, statuses) && statuses[s.id] === "todo"),
-  );
-  const notYet = panelRows(overview.documents).notYet;
-  return (
-    <Card data-testid="missing">
-      <CardContent className="p-4 sm:p-6 flex flex-col gap-1">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{td("missing.title")}</p>
-        {notStarted.length === 0 && notYet.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{td("missing.none")}</p>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            {notStarted.length > 0 &&
-              td("missing.notStarted", { steps: notStarted.map((s) => t(`steps.${s.id}.label`)).join(", ") })}
-            {notStarted.length > 0 && notYet.length > 0 && " "}
-            {notYet.length > 0 &&
-              td("missing.notYet", { names: notYet.map((r) => documentName(td, r.entry.id)).join(", ") })}
-          </p>
         )}
       </CardContent>
     </Card>

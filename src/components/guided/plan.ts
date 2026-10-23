@@ -65,7 +65,7 @@ function stageDone<C>(config: PathConfig<C>, stageId: string, statuses: PathStat
   const stage = config.stages.find((s) => s.id === stageId);
   if (!stage) return true;
   const p = stageProgress(stage, statuses);
-  return p.total === 0 || p.state === "done";
+  return p.total === 0 || p.state === "done" || p.state === "ready";
 }
 
 export function planState<C>(

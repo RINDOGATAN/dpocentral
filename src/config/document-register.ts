@@ -94,7 +94,16 @@ export type DocumentInput =
 export type DocumentStatus =
   | { state: "ready" }
   | { state: "draft"; gaps: DocumentGap[] }
-  | { state: "needsInput"; input: DocumentInput }
+  | {
+      state: "needsInput";
+      input: DocumentInput;
+      /**
+       * The input is an event that cannot be made to happen (a breach, a
+       * rights request), and the means are in place for when it does: the
+       * document is ready for when it is needed, shown as such, not as a gap.
+       */
+      standby?: true;
+    }
   | { state: "notYet" };
 
 export type DocumentFormat = "pdf" | "csv" | "screen";
@@ -131,6 +140,12 @@ export interface DocumentEntry {
 const confirmed = (total: number, drafts: number) => Math.max(0, total - drafts);
 const ready = (): DocumentStatus => ({ state: "ready" });
 const needs = (input: DocumentInput): DocumentStatus => ({ state: "needsInput", input });
+const standby = (input: DocumentInput): DocumentStatus => ({ state: "needsInput", input, standby: true });
+
+/** Waiting for an event, with the means in place: ready for when it is needed, not a gap. */
+export function isStandby(status: DocumentStatus): boolean {
+  return status.state === "needsInput" && status.standby === true;
+}
 /** A draft with the gaps that are not zero; ready when there are none. */
 function draftOrReady(gaps: DocumentGap[]): DocumentStatus {
   const open = gaps.filter((g) => g.count > 0);
@@ -270,10 +285,12 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     formats: ["pdf"],
     module: "dsar",
     needs: "Rights requests on file.",
-    rule: "Needs a request when there is none. Draft while no request has been completed; ready once one has.",
+    rule: "Needs a request when there is none (on standby, ready for when it is needed, once the intake is set up). Draft while no request has been completed; ready once one has.",
     evaluate: (f) =>
       f.dsarRequests === 0
-        ? needs("dsarRequest")
+        ? f.dsarIntakeConfigured
+          ? standby("dsarRequest")
+          : needs("dsarRequest")
         : f.dsarCompleted > 0
           ? ready()
           : draftOrReady([{ key: "openRequests", count: f.dsarRequests - f.dsarCompleted }]),
@@ -285,10 +302,12 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     download: "/api/export/breach-register",
     formats: ["pdf", "csv"],
     needs: "At least one incident.",
-    rule: "Needs an incident when there is none. Draft while any incident has no impact recorded (records affected or data categories); ready otherwise.",
+    rule: "Needs an incident when there is none (on standby, ready for when it is needed, once one processing activity is complete: the path's incidents step is then ready). Draft while any incident has no impact recorded (records affected or data categories); ready otherwise.",
     evaluate: (f) =>
       f.incidents === 0
-        ? needs("incident")
+        ? f.processingActivitiesComplete > 0
+          ? standby("incident")
+          : needs("incident")
         : draftOrReady([{ key: "impactMissing", count: f.incidentsMissingImpact }]),
   },
   {
@@ -302,7 +321,9 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
       !f.aiAssistOn
         ? needs("aiAssist")
         : f.incidents === 0
-          ? needs("incident")
+          ? f.processingActivitiesComplete > 0
+            ? standby("incident")
+            : needs("incident")
           : f.incidentNotifications === 0
             ? needs("notificationRecord")
             : ready(),
@@ -369,6 +390,14 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     href: null,
     formats: [],
     needs: "A staff training record.",
+    rule: "Not in DPO Central yet.",
+  },
+  {
+    id: "vendorReviewReport",
+    stepId: "vendorDueDiligence",
+    href: null,
+    formats: [],
+    needs: "The vendor risk assessment module (announced, not yet available).",
     rule: "Not in DPO Central yet.",
   },
   {

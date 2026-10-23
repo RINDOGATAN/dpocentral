@@ -142,6 +142,8 @@ describe("the intro cookie logic is pure and correct", () => {
     expect(shouldShowIntro(null)).toBe(true);
     expect(shouldShowIntro("open")).toBe(true);
     expect(shouldShowIntro("dismissed")).toBe(false);
+    // Shown once already: first visit only.
+    expect(shouldShowIntro("seen")).toBe(false);
   });
 
   it("parses the cookie value", () => {

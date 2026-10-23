@@ -79,7 +79,12 @@ export function registerRows(documents: readonly EvaluatedDocument[]): RegisterR
   return rows;
 }
 
-const STATE_ORDER: Record<DocumentState, number> = { ready: 0, draft: 1, needsInput: 2, notYet: 3 };
+const STATE_ORDER: Record<DocumentState, number> = { ready: 0, draft: 2, needsInput: 3, notYet: 4 };
+
+/** Ready first, then ready for when it is needed, drafts, and those waiting for an input. */
+function stateRank(status: EvaluatedDocument["status"]): number {
+  return status.state === "needsInput" && status.standby ? 1 : STATE_ORDER[status.state];
+}
 
 /**
  * The dashboard panel: the documents DPO Central produces, ready first, then
@@ -96,7 +101,7 @@ export function panelRows(documents: readonly EvaluatedDocument[]): {
     .filter(({ row }) => row.doc.status.state !== "notYet")
     .sort(
       (a, b) =>
-        STATE_ORDER[a.row.doc.status.state] - STATE_ORDER[b.row.doc.status.state] || a.index - b.index,
+        stateRank(a.row.doc.status) - stateRank(b.row.doc.status) || a.index - b.index,
     )
     .map(({ row }) => row);
   return { produced, notYet: rows.filter((row) => row.doc.status.state === "notYet") };
@@ -153,6 +158,7 @@ export type AreaAction =
   | { kind: "confirm" }
   | { kind: "step"; step: PathStep<unknown> }
   | { kind: "done" }
+  | { kind: "ready" }
   | { kind: "coming" };
 
 export interface Area<C> {
@@ -196,7 +202,9 @@ export function programmeAreas<C>(
             ? { kind: "confirm" }
             : open
               ? { kind: "step", step: open as PathStep<unknown> }
-              : { kind: "done" };
+              : word === "ready"
+                ? { kind: "ready" }
+                : { kind: "done" };
     return { stage, number: stageNumber(config, stage.id), word, action };
   });
 }

@@ -192,10 +192,9 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const menu = wide(page) ? page.locator("aside nav").first() : page.getByRole("dialog");
   const closed = menu.locator("li > button[aria-expanded='false']");
   for (let guard = 0; guard < 10 && (await closed.count()) > 0; guard++) await closed.first().click();
-  await expect(menu.getByTestId("step-docs-audits")).toContainText(
-    es ? "Informe ejecutivo · listo" : "Executive report · ready",
-  );
-  await expect(menu.getByTestId("menu-not-yet")).not.toContainText(es ? "Informe ejecutivo" : "Executive report");
+  // Ready: the step carries no document line, and nothing is listed as not yet in DPO Central.
+  await expect(menu.getByTestId("step-docs-audits")).toHaveCount(0);
+  await expect(menu.getByTestId("menu-not-yet")).toHaveCount(0);
   await menu.getByRole("link", { name: es ? /Informe ejecutivo/ : /Executive report/ }).first().click();
   await page.waitForURL("**/privacy/board-report**");
 

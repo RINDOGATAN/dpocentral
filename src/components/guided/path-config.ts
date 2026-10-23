@@ -48,7 +48,11 @@ import {
 } from "lucide-react";
 import { withoutSteps, type PathConfig } from "./path";
 import { features, isDsarModuleEnabled } from "@/config/features";
+import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 import type { PlanWindow } from "./plan";
+
+/** The vendor risk assessment module is announced, not yet available. */
+export const VENDOR_REVIEW_COMING = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.VENDOR);
 
 /**
  * What the rules read. Counts only: nothing here names a record.
@@ -326,17 +330,18 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // The vendor list opened on its due-diligence view: each vendor's
           // review state. The page reads the view where it is wired; the menu
           // marks this step whichever way the page renders it.
-          href: "/privacy/vendors?view=due-diligence",
+          //
+          // While the vendor risk assessment module is announced but not yet
+          // available (skill-packages.ts, COMING_SOON_SKILL_IDS), nobody can
+          // complete the step: it is "coming", never counted and never offered
+          // as a next action, like the policies steps.
+          href: VENDOR_REVIEW_COMING ? null : "/privacy/vendors?view=due-diligence",
+          coming: VENDOR_REVIEW_COMING || undefined,
           // Vendor assessments are a premium type on the kit.
           premiumType: "VENDOR",
           icon: FileCheck2,
-          rule: "Done when every vendor has an approved vendor (due-diligence) assessment. Started when a vendor assessment exists, leaving out untouched automatic drafts; a DPIA linked to a vendor is not a due-diligence review.",
-          status: (c) =>
-            c.vendors > 0 && c.vendorsAssessed >= c.vendors
-              ? "done"
-              : c.vendorAssessments > 0
-                ? "started"
-                : "todo",
+          rule: "Coming while the vendor risk assessment module is announced but not available. Then: done when every vendor has an approved vendor (due-diligence) assessment; started when a vendor assessment exists, leaving out untouched automatic drafts; a DPIA linked to a vendor is not a due-diligence review.",
+          status: VENDOR_REVIEW_COMING ? undefined : vendorDueDiligenceStatus,
         },
         // The assessment picker offers the legitimate-interest template as
         // included, so the step opens it rather than calling it "coming".
@@ -463,3 +468,12 @@ export const PLAN_WINDOWS: readonly PlanWindow[] = [
   { untilDay: 60, stages: ["inventory", "assess"] },
   { untilDay: 90, stages: ["rights", "respond"] },
 ];
+
+/**
+ * Vendor due diligence, once the vendor risk assessment module is available:
+ * done when every vendor has an approved vendor (due-diligence) assessment;
+ * started when a vendor assessment exists.
+ */
+export function vendorDueDiligenceStatus(c: PathCounts): "done" | "started" | "todo" {
+  return c.vendors > 0 && c.vendorsAssessed >= c.vendors ? "done" : c.vendorAssessments > 0 ? "started" : "todo";
+}

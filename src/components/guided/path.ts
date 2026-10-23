@@ -43,10 +43,12 @@ export function isStepMet(status: StepStatus | null | undefined): boolean {
 
 /**
  * A stage as a whole: not started, in progress, drafts waiting to be
- * confirmed, done, or "coming" (a stage whose steps all have no page yet, so
- * it carries no count and no progress).
+ * confirmed, done, "ready" (every counted step is met, but at least one only
+ * as ready for an event that has not happened, such as a breach: the stage is
+ * prepared, not done), or "coming" (a stage whose steps all have no page yet,
+ * so it carries no count and no progress).
  */
-export type StageState = "todo" | "started" | "toConfirm" | "done" | "coming";
+export type StageState = "todo" | "started" | "toConfirm" | "ready" | "done" | "coming";
 
 export interface PathStep<C> {
   /** Stable id; also the i18n key under `steps.<id>`. */
@@ -231,10 +233,13 @@ export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): S
   );
   const drafts = counted.some((s) => statuses[s.id] === "toConfirm");
   const allComing = counted.length === 0 && stage.steps.some((s) => s.coming);
+  const onlyReady = counted.some((s) => statuses[s.id] === "ready");
   const state: StageState = allComing
     ? "coming"
     : counted.length > 0 && done === counted.length
-      ? "done"
+      ? onlyReady
+        ? "ready"
+        : "done"
       : drafts
         ? "toConfirm"
         : moving

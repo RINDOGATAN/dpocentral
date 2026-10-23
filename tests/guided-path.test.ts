@@ -11,7 +11,13 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
-import { DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS, type PathCounts } from "@/components/guided/path-config";
+import {
+  DPO_CENTRAL_PATH,
+  EMPTY_PATH_COUNTS,
+  VENDOR_REVIEW_COMING,
+  vendorDueDiligenceStatus,
+  type PathCounts,
+} from "@/components/guided/path-config";
 import {
   currentLibraryId,
   currentStepId,
@@ -271,13 +277,15 @@ describe("the done rules", () => {
     expect(statusOf("transfers", { transfers: 1, transfersComplete: 1 })).toBe("done");
   });
 
-  it("vendor due diligence: every vendor assessed", () => {
-    expect(statusOf("vendorDueDiligence", { vendors: 2, vendorsAssessed: 1, vendorAssessments: 1 })).toBe(
-      "started",
-    );
-    expect(statusOf("vendorDueDiligence", { vendors: 2, vendorsAssessed: 2, vendorAssessments: 2 })).toBe(
-      "done",
-    );
+  it("vendor due diligence: coming while its module is announced; then every vendor assessed", () => {
+    // Nobody can complete it while the vendor risk assessment module is not
+    // available: not counted, never a next action.
+    expect(VENDOR_REVIEW_COMING).toBe(true);
+    expect(statusOf("vendorDueDiligence", { vendors: 2, vendorsAssessed: 2, vendorAssessments: 2 })).toBe("coming");
+    const c = (over: Partial<PathCounts>) => ({ ...EMPTY_PATH_COUNTS, ...over });
+    expect(vendorDueDiligenceStatus(c({ vendors: 2, vendorsAssessed: 1, vendorAssessments: 1 }))).toBe("started");
+    expect(vendorDueDiligenceStatus(c({ vendors: 2, vendorsAssessed: 2, vendorAssessments: 2 }))).toBe("done");
+    expect(vendorDueDiligenceStatus(c({}))).toBe("todo");
   });
 
   it("rights: ready when needed once the intake is set up; a logged request alone does not finish it", () => {
@@ -417,7 +425,8 @@ describe("the current page", () => {
   it("marks exactly one step, telling a page's views apart by their query", () => {
     expect(currentStepId(PATH, "/privacy/quickstart")).toBe("quickstart");
     expect(currentStepId(PATH, "/privacy/vendors")).toBe("vendors");
-    expect(currentStepId(PATH, "/privacy/vendors", "view=due-diligence")).toBe("vendorDueDiligence");
+    // The due-diligence view has no step of its own while that step is coming.
+    expect(currentStepId(PATH, "/privacy/vendors", "view=due-diligence")).toBe("vendors");
     expect(currentStepId(PATH, "/privacy/vendors/abc")).toBe("vendors");
     expect(currentStepId(PATH, "/privacy/data-inventory")).toBe("dataInventory");
     expect(currentStepId(PATH, "/privacy/data-inventory/processing-activities")).toBe("ropa");

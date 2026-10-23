@@ -203,7 +203,7 @@ export function PathMenu<C>({
               value={progress?.done ?? null}
               total={progress?.total ?? 0}
               size={32}
-              complete={progress?.state === "done"}
+              complete={progress?.state === "done" || progress?.state === "ready"}
             >
               {number}
             </ProgressRing>
@@ -321,7 +321,7 @@ export function PathMenu<C>({
               <ProgressRing
                 value={progress?.done ?? null}
                 total={progress?.total ?? 0}
-                complete={progress?.state === "done"}
+                complete={progress?.state === "done" || progress?.state === "ready"}
               >
                 {stageNumber(config, stage.id) ?? index + 1}
               </ProgressRing>

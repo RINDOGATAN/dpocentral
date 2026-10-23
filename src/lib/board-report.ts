@@ -19,7 +19,7 @@
  * Tested in tests/board-report.test.ts.
  */
 
-import type { DocumentGap, DocumentStatus, EvaluatedDocument } from "@/config/document-register";
+import { isStandby, type DocumentGap, type DocumentStatus, type EvaluatedDocument } from "@/config/document-register";
 import type { PathConfig, PathStatuses, ProgramFigure, StageWord } from "@/components/guided/path";
 import type { PlanWindow } from "@/components/guided/plan";
 import type { NeedsActionItem, NeedsActionKind } from "@/lib/needs-action";
@@ -257,7 +257,11 @@ export function documentSplit(documents: readonly EvaluatedDocument[]): {
 } {
   return {
     ready: documents.filter((d) => d.status.state === "ready"),
-    missing: documents.filter((d) => d.status.state === "draft" || d.status.state === "needsInput"),
+    // A document on standby (waiting only for a breach or a request, with the
+    // means in place) is not missing.
+    missing: documents.filter(
+      (d) => d.status.state === "draft" || (d.status.state === "needsInput" && !isStandby(d.status)),
+    ),
   };
 }
 
@@ -310,7 +314,7 @@ export function topRisks(
     return i < 0 ? DOCUMENT_PRIORITY.length : i;
   };
   const gaps = documents
-    .filter((d) => d.status.state === "draft" || d.status.state === "needsInput")
+    .filter((d) => d.status.state === "draft" || (d.status.state === "needsInput" && !isStandby(d.status)))
     .filter((d) => DOCUMENT_PRIORITY.includes(d.id))
     // Waiting for an input is a bigger gap than a draft.
     .sort(

@@ -5521,7 +5521,7 @@
           "figure": "La cifra del programa, «N de M pasos confirmados», con cuántos pasos están por confirmar, en curso y sin empezar.",
           "areas": "Seis áreas, una por cada fase de la ruta, cada una con su estado y su siguiente acción. Al pulsar un área se abre esa acción.",
           "documents": "Los documentos que puedes generar hoy, con el botón «Descargar documentos listos» (consulta Documentos más abajo).",
-          "next": "Tus tres próximas acciones, junto a Plazos en riesgo (consulta Próximas acciones y plazos más abajo).",
+          "next": "Tus tres próximas acciones, junto a Próximos plazos (consulta Próximas acciones y plazos más abajo).",
           "missing": "Lo que falta: los pasos sin empezar y los documentos que aún no están en DPO Central."
         },
         "calloutTitle": "Los borradores cuentan cuando se confirman",
@@ -9927,6 +9927,7 @@
     "stageProgress": "{done} de {total}",
     "stageState": {
       "todo": "sin empezar",
+      "ready": "a punto",
       "started": "en curso",
       "done": "hecho",
       "coming": "próximamente",
@@ -10114,7 +10115,8 @@
       "coming": "Aún no en DPO Central",
       "confirm": "Confirma los registros en borrador",
       "step": "Siguiente: {step}",
-      "done": "Todos los pasos hechos"
+      "done": "Todos los pasos hechos",
+      "ready": "Listo para cuando haga falta"
     },
     "nextActions": {
       "title": "Tus tres próximas acciones",
@@ -10126,7 +10128,7 @@
       "toConfirm": "Los registros en borrador cuentan cuando una persona los confirma."
     },
     "deadlines": {
-      "title": "Plazos en riesgo",
+      "title": "Próximos plazos",
       "breachDecision": "Brecha {ref}: decide si notificar",
       "breachNotify": "Brecha {ref}: notificar",
       "dsarDue": "La solicitud de derechos {ref} vence",
@@ -10334,7 +10336,9 @@
     "needsAction": {
       "title": "Requiere acción",
       "subtitle": "Todo lo que está pendiente, en un solo lugar.",
-      "empty": "Ahora mismo no hay nada pendiente.",
+      "empty": "No hay plazos, aprobaciones ni revisiones pendientes.",
+    "nextSteps": "Siguientes pasos de tu programa",
+    "documentsToComplete": "{count, plural, one {# documento por completar, en el resumen} other {# documentos por completar, en el resumen}}",
       "deptNote": "Se muestra un departamento. Los elementos de toda la organización están en la lista completa.",
       "kind": {
         "review-due": "Revisiones pendientes",
@@ -10615,16 +10619,24 @@
       "ready": "listo",
       "draft": "borrador",
       "needsInput": "falta un dato",
+      "standby": "a punto",
+      "needsModule": "requiere módulo",
+      "needsSetting": "requiere ajuste",
       "notYet": "aún no en DPO Central"
     },
     "legend": {
       "ready": "Listo",
       "draft": "Borrador, con lo que falta",
       "needsInput": "Falta un dato, que se indica",
+      "standby": "A punto, para cuando haga falta",
+      "needsModule": "Requiere un módulo",
+      "needsSetting": "Requiere un ajuste",
       "notYet": "Aún no en DPO Central"
     },
     "needs": "necesita: {input}",
     "needsLine": "Necesita: {input}",
+    "standbyLine": "Listo para cuando haga falta.",
+    "waitingLine": "{count, plural, one {# documento por completar} other {# documentos por completar}}",
     "inputs": {
       "jurisdiction": "dónde operas",
       "activity": "una actividad de tratamiento",
@@ -10643,8 +10655,8 @@
     },
     "inputAction": {
       "default": "Añadir",
-      "dpiaModule": "Cómo conseguirlo",
-      "dpiaModuleHosted": "Cómo conseguirlo",
+      "dpiaModule": "Ver cómo conseguirlo",
+      "dpiaModuleHosted": "Ver cómo conseguirlo",
       "aiAssist": "Abrir ajustes",
       "dpaFacts": "Empezar",
       "dpiaStart": "Empezar",
@@ -10700,6 +10712,7 @@
       "privacyNotice": "Política de privacidad",
       "dpoAppointment": "Designación del DPD",
       "trainingRecord": "Registro de formación del personal",
+      "vendorReviewReport": "Informe de diligencia debida de proveedores",
       "consentRecords": "Avisos y registros de consentimiento",
       "responseLetter": "Carta de respuesta a una solicitud de derechos",
       "boardReport": "Informe ejecutivo"

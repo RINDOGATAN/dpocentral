@@ -17,9 +17,30 @@ export function documentName(t: Translate, id: string): string {
   return t(`items.${id}`);
 }
 
-/** "ready", "draft", "needs: the DPIA module", "not in DPO Central yet". */
+/**
+ * The badge a document row carries. A row waiting for an input says which kind
+ * of input: data a person adds ("needs an input"), a module, or a setting. A
+ * row waiting only for an event that has not happened is "ready when needed".
+ */
+export type DocumentBadge = "ready" | "standby" | "draft" | "needsInput" | "needsModule" | "needsSetting" | "notYet";
+
+const MODULE_INPUTS: ReadonlySet<string> = new Set(["dpiaModule", "dpiaModuleHosted"]);
+const SETTING_INPUTS: ReadonlySet<string> = new Set(["aiAssist"]);
+
+export function documentBadge(status: DocumentStatus): DocumentBadge {
+  if (status.state !== "needsInput") return status.state;
+  if (status.standby) return "standby";
+  if (MODULE_INPUTS.has(status.input)) return "needsModule";
+  if (SETTING_INPUTS.has(status.input)) return "needsSetting";
+  return "needsInput";
+}
+
+/** "ready", "draft", "ready when needed", "needs: the DPIA module", "not in DPO Central yet". */
 export function documentStateText(t: Translate, status: DocumentStatus): string {
-  if (status.state === "needsInput") return t("needs", { input: t(`inputs.${status.input}`) });
+  if (status.state === "needsInput") {
+    if (status.standby) return t("state.standby");
+    return t("needs", { input: t(`inputs.${status.input}`) });
+  }
   return t(`state.${status.state}`);
 }
 

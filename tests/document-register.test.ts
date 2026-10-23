@@ -135,6 +135,7 @@ describe("d4: the register", () => {
       "privacyNotice",
       "dpoAppointment",
       "trainingRecord",
+      "vendorReviewReport",
       "consentRecords",
       "responseLetter",
     ]);
@@ -224,6 +225,7 @@ describe("d4: the states", () => {
       privacyNotice: "notYet",
       dpoAppointment: "notYet",
       trainingRecord: "notYet",
+      vendorReviewReport: "notYet",
       consentRecords: "notYet",
       responseLetter: "notYet",
     });
@@ -391,13 +393,15 @@ describe("the menu and the dashboard cannot disagree", () => {
     for (const bundle of [en, es]) expect(bundle.guided.stageState.action).toBeTruthy();
   });
 
-  it("the menu gathers the steps with no page yet at the foot instead of listing them", () => {
+  it("the menu does not list the steps with no page yet: the documents panel names them once", () => {
     const menu = read("src/components/guided/path-menu.tsx");
     expect(menu).toContain("isShown(step, statuses) && !step.coming");
-    expect(menu).toContain('data-testid="menu-not-yet"');
     const layout = read("src/components/guided/guided-layout.tsx");
-    expect(layout).toContain("notYetEntries({ dsarEnabled: isDsarModuleEnabled() })");
+    expect(layout).not.toContain("notYetEntries(");
     expect(layout).toContain("stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents)");
+    const dashboard = read("src/components/guided/guided-dashboard.tsx");
+    expect(dashboard).toContain('data-testid="doc-not-yet"');
+    expect(dashboard).not.toContain("MissingCard");
   });
 });
 
