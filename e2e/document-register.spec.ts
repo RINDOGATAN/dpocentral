@@ -105,7 +105,10 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   const all = Object.values(lines).join(" | ");
   for (const row of rows) {
     if (row.name === (es ? "Informe del programa de privacidad" : "Privacy program report")) continue;
-    const words = row.kind === "needsInput" ? row.detail : row.state;
+    // The panel's own line is capitalised ("Needs: ..."); inline in the menu
+    // it reads "· needs: ...". Same words otherwise.
+    const words =
+      row.kind === "needsInput" ? row.detail.charAt(0).toLowerCase() + row.detail.slice(1) : row.state;
     // The activities and vendors registers state counts ("1 confirmed, 2 in
     // draft") where the panel says "draft"; the state is the same.
     const counted = row.kind === "draft" && all.includes(`${row.name} · `) && new RegExp(`${row.name.replace(/[()]/g, "\\$&")} · \\d+ `).test(all);
