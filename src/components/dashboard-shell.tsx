@@ -107,7 +107,6 @@ function DashboardFooter() {
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>{tFooter("serviceBy", { brandName: brand.nameUppercase, companyName: brand.companyName })}</p>
-          <p>{tFooter("disclaimer")}</p>
           <p>
             DPO Central &middot; AGPL-3.0 &middot; &copy; Rindogatan LLC &middot;{" "}
             <Link href="/licenses" className="underline hover:text-foreground transition-colors">
