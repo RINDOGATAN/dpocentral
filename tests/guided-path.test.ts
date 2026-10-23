@@ -134,12 +134,14 @@ describe("the shape of the path", () => {
       "/privacy/reports",
       "/privacy/regulations",
       "/privacy/ai-systems",
-      "/privacy/experts",
       "/privacy/settings",
     ];
     for (const href of classic) {
       expect(guided.has(href), href).toBe(true);
     }
+    // The experts directory has no entries: its link stays out while the
+    // directory is off (src/config/features.ts).
+    expect(guided.has("/privacy/experts")).toBe(false);
   });
 
   it("shows Billing only when the store is on", () => {

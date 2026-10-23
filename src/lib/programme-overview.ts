@@ -201,6 +201,15 @@ export function programmeAreas<C>(
   });
 }
 
+/**
+ * The tiles the dashboard's Areas panel shows: every area but one whose steps
+ * are all still coming, so each tile shown can be acted on. The menu, the
+ * clients view and the board report keep all six.
+ */
+export function actionableAreas<C>(areas: readonly Area<C>[]): Area<C>[] {
+  return areas.filter((area) => area.word !== "coming");
+}
+
 /** Most urgent first: deadlines in law, then approvals, drafts and reviews. */
 const NEEDS_ACTION_PRIORITY: NeedsActionKind[] = [
   "breach-window",

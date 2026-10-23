@@ -4,7 +4,7 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -73,9 +73,15 @@ const riskColors: Record<string, string> = {
   CRITICAL: "border-destructive bg-destructive text-destructive-foreground",
 };
 
+const VENDOR_TABS = ["overview", "contracts", "assessments", "reviews"];
+
 export default function VendorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
+  // ?tab=contracts opens the Contracts tab (the vendor list links here so
+  // when no DPA has been produced yet).
+  const requestedTab = useSearchParams().get("tab");
+  const initialTab = requestedTab && VENDOR_TABS.includes(requestedTab) ? requestedTab : "overview";
   const { organization } = useOrganization();
   const { canWrite, isAdmin } = useOrgRole();
   const t = useTranslations("toasts");
@@ -330,7 +336,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={initialTab}>
         <TabsList>
           <TabsTrigger value="overview">{tp("tabs.overview")}</TabsTrigger>
           <TabsTrigger value="contracts">{tp("tabs.contractsWithCount", { count: vendor.contracts?.length ?? 0 })}</TabsTrigger>

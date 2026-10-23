@@ -153,7 +153,9 @@ export const INPUTS: Record<DocumentInput, { href: string; external?: boolean }>
   // Hosted after the two free DPIAs: the storefront's plans page (resolved
   // per language where it is shown, src/lib/hosted.ts plansUrl).
   dpiaModuleHosted: { href: "plans", external: true },
-  dpaFacts: { href: "/privacy/vendors" },
+  // The vendor list says what is missing and opens each vendor on its
+  // Contracts tab, where the DPA is produced.
+  dpaFacts: { href: "/privacy/vendors?missing=dpa" },
   incident: { href: "/privacy/incidents/new" },
   aiAssist: { href: "/privacy/settings" },
   notificationRecord: { href: "/privacy/incidents" },

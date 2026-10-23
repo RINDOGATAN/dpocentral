@@ -2253,6 +2253,7 @@
     "vendors": {
       "title": "Vendors and processors",
       "subtitle": "Third-party vendors and the processors that handle personal data for you (vendor management)",
+      "missingDpa": "Missing: a DPA. Open a vendor and, on its Contracts tab, select “Produce DPA + TIA”.",
       "exportRegister": "Export Register",
       "exportPdf": "Download as PDF",
       "exportCsv": "Download as CSV",
@@ -10617,6 +10618,7 @@
       "notYet": "Not in DPO Central yet"
     },
     "needs": "needs: {input}",
+    "needsLine": "Needs: {input}",
     "inputs": {
       "jurisdiction": "where you operate",
       "activity": "a processing activity",

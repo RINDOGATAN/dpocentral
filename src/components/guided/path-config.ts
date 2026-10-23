@@ -47,7 +47,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { withoutSteps, type PathConfig } from "./path";
-import { isDsarModuleEnabled } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 import type { PlanWindow } from "./plan";
 
 /**
@@ -431,7 +431,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
     ...(auditTrail
       ? [{ id: "auditTrail", href: "/privacy/audit-trail", icon: ScrollText }]
       : []),
-    { id: "experts", href: "/privacy/experts", icon: Search },
+    ...(features.expertDirectoryEnabled ? [{ id: "experts", href: "/privacy/experts", icon: Search }] : []),
     { id: "skills", href: "/privacy/skills", icon: KeyRound },
     ...(stripeEnabled
       ? [{ id: "billing", href: "/privacy/billing", icon: CreditCard }]

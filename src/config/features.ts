@@ -79,8 +79,9 @@ const defaultFeatures: FeatureFlags = {
   tiaEnabled: true,
   vendorAssessmentEnabled: true,
 
-  // Expert Directory
-  expertDirectoryEnabled: true,
+  // Expert Directory: off. The directory has no entries; its boxes, links
+  // and page stay hidden until it does.
+  expertDirectoryEnabled: false,
 
   // New Features
   notificationsEnabled: true,
