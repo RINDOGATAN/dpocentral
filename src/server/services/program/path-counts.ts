@@ -27,6 +27,15 @@ const COMPLETENESS_SCAN = 500;
 /** The risk assessments the "Assessments" step counts. */
 const RISK_TYPES = ["DPIA", "PIA"] as const;
 
+/**
+ * A transfer is a draft while the record it hangs off is: its processing
+ * activity or, when it has none, its vendor (the transfer to TODO.LAW,
+ * src/server/services/todolaw-processor.ts).
+ */
+const TRANSFER_ON_DRAFT = {
+  OR: [{ processingActivity: DRAFT_WHERE }, { processingActivityId: null, vendor: DRAFT_WHERE }],
+};
+
 /** Recorded compliance statuses ("PENDING" is not a recorded assessment). */
 const RECORDED_TRANSFER_STATUS = ["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT"];
 
@@ -106,7 +115,7 @@ export async function loadPathCounts(
     prisma.assessment.count({ where: { ...org, template: { type: "LIA" } } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "LIA" } } }),
     prisma.dataTransfer.count({ where: org }),
-    prisma.dataTransfer.count({ where: { ...org, processingActivity: DRAFT_WHERE } }),
+    prisma.dataTransfer.count({ where: { ...org, ...TRANSFER_ON_DRAFT } }),
     prisma.dSARRequest.count({ where: org }),
     // The active intake form's shape, not just its presence: every org is
     // auto-seeded a default form so the public portal works out of the box, so
@@ -143,7 +152,7 @@ export async function loadPathCounts(
     prisma.assessment.count({ where: { ...org, ...vendorType, ...UNTOUCHED_AUTO_DRAFT } }),
     prisma.dataTransfer.count({ where: { ...org, complianceStatus: { in: RECORDED_TRANSFER_STATUS } } }),
     prisma.dataTransfer.count({
-      where: { ...org, complianceStatus: { in: RECORDED_TRANSFER_STATUS }, processingActivity: DRAFT_WHERE },
+      where: { ...org, complianceStatus: { in: RECORDED_TRANSFER_STATUS }, ...TRANSFER_ON_DRAFT },
     }),
   ]);
 
