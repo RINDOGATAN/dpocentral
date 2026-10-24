@@ -10,7 +10,11 @@
  */
 
 import type { AIRiskLevel } from "@prisma/client";
-import { aiSystemDefaultPurpose, aiSystemRecordDescription, aiSystemRecordName } from "@/lib/record-name";
+import {
+  aiSystemDefaultPurpose,
+  aiSystemRecordDescription,
+  aiSystemRecordName,
+} from "@/lib/record-name";
 
 // ============================================================
 // TYPES
@@ -29,6 +33,8 @@ export interface VendorCatalogAIFields {
   aiModels?: unknown; // Json - [{name, type, source, euAiActRiskTier}]
   euAiActAnnexIIIDomains?: string[];
   tags?: string[];
+  /** Legal name of the company behind the product, when the catalogue gives one. */
+  legalName?: string | null;
 }
 
 export interface AISystemCreateData {
@@ -68,9 +74,17 @@ const AI_RELATED_CATEGORIES = new Set([
 ]);
 
 const AI_RELATED_TAGS = new Set([
-  "ai", "ml", "machine-learning", "artificial-intelligence",
-  "llm", "gpt", "nlp", "computer-vision", "generative-ai",
-  "deep-learning", "neural-network",
+  "ai",
+  "ml",
+  "machine-learning",
+  "artificial-intelligence",
+  "llm",
+  "gpt",
+  "nlp",
+  "computer-vision",
+  "generative-ai",
+  "deep-learning",
+  "neural-network",
 ]);
 
 // ============================================================
@@ -86,8 +100,14 @@ export function isAiCapableVendor(catalog: VendorCatalogAIFields): boolean {
   if (catalog.euAiActRole != null) return true;
   if (catalog.aiTechniques.length > 0) return true;
   if (AI_RELATED_CATEGORIES.has(catalog.category)) return true;
-  if (catalog.subcategory && AI_RELATED_CATEGORIES.has(catalog.subcategory)) return true;
-  if (catalog.tags?.some((t) => typeof t === "string" && AI_RELATED_TAGS.has(t.toLowerCase()))) return true;
+  if (catalog.subcategory && AI_RELATED_CATEGORIES.has(catalog.subcategory))
+    return true;
+  if (
+    catalog.tags?.some(
+      (t) => typeof t === "string" && AI_RELATED_TAGS.has(t.toLowerCase()),
+    )
+  )
+    return true;
   return false;
 }
 
@@ -108,9 +128,15 @@ const ANNEX_III_HIGH_RISK_DOMAINS = new Set([
 
 function deriveRiskLevel(catalog: VendorCatalogAIFields): AIRiskLevel {
   // If the catalog has Annex III domain tags, it's HIGH_RISK
-  if (catalog.euAiActAnnexIIIDomains && catalog.euAiActAnnexIIIDomains.length > 0) {
+  if (
+    catalog.euAiActAnnexIIIDomains &&
+    catalog.euAiActAnnexIIIDomains.length > 0
+  ) {
     for (const domain of catalog.euAiActAnnexIIIDomains) {
-      if (typeof domain === "string" && ANNEX_III_HIGH_RISK_DOMAINS.has(domain.toLowerCase())) {
+      if (
+        typeof domain === "string" &&
+        ANNEX_III_HIGH_RISK_DOMAINS.has(domain.toLowerCase())
+      ) {
         return "HIGH_RISK";
       }
     }
@@ -118,15 +144,22 @@ function deriveRiskLevel(catalog: VendorCatalogAIFields): AIRiskLevel {
 
   // Check AI models for risk tier hints
   if (catalog.aiModels && Array.isArray(catalog.aiModels)) {
-    for (const model of catalog.aiModels as Array<{ euAiActRiskTier?: string }>) {
-      if (model.euAiActRiskTier === "HIGH_RISK" || model.euAiActRiskTier === "UNACCEPTABLE") {
+    for (const model of catalog.aiModels as Array<{
+      euAiActRiskTier?: string;
+    }>) {
+      if (
+        model.euAiActRiskTier === "HIGH_RISK" ||
+        model.euAiActRiskTier === "UNACCEPTABLE"
+      ) {
         return model.euAiActRiskTier as AIRiskLevel;
       }
     }
   }
 
   // Check capabilities for high-risk signals
-  const capsLower = catalog.aiCapabilities.map((c) => c.toLowerCase()).join(" ");
+  const capsLower = catalog.aiCapabilities
+    .map((c) => c.toLowerCase())
+    .join(" ");
   if (
     capsLower.includes("biometric") ||
     capsLower.includes("recruitment") ||
@@ -153,17 +186,59 @@ function deriveRiskLevel(catalog: VendorCatalogAIFields): AIRiskLevel {
 // MAPPING
 // ============================================================
 
+/**
+ * The company behind a catalogue product, from its legal name: the text before
+ * any parenthesis ("Microsoft Corporation (EU customers: ...)" gives
+ * "Microsoft Corporation"). Null when the catalogue gives no legal name.
+ */
+export function providerCompany(
+  legalName: string | null | undefined,
+): string | null {
+  const company = legalName?.split(" (")[0]?.trim();
+  return company ? company : null;
+}
+
+/**
+ * The provider of an AI system as shown. A provider equal to the catalogue
+ * product's name (what imports wrote before the legal name was carried) is
+ * replaced by the company behind the product when the catalogue knows it; any
+ * other value, typed by a person, is shown as stored.
+ */
+export function displayAiSystemProvider(
+  provider: string | null,
+  catalogName: string | null | undefined,
+  legalName: string | null | undefined,
+): string | null {
+  const company = providerCompany(legalName);
+  if (
+    provider &&
+    catalogName &&
+    company &&
+    provider.trim().toLowerCase() === catalogName.trim().toLowerCase()
+  ) {
+    return company;
+  }
+  return provider;
+}
+
 function deriveModelType(catalog: VendorCatalogAIFields): string | null {
-  if (catalog.aiModels && Array.isArray(catalog.aiModels) && catalog.aiModels.length > 0) {
+  if (
+    catalog.aiModels &&
+    Array.isArray(catalog.aiModels) &&
+    catalog.aiModels.length > 0
+  ) {
     const first = catalog.aiModels[0] as { type?: string };
     if (first.type) return first.type;
   }
   // Infer from techniques
   const techniques = catalog.aiTechniques.map((t) => t.toLowerCase());
-  if (techniques.some((t) => t.includes("llm") || t.includes("language model"))) return "LLM";
-  if (techniques.some((t) => t.includes("computer vision"))) return "Computer Vision";
+  if (techniques.some((t) => t.includes("llm") || t.includes("language model")))
+    return "LLM";
+  if (techniques.some((t) => t.includes("computer vision")))
+    return "Computer Vision";
   if (techniques.some((t) => t.includes("nlp"))) return "NLP";
-  if (techniques.some((t) => t.includes("deep learning"))) return "Deep Learning";
+  if (techniques.some((t) => t.includes("deep learning")))
+    return "Deep Learning";
   return null;
 }
 
@@ -184,14 +259,19 @@ export function buildAISystemFromCatalog(
 
   return {
     name: aiSystemRecordName(vendorName, locale),
-    description: aiSystemRecordDescription(vendorName, catalog.aiCapabilities, locale),
-    purpose: catalog.aiCapabilities.length > 0
-      ? catalog.aiCapabilities.join("; ")
-      : aiSystemDefaultPurpose(catalog.category, locale),
+    description: aiSystemRecordDescription(
+      vendorName,
+      catalog.aiCapabilities,
+      locale,
+    ),
+    purpose:
+      catalog.aiCapabilities.length > 0
+        ? catalog.aiCapabilities.join("; ")
+        : aiSystemDefaultPurpose(catalog.category, locale),
     riskLevel,
     category: catalog.subcategory ?? catalog.category,
     modelType: deriveModelType(catalog),
-    provider: vendorName,
+    provider: providerCompany(catalog.legalName) ?? vendorName,
     vendorId,
     aiCapabilities: catalog.aiCapabilities,
     aiTechniques: catalog.aiTechniques,

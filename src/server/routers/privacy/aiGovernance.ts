@@ -2,7 +2,12 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  organizationProcedure,
+  writerProcedure,
+  officerProcedure,
+} from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { AIRiskLevel, AISystemStatus } from "@prisma/client";
 import { createAssessmentFromActivity } from "../../services/assessment-auto-create";
@@ -13,6 +18,7 @@ import {
   getAiSentinelSystemStatus,
 } from "../../services/ai-sentinel/client";
 import type { DPCSystemPayload } from "../../services/ai-sentinel/types";
+import { withDisplayedProvider } from "../../services/ai-system-provider";
 
 /**
  * AI systems are read-only in DPO Central ("show AI systems read-only with 'Govern this in AI Sentinel'"). Their
@@ -28,7 +34,10 @@ const AI_SYSTEMS_READ_ONLY_MESSAGE =
   "AI systems are read-only in DPO Central. Govern them in AI Sentinel.";
 
 function assertAiSystemsReadOnly(): never {
-  throw new TRPCError({ code: "FORBIDDEN", message: AI_SYSTEMS_READ_ONLY_MESSAGE });
+  throw new TRPCError({
+    code: "FORBIDDEN",
+    message: AI_SYSTEMS_READ_ONLY_MESSAGE,
+  });
 }
 
 export const aiGovernanceRouter = createTRPCRouter({
@@ -46,7 +55,7 @@ export const aiGovernanceRouter = createTRPCRouter({
         search: z.string().optional(),
         limit: z.number().min(1).max(100).default(50),
         cursor: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const systems = await ctx.prisma.aISystem.findMany({
@@ -78,7 +87,10 @@ export const aiGovernanceRouter = createTRPCRouter({
         nextCursor = nextItem?.id;
       }
 
-      return { systems, nextCursor };
+      return {
+        systems: await withDisplayedProvider(ctx.prisma, systems),
+        nextCursor,
+      };
     }),
 
   // Get AI system by ID
@@ -104,7 +116,8 @@ export const aiGovernanceRouter = createTRPCRouter({
         });
       }
 
-      return system;
+      const [shown] = await withDisplayedProvider(ctx.prisma, [system]);
+      return shown;
     }),
 
   // Register a new AI system
@@ -125,7 +138,7 @@ export const aiGovernanceRouter = createTRPCRouter({
         humanOversight: z.string().optional(),
         transparencyMeasures: z.string().optional(),
         technicalDocUrl: z.string().optional(),
-      })
+      }),
     )
     // Read-only: authoring an AI system by hand is refused; govern in AI Sentinel.
     .mutation(() => assertAiSystemsReadOnly()),
@@ -150,7 +163,7 @@ export const aiGovernanceRouter = createTRPCRouter({
         humanOversight: z.string().optional().nullable(),
         transparencyMeasures: z.string().optional().nullable(),
         technicalDocUrl: z.string().optional().nullable(),
-      })
+      }),
     )
     // Read-only: editing an AI system is refused; govern in AI Sentinel.
     .mutation(() => assertAiSystemsReadOnly()),
@@ -167,10 +180,11 @@ export const aiGovernanceRouter = createTRPCRouter({
         organizationId: z.string(),
         purpose: z.string(),
         category: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
-      const { suggestRiskLevel } = await import("@/config/ai-act-classifications");
+      const { suggestRiskLevel } =
+        await import("@/config/ai-act-classifications");
       return suggestRiskLevel(input.purpose, input.category ?? "");
     }),
 
@@ -178,9 +192,8 @@ export const aiGovernanceRouter = createTRPCRouter({
   getClassifications: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async () => {
-      const { AI_ACT_CATEGORIES, getObligationsForRiskLevel } = await import(
-        "@/config/ai-act-classifications"
-      );
+      const { AI_ACT_CATEGORIES, getObligationsForRiskLevel } =
+        await import("@/config/ai-act-classifications");
       return {
         categories: AI_ACT_CATEGORIES,
         obligations: {
@@ -216,11 +229,11 @@ export const aiGovernanceRouter = createTRPCRouter({
         total,
         byRiskLevel: byRiskLevel.reduce(
           (acc, r) => ({ ...acc, [r.riskLevel]: r._count }),
-          {} as Record<string, number>
+          {} as Record<string, number>,
         ),
         byStatus: byStatus.reduce(
           (acc, s) => ({ ...acc, [s.status]: s._count }),
-          {} as Record<string, number>
+          {} as Record<string, number>,
         ),
       };
     }),
@@ -256,7 +269,7 @@ export const aiGovernanceRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         systemIds: z.array(z.string()).optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       if (!isAiSentinelConfigured()) {
@@ -308,7 +321,10 @@ export const aiGovernanceRouter = createTRPCRouter({
         dpoCentralVendorId: s.vendorId ?? undefined,
       }));
 
-      const result = await exportAISystems(ctx.session.user.email ?? "", payloads);
+      const result = await exportAISystems(
+        ctx.session.user.email ?? "",
+        payloads,
+      );
 
       // Update synced systems with AIS IDs. The ids come back from the
       // external service: only a system that was sent, and that belongs to
