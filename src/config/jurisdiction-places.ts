@@ -107,6 +107,14 @@ export function impliedBy(codes: readonly string[]): string[] {
   return withImpliedLaws(codes).filter((c) => codes.some((k) => (IMPLIED_LAWS[k] ?? []).includes(c)));
 }
 
+/**
+ * The chosen codes that bring `code` with them (Spain's LOPDGDD for the GDPR).
+ * While one is applied, `code` cannot be removed on its own.
+ */
+export function bringersOf(code: string, codes: readonly string[]): string[] {
+  return codes.filter((k) => k !== code && (IMPLIED_LAWS[k] ?? []).includes(code));
+}
+
 /** The places in the reader's language, in catalog order within each group. */
 export function placeOptions(locale: string | null | undefined): PlaceOption[] {
   const es = locale?.split("-")[0] === "es";

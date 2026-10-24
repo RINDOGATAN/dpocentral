@@ -891,6 +891,7 @@ export const vendorRouter = createTRPCRouter({
         expiringContracts,
         pendingQuestionnaires,
         upcomingReviews,
+        dpaContracts,
       ] = await Promise.all([
         ctx.prisma.vendor.count({
           where: { organizationId: ctx.organization.id },
@@ -934,9 +935,14 @@ export const vendorRouter = createTRPCRouter({
             },
           },
         }),
+        // As the documents panel counts them (src/server/services/program/document-facts.ts).
+        ctx.prisma.vendorContract.count({
+          where: { type: "DPA", vendor: { organizationId: ctx.organization.id } },
+        }),
       ]);
 
       return {
+        dpaContracts,
         total,
         byStatus: byStatus.reduce((acc, s) => ({ ...acc, [s.status]: s._count }), {}),
         byRiskTier: byRiskTier.reduce((acc, r) => ({ ...acc, [r.riskTier!]: r._count }), {}),

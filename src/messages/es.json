@@ -2080,6 +2080,8 @@
         "breachShort": "Brecha: {hours} h",
         "appliedSummary": "{region} | Derechos: {days, plural, one {# día} other {# días}} | Brecha: {hours} h",
         "appliedSummaryMonths": "{region} | Derechos: {months, plural, one {# mes} other {# meses}} | Brecha: {hours} h",
+        "includedWith": "incluida con {place}",
+        "remove": "Quitar {name}",
         "moreItems": "+{count} más",
         "apply": "Aplicar"
       },

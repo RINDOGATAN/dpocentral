@@ -73,7 +73,7 @@ export default function VendorsPage() {
   // Reached from the documents panel when no DPA has been produced yet
   // (src/config/document-register.ts, INPUTS.dpaFacts): say what is missing
   // and open each vendor on its Contracts tab.
-  const missingDpa = useSearchParams().get("missing") === "dpa";
+  const missingDpaLink = useSearchParams().get("missing") === "dpa";
 
   const {
     data: vendorsPages,
@@ -93,10 +93,13 @@ export default function VendorsPage() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
   const vendorsData = { vendors: vendorsPages?.pages.flatMap((p) => p.vendors) ?? [] };
 
-  const { data: statsData } = trpc.vendor.getStats.useQuery(
+  // Reached from the documents panel, the counts are read afresh so the notice
+  // never outlives the DPA that answers it.
+  const { data: statsData, isFetchedAfterMount: statsFresh } = trpc.vendor.getStats.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id, refetchOnMount: missingDpaLink ? "always" : true }
   );
+  const missingDpa = missingDpaLink && statsFresh && statsData?.dpaContracts === 0;
 
   const { data: catalogAccess } = trpc.vendor.hasVendorCatalogAccess.useQuery(
     { organizationId: organization?.id ?? "" },

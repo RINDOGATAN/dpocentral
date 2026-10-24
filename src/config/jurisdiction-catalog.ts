@@ -1381,6 +1381,20 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
     relevantJurisdictions: ["FADP"],
   },
   {
+    id: "spain_presence",
+    question: "Are you established in Spain, or do you process data of individuals in Spain?",
+    helpText:
+      "Spain's LOPDGDD complements the EU GDPR with national rules (for example on the age of consent, employee data and the DPO). It always applies together with the GDPR.",
+    relevantJurisdictions: ["LOPDGDD"],
+  },
+  {
+    id: "andorra_presence",
+    question: "Are you established in Andorra, or do you process data of individuals in Andorra?",
+    helpText:
+      "Andorra is not in the EU and has its own data protection law (the LQPD), closely aligned with the GDPR.",
+    relevantJurisdictions: ["LQPD"],
+  },
+  {
     id: "california_consumers",
     question:
       "Do you have customers or users in California, or collect data of California residents?",

@@ -39,6 +39,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useLocale, useTranslations } from "next-intl";
 import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { toneMark } from "@/config/status-palette";
+import { bringersOf, placeOptions } from "@/config/jurisdiction-places";
 
 export default function RegulationsPage() {
   const t = useTranslations("pages.regulations");
@@ -76,6 +77,8 @@ export default function RegulationsPage() {
 
   const catalogItems = (catalog?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
   const appliedItems = (applied?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
+  const appliedCodes = appliedItems.map((j) => j.code);
+  const places = placeOptions(locale);
   const tab = tabChoice ?? (appliedItems.length > 0 ? "applied" : "catalog");
 
   const utils = trpc.useUtils();
@@ -260,6 +263,9 @@ export default function RegulationsPage() {
             <div className="space-y-3">
               {appliedItems.map((j) => {
                 const reqStatus = statusByJurisdiction.get(j.jurisdictionId);
+                // Included with another applied law (the GDPR with Spain): not removable on its own.
+                const bringerCode = bringersOf(j.code, appliedCodes)[0];
+                const bringer = bringerCode ? places.find((p) => p.code === bringerCode) : undefined;
                 return (
                   <Card key={j.id}>
                     <CardContent className="py-4 space-y-4">
@@ -278,9 +284,15 @@ export default function RegulationsPage() {
                             </div>
                           </div>
                         </div>
+                        {bringer ? (
+                          <span className="text-xs text-muted-foreground text-right" data-testid={`applied-included-${j.code}`}>
+                            {t("card.includedWith", { place: bringer.place })}
+                          </span>
+                        ) : (
                         <Button
                           size="sm"
                           variant="ghost"
+                          aria-label={t("card.remove", { name: j.name })}
                           onClick={() =>
                             removeMutation.mutate({
                               organizationId: orgId,
@@ -291,6 +303,7 @@ export default function RegulationsPage() {
                         >
                           <X className="w-4 h-4" />
                         </Button>
+                        )}
                       </div>
 
                       {reqStatus && reqStatus.requirements.length > 0 && (
