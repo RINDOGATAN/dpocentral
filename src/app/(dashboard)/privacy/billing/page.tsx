@@ -102,7 +102,7 @@ export default function BillingPage() {
   const addOnRows = (plans ?? []).map((pkg) => {
     const entitlement = entitlementsBySkill.get(pkg.skillId);
     const isActive = !!entitlement || pkg.isEntitled;
-    const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId);
+    const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId) && !isActive;
     return {
       id: pkg.id,
       skillId: pkg.skillId,

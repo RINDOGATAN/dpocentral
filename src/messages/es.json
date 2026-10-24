@@ -1954,7 +1954,7 @@
       "title": "Informes",
       "subtitle": "Panel de cumplimiento: en qué punto está tu programa de privacidad",
       "saveSnapshot": "Guardar instantánea",
-      "regulatoryReport": "Informe regulatorio",
+      "regulatoryReport": "Informe normativo",
       "score": {
         "title": "Puntuación por módulos",
         "subtitle": "Ponderada entre todas las áreas, por importancia.",
@@ -4854,8 +4854,8 @@
       }
     },
     "regulatoryLandscape": {
-      "pageTitle": "Panorama regulatorio",
-      "coverTitle": "Informe del panorama regulatorio",
+      "pageTitle": "Informe normativo",
+      "coverTitle": "Informe normativo",
       "coverSubtitle": "Análisis de cumplimiento y exposición del programa de privacidad",
       "coverGenerated": "Generado: {date}",
       "coverConfidential": "CONFIDENCIAL: este documento ofrece una visión general del cumplimiento normativo para uso interno de los equipos de privacidad y jurídico. No debe distribuirse externamente sin autorización.",
@@ -5570,15 +5570,15 @@
       },
       "navigation": {
         "title": "El menú",
-        "description": "El menú de la izquierda sigue la ruta de un programa de privacidad, en seis fases.",
+        "description": "El menú de la izquierda sigue la ruta de un programa de privacidad, en cinco fases numeradas.",
         "organisation": "Arriba está la organización en la que trabajas. Abre la lista de tus organizaciones, que termina con «Nueva organización», o «Añadir un cliente» para los profesionales de la privacidad. Los profesionales de la privacidad ven también Todos los clientes, una tabla con cada cliente.",
-        "stages": "Después vienen Resumen (el panel) y las seis fases numeradas. Cada fase se abre en sus pasos:",
-        "states": "Cada fase y cada paso muestran su estado: hecho, en curso, sin empezar, por confirmar o requiere acción.",
+        "stages": "Después vienen Resumen (el panel) y las cinco fases numeradas. Cada fase se abre en sus pasos:",
+        "states": "Cada fase y cada paso muestran su estado: hecho, a punto (listo para cuando haga falta), en curso, sin empezar, por confirmar o requiere acción.",
         "documentLines": "Una línea bajo cada paso indica los documentos que genera y su estado.",
         "optional": "Los pasos opcionales nunca cuentan en la cifra del programa. Sistemas de IA solo aparece cuando hay un sistema de IA registrado.",
-        "notYet": "«Aún no en DPO Central», al pie de la ruta, recoge lo que el producto aún no hace. Una fase que solo tiene esos pasos indica «Próximamente».",
+        "notYet": "Lo que DPO Central aún no hace se nombra una sola vez, en la última línea de la lista de documentos del panel. Una fase que solo tiene esos pasos indica «próximamente».",
         "lockTitle": "El candado",
-        "lockBody": "En tu propia instancia, un pequeño candado junto a Diligencia debida de proveedores en el menú, o junto a la EIPD en Evaluaciones y en el selector de tipo, indica que la organización no tiene licencia para ese tipo de evaluación premium. El piloto alojado nunca muestra un candado.",
+        "lockBody": "En tu propia instancia, un pequeño candado junto a la EIPD en Evaluaciones y en el selector de tipo indica que la organización no tiene licencia para ese tipo de evaluación premium. El piloto alojado nunca muestra un candado.",
         "libraryTitle": "Biblioteca y herramientas",
         "library": {
           "needsAction": "Todo lo que espera a una persona, en un solo lugar.",
@@ -6638,7 +6638,7 @@
           "NotApplied": "No aplicada"
         },
         "infoTitle": "Jurisdicción principal",
-        "infoBody": "Establecer una jurisdicción principal determina el plazo predeterminado de respuesta a las solicitudes de derechos y la ventana de notificación de brechas que se usan en toda tu organización. Las demás jurisdicciones aplicadas se siguen en paralelo. Las nuevas solicitudes toman el plazo de tu jurisdicción principal; el informe del panorama regulatorio muestra qué norma es la más estricta."
+        "infoBody": "Establecer una jurisdicción principal determina el plazo predeterminado de respuesta a las solicitudes de derechos y la ventana de notificación de brechas que se usan en toda tu organización. Las demás jurisdicciones aplicadas se siguen en paralelo. Las nuevas solicitudes toman el plazo de tu jurisdicción principal; el informe normativo muestra qué norma es la más estricta."
       },
       "impact": {
         "title": "Impacto en el sistema",
@@ -6662,7 +6662,7 @@
           }
         },
         "noteTitle": "La jurisdicción principal fija el plazo",
-        "noteBody": "Las nuevas solicitudes toman el plazo de la jurisdicción principal de tu organización. Cuando se aplican varias jurisdicciones, el sistema no cambia por sí solo a la más estricta: el informe del panorama regulatorio las compara y muestra qué norma es la más estricta. Por ejemplo, si el RGPD da un mes para responder a una solicitud de derechos y la LGPD da 15 días, el informe muestra el plazo de 15 días, y puedes hacer principal la jurisdicción más estricta."
+        "noteBody": "Las nuevas solicitudes toman el plazo de la jurisdicción principal de tu organización. Cuando se aplican varias jurisdicciones, el sistema no cambia por sí solo a la más estricta: el informe normativo las compara y muestra qué norma es la más estricta. Por ejemplo, si el RGPD da un mes para responder a una solicitud de derechos y la LGPD da 15 días, el informe muestra el plazo de 15 días, y puedes hacer principal la jurisdicción más estricta."
       },
       "nav": {
         "previous": "Cumplimiento de transferencias",
@@ -6801,7 +6801,7 @@
           "portfolioDesc": ": resumen de EIPD/PIA/EIT/EIL de todo el programa",
           "assessmentLabel": "Evaluación (individual)",
           "assessmentDesc": ": cuestionario completo con respuestas y puntuación de riesgo",
-          "regulatoryLabel": "Panorama regulatorio",
+          "regulatoryLabel": "Informe normativo",
           "regulatoryDesc": ": jurisdicciones aplicadas y estado de cumplimiento"
         },
         "flowTipTitle": "Mapa de flujos de datos en los PDF",
@@ -7182,7 +7182,7 @@
             "desc": "Volúmenes de solicitudes, cumplimiento de plazos, tendencias de resolución (sin datos personales)"
           },
           "regulatory": {
-            "name": "Panorama regulatorio",
+            "name": "Informe normativo",
             "desc": "Análisis de jurisdicciones con exposición a transferencias y resumen de sanciones"
           },
           "inventory": {
@@ -10625,12 +10625,12 @@
       "notYet": "aún no en DPO Central"
     },
     "legend": {
-      "ready": "Listo",
-      "draft": "Borrador, con lo que falta",
-      "needsInput": "Falta un dato, que se indica",
-      "standby": "A punto, para cuando haga falta",
-      "needsModule": "Requiere un módulo",
-      "needsSetting": "Requiere un ajuste",
+      "ready": "listo",
+      "draft": "borrador, con lo que falta",
+      "needsInput": "falta un dato, que se indica",
+      "standby": "a punto, para cuando haga falta",
+      "needsModule": "requiere un módulo",
+      "needsSetting": "requiere un ajuste",
       "notYet": "Aún no en DPO Central"
     },
     "needs": "necesita: {input}",

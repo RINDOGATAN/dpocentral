@@ -258,7 +258,10 @@ export default function SkillsPage() {
         ) : (
           <ul className="grid gap-3">
             {packages.map((pkg) => {
-              const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId);
+              // Announced types read "coming" only while no template exists for
+              // them, the same rule as the new-assessment picker: the PIA's
+              // open-source template is seeded on every install.
+              const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId) && !pkg.installed;
               const active = !!pkg.entitlement?.isActive;
               // Features (no assessmentType) are in-app capabilities, free on
               // self-host — never a "buy" item there. Only downloadable assessment

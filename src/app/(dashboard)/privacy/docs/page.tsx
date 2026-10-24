@@ -23,7 +23,7 @@ import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import Link from "next/link";
-import { isDsarModuleEnabled } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 
 /**
  * Getting started: the dashboard, the documents panel, the next actions and
@@ -71,7 +71,10 @@ export default async function DocsGettingStartedPage() {
     "assessment-review",
   ].filter((kind) => dsarOn || kind !== "dsar-due");
 
-  const libraryItems = ["needsAction", "incomplete", "reports", "auditTrail", "experts", "skills", "help", "settings"] as const;
+  // The experts entry follows the experts switch, like the directory itself.
+  const libraryItems = (
+    ["needsAction", "incomplete", "reports", "auditTrail", "experts", "skills", "help", "settings"] as const
+  ).filter((item) => item !== "experts" || features.expertDirectoryEnabled);
 
   const roleRows = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
 
