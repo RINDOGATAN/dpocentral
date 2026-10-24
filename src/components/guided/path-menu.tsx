@@ -186,11 +186,13 @@ export function PathMenu<C>({
           onNavigate={onNavigate}
         />
         <div className="my-1 h-px w-8 bg-border" />
-        {config.stages.map((stage, index) => {
+        {config.stages.map((stage) => {
           const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const href = stageTarget(stage, statuses);
-          const number = stageNumber(config, stage.id) ?? index + 1;
-          const label = `${t("stageNumber", { number })}: ${t(`stages.${stage.id}`)}${
+          // A stage with no step available yet carries no number (stageNumber),
+          // so it must not borrow its position and repeat the next stage's.
+          const number = stageNumber(config, stage.id);
+          const label = `${number !== null ? `${t("stageNumber", { number })}: ` : ""}${t(`stages.${stage.id}`)}${
             progress
               ? progress.state === "coming"
                 ? `, ${t("stageState.coming")}`
@@ -281,7 +283,7 @@ export function PathMenu<C>({
         {t("pathTitle")}
       </p>
       <ol className="flex flex-col gap-0.5">
-        {config.stages.map((stage, index) => {
+        {config.stages.map((stage) => {
           const open = isOpen(stage);
           const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const panelId = `path-stage-${variant}-${stage.id}`;
@@ -325,7 +327,7 @@ export function PathMenu<C>({
                 complete={progress?.state === "done"}
                 ready={progress?.state === "ready"}
               >
-                {stageNumber(config, stage.id) ?? index + 1}
+                {stageNumber(config, stage.id) ?? ""}
               </ProgressRing>
               <span className="flex min-w-0 flex-1 flex-col">
                 <span
