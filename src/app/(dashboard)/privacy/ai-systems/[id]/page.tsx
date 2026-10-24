@@ -3,7 +3,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { use } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +30,11 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
 import { useLocale, useTranslations } from "next-intl";
-import { displayAiSystemDescription, displayAiSystemName, displayAiSystemPurpose } from "@/lib/record-name";
+import {
+  displayAiSystemDescription,
+  displayAiSystemName,
+  displayAiSystemPurpose,
+} from "@/lib/record-name";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
@@ -32,7 +42,11 @@ import { toneForAiRiskLevel } from "@/config/status-tone";
 
 // Risk level goes through the shared tones: toneForAiRiskLevel.
 
-export default function AISystemDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function AISystemDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = use(params);
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
@@ -43,20 +57,21 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
 
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
     { organizationId: orgId, id },
-    { enabled: !!orgId && !!id }
+    { enabled: !!orgId && !!id },
   );
 
   // Read-through AI-Act status of the linked AI Sentinel system (the unified
   // "one system, both regimes" view). Null/absent simply hides the panel.
-  const { data: sentinelStatus } = trpc.aiGovernance.aiSentinelSystemStatus.useQuery(
-    { organizationId: orgId, systemId: id },
-    {
-      enabled:
-        features.aiSentinelIntegrationEnabled &&
-        !!orgId &&
-        !!system?.aiSentinelSystemId,
-    }
-  );
+  const { data: sentinelStatus } =
+    trpc.aiGovernance.aiSentinelSystemStatus.useQuery(
+      { organizationId: orgId, systemId: id },
+      {
+        enabled:
+          features.aiSentinelIntegrationEnabled &&
+          !!orgId &&
+          !!system?.aiSentinelSystemId,
+      },
+    );
 
   if (isLoading) {
     return (
@@ -71,7 +86,9 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
       <div className="text-center py-12">
         <p className="text-muted-foreground">{t("notFound")}</p>
         <Button asChild className="mt-4" variant="outline">
-          <Link href="/privacy/ai-systems"><ArrowLeft className="w-4 h-4 mr-2" /> {t("back")}</Link>
+          <Link href="/privacy/ai-systems">
+            <ArrowLeft className="w-4 h-4 mr-2" /> {t("back")}
+          </Link>
         </Button>
       </div>
     );
@@ -89,23 +106,42 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <Button variant="ghost" size="sm" asChild className="shrink-0">
-            <Link href="/privacy/ai-systems"><ArrowLeft className="w-4 h-4" /></Link>
+            <Link href="/privacy/ai-systems">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
           </Button>
           <div className="min-w-0">
             <h1 className="text-2xl font-semibold flex items-center gap-2 min-w-0">
               <Bot className="w-6 h-6 shrink-0" />
-              <span className="truncate">{displayAiSystemName(system.name, locale)}</span>
+              <span className="truncate">
+                {displayAiSystemName(system.name, locale)}
+              </span>
             </h1>
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>
-                {tList(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
+                {tList(
+                  `riskLevel.${system.riskLevel}` as
+                    | `riskLevel.UNACCEPTABLE`
+                    | `riskLevel.HIGH_RISK`
+                    | `riskLevel.LIMITED`
+                    | `riskLevel.MINIMAL`,
+                )}
               </StatusChip>
               <Badge variant="outline">
-                {tList(`status.${system.status}` as `status.DRAFT` | `status.REGISTERED` | `status.UNDER_REVIEW` | `status.COMPLIANT` | `status.NON_COMPLIANT` | `status.DECOMMISSIONED`)}
+                {tList(
+                  `status.${system.status}` as
+                    | `status.DRAFT`
+                    | `status.REGISTERED`
+                    | `status.UNDER_REVIEW`
+                    | `status.COMPLIANT`
+                    | `status.NON_COMPLIANT`
+                    | `status.DECOMMISSIONED`,
+                )}
               </Badge>
               {system.aiSentinelSystemId && (
                 <Badge variant="outline" className={toneBorder("info")}>
-                  <Shield className={`w-3 h-3 mr-1 ${toneMark("info")}`} /> {t("linked")}
+                  <Shield className={`w-3 h-3 mr-1 ${toneMark("info")}`} />{" "}
+                  {t("linked")}
                 </Badge>
               )}
             </div>
@@ -115,17 +151,29 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
 
       {/* AI Models */}
       {(() => {
-        const rawModels = Array.isArray(system.aiModels) ? (system.aiModels as unknown[]) : [];
+        const rawModels = Array.isArray(system.aiModels)
+          ? (system.aiModels as unknown[])
+          : [];
         const models = rawModels.filter(
-          (m): m is { name: string; type?: string; source?: string; euAiActRiskTier?: string } =>
-            typeof m === "object" && m !== null && typeof (m as { name?: unknown }).name === "string"
+          (
+            m,
+          ): m is {
+            name: string;
+            type?: string;
+            source?: string;
+            euAiActRiskTier?: string;
+          } =>
+            typeof m === "object" &&
+            m !== null &&
+            typeof (m as { name?: unknown }).name === "string",
         );
         if (models.length === 0) return null;
         return (
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <Bot className="w-4 h-4" /> {t("embeddedModels", { count: models.length })}
+                <Bot className="w-4 h-4" />{" "}
+                {t("embeddedModels", { count: models.length })}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -135,16 +183,31 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                     <p className="font-medium text-sm">{model.name}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {model.type && (
-                        <Badge variant="secondary" className="text-xs">{model.type}</Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {model.type}
+                        </Badge>
                       )}
                       {model.source && (
                         <Badge variant="outline" className="text-xs">
-                          {t.has(`modelSource.${model.source}`) ? t(`modelSource.${model.source}` as "modelSource.vendor-declared") : model.source}
+                          {t.has(`modelSource.${model.source}`)
+                            ? t(
+                                `modelSource.${model.source}` as "modelSource.vendor-declared",
+                              )
+                            : model.source}
                         </Badge>
                       )}
                       {model.euAiActRiskTier && (
-                        <StatusChip tone={toneForAiRiskLevel(model.euAiActRiskTier)} className="text-xs">
-                          {tList(`riskLevel.${model.euAiActRiskTier}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
+                        <StatusChip
+                          tone={toneForAiRiskLevel(model.euAiActRiskTier)}
+                          className="text-xs"
+                        >
+                          {tList(
+                            `riskLevel.${model.euAiActRiskTier}` as
+                              | `riskLevel.UNACCEPTABLE`
+                              | `riskLevel.HIGH_RISK`
+                              | `riskLevel.LIMITED`
+                              | `riskLevel.MINIMAL`,
+                          )}
                         </StatusChip>
                       )}
                     </div>
@@ -165,67 +228,107 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
           <CardContent className="space-y-3 text-sm">
             {system.description && (
               <div>
-                <span className="text-muted-foreground">{t("details.description")}</span>
-                <p className="mt-1">{displayAiSystemDescription(system.description, locale)}</p>
+                <span className="text-muted-foreground">
+                  {t("details.description")}
+                </span>
+                <p className="mt-1">
+                  {displayAiSystemDescription(system.description, locale)}
+                </p>
               </div>
             )}
             {system.purpose && (
               <div>
-                <span className="text-muted-foreground">{t("details.purpose")}</span>
-                <p className="mt-1">{displayAiSystemPurpose(system.purpose, locale, vendorCategory)}</p>
+                <span className="text-muted-foreground">
+                  {t("details.purpose")}
+                </span>
+                <p className="mt-1">
+                  {displayAiSystemPurpose(
+                    system.purpose,
+                    locale,
+                    vendorCategory,
+                  )}
+                </p>
               </div>
             )}
             {system.category && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.category")}</span>
+                <span className="text-muted-foreground">
+                  {t("details.category")}
+                </span>
                 <span>{system.category}</span>
               </div>
             )}
             {system.modelType && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.modelType")}</span>
+                <span className="text-muted-foreground">
+                  {t("details.modelType")}
+                </span>
                 <span>{system.modelType}</span>
               </div>
             )}
-            {system.provider && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.provider")}</span>
-                <span>{system.provider}</span>
-              </div>
-            )}
+            {/* A provider that only repeats the linked vendor's name adds nothing: show the vendor row alone. */}
+            {system.provider &&
+              system.provider.trim().toLowerCase() !==
+                system.vendor?.name.trim().toLowerCase() && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">
+                    {t("details.provider")}
+                  </span>
+                  <span>{system.provider}</span>
+                </div>
+              )}
             {system.deployer && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.deployer")}</span>
+                <span className="text-muted-foreground">
+                  {t("details.deployer")}
+                </span>
                 <span>{system.deployer}</span>
               </div>
             )}
             {system.vendor && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.vendor")}</span>
-                <Link href={`/privacy/vendors/${system.vendor.id}`} className="text-primary hover:underline">
+                <span className="text-muted-foreground">
+                  {t("details.vendor")}
+                </span>
+                <Link
+                  href={`/privacy/vendors/${system.vendor.id}`}
+                  className="text-primary hover:underline"
+                >
                   {system.vendor.name}
                 </Link>
               </div>
             )}
             {system.euAiActRole && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.euAiActRole")}</span>
+                <span className="text-muted-foreground">
+                  {t("details.euAiActRole")}
+                </span>
                 <span>{system.euAiActRole}</span>
               </div>
             )}
             {system.euAiActCompliant != null && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.euAiActCompliant")}</span>
-                <StatusChip tone={system.euAiActCompliant ? "success" : "neutral"}>
+                <span className="text-muted-foreground">
+                  {t("details.euAiActCompliant")}
+                </span>
+                <StatusChip
+                  tone={system.euAiActCompliant ? "success" : "neutral"}
+                >
                   {system.euAiActCompliant ? t("details.yes") : t("details.no")}
                 </StatusChip>
               </div>
             )}
             {system.iso42001Certified != null && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("details.iso42001")}</span>
-                <StatusChip tone={system.iso42001Certified ? "success" : "neutral"}>
-                  {system.iso42001Certified ? t("details.yes") : t("details.no")}
+                <span className="text-muted-foreground">
+                  {t("details.iso42001")}
+                </span>
+                <StatusChip
+                  tone={system.iso42001Certified ? "success" : "neutral"}
+                >
+                  {system.iso42001Certified
+                    ? t("details.yes")
+                    : t("details.no")}
                 </StatusChip>
               </div>
             )}
@@ -256,30 +359,42 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             )}
             {system.trainingDataSources.length > 0 && (
               <div>
-                <span className="text-muted-foreground">{t("compliance.trainingData")}</span>
+                <span className="text-muted-foreground">
+                  {t("compliance.trainingData")}
+                </span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {system.trainingDataSources.map((s, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">{s}</Badge>
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {s}
+                    </Badge>
                   ))}
                 </div>
               </div>
             )}
             {system.aiCapabilities.length > 0 && (
               <div>
-                <span className="text-muted-foreground">{t("compliance.capabilities")}</span>
+                <span className="text-muted-foreground">
+                  {t("compliance.capabilities")}
+                </span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {system.aiCapabilities.map((c, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">{c}</Badge>
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {c}
+                    </Badge>
                   ))}
                 </div>
               </div>
             )}
             {system.aiTechniques.length > 0 && (
               <div>
-                <span className="text-muted-foreground">{t("compliance.techniques")}</span>
+                <span className="text-muted-foreground">
+                  {t("compliance.techniques")}
+                </span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {system.aiTechniques.map((tech, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">{tech}</Badge>
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {tech}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -287,7 +402,12 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             {system.technicalDocUrl && (
               <div className="flex items-center gap-1">
                 <FileText className="w-3 h-3 text-muted-foreground" />
-                <a href={system.technicalDocUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs">
+                <a
+                  href={system.technicalDocUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline text-xs"
+                >
                   {t("compliance.technicalDoc")}
                 </a>
               </div>
@@ -305,10 +425,22 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                 <Shield className={`w-5 h-5 mt-0.5 ${toneMark("info")}`} />
                 <div>
                   <p className="font-medium">{t("sentinel.linkedTitle")}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{t("sentinel.linkedBody")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("sentinel.linkedBody")}
+                  </p>
                   {system.aiSentinelSyncedAt && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      {t("sentinel.lastSynced", { date: new Date(system.aiSentinelSyncedAt).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })}
+                      {t("sentinel.lastSynced", {
+                        date: new Date(
+                          system.aiSentinelSyncedAt,
+                        ).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }),
+                      })}
                     </p>
                   )}
                 </div>
@@ -328,29 +460,39 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             {sentinelStatus?.found && (
               <div className={`mt-4 pt-4 border-t ${toneBorder("info")}`}>
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-3">
-                  {t("sentinel.aiActStatus")} · {t("sentinel.statusFromSentinel")}
+                  {t("sentinel.aiActStatus")} ·{" "}
+                  {t("sentinel.statusFromSentinel")}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div>
-                    <p className="text-xs text-muted-foreground">{t("sentinel.riskTier")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("sentinel.riskTier")}
+                    </p>
                     <p className="text-sm font-semibold">
                       {sentinelStatus.riskLevel ?? t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">{t("sentinel.fria")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("sentinel.fria")}
+                    </p>
                     <p className="text-sm font-semibold">
                       {sentinelStatus.fria?.status ?? t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">{t("sentinel.conformity")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("sentinel.conformity")}
+                    </p>
                     <p className="text-sm font-semibold">
-                      {sentinelStatus.conformity?.status ?? t("sentinel.notAssessed")}
+                      {sentinelStatus.conformity?.status ??
+                        t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">{t("sentinel.oversightOpen")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("sentinel.oversightOpen")}
+                    </p>
                     <p className="text-sm font-semibold">
                       {sentinelStatus.openOversightGates ?? 0}
                     </p>
@@ -366,10 +508,14 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
         <Card className={`${toneBorder("danger")} ${toneTint("danger")}`}>
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
-              <AlertTriangle className={`w-5 h-5 mt-0.5 ${toneMark("danger")}`} />
+              <AlertTriangle
+                className={`w-5 h-5 mt-0.5 ${toneMark("danger")}`}
+              />
               <div>
                 <p className="font-medium">{t("unacceptableTitle")}</p>
-                <p className="text-sm text-muted-foreground mt-1">{t("unacceptableBody")}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t("unacceptableBody")}
+                </p>
               </div>
             </div>
           </CardContent>

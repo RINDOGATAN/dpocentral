@@ -1691,6 +1691,9 @@ model VendorCatalog {
   trainingUse String?
   /// Vendor's statement on retention of inputs and outputs, free text.
   retention   String? @db.Text
+  /// Legal name of the company behind the product, as the catalogue gives it
+  /// (for example "Microsoft Corporation (EU customers: ...)"); null when unknown.
+  legalName   String? @db.Text
 
   // Contact & Links
   website          String?

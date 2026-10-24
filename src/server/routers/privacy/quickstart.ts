@@ -788,6 +788,7 @@ export const quickstartRouter = createTRPCRouter({
               aiModels: catalogVendor.aiModels,
               euAiActAnnexIIIDomains: catalogVendor.euAiActAnnexIIIDomains,
               tags: catalogVendor.tags,
+              legalName: catalogVendor.legalName,
             },
             vendor.id,
             catalogVendor.name,

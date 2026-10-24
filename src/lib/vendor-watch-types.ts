@@ -29,6 +29,8 @@ export interface VendorWatchVendor {
   trainingUse?: string | null;
   /** Vendor's statement on retention of inputs and outputs. Optional: absent from older snapshots. */
   retention?: string | null;
+  /** Legal name of the company behind the product. Optional: absent from older snapshots. */
+  legalName?: string | null;
   tags: string[];
   website: string | null;
   privacyPolicyUrl: string | null;

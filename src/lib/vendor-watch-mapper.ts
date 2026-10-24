@@ -61,6 +61,7 @@ export function mapVendorToUpsert(v: VendorWatchVendor) {
     // Older snapshots carry neither field: leave the columns as they are then.
     ...("trainingUse" in v ? { trainingUse: trainingUseOrNull(v.trainingUse) } : {}),
     ...("retention" in v ? { retention: v.retention ?? null } : {}),
+    ...("legalName" in v ? { legalName: v.legalName ?? null } : {}),
     tags: v.tags || [],
     website: v.website,
     privacyPolicyUrl: httpUrlOrNull(v.privacyPolicyUrl),
