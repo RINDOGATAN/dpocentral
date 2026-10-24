@@ -44,7 +44,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { MENU_COOKIE, cookieAssignment } from "@/lib/menu-cookie";
 import { signOutOfSuite } from "@/lib/sign-out";
-import { features, isDsarModuleEnabled } from "@/config/features";
+import { features } from "@/config/features";
 import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
@@ -66,8 +66,6 @@ import { NewOrganizationDialog } from "@/components/privacy/new-organization-dia
 import { trpc } from "@/lib/trpc";
 import { lockedStepIds } from "@/lib/menu-locks";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { usePriceInSentence } from "@/components/region-provider";
-import { DSAR_ADDON_MONTHLY_PRICE } from "@/lib/dsar-addon";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 /** The path a department-limited member sees: no quick start. */
@@ -105,12 +103,6 @@ export function GuidedLayout({
   // The rights-requests step is left out for a member who may not read
   // requests (src/lib/dsar-access.ts).
   const { canHandle: canHandleDsars } = useDsarAccess();
-  const tm = useTranslations("dsarModule");
-  const priceInSentence = usePriceInSentence();
-  const { data: dsarAccess } = trpc.dsar.moduleAccess.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && canHandleDsars === true && isDsarModuleEnabled(), refetchOnWindowFocus: false },
-  );
   // The audit trail's library entry, for the roles that read it
   // (src/lib/audit-access.ts); not shown while the role is still loading.
   const { canRead: canReadAudit } = useAuditAccess();
@@ -167,9 +159,6 @@ export function GuidedLayout({
     ? recordCountsText(td, "dataInventory", overview.recordCounts.dataInventory, { onlyIfDrafts: true })
     : null;
   if (inventoryNote) stepNotes.dataInventory = inventoryNote;
-  // Hosted paid plan without the rights-request add-on: the step stays in the
-  // menu with its price line (src/server/services/dsar/module.ts).
-  if (dsarAccess?.gate === "inactive") stepNotes.dsar = tm("addOnLine", { price: priceInSentence(DSAR_ADDON_MONTHLY_PRICE) });
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which
   // therefore never asks (src/lib/menu-locks.ts).

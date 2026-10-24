@@ -1289,7 +1289,21 @@
       }
     },
     "incidentDetail": {
-      "recordedInError": {"action": "Registrada por error", "undo": "Deshacer «registrada por error»", "dialogTitle": "¿Marcar como registrada por error?", "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.", "reasonLabel": "¿Por qué se ha registrado por error?", "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba", "confirm": "Marcar como registrada por error", "marked": "Incidencia marcada como registrada por error", "undone": "La incidencia vuelve a contar", "noticeTitle": "Registrada por error el {date}", "noticeReason": "Motivo: {reason}.", "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.", "badge": "Registrada por error"},
+      "recordedInError": {
+        "action": "Registrada por error",
+        "undo": "Deshacer «registrada por error»",
+        "dialogTitle": "¿Marcar como registrada por error?",
+        "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.",
+        "reasonLabel": "¿Por qué se ha registrado por error?",
+        "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba",
+        "confirm": "Marcar como registrada por error",
+        "marked": "Incidencia marcada como registrada por error",
+        "undone": "La incidencia vuelve a contar",
+        "noticeTitle": "Registrada por error el {date}",
+        "noticeReason": "Motivo: {reason}.",
+        "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.",
+        "badge": "Registrada por error"
+      },
       "notFound": "Incidente no encontrado",
       "back": "Volver a incidentes",
       "close": "Cerrar incidente",
@@ -1937,7 +1951,7 @@
         "createdTransfers": "{count, plural, one {# transferencia internacional} other {# transferencias internacionales}}",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos redactado tus primeros registros. Cuentan en tu programa cuando los revisas y confirmas.",
-          "reviewCta": "Revisar y confirmar",
+        "reviewCta": "Revisar y confirmar",
         "cardDataInventory": "Inventario de datos",
         "cardDataInventoryDesc": "Ver sistemas y elementos",
         "cardActivities": "Actividades de tratamiento",
@@ -3043,11 +3057,11 @@
       "encryption": "Cifrado",
       "noDetails": "Sin más detalles",
       "generated": "Propuesto a partir de los sistemas vinculados a una actividad de tratamiento. Es un borrador, que no aparece en los informes PDF, hasta que lo confirmes o lo edites.",
-        "generatedConfirmed": "Creado a partir de los sistemas vinculados a una actividad de tratamiento, y confirmado.",
-        "confirm": "Confirmar flujo",
-        "confirmed": "Flujo confirmado",
-        "draftBadge": "Por confirmar",
-        "transfersTitle": "Transferencias fuera del EEE desde el destino"
+      "generatedConfirmed": "Creado a partir de los sistemas vinculados a una actividad de tratamiento, y confirmado.",
+      "confirm": "Confirmar flujo",
+      "confirmed": "Flujo confirmado",
+      "draftBadge": "Por confirmar",
+      "transfersTitle": "Transferencias fuera del EEE desde el destino"
     },
     "legend": {
       "title": "Leyenda",
@@ -10346,8 +10360,8 @@
       "title": "Requiere acción",
       "subtitle": "Todo lo que está pendiente, en un solo lugar.",
       "empty": "No hay plazos, aprobaciones ni revisiones pendientes.",
-    "nextSteps": "Siguientes pasos de tu programa",
-    "documentsToComplete": "{count, plural, one {# documento por completar, en el resumen} other {# documentos por completar, en el resumen}}",
+      "nextSteps": "Siguientes pasos de tu programa",
+      "documentsToComplete": "{count, plural, one {# documento por completar, en el resumen} other {# documentos por completar, en el resumen}}",
       "deptNote": "Se muestra un departamento. Los elementos de toda la organización están en la lista completa.",
       "kind": {
         "review-due": "Revisiones pendientes",
@@ -10525,7 +10539,6 @@
       "dsarIntakeTooFast": "Tómate un momento para revisar tu solicitud y vuelve a enviarla.",
       "dsarIntakeTooMany": "Hoy se han enviado demasiadas solicitudes desde aquí. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
       "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
-      "dsarModuleInactiveCreate": "El módulo de solicitudes de derechos no está activo en esta organización. Está disponible como complemento; las solicitudes que ya tienes siguen disponibles.",
       "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización.",
       "dsarUnfilledPlaceholders": "Completa todos los campos entre llaves del mensaje antes de enviarlo.",
       "onlyADraftAssessmentCanBeDeleted": "Solo se puede eliminar una evaluación en borrador.",
@@ -10573,16 +10586,13 @@
     "off": "Las solicitudes de derechos no están incluidas en este plan.",
     "exportBody": "Puedes seguir descargando los registros de solicitudes de derechos que tu organización ya tiene.",
     "exportLink": "Descargar los registros (JSON)",
-    "addOnLine": "Disponible como complemento: {price} al mes",
-    "addOnTitle": "Las solicitudes de derechos son un complemento de tu plan",
-    "addOnBody": "Disponible como complemento: {price} al mes. Las solicitudes que ya tienes siguen disponibles aquí.",
-    "addOnLink": "Consulta los planes",
-    "pilotUsage": "Piloto: {used} de {limit} solicitudes por el formulario público.",
-    "monthUsage": "Este mes: {used} de {limit} solicitudes por el formulario público.",
     "limitReached": "El formulario público no admite solicitudes ahora; en su lugar muestra tu correo de contacto de privacidad.",
     "staffNote": "Las solicitudes que registras tú no cuentan.",
-    "addOnNoNew": "Podrás añadir solicitudes nuevas cuando las solicitudes de derechos formen parte de tu plan.",
-    "backToRequests": "Volver a las solicitudes"
+    "volumeUsage": "Este mes el formulario público ha recibido {used} de sus {limit} solicitudes (el recuento vuelve a empezar el {date}).",
+    "volumeUpgrade": "La ampliación de volumen sube el límite a {upgraded, number} solicitudes al mes por {price} al mes.",
+    "volumeUpgradeLink": "Contratar la ampliación",
+    "volumeUpgradeWrite": "Escribe a {email} para añadirla",
+    "volumeMore": "Si necesitas más volumen, escríbenos."
   },
   "drafts": {
     "badge": "Por confirmar",
@@ -11090,5 +11100,17 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "saved": "Se han guardado los datos del responsable"
+  },
+  "dsarVolumeEmail": {
+    "subject": "{orgName}: tu formulario de solicitudes de derechos ha recibido {used} de sus {limit} solicitudes este mes",
+    "subjectLimit": "{orgName}: tu formulario de solicitudes de derechos ha alcanzado su límite mensual",
+    "heading": "{used} de {limit} solicitudes este mes",
+    "headingLimit": "Tu formulario ha recibido {limit} solicitudes este mes",
+    "body": "Tu formulario público de solicitudes de derechos admite hasta {limit} solicitudes por mes natural (hora de España). Cuando alcanza el límite, deja de admitir solicitudes hasta el {date} y muestra en su lugar tu correo de contacto de privacidad, para que nadie se quede sin poder ejercer sus derechos. Las solicitudes que registras tú no cuentan.",
+    "bodyLimit": "Ahora muestra tu correo de contacto de privacidad en lugar de admitir solicitudes, hasta el {date}, para que nadie se quede sin poder ejercer sus derechos. Las solicitudes que registras tú no cuentan.",
+    "upgrade": "La ampliación de volumen sube el límite a {upgraded, number} solicitudes al mes. Su precio y el botón de compra están en la página de solicitudes de derechos.",
+    "moreVolume": "Si necesitas más volumen, responde a este correo.",
+    "ctaText": "Abrir las solicitudes de derechos",
+    "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}, o su contacto de privacidad."
   }
 }

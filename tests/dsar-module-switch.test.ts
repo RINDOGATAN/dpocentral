@@ -213,7 +213,6 @@ describe("menus, guided step, help and docs", () => {
       "src/app/sitemap.ts",
       "src/app/(public)/docs/page.tsx",
       "src/app/(dashboard)/privacy/docs/page.tsx",
-      "src/components/guided/guided-layout.tsx",
       "src/app/(dashboard)/privacy/reports/page.tsx",
       "src/components/pilot/pilot-status-card.tsx",
     ]) {

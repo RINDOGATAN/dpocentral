@@ -193,10 +193,10 @@ describe("abuse protection on the public form", () => {
     }));
   });
 
-  it("refuses a submission whose hidden field is filled, before reading the organisation", async () => {
+  it("answers a submission whose hidden field is filled as if received, before reading the organisation, and stores nothing", async () => {
     await expect(
       anon().submitPublic({ ...validSubmission(), website: "https://spam.example" })
-    ).rejects.toMatchObject({ code: "BAD_REQUEST", message: expect.stringContaining("could not accept") });
+    ).resolves.toMatchObject({ acknowledgementSent: false, publicId: expect.stringMatching(/^c[a-z0-9]{24}$/) });
     expect(mocks.prisma.organization.findUnique).not.toHaveBeenCalled();
     expect(mocks.prisma.dSARRequest.create).not.toHaveBeenCalled();
     expect(counterKeys()).toContain("dsar-rejected:honeypot");
@@ -347,7 +347,7 @@ describe("abuse protection on the public form", () => {
     await from("203.0.113.9").submitPublic({ ...validSubmission(), requesterEmail: "secret.person@example.com" });
     await expect(
       anon().submitPublic({ ...validSubmission(), website: "x", requesterEmail: "secret.person@example.com" })
-    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    ).resolves.toMatchObject({ acknowledgementSent: false });
     const keys = counterKeys().join(" ");
     expect(keys).not.toContain("203.0.113.9");
     expect(keys).not.toContain("secret.person");

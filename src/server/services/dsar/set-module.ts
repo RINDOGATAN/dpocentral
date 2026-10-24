@@ -2,8 +2,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Setting an organisation's rights-request add-on (Organization
- * dsarModuleStatus, dsarModuleSubscriptionId, dsarModuleRenewsAt), for the
+ * Setting an organisation's rights-request volume upgrade (Organization
+ * dsarModuleStatus, dsarModuleSubscriptionId, dsarModuleRenewsAt; ACTIVE
+ * raises the public form's monthly ceiling from 100 to 1,000), for the
  * operator's script scripts/set-dsar-module.ts. Modelled on the plan setter
  * (src/server/services/pilot/plan.ts): payment is collected outside the app
  * and an operator records the result here.
@@ -104,10 +105,7 @@ export async function setDsarModule(db: SetDb, input: SetDsarModuleInput): Promi
   const after = resolveDsarModuleState(before, input);
   const changed = !same(before, after);
   const organization = { id: row.id, slug: row.slug, name: row.name, plan: row.plan };
-  const note =
-    row.plan !== "EU_CLOUD" && after.dsarModuleStatus === "ACTIVE"
-      ? "The organization is on the pilot plan: the pilot's own limit (3 public-form requests) applies until it is on EU_CLOUD."
-      : null;
+  const note: string | null = null;
 
   if (!input.execute || !changed) return { organization, before, after, changed, written: false, note };
 

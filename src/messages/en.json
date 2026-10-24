@@ -1289,7 +1289,21 @@
       }
     },
     "incidentDetail": {
-      "recordedInError": {"action": "Recorded in error", "undo": "Undo \"recorded in error\"", "dialogTitle": "Mark as recorded in error?", "dialogBody": "For an entry made by mistake, such as a test or a duplicate. The incident is not deleted: it stays in the breach register, marked, with your reason, and leaves every count and report figure. You can undo this.", "reasonLabel": "Why was it recorded in error?", "reasonPlaceholder": "For example: a duplicate of another incident, or a test entry", "confirm": "Mark as recorded in error", "marked": "Incident marked as recorded in error", "undone": "Incident counted again", "noticeTitle": "Recorded in error on {date}", "noticeReason": "Reason: {reason}.", "noticeBody": "It stays in the breach register, marked, and is left out of every count.", "badge": "Recorded in error"},
+      "recordedInError": {
+        "action": "Recorded in error",
+        "undo": "Undo \"recorded in error\"",
+        "dialogTitle": "Mark as recorded in error?",
+        "dialogBody": "For an entry made by mistake, such as a test or a duplicate. The incident is not deleted: it stays in the breach register, marked, with your reason, and leaves every count and report figure. You can undo this.",
+        "reasonLabel": "Why was it recorded in error?",
+        "reasonPlaceholder": "For example: a duplicate of another incident, or a test entry",
+        "confirm": "Mark as recorded in error",
+        "marked": "Incident marked as recorded in error",
+        "undone": "Incident counted again",
+        "noticeTitle": "Recorded in error on {date}",
+        "noticeReason": "Reason: {reason}.",
+        "noticeBody": "It stays in the breach register, marked, and is left out of every count.",
+        "badge": "Recorded in error"
+      },
       "notFound": "Incident not found",
       "back": "Back to incidents",
       "close": "Close incident",
@@ -1937,7 +1951,7 @@
         "createdTransfers": "{count, plural, one {# international transfer} other {# international transfers}}",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your first records are drafted. They count towards your program once you check and confirm them.",
-          "reviewCta": "Review and confirm",
+        "reviewCta": "Review and confirm",
         "cardDataInventory": "Data inventory",
         "cardDataInventoryDesc": "View systems and elements",
         "cardActivities": "Processing activities",
@@ -3043,11 +3057,11 @@
       "encryption": "Encryption",
       "noDetails": "No additional details",
       "generated": "Suggested from the systems linked to a processing activity. It is a draft, left out of the PDF reports, until you confirm it or edit it.",
-        "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
-        "confirm": "Confirm flow",
-        "confirmed": "Flow confirmed",
-        "draftBadge": "To confirm",
-        "transfersTitle": "Transfers outside the EEA from the destination"
+      "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
+      "confirm": "Confirm flow",
+      "confirmed": "Flow confirmed",
+      "draftBadge": "To confirm",
+      "transfersTitle": "Transfers outside the EEA from the destination"
     },
     "legend": {
       "title": "Key",
@@ -10346,8 +10360,8 @@
       "title": "Needs action",
       "subtitle": "Everything waiting for you, in one place.",
       "empty": "No deadlines, approvals or reviews are waiting.",
-    "nextSteps": "Next steps in your program",
-    "documentsToComplete": "{count, plural, one {# document to complete, on the overview} other {# documents to complete, on the overview}}",
+      "nextSteps": "Next steps in your program",
+      "documentsToComplete": "{count, plural, one {# document to complete, on the overview} other {# documents to complete, on the overview}}",
       "deptNote": "Showing one department. Organization-wide items are on the full list.",
       "kind": {
         "review-due": "Reviews due",
@@ -10525,7 +10539,6 @@
       "dsarIntakeTooFast": "Please take a moment to check your request, then submit it again.",
       "dsarIntakeTooMany": "Too many requests have been sent from here today. Please try again tomorrow, or contact the organization directly.",
       "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly.",
-      "dsarModuleInactiveCreate": "The rights-request module is not active for this organization. It is available as an add-on; the requests already held stay available.",
       "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly.",
       "dsarUnfilledPlaceholders": "Complete every placeholder in braces in the message before sending it.",
       "onlyADraftAssessmentCanBeDeleted": "Only a draft assessment can be deleted",
@@ -10573,16 +10586,13 @@
     "off": "Rights requests are not included in this plan.",
     "exportBody": "The rights-request records your organization already holds can still be downloaded.",
     "exportLink": "Download the records (JSON)",
-    "addOnLine": "Available as an add-on: {price} a month",
-    "addOnTitle": "Rights requests are an add-on on your plan",
-    "addOnBody": "Available as an add-on: {price} a month. The requests you already hold stay available here.",
-    "addOnLink": "See the plans",
-    "pilotUsage": "Pilot: {used} of {limit} requests through the public form.",
-    "monthUsage": "This month: {used} of {limit} requests through the public form.",
     "limitReached": "The public form is not taking requests now; it shows your privacy contact e-mail instead.",
     "staffNote": "Requests you enter yourself do not count.",
-    "addOnNoNew": "New requests can be added once rights requests are part of your plan.",
-    "backToRequests": "Back to requests"
+    "volumeUsage": "This month the public form has received {used} of its {limit} requests (the count starts again on {date}).",
+    "volumeUpgrade": "The volume upgrade raises the limit to {upgraded, number} requests a month for {price} a month.",
+    "volumeUpgradeLink": "Buy the upgrade",
+    "volumeUpgradeWrite": "Write to {email} to add it",
+    "volumeMore": "For a higher volume, write to us."
   },
   "drafts": {
     "badge": "To confirm",
@@ -11090,5 +11100,17 @@
     "save": "Save",
     "cancel": "Cancel",
     "saved": "Controller details saved"
+  },
+  "dsarVolumeEmail": {
+    "subject": "{orgName}: your rights-request form has received {used} of its {limit} requests this month",
+    "subjectLimit": "{orgName}: your rights-request form has reached its monthly limit",
+    "heading": "{used} of {limit} requests this month",
+    "headingLimit": "Your form has received {limit} requests this month",
+    "body": "Your public rights-request form takes up to {limit} requests a calendar month (Spain time). When it reaches the limit, it stops taking requests until {date} and shows your privacy contact e-mail instead, so that nobody is left unable to exercise their rights. Requests you enter yourself do not count.",
+    "bodyLimit": "It now shows your privacy contact e-mail instead of taking requests, until {date}, so that nobody is left unable to exercise their rights. Requests you enter yourself do not count.",
+    "upgrade": "The volume upgrade raises the limit to {upgraded, number} requests a month. Its price and the purchase button are on the rights-request page.",
+    "moreVolume": "If you need a higher volume, reply to this e-mail.",
+    "ctaText": "Open rights requests",
+    "whyYou": "You receive this e-mail because you are an owner or administrator of {orgName}, or its privacy contact."
   }
 }
