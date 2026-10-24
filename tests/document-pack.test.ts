@@ -314,7 +314,7 @@ describe("buildDocumentPack", () => {
     const index = text(files.get("00-INDEX.md"));
     expect(index).toContain("# Document pack: Harbour Bakery");
     expect(index).toContain("| Regulatory report | ready |");
-    expect(index).toContain("| Legitimate Interest Assessment: Loyalty | ready | 2026-09-30 |");
+    expect(index).toContain("| Legitimate interest assessment: Loyalty | ready | 2026-09-30 |");
     expect(index).toContain("| DPA with Mailer | ready | 2026-10-01 |");
     expect(index).toContain("- Vendor register: draft (1 record to confirm); drafts were not asked for");
     expect(index).toContain("- DPIA: needs: the DPIA module");

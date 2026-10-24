@@ -14,6 +14,7 @@ export function ProgressRing({
   total,
   size = 28,
   complete = false,
+  ready = false,
   children,
 }: {
   /** Null while loading: only the track is drawn. */
@@ -25,8 +26,25 @@ export function ProgressRing({
    * its number. Same size, so nothing moves.
    */
   complete?: boolean;
+  /**
+   * The stage is ready for when it is needed ("a punto"), not done: an
+   * outlined accent ring with a check, distinct from the solid done disc.
+   */
+  ready?: boolean;
   children?: React.ReactNode;
 }) {
+  if (ready && !complete) {
+    return (
+      <span
+        className="inline-flex items-center justify-center shrink-0 rounded-full border-2 border-primary text-primary"
+        style={{ width: size, height: size }}
+        aria-hidden="true"
+        data-ready="true"
+      >
+        <Check style={{ width: size * 0.45, height: size * 0.45 }} strokeWidth={2.5} />
+      </span>
+    );
+  }
   if (complete) {
     return (
       <span

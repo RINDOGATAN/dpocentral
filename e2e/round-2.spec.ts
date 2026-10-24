@@ -102,7 +102,7 @@ test("M2: a member limited to one department works inside it", async ({ page }) 
   // No quick start, no organisation-wide progress, no organisation-wide actions.
   await expect(page.locator('a[href="/privacy/quickstart"]')).toHaveCount(0);
   await expect(page.getByText(/overall/i)).toHaveCount(0);
-  // The whole programme's report (the "Report Incident" quick action stays).
+  // The whole programme's report (the "Report incident" quick action stays).
   await expect(
     page.getByRole("button", { name: /^(export report|privacy program report)$/i }),
   ).toHaveCount(0);

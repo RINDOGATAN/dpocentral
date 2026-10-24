@@ -203,7 +203,8 @@ export function PathMenu<C>({
               value={progress?.done ?? null}
               total={progress?.total ?? 0}
               size={32}
-              complete={progress?.state === "done" || progress?.state === "ready"}
+              complete={progress?.state === "done"}
+              ready={progress?.state === "ready"}
             >
               {number}
             </ProgressRing>
@@ -321,7 +322,8 @@ export function PathMenu<C>({
               <ProgressRing
                 value={progress?.done ?? null}
                 total={progress?.total ?? 0}
-                complete={progress?.state === "done" || progress?.state === "ready"}
+                complete={progress?.state === "done"}
+                ready={progress?.state === "ready"}
               >
                 {stageNumber(config, stage.id) ?? index + 1}
               </ProgressRing>
@@ -537,8 +539,13 @@ function StepMark({
   const text = optional && status === "todo" ? t("stepStatus.optional") : t(`stepStatus.${status}`);
   return (
     <span className="inline-flex size-3.5 shrink-0" title={text}>
-      {status === "done" || status === "ready" ? (
+      {status === "done" ? (
         <span className="flex size-3.5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Check className="size-2.5" strokeWidth={3} aria-hidden="true" />
+        </span>
+      ) : status === "ready" ? (
+        // Ready for when it is needed ("a punto"): outlined, not the done disc.
+        <span className="flex size-3.5 items-center justify-center rounded-full border border-primary text-primary" data-ready="true">
           <Check className="size-2.5" strokeWidth={3} aria-hidden="true" />
         </span>
       ) : status === "toConfirm" ? (

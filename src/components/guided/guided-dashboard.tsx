@@ -69,7 +69,8 @@ const DOC_TONE: Record<DocumentBadge, StatusTone> = {
 };
 
 /** The legend, in the order the rows are listed. */
-const LEGEND_ORDER: readonly DocumentBadge[] = ["ready", "standby", "draft", "needsInput", "needsModule", "needsSetting", "notYet"];
+// "Not in DPO Central yet" has its own line above the legend, so it is not repeated here.
+const LEGEND_ORDER: readonly DocumentBadge[] = ["ready", "standby", "draft", "needsInput", "needsModule", "needsSetting"];
 
 /** Rows shown at once: those that can be produced now or are ready for when they are needed. */
 const SHOWN_BADGES: ReadonlySet<DocumentBadge> = new Set(["ready", "standby", "draft"]);

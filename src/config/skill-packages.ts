@@ -28,7 +28,11 @@ export const SKILL_DISPLAY_NAMES: Record<string, string> = {
   DSAR_PORTAL: "DSAR Public Portal",
 };
 
-/** Skills that are announced but not yet purchasable (templates not created yet) */
+/**
+ * Skills announced but not yet purchasable. A screen shows one as "coming"
+ * only while its type has no template (the PIA's open-source template,
+ * system-pia-template-v2, is seeded on every install, so it is offered).
+ */
 export const COMING_SOON_SKILL_IDS = new Set([
   "com.nel.dpocentral.pia",
   "com.nel.dpocentral.vendor",

@@ -322,7 +322,7 @@ export const VENDOR_DATA_MAPPINGS_ES: Record<string, string> = {
   "Duration of account + 1 year": "Duración de la cuenta + 1 año",
 
   // ── Legal & Compliance ───────────────────────────
-  "Legal & Compliance": "Legal y cumplimiento",
+  "Legal & Compliance": "Jurídico y cumplimiento",
   "Legal and compliance technology platform": "Plataforma tecnológica jurídica y de cumplimiento",
   "Signatory Name & Email": "Nombre y correo electrónico del firmante",
   "Contract/Document Content": "Contenido de contratos y documentos",

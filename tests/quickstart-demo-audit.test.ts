@@ -256,10 +256,12 @@ describe("places, reports, What applies, Settings", () => {
     expect(OPEN_PLACE_GROUPS).toEqual(["europe"]);
     expect(fmt(es.jurisdictionPicker.placeCount, "es", { count: 19 })).toBe("19 lugares");
   });
-  it("module titles on the reports page wrap", () => {
+  it("module titles on the reports page wrap between words, score on its own line", () => {
     const page = src("src/app/(dashboard)/privacy/reports/page.tsx");
-    expect(page).toContain('className="text-sm font-medium leading-snug break-words hyphens-auto">{label}');
+    expect(page).toContain("[hyphens:none] [overflow-wrap:normal] [word-break:normal]\">{label}");
+    expect(page).not.toContain("hyphens-auto");
     expect(page).not.toContain('font-medium truncate">{label}');
+    expect(page).toContain('data-testid="module-score"');
   });
   it("What applies opens on the applied tab once something applies", () => {
     const page = src("src/app/(dashboard)/privacy/regulations/page.tsx");

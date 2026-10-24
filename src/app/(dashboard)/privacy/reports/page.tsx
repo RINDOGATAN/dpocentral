@@ -69,21 +69,22 @@ function ModuleBreakdownCard({
   return (
     <Card className={score === null ? "border-dashed" : undefined}>
       <CardContent className="p-4">
-        {/* The title wraps (Spanish module names do not fit one line at four
-            cards a row); the score stays beside it, aligned to its first line. */}
-        <div className="flex items-start gap-3 mb-3">
+        {/* The title wraps between words only (no hyphenation: Spanish module
+            names broke mid-word at five cards a row); the score has its own
+            line under it. */}
+        <div className="flex items-start gap-3">
           <div className="w-8 h-8 flex items-center justify-center border rounded shrink-0">
             <Icon className="w-4 h-4 text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-snug break-words hyphens-auto">{label}</p>
+            <p className="text-sm font-medium leading-snug [hyphens:none] [overflow-wrap:normal] [word-break:normal]">{label}</p>
             <p className="text-xs text-muted-foreground">{weightLabel}</p>
           </div>
-          <span className="text-lg font-bold inline-flex items-center gap-1 shrink-0">
-            {tone && <StatusMark tone={tone} className="h-4 w-4" />}
-            {score === null ? unratedValue : `${score}%`}
-          </span>
         </div>
+        <p className="text-lg font-bold inline-flex items-center gap-1 mt-2 mb-2" data-testid="module-score">
+          {tone && <StatusMark tone={tone} className="h-4 w-4" />}
+          {score === null ? unratedValue : `${score}%`}
+        </p>
         <div className="w-full bg-muted rounded-full h-2">
           {tone !== null && (
             <div
