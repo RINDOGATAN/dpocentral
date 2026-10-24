@@ -39,7 +39,8 @@ import {
 import { isHostedDeployment } from "@/lib/hosted";
 
 /** The vendor's sourceRef and the catalogue slug it comes from. */
-export const TODOLAW_SOURCE_REF = "todo-law";
+export { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
+import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 export const TODOLAW_VENDOR_NAME = "TODO.LAW";
 export const TODOLAW_ENTITY = "RINDOGATAN LLC";
 
