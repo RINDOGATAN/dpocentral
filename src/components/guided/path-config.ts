@@ -151,6 +151,14 @@ export interface PathCounts {
   boardReportsSaved?: number;
 
   /**
+   * Records the service added on its own (TODO.LAW as processor) and nobody
+   * has confirmed yet. Left out of every count above, so they never move a
+   * step or a stage; counted only among the drafts waiting to be confirmed.
+   * Optional: absent reads as none.
+   */
+  systemDrafts?: number;
+
+  /**
    * For a step not yet done though records exist: the fields still missing on
    * the record closest to complete, so the page can say what finishes the
    * step. Field names only, never a record. Optional: absent reads as none.

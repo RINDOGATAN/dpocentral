@@ -16,6 +16,7 @@ import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
 import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { DRAFT_PROVENANCES } from "@/lib/drafts";
 import { evaluateApplicability, readApplicabilityAnswers } from "@/config/applicability";
+import { TODOLAW_SOURCE_REF } from "@/server/services/todolaw-processor";
 import {
   closestMissing,
   missingMinimumFields,
@@ -36,6 +37,16 @@ const RISK_TYPES = ["DPIA", "PIA"] as const;
 const TRANSFER_ON_DRAFT = {
   OR: [{ processingActivity: DRAFT_WHERE }, { processingActivityId: null, vendor: DRAFT_WHERE }],
 };
+
+/**
+ * A record the service adds on its own (TODO.LAW as processor, with its
+ * transfer: src/server/services/todolaw-processor.ts), not yet confirmed. It
+ * says nothing about where the organisation's own work stands, so until a
+ * person confirms it the path leaves it out: it neither starts a step nor
+ * makes a stage "to confirm". It still counts among the drafts waiting to be
+ * confirmed (draftTotal). Once confirmed it counts like any other record.
+ */
+const SYSTEM_VENDOR_DRAFT = { sourceRef: TODOLAW_SOURCE_REF, ...DRAFT_WHERE };
 
 /** Recorded compliance statuses ("PENDING" is not a recorded assessment). */
 const RECORDED_TRANSFER_STATUS = ["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT"];
@@ -101,6 +112,8 @@ export async function loadPathCounts(
     transfersRecorded,
     transfersRecordedOnDrafts,
     dpiaApproved,
+    systemVendorDrafts,
+    systemTransferDrafts,
   ] = await Promise.all([
     prisma.organization.findFirst({ where: { id: organizationId }, select: { settings: true } }),
     prisma.dataAsset.count({ where: org }),
@@ -157,6 +170,12 @@ export async function loadPathCounts(
       where: { ...org, complianceStatus: { in: RECORDED_TRANSFER_STATUS }, ...TRANSFER_ON_DRAFT },
     }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "DPIA" } } }),
+    // What the service adds on its own (TODO.LAW as processor, and its
+    // transfer), while nobody has confirmed it: left out of the path below.
+    prisma.vendor.count({ where: { ...SYSTEM_VENDOR_DRAFT, organizationId } }),
+    prisma.dataTransfer.count({
+      where: { ...org, processingActivityId: null, vendor: SYSTEM_VENDOR_DRAFT },
+    }),
   ]);
 
   const activityMissing = activityRows.map((r) => missingMinimumFields(r));
@@ -188,8 +207,9 @@ export async function loadPathCounts(
     processingActivitiesDrafts,
     processingActivitiesComplete,
     jurisdictions: jurisdictions.length,
-    vendors,
-    vendorsDrafts,
+    // The service's own unconfirmed records are left out of the path (SYSTEM_VENDOR_DRAFT).
+    vendors: Math.max(0, vendors - systemVendorDrafts),
+    vendorsDrafts: Math.max(0, vendorsDrafts - systemVendorDrafts),
     vendorsComplete,
     vendorsAssessed,
     vendorAssessments: Math.max(0, vendorAssessments - vendorAutoDrafts),
@@ -199,8 +219,8 @@ export async function loadPathCounts(
     dpiaDuty: dpiaItem?.state ?? null,
     liaAssessments,
     liaApproved,
-    transfers,
-    transfersDrafts,
+    transfers: Math.max(0, transfers - systemTransferDrafts),
+    transfersDrafts: Math.max(0, transfersDrafts - systemTransferDrafts),
     transfersComplete,
     dsarRequests,
     dsarIntakeConfigured: intakeForm ? isIntakeConfigured(intakeForm) : false,
@@ -208,10 +228,13 @@ export async function loadPathCounts(
     aiSystems,
     boardReportsSaved: Object.keys(settingsObject(settingsObject(settings.boardReport).reports)).length,
     missing,
+    systemDrafts: systemVendorDrafts,
   };
 }
 
 /** Records drafted and not yet confirmed, across the three kinds. */
 export function draftTotal(counts: PathCounts): number {
-  return counts.dataAssetsDrafts + counts.processingActivitiesDrafts + counts.vendorsDrafts;
+  return (
+    counts.dataAssetsDrafts + counts.processingActivitiesDrafts + counts.vendorsDrafts + (counts.systemDrafts ?? 0)
+  );
 }
