@@ -237,10 +237,11 @@ describe("set-dsar-module", () => {
     expect(audit.data.changes).toMatchObject({ subscriptionIdChanged: true });
   });
 
-  it("warns that a pilot organisation keeps the pilot's limit", async () => {
+  it("applies the volume upgrade on the pilot as on the paid plan (no pilot warning)", async () => {
     const { db } = moduleDb("PILOT");
     const r = await setDsarModule(db as never, { org: "acme", status: "ACTIVE", operator: "op", execute: false });
-    expect(r.note).toContain("pilot");
+    expect(r.note).toBeNull();
+    expect(r.after.dsarModuleStatus).toBe("ACTIVE");
   });
 });
 

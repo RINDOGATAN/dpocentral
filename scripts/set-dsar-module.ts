@@ -2,7 +2,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Sets an organisation's rights-request (DSAR) add-on on the hosted service.
+ * Sets an organisation's rights-request (DSAR) volume upgrade on the hosted
+ * service, once its payment has arrived (the payment link carries the
+ * organisation as Stripe's client reference, "dpc-dsar-<organisation id>").
  * Operator use only, modelled on scripts/set-org-plan.ts. DRY RUN BY DEFAULT:
  * it prints the before and after and writes nothing unless --execute is given.
  *
@@ -13,9 +15,9 @@
  *
  * Options:
  *   --org           the organisation's id or slug (required)
- *   --status        ACTIVE (module open: 10 public-form requests per calendar
- *                   month, Madrid), CANCELLED or NONE (closed to new
- *                   requests; requests held stay readable) (required)
+ *   --status        ACTIVE (1,000 public-form requests per calendar month,
+ *                   Madrid), CANCELLED or NONE (back to the standard 100; the
+ *                   module itself stays open) (required)
  *   --subscription  the payment provider's subscription id; "none" clears it;
  *                   default: kept
  *   --renews        next renewal, YYYY-MM-DD (UTC) or an ISO time; "none"
@@ -25,8 +27,7 @@
  *   --execute       write the change (one audit-trail entry,
  *                   DSAR_MODULE_CHANGE, in the same transaction)
  *
- * The organisation must be on the paid plan (EU_CLOUD, scripts/set-org-plan.ts)
- * for the add-on to matter; a pilot organisation keeps the pilot's limit.
+ * The upgrade applies on the pilot and on the paid plan alike.
  * Exit codes: 0 done (or nothing to change), 1 refused input, 2 unexpected error.
  */
 

@@ -22,7 +22,6 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useSubmitLock } from "@/lib/use-submit-lock";
-import { useDsarCanAddRequests } from "@/components/privacy/dsar-module-access-note";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { DsarRestrictedNotice } from "@/components/privacy/dsar-restricted-notice";
@@ -62,7 +61,6 @@ export default function NewDSARRequestPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newDsar");
   const tCommon = useTranslations("common");
-  const tModule = useTranslations("dsarModule");
   const tCcpa = useTranslations("ccpaRequests");
   const [card, setCard] = useState<string>("");
   // The laws the organisation declared decide which requests are offered.
@@ -73,7 +71,6 @@ export default function NewDSARRequestPage() {
   const codes = (applied?.jurisdictions ?? []).map((j) => j.code).filter((c) => c !== "EU_AI_ACT");
   const hasCcpa = codes.includes("CCPA");
   const hasOtherLaw = codes.length === 0 || codes.some((c) => c !== "CCPA");
-  const canAdd = useDsarCanAddRequests();
 
   const [form, setForm] = useState({
     type: "" as string,
@@ -118,24 +115,6 @@ export default function NewDSARRequestPage() {
   const isValid = form.type && form.requesterName && form.requesterEmail;
 
   if (canHandle === false) return <DsarRestrictedNotice />;
-
-  // The add-on is not on the plan: the note above the page says so (layout);
-  // no form the server would refuse.
-  if (!canAdd) {
-    return (
-      <Card data-testid="dsar-new-addon-off">
-        <CardContent className="py-8 text-center text-muted-foreground space-y-4">
-          <p>{tModule("addOnNoNew")}</p>
-          <Link href="/privacy/dsar">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              {tModule("backToRequests")}
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <div className="space-y-6">

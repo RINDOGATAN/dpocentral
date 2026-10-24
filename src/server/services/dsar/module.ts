@@ -5,15 +5,12 @@
  * The rights-request (DSAR) module on the hosted service, per organisation.
  *
  *  - Self-hosted kit: unchanged. The module is open and never limited.
- *  - Hosted, pilot organisation (plan PILOT): the module is open, with at most
- *    PILOT_PUBLIC_REQUEST_CAP requests through the public form, in total.
- *  - Hosted, paid organisation (plan EU_CLOUD): the module is an add-on. With
- *    `dsarModuleStatus` ACTIVE it is open, with at most
- *    PAID_PUBLIC_REQUESTS_PER_MONTH requests through the public form per
- *    calendar month (Europe/Madrid). Otherwise ("inactive") no new request can
- *    be created (the public form and status pages show a neutral "not
- *    available" page, staff cannot add one) and every request already held
- *    stays readable and workable by staff: data already held is never hidden.
+ *  - Hosted, every organisation (pilot or paid plan): the module is open and
+ *    works fully. One ceiling guards our costs against floods: at most
+ *    STANDARD_PUBLIC_REQUESTS_PER_MONTH requests through the public form per
+ *    calendar month (Europe/Madrid), or UPGRADED_PUBLIC_REQUESTS_PER_MONTH
+ *    with the volume upgrade (`dsarModuleStatus` ACTIVE, recorded by the
+ *    operator's script scripts/set-dsar-module.ts once the upgrade is paid).
  *
  * Only requests that came through the public form count. Requests entered by
  * staff never do. Each public-form request writes one organisation audit-log
@@ -22,25 +19,32 @@
  * Requests received before that entry existed are counted from their own
  * trail (REQUEST_SUBMITTED_PUBLIC); the larger of the two counts wins.
  *
- * At the limit, the public form shows the organisation's privacy contact
- * e-mail (DSARIntakeForm.privacyContactEmail) instead of accepting, or a
- * neutral line asking the person to contact the organisation directly.
+ * Nobody sees a counter under normal use. At 50, 75 and 90 per cent of the
+ * month's ceiling, and at the ceiling, the organisation's owners and
+ * administrators are told once each per month
+ * (src/server/services/dsar/volume-notices.ts); from 50 per cent a one-line
+ * note on the module's pages says the same. At the ceiling the public form
+ * shows the organisation's privacy contact e-mail
+ * (DSARIntakeForm.privacyContactEmail) instead of accepting, or a neutral
+ * line asking the person to contact the organisation directly, and our own
+ * inbox is told.
  *
  * AGPL-3.0 License - Part of the open-source core
  */
 
 import { isHostedDeployment } from "@/lib/hosted";
-import { isPaidPlan, type PlanOrg } from "@/server/services/pilot/caps";
 
-/** Public-form requests a pilot organisation may receive, in total. */
-export const PILOT_PUBLIC_REQUEST_CAP = 3;
-/** Public-form requests an organisation with the add-on may receive per calendar month. */
-export const PAID_PUBLIC_REQUESTS_PER_MONTH = 10;
+import { STANDARD_PUBLIC_REQUESTS_PER_MONTH, UPGRADED_PUBLIC_REQUESTS_PER_MONTH } from "@/lib/dsar-addon";
+
+/** The monthly ceilings (100, and 1,000 with the volume upgrade): src/lib/dsar-addon.ts. */
+export { STANDARD_PUBLIC_REQUESTS_PER_MONTH, UPGRADED_PUBLIC_REQUESTS_PER_MONTH };
+/** The shares of the month's ceiling, in per cent, at which the owners are told. */
+export const VOLUME_WARNING_PERCENTS = [50, 75, 90] as const;
 /** The time zone of the calendar month. */
 export const DSAR_MONTH_TIME_ZONE = "Europe/Madrid";
 
-/** The add-on's monthly price; the messages take it as {price}. */
-export { DSAR_ADDON_MONTHLY_PRICE } from "@/lib/dsar-addon";
+/** The volume upgrade's monthly price; the messages take it as {price}. */
+export { DSAR_VOLUME_UPGRADE_MONTHLY_PRICE } from "@/lib/dsar-addon";
 
 /** The organisation audit-log action of a request received through the public form. */
 export const DSAR_PUBLIC_SUBMISSION = "DSAR_PUBLIC_SUBMISSION";
@@ -48,23 +52,44 @@ export const DSAR_PUBLIC_SUBMISSION = "DSAR_PUBLIC_SUBMISSION";
 export const DSAR_MODULE_STATUSES = ["NONE", "ACTIVE", "CANCELLED"] as const;
 export type DsarModuleStatusValue = (typeof DSAR_MODULE_STATUSES)[number];
 
-export type DsarModuleOrg = PlanOrg & { dsarModuleStatus?: string | null };
+export type DsarModuleOrg = { dsarModuleStatus?: string | null };
 
 /**
  *  - "open":     the kit; no limit.
- *  - "pilot":    hosted pilot; 3 public-form requests in total.
- *  - "active":   hosted paid plan with the add-on; 10 per calendar month.
- *  - "inactive": hosted paid plan without the add-on; no new requests.
+ *  - "standard": hosted; 100 public-form requests per calendar month.
+ *  - "upgraded": hosted with the volume upgrade; 1,000 per calendar month.
  */
-export type DsarModuleGate = "open" | "pilot" | "active" | "inactive";
+export type DsarModuleGate = "open" | "standard" | "upgraded";
 
 export function dsarModuleGate(
   org: DsarModuleOrg,
   hosted: boolean = isHostedDeployment()
 ): DsarModuleGate {
   if (!hosted) return "open";
-  if (!isPaidPlan(org)) return "pilot";
-  return org.dsarModuleStatus === "ACTIVE" ? "active" : "inactive";
+  return org.dsarModuleStatus === "ACTIVE" ? "upgraded" : "standard";
+}
+
+/** The month's ceiling of a limited gate. */
+export function monthlyCeiling(gate: "standard" | "upgraded"): number {
+  return gate === "upgraded" ? UPGRADED_PUBLIC_REQUESTS_PER_MONTH : STANDARD_PUBLIC_REQUESTS_PER_MONTH;
+}
+
+/** The request counts at which the owners are told: 50, 75 and 90 per cent of `limit`. */
+export function warningThresholds(limit: number): number[] {
+  return VOLUME_WARNING_PERCENTS.map((pct) => Math.ceil((limit * pct) / 100));
+}
+
+export type VolumeWarningPercent = 0 | 50 | 75 | 90 | 100;
+
+/** The highest warning step `used` has reached: 100 at the ceiling, 0 below the first. */
+export function warningPercentOf(used: number, limit: number): VolumeWarningPercent {
+  if (used >= limit) return 100;
+  const thresholds = warningThresholds(limit);
+  let reached: VolumeWarningPercent = 0;
+  VOLUME_WARNING_PERCENTS.forEach((pct, i) => {
+    if (used >= thresholds[i]!) reached = pct;
+  });
+  return reached;
 }
 
 // ── The calendar month in Madrid ─────────────────────────────────────────
@@ -139,18 +164,18 @@ export async function countPublicFormRequests(
 
 export type DsarModuleAccess =
   | { gate: "open" }
-  | { gate: "inactive" }
   | {
-      gate: "pilot" | "active";
+      gate: "standard" | "upgraded";
       limit: number;
       used: number;
       remaining: number;
-      /** "total" for the pilot; "month" with the add-on (the window's end is when it starts again). */
-      period: "total" | "month";
-      resetsAt: Date | null;
+      /** When the count starts again: the start of the next calendar month (Madrid). */
+      resetsAt: Date;
+      /** The highest warning step reached this month (see warningPercentOf). */
+      warningPercent: VolumeWarningPercent;
     };
 
-/** The organisation's module state and, where limited, how many public-form requests are left. */
+/** The organisation's module state and, on the hosted service, this month's public-form count. */
 export async function getDsarModuleAccess(
   db: PublicRequestCountDb,
   org: { id: string } & DsarModuleOrg,
@@ -158,31 +183,29 @@ export async function getDsarModuleAccess(
   hosted: boolean = isHostedDeployment()
 ): Promise<DsarModuleAccess> {
   const gate = dsarModuleGate(org, hosted);
-  if (gate === "open" || gate === "inactive") return { gate };
-  if (gate === "pilot") {
-    const used = await countPublicFormRequests(db, org.id);
-    const limit = PILOT_PUBLIC_REQUEST_CAP;
-    return { gate, limit, used, remaining: Math.max(0, limit - used), period: "total", resetsAt: null };
-  }
+  if (gate === "open") return { gate };
   const window = madridMonthWindow(now);
   const used = await countPublicFormRequests(db, org.id, window);
-  const limit = PAID_PUBLIC_REQUESTS_PER_MONTH;
-  return { gate, limit, used, remaining: Math.max(0, limit - used), period: "month", resetsAt: window.end };
+  const limit = monthlyCeiling(gate);
+  return {
+    gate,
+    limit,
+    used,
+    remaining: Math.max(0, limit - used),
+    resetsAt: window.end,
+    warningPercent: warningPercentOf(used, limit),
+  };
 }
 
 /** True when the public form may take one more request. */
 export function acceptsPublicRequest(access: DsarModuleAccess): boolean {
   if (access.gate === "open") return true;
-  if (access.gate === "inactive") return false;
   return access.remaining > 0;
 }
 
 // ── Messages (English at the throw site; the formatter localises them) ──
 
 export const DSAR_MODULE_MESSAGES = {
-  /** A staff member adds a request while the add-on is not active. */
-  inactiveCreate:
-    "The rights-request module is not active for this organization. It is available as an add-on; the requests already held stay available.",
   /** The public form is at its limit. */
   formClosed: "This form is not taking requests at the moment. Please contact the organization directly.",
 } as const;

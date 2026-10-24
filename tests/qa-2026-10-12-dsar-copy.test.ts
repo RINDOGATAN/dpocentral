@@ -34,21 +34,17 @@ describe("public rights-request form", () => {
   });
 });
 
-describe("rights requests without the add-on", () => {
-  it("hides the buttons that add a request and replaces the form", () => {
+describe("rights requests open to every organisation", () => {
+  it("always offers the buttons that add a request (no add-on gate left)", () => {
     const list = src("src/app/(dashboard)/privacy/dsar/page.tsx");
-    expect(list).toContain("!restricted && canAdd &&");
-    expect(list).toMatch(/\{canAdd && \(/);
+    expect(list).not.toContain("canAdd");
     const form = src("src/app/(dashboard)/privacy/dsar/new/page.tsx");
-    expect(form).toContain('data-testid="dsar-new-addon-off"');
-    const hook = src("src/components/privacy/dsar-module-access-note.tsx");
-    expect(hook).toContain('access?.gate !== "inactive"');
+    expect(form).not.toContain("dsar-new-addon-off");
   });
 
   it("has the words in both languages", () => {
     for (const m of [en, es]) {
-      expect(m.dsarModule.addOnNoNew.length).toBeGreaterThan(10);
-      expect(m.dsarModule.backToRequests.length).toBeGreaterThan(3);
+      expect(m.dsarModule.volumeUsage.length).toBeGreaterThan(10);
       expect(m.dsarSettings.actions.saved.length).toBeGreaterThan(3);
     }
   });

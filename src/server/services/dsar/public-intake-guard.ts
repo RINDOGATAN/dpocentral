@@ -7,7 +7,8 @@
  * against scripts and floods without asking the requester for anything more:
  *
  *  1. A hidden field (the honeypot). People never see or fill it; form-filling
- *     scripts do. A submission with it filled is refused.
+ *     scripts do. A submission with it filled gets an answer that looks like
+ *     a receipt, and is neither stored nor counted (honeypotFilled).
  *  2. A signed form token, issued when the form is loaded (getPublicForm). It
  *     names the organisation and the time it was issued. A submission is
  *     refused when the token is missing, forged, for another organisation,
@@ -36,7 +37,7 @@
  * AGPL-3.0 License - Part of the open-source core
  */
 
-import { createHmac } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { logger } from "@/lib/logger";
 import { isRateLimitDisabled } from "@/lib/rate-limit";
@@ -165,7 +166,23 @@ async function refuse(
 }
 
 /**
- * Checks 1 and 2: the honeypot and the form token. Run before the
+ * Check 1: the honeypot. A submission with the hidden field filled is
+ * answered as if it had been received (a made-up reference, no e-mail), so
+ * the script learns nothing, and it is not stored and not counted against
+ * the form's monthly ceiling. Only the refusal is counted, by reason.
+ */
+export function honeypotFilled(input: { website?: string }): boolean {
+  return !!input.website && input.website.trim() !== "";
+}
+
+/** A made-up reference in the shape of a real one (a cuid), for the honeypot's answer. */
+export function decoyPublicId(): string {
+  return `c${randomBytes(18).toString("base64url").toLowerCase().replace(/[^a-z0-9]/g, "").padEnd(24, "0").slice(0, 24)}`;
+}
+
+/**
+ * Check 2: the form token (and, as a safety net, the honeypot, refused
+ * outright when a caller has not handled it first). Run before the
  * organisation is read, so a script costs one counter write and nothing else.
  */
 export async function assertHumanSubmission(
@@ -173,7 +190,7 @@ export async function assertHumanSubmission(
   input: { orgSlug: string; website?: string; formToken?: string },
   now: Date = new Date()
 ): Promise<void> {
-  if (input.website && input.website.trim() !== "") {
+  if (honeypotFilled(input)) {
     await refuse(db, "honeypot", null, now);
   }
   const token = checkFormToken(input.formToken, input.orgSlug, now);
