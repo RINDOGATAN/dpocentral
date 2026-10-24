@@ -324,6 +324,24 @@ export const regulationsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // A law another applied law brings with it (the GDPR with Spain's
+      // LOPDGDD) stays while that law is applied, as in the picker.
+      const { bringersOf } = await import("@/config/jurisdiction-places");
+      const applied = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId: ctx.organization.id },
+        include: { jurisdiction: { select: { code: true } } },
+      });
+      const target = applied.find((oj) => oj.jurisdictionId === input.jurisdictionId);
+      if (target) {
+        const bringers = bringersOf(target.jurisdiction.code, applied.map((oj) => oj.jurisdiction.code));
+        if (bringers.length > 0) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: `${target.jurisdiction.code} is included with ${bringers.join(", ")}; remove that first.`,
+          });
+        }
+      }
+
       await ctx.prisma.organizationJurisdiction.deleteMany({
         where: {
           organizationId: ctx.organization.id,

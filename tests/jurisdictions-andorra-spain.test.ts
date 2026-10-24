@@ -2,9 +2,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { describe, expect, it } from "vitest";
-import { JURISDICTION_CATALOG } from "@/config/jurisdiction-catalog";
+import { APPLICABILITY_QUESTIONS, JURISDICTION_CATALOG, getApplicableJurisdictions } from "@/config/jurisdiction-catalog";
 import { JURISDICTION_CATALOG_ES } from "@/config/jurisdiction-catalog-es";
-import { impliedBy, isPlaceCode, placeOptions, withImpliedLaws } from "@/config/jurisdiction-places";
+import { bringersOf, impliedBy, isPlaceCode, placeOptions, withImpliedLaws } from "@/config/jurisdiction-places";
 
 const entry = (code: string) => JURISDICTION_CATALOG.find((j) => j.code === code)!;
 
@@ -43,5 +43,19 @@ describe("Andorra (LQPD) and Spain (LOPDGDD) in the catalog", () => {
     expect(withImpliedLaws(["LQPD"])).toEqual(["LQPD"]);
     expect(impliedBy(["LOPDGDD", "GDPR"])).toEqual(["GDPR"]);
     expect(impliedBy(["GDPR"])).toEqual([]);
+  });
+
+  it("the GDPR cannot be removed on its own while Spain is applied; Spain can", () => {
+    expect(bringersOf("GDPR", ["GDPR", "LOPDGDD"])).toEqual(["LOPDGDD"]);
+    expect(bringersOf("GDPR", ["GDPR", "LQPD"])).toEqual([]);
+    expect(bringersOf("LOPDGDD", ["GDPR", "LOPDGDD"])).toEqual([]);
+  });
+
+  it("the applicability wizard can suggest each of them", () => {
+    const suggests = (code: string) =>
+      APPLICABILITY_QUESTIONS.filter((q) => q.relevantJurisdictions.includes(code)).map((q) => q.id);
+    expect(suggests("LQPD")).toEqual(["andorra_presence"]);
+    expect(suggests("LOPDGDD")).toEqual(["spain_presence"]);
+    expect(getApplicableJurisdictions({ andorra_presence: true }).map((j) => j.code)).toEqual(["LQPD"]);
   });
 });

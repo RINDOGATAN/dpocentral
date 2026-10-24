@@ -2080,6 +2080,8 @@
         "breachShort": "Breach: {hours}h",
         "appliedSummary": "{region} | DSAR: {days, plural, one {# day} other {# days}} | Breach: {hours}h",
         "appliedSummaryMonths": "{region} | DSAR: {months, plural, one {# month} other {# months}} | Breach: {hours}h",
+        "includedWith": "included with {place}",
+        "remove": "Remove {name}",
         "moreItems": "+{count} more",
         "apply": "Apply"
       },
