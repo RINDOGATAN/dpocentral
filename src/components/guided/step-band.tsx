@@ -25,6 +25,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { useOrganization } from "@/lib/organization-context";
 import { DPO_CENTRAL_PATH } from "./path-config";
 import { useProgramPathQuery } from "./use-program-path";
+import { stepFinishText } from "./step-finish";
 import {
   nextStep,
   stageAfterCelebration,
@@ -69,7 +70,7 @@ export function StepBand({
 }) {
   const t = useTranslations("guided");
   const { organization } = useOrganization();
-  const { missing } = useProgramPathQuery();
+  const { missing, dpiaDuty } = useProgramPathQuery();
   const place = stepAndFollowing(DPO_CENTRAL_PATH, stepId, statuses);
   const orgId = organization?.id;
   const storageKey = orgId ? `${SEEN_KEY}:${orgId}` : null;
@@ -148,6 +149,13 @@ export function StepBand({
                   </Link>
                 </>
               )}
+            </span>
+          )}
+          {/* The assessments step says what finishes it: an approved DPIA where
+              the organisation's answers require one, otherwise any risk assessment. */}
+          {current.step.id === "assessments" && currentStatus !== undefined && currentStatus !== "done" && (
+            <span className="mt-0.5 block text-muted-foreground" data-testid="band-finish">
+              {stepFinishText(t, current.step.id, dpiaDuty)}
             </span>
           )}
           {currentStatus === "ready" && (

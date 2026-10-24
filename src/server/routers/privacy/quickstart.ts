@@ -1320,12 +1320,11 @@ export const quickstartRouter = createTRPCRouter({
 
       // Record on the organisation (additive merge into its settings JSON) that
       // the quick start was run to the end, and the programme's name when one
-      // was given. The path's quick start step and day 1 of the 30/60/90-day
-      // plan read `settings.quickstart.completedAt`
-      // (services/program/path-counts.ts, plan-start.ts): without it a run
-      // with a template and no vendors left "Next step: Quick start" and the
-      // plan "Not started". The first completion is kept, so a second run never
-      // moves day 1. Best-effort: a failure here never fails the quickstart.
+      // was given. The path's quick start step reads
+      // `settings.quickstart.completedAt` (services/program/path-counts.ts):
+      // without it a run with a template and no vendors left "Next step: Quick
+      // start". The first completion is kept. Best-effort: a failure here never
+      // fails the quickstart.
       try {
         const org = await ctx.prisma.organization.findUnique({
           where: { id: orgId },

@@ -6,9 +6,6 @@
  * path the Guided layout shows (src/components/guided/path-config.ts).
  *
  * Read-only. `status` is one organisation, through the usual membership guard.
- * It carries `planStart`, day 1 of the 30/60/90-day plan
- * (src/server/services/program/plan-start.ts); the plan's state is worked out
- * where it is shown, from that date and the statuses (src/components/guided/plan.ts).
  *
  * The client switcher ("All clients") reuses the existing clients router and
  * the /privacy/clients page, so there is no separate portfolio query here.
@@ -19,7 +16,6 @@ import { createTRPCRouter, organizationProcedure } from "../../trpc";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath } from "@/components/guided/path";
 import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
-import { loadPlanStart } from "@/server/services/program/plan-start";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { loadDeadlines } from "@/server/services/program/deadlines";
 import { loadReviewsDue } from "@/server/services/program/reviews-due";
@@ -34,14 +30,11 @@ export const programPathRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const counts = await loadPathCounts(ctx.prisma, ctx.organization.id);
       const steps = evaluatePath(DPO_CENTRAL_PATH, counts);
-      const planStart = await loadPlanStart(
-        ctx.prisma,
-        ctx.organization.id,
-        steps.quickstart === "done",
-      );
       return {
         steps,
-        planStart: planStart?.toISOString() ?? null,
+        // What the organisation's answers say about a DPIA: the assessments
+        // step's bar ("applies") or only a suggestion ("check").
+        dpiaDuty: counts.dpiaDuty ?? null,
         // Records drafted for this organisation and not yet confirmed: what
         // "Review and confirm" holds (services/template-items/drafts.ts).
         drafts: draftTotal(counts),

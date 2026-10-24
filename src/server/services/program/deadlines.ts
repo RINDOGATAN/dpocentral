@@ -5,8 +5,8 @@
  * The deadlines at risk the dashboard shows: the 72-hour
  * window of each open breach still waiting for a decision or a notification,
  * and the rights requests due soonest. Dates and short references only; no
- * name, no content leaves the database. The plan's next milestone is worked
- * out on the page from the plan's start (src/components/guided/plan.ts).
+ * name, no content leaves the database. There is no timetable of our own:
+ * only deadlines in law, and the reviews the organisation set itself.
  *
  * Rights requests follow the module switch (NEXT_PUBLIC_DSAR_ENABLED) and the
  * member's read rule (src/server/services/dsar/access.ts): a member who does

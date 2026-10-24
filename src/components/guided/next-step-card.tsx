@@ -4,7 +4,7 @@
 
 /**
  * Guided only, top of the dashboard: the first step on the path that is not
- * done, one sentence on why, one button. Holds its height while the status
+ * done, one sentence on what finishes it, one button. Holds its height while the status
  * loads, so the dashboard below it does not move.
  */
 
@@ -14,11 +14,10 @@ import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "./path-config";
+import { DPO_CENTRAL_PATH } from "./path-config";
 import { nextStep, stageNumber } from "./path";
-import { planState } from "./plan";
-import { planPaceText } from "./plan-text";
 import { useProgramPathQuery } from "./use-program-path";
+import { stepFinishText } from "./step-finish";
 
 export function NextStepCard({
   waitForFresh = false,
@@ -31,12 +30,9 @@ export function NextStepCard({
   waitForFresh?: boolean;
 } = {}) {
   const t = useTranslations("guided");
-  const { steps, planStart, refreshing } = useProgramPathQuery();
+  const { steps, dpiaDuty, refreshing } = useProgramPathQuery();
   const statuses = waitForFresh && refreshing ? null : steps;
   const next = statuses ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
-  const pace = statuses
-    ? planPaceText(planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, planStart, new Date()), t)
-    : null;
   const StepIcon = next?.step.icon;
   // The step is met only by drafts: the action is to confirm them, on the
   // review page (drafts count once a person confirms them).
@@ -67,14 +63,8 @@ export function NextStepCard({
                 {t(`steps.${next.step.id}.label`)}
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                {toConfirm ? t("nextStep.toConfirm") : t(`steps.${next.step.id}.why`)}
+                {toConfirm ? t("nextStep.toConfirm") : stepFinishText(t, next.step.id, dpiaDuty)}
               </p>
-              {pace && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  <span className="sr-only">{t("plan.label")}: </span>
-                  {pace}
-                </p>
-              )}
             </div>
             {toConfirm ? (
               <Link href="/privacy/review" className="w-full sm:w-auto shrink-0">
@@ -99,12 +89,6 @@ export function NextStepCard({
             <div className="flex-1 min-w-0">
               <h2 className="font-semibold text-base sm:text-lg">{t("nextStep.allDoneTitle")}</h2>
               <p className="text-sm text-muted-foreground mt-1">{t("nextStep.allDoneBody")}</p>
-              {pace && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  <span className="sr-only">{t("plan.label")}: </span>
-                  {pace}
-                </p>
-              )}
             </div>
             <Link href="/privacy" className="w-full sm:w-auto shrink-0">
               <Button variant="outline" className="w-full sm:w-auto">

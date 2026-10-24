@@ -136,7 +136,7 @@ describe("the sidebar and the Guided home", () => {
     expect(layout).toContain("useMemberScope()");
     expect(layout).toContain("config: limited ? LIMITED_PATH : DPO_CENTRAL_PATH");
     expect(layout).toContain("showProgress: !limited");
-    expect(layout).toContain("planLine: orgWide ?");
+    expect(layout).toContain("if (orgWide && menuProps.statuses)");
     expect(layout).toContain("statuses={orgWide ? statuses : null}");
     const menu = read("src/components/guided/path-menu.tsx");
     expect(menu).toContain("showProgress && (");

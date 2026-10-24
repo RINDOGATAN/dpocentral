@@ -10,6 +10,7 @@
 
 import type { BoardReport } from "./board-report";
 import { documentSplit, draftGaps } from "./board-report";
+import { stepFinishText } from "@/components/guided/step-finish";
 
 export type Translate = (key: string, values?: Record<string, string | number>) => string;
 
@@ -55,6 +56,10 @@ export interface BoardReportText {
   scopeNote: string;
   disclaimer: string;
   programme: { title: string; figure: string; parts: string; headers: [string, string]; areas: Row[] };
+  /** Every counted step with its state and, when not met, what finishes it. Null for an older report shape. */
+  steps: { title: string; rows: Row[] } | null;
+  /** The stable counts of records on the date generated. Null for an older report shape. */
+  records: { title: string; rows: Row[]; note: string } | null;
   documents: { title: string; line: string; readyTitle: string; ready: string[]; noneReady: string; missingTitle: string; missing: Row[]; noneMissing: string };
   incidents: { title: string; rows: Row[] };
   rights: { title: string; rows: Row[] } | null;
@@ -107,6 +112,24 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
     return gaps.length > 0 ? `${register(`state.${status.state}`)} (${gaps.join("; ")})` : register(`state.${status.state}`);
   };
 
+  // Every counted step, numbered as in the menu, with its state; a step not
+  // met says what finishes it, and which fields are missing when it is started.
+  const steps = report.steps
+    ? report.steps.map((step) => {
+        const met = step.status === "done" || step.status === "ready";
+        const state = guided(`stepStatus.${step.status}`);
+        const finish = met ? null : stepFinishText(guided, step.stepId, report.dpiaDuty);
+        const missing = step.missing?.length
+          ? board("steps.missing", { fields: step.missing.map((f) => guided(`band.fields.${f}`)).join(", ") })
+          : null;
+        return {
+          label: board("steps.line", { number: step.number, step: guided(`steps.${step.stepId}.label`) }),
+          value: [state, finish, missing].filter(Boolean).join(". "),
+        };
+      })
+    : null;
+  const records = report.records;
+
   const incidents = report.incidents;
   const rights = report.rights;
   const vendors = report.vendors;
@@ -132,11 +155,9 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       ? Math.max(1, Math.floor((new Date(report.generatedAt).getTime() - new Date(`${action.date}T00:00:00.000Z`).getTime()) / 86_400_000))
       : 0;
     const when = action.date
-      ? action.dateSource === "deadline"
-        ? action.overdue
-          ? board("actions.overdue", { date: date(action.date), days: daysPast })
-          : board("actions.deadline", { date: date(action.date) })
-        : board("actions.plan", { date: date(action.date) })
+      ? action.overdue
+        ? board("actions.overdue", { date: date(action.date), days: daysPast })
+        : board("actions.deadline", { date: date(action.date) })
       : board("actions.noDate");
     return { action: label, owner: action.owner ?? board("actions.noOwner"), date: when };
   });
@@ -247,6 +268,27 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       headers: [board("programme.colArea"), board("programme.colState")],
       areas,
     },
+    steps: steps ? { title: board("steps.title"), rows: steps } : null,
+    records: records
+      ? {
+          title: board("records.title"),
+          note: board("records.note"),
+          rows: [
+            { label: board("records.dataAssets"), value: num(records.dataAssets) },
+            { label: board("records.activities"), value: num(records.activities) },
+            { label: board("records.activitiesComplete"), value: num(records.activitiesComplete) },
+            { label: board("records.transfers"), value: num(records.transfers) },
+            { label: board("records.transfersAssessed"), value: num(records.transfersAssessed) },
+            ...(records.rightsReceived != null
+              ? [
+                  { label: board("records.rightsReceived"), value: num(records.rightsReceived) },
+                  { label: board("records.rightsCompleted"), value: num(records.rightsCompleted ?? 0) },
+                ]
+              : []),
+            { label: board("records.incidents"), value: num(records.incidents) },
+          ],
+        }
+      : null,
     documents: {
       title: board("documents.title"),
       line: board("documents.line", { ready: ready.length, total: produced }),
@@ -301,6 +343,9 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       headers: [board("assessments.colType"), board("assessments.colApproved"), board("assessments.colPending")],
       rows: [
         [board("assessments.dpia"), num(a.dpiaApproved), num(a.dpiaPending)],
+        ...(a.piaApproved != null
+          ? [[board("assessments.pia"), num(a.piaApproved), num(a.piaPending ?? 0)] as [string, string, string]]
+          : []),
         [board("assessments.lia"), num(a.liaApproved), num(a.liaPending)],
       ],
     },

@@ -15,6 +15,7 @@ import type { PathCounts } from "@/components/guided/path-config";
 import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
 import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { DRAFT_PROVENANCES } from "@/lib/drafts";
+import { evaluateApplicability, readApplicabilityAnswers } from "@/config/applicability";
 import {
   closestMissing,
   missingMinimumFields,
@@ -90,13 +91,14 @@ export async function loadPathCounts(
     vendorAutoDrafts,
     transfersRecorded,
     transfersRecordedOnDrafts,
+    dpiaApproved,
   ] = await Promise.all([
     prisma.organization.findFirst({ where: { id: organizationId }, select: { settings: true } }),
     prisma.dataAsset.count({ where: org }),
     prisma.dataAsset.count({ where: drafts }),
     prisma.processingActivity.count({ where: org }),
     prisma.processingActivity.count({ where: drafts }),
-    prisma.organizationJurisdiction.count({ where: org }),
+    prisma.organizationJurisdiction.findMany({ where: org, select: { jurisdiction: { select: { code: true } } } }),
     prisma.vendor.count({ where: org }),
     prisma.vendor.count({ where: drafts }),
     prisma.vendor.count({ where: { ...org, assessments: { some: { status: "APPROVED", ...vendorType } } } }),
@@ -145,6 +147,7 @@ export async function loadPathCounts(
     prisma.dataTransfer.count({
       where: { ...org, complianceStatus: { in: RECORDED_TRANSFER_STATUS }, processingActivity: DRAFT_WHERE },
     }),
+    prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "DPIA" } } }),
   ]);
 
   const activityMissing = activityRows.map((r) => missingMinimumFields(r));
@@ -161,6 +164,11 @@ export async function loadPathCounts(
 
   const settings = settingsObject(organization?.settings);
   const quickstart = settingsObject(settings.quickstart);
+  // What the organisation's own answers say about a DPIA (the assessments step's bar).
+  const dpiaItem = evaluateApplicability(
+    jurisdictions.map((j) => j.jurisdiction.code),
+    readApplicabilityAnswers(settings.applicability),
+  ).find((item) => item.id === "dpiaLikely");
 
   return {
     quickstartCompleted: typeof quickstart.completedAt === "string",
@@ -170,7 +178,7 @@ export async function loadPathCounts(
     processingActivities,
     processingActivitiesDrafts,
     processingActivitiesComplete,
-    jurisdictions,
+    jurisdictions: jurisdictions.length,
     vendors,
     vendorsDrafts,
     vendorsComplete,
@@ -178,6 +186,8 @@ export async function loadPathCounts(
     vendorAssessments: Math.max(0, vendorAssessments - vendorAutoDrafts),
     assessments: Math.max(0, assessments - riskAutoDrafts),
     assessmentsApproved,
+    dpiaApproved,
+    dpiaDuty: dpiaItem?.state ?? null,
     liaAssessments,
     liaApproved,
     transfers,

@@ -36,7 +36,6 @@ import {
   type EvaluatedDocument,
 } from "@/config/document-register";
 import type { NeedsActionItem, NeedsActionKind } from "@/lib/needs-action";
-import type { PlanState, PlanWindow } from "@/components/guided/plan";
 
 /** The stage each kind of waiting work belongs to (null: no single stage). */
 export const NEEDS_ACTION_STAGE: Record<NeedsActionKind, string | null> = {
@@ -272,8 +271,6 @@ export function nextActions<C>(
 // Deadlines and the firm view
 // ---------------------------------------------------------------------------
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 /** A deadline at risk, as the server sends it (src/server/services/program/deadlines.ts). */
 export interface RecordDeadline {
   kind: "breachDecision" | "breachNotify" | "dsarDue";
@@ -292,8 +289,8 @@ export interface ReviewDeadline {
   href: string;
 }
 
-/** A deadline of the firm view: a record's, a review's, or the plan's next milestone. */
-export type ClientDeadline = RecordDeadline | ReviewDeadline | { kind: "plan"; at: string; day: number };
+/** A deadline of the firm view: a record's or a review's. */
+export type ClientDeadline = RecordDeadline | ReviewDeadline;
 
 /**
  * One client's due items, merged: the deadlines at risk, the reviews coming
@@ -323,7 +320,8 @@ export function clientDueItems(
 export type ClientStatus = "action" | "setup" | "toConfirm" | "onTrack";
 
 export function clientStatus(input: {
-  confirmedSteps: number;
+  /** Stages done (the programme figure). */
+  confirmedStages: number;
   drafts: number;
   needsAttention: boolean;
   nearest: ClientDeadline | null;
@@ -331,39 +329,18 @@ export function clientStatus(input: {
 }): ClientStatus {
   const overdue = !!input.nearest && new Date(input.nearest.at).getTime() < input.now.getTime();
   if (input.needsAttention || overdue) return "action";
-  if (input.confirmedSteps === 0) return "setup";
+  if (input.confirmedStages === 0) return "setup";
   if (input.drafts > 0) return "toConfirm";
   return "onTrack";
 }
 
 /**
- * The plan's next milestone (day 30, 60 or 90) while the plan runs: the last
- * day of the window the plan is in. Null before the plan starts and after it
- * ends. The dashboard's deadlines card and the firm view both read it here.
- */
-export function planMilestone(
-  windows: readonly PlanWindow[],
-  planStart: string | Date | null,
-  plan: PlanState | null,
-): { day: number; at: Date } | null {
-  if (!planStart || plan?.kind !== "running") return null;
-  const window = windows.find((w) => w.untilDay >= plan.day);
-  if (!window) return null;
-  const start = typeof planStart === "string" ? new Date(planStart) : planStart;
-  return { day: window.untilDay, at: new Date(start.getTime() + (window.untilDay - 1) * DAY_MS) };
-}
-
-/**
  * The nearest deadline of one client: the earliest of its breach windows,
- * its rights requests due and its plan's next milestone. An overdue one is
- * the earliest of all, so it comes first.
+ * its rights requests due and its reviews coming due. An overdue one is the
+ * earliest of all, so it comes first.
  */
-export function nearestDeadline(
-  deadlines: readonly (RecordDeadline | ReviewDeadline)[],
-  milestone: { day: number; at: Date } | null,
-): ClientDeadline | null {
+export function nearestDeadline(deadlines: readonly (RecordDeadline | ReviewDeadline)[]): ClientDeadline | null {
   const all: ClientDeadline[] = [...deadlines];
-  if (milestone) all.push({ kind: "plan", at: milestone.at.toISOString(), day: milestone.day });
   if (all.length === 0) return null;
   return all.reduce((a, b) => (new Date(b.at).getTime() < new Date(a.at).getTime() ? b : a));
 }

@@ -146,6 +146,14 @@ const standby = (input: DocumentInput): DocumentStatus => ({ state: "needsInput"
 export function isStandby(status: DocumentStatus): boolean {
   return status.state === "needsInput" && status.standby === true;
 }
+
+/** Inputs that are a choice, not a gap: AI assistance is off by default and may stay off. */
+const OPTIONAL_INPUTS: ReadonlySet<DocumentInput> = new Set(["aiAssist"]);
+
+/** Waiting only for an optional setting: a plain note, never a gap to complete. */
+export function isOptionalSetting(status: DocumentStatus): boolean {
+  return status.state === "needsInput" && OPTIONAL_INPUTS.has(status.input);
+}
 /** A draft with the gaps that are not zero; ready when there are none. */
 function draftOrReady(gaps: DocumentGap[]): DocumentStatus {
   const open = gaps.filter((g) => g.count > 0);
@@ -285,12 +293,10 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     formats: ["pdf"],
     module: "dsar",
     needs: "Rights requests on file.",
-    rule: "Needs a request when there is none (on standby, ready for when it is needed, once the intake is set up). Draft while no request has been completed; ready once one has.",
+    rule: "On standby (ready for when it is needed) while no request has arrived: a request cannot be made to arrive, so its absence is never a gap. Draft while no request has been completed; ready once one has.",
     evaluate: (f) =>
       f.dsarRequests === 0
-        ? f.dsarIntakeConfigured
-          ? standby("dsarRequest")
-          : needs("dsarRequest")
+        ? standby("dsarRequest")
         : f.dsarCompleted > 0
           ? ready()
           : draftOrReady([{ key: "openRequests", count: f.dsarRequests - f.dsarCompleted }]),
@@ -302,12 +308,10 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     download: "/api/export/breach-register",
     formats: ["pdf", "csv"],
     needs: "At least one incident.",
-    rule: "Needs an incident when there is none (on standby, ready for when it is needed, once one processing activity is complete: the path's incidents step is then ready). Draft while any incident has no impact recorded (records affected or data categories); ready otherwise.",
+    rule: "On standby (ready for when it is needed) while no incident is recorded: a breach cannot be made to happen, so its absence is never a gap. Draft while any incident has no impact recorded (records affected or data categories); ready otherwise.",
     evaluate: (f) =>
       f.incidents === 0
-        ? f.processingActivitiesComplete > 0
-          ? standby("incident")
-          : needs("incident")
+        ? standby("incident")
         : draftOrReady([{ key: "impactMissing", count: f.incidentsMissingImpact }]),
   },
   {
@@ -315,15 +319,13 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     stepId: "incidents",
     href: "/privacy/incidents",
     formats: ["screen"],
-    needs: "AI assistance switched on (off by default), an incident, and a notification record on it.",
-    rule: "Needs AI assistance while it is off, then an incident, then a notification record. Ready once all three exist.",
+    needs: "An incident and a notification record on it; the draft itself is written with AI assistance, which is a choice (off by default).",
+    rule: "On standby while no incident is recorded (a breach cannot be made to happen). Then, with AI assistance off, the optional note that it drafts the notification when switched on (a choice, never a gap); with it on, needs a notification record. Ready once one exists.",
     evaluate: (f) =>
-      !f.aiAssistOn
-        ? needs("aiAssist")
-        : f.incidents === 0
-          ? f.processingActivitiesComplete > 0
-            ? standby("incident")
-            : needs("incident")
+      f.incidents === 0
+        ? standby("incident")
+        : !f.aiAssistOn
+          ? needs("aiAssist")
           : f.incidentNotifications === 0
             ? needs("notificationRecord")
             : ready(),

@@ -271,11 +271,12 @@ describe("confirming drafts", () => {
 describe("d3: one programme figure", () => {
   it("after a quick start the figure stays low, with the drafts shown separately", () => {
     const figure = programFigure(DPO_CENTRAL_PATH, statuses(AFTER_QUICKSTART));
-    // Ten steps less vendor due diligence, coming while its module is announced.
-    expect(figure.total).toBe(9);
+    // The five stages with a page ("Policies and people" is all to come).
+    expect(figure.total).toBe(5);
     // Set up is done (the quick start ran and asked where the organisation operates).
-    expect(figure.confirmed).toBe(2);
-    expect(figure.toConfirm).toBe(4);
+    expect(figure.confirmed).toBe(1);
+    // Stages waiting only for drafts to be confirmed are counted apart.
+    expect(figure.toConfirm).toBeGreaterThan(0);
     expect(figure.confirmed + figure.toConfirm + figure.started + figure.notStarted).toBe(figure.total);
   });
 
@@ -292,9 +293,9 @@ describe("d3: one programme figure", () => {
       transfersComplete: 2,
     };
     const figure = programFigure(DPO_CENTRAL_PATH, statuses(confirmed));
-    // Set up (2), the three inventory steps, transfers, and the breach
-    // register, now ready when needed.
-    expect(figure.confirmed).toBe(7);
+    // Set up, Know your data, and Respond (the breach register, now ready
+    // when needed); Assess the risk still waits for an approved assessment.
+    expect(figure.confirmed).toBe(3);
     expect(figure.toConfirm).toBe(0);
   });
 
@@ -302,16 +303,22 @@ describe("d3: one programme figure", () => {
     const s = statuses(AFTER_QUICKSTART);
     const figure = programFigure(DPO_CENTRAL_PATH, s);
     expect(overallProgress(DPO_CENTRAL_PATH, s)).toEqual({ done: figure.confirmed, total: figure.total });
-    const sum = DPO_CENTRAL_PATH.stages.reduce((n, st) => n + stageProgress(st, s).done, 0);
-    expect(sum).toBe(figure.confirmed);
+    // The stages whose ring the menu shows complete (done, or ready when needed).
+    const complete = DPO_CENTRAL_PATH.stages.filter((st) => ["done", "ready"].includes(stageProgress(st, s).state)).length;
+    expect(complete).toBe(figure.confirmed);
   });
 
   it("is shown with the same words in the four places", () => {
     for (const bundle of [en, es]) {
       expect(bundle.guided.figure.line).toMatch(/\{done\}.*\{total\}/);
     }
-    expect(en.guided.figure.line).toBe("{done} of {total} steps confirmed");
-    expect(es.guided.figure.line).toBe("{done} de {total} pasos confirmados");
+    expect(en.guided.figure.line).toBe("{done} of {total} stages done");
+    expect(es.guided.figure.line).toBe("{done} de {total} fases hechas");
+    // The line under it says where the organisation is, never a timetable.
+    expect(es.guided.phase.now).toBe("Ahora: fase {number}, {stage}");
+    expect(en.guided.phase.now).toBe("Now: stage {number}, {stage}");
+    expect(JSON.stringify(es.guided)).not.toMatch(/día \{day\}|90 días/);
+    expect(JSON.stringify(en.guided)).not.toMatch(/Day \{day\}|90-day/);
     const menu = read("src/components/guided/path-menu.tsx");
     expect(menu).toMatch(/programFigure\(config, statuses\)/);
     expect(menu).toMatch(/t\("figure\.line"/);

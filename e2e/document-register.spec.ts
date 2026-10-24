@@ -116,9 +116,12 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
     // The panel's own line is capitalised ("Needs: ..."); inline in the menu
     // it reads "· needs: ...". The activities and vendors registers state
     // counts ("1 confirmed, 2 in draft") where the panel says "draft".
+    // The panel adds the step the input belongs to ("(step 2.3 ...)"); the
+    // menu line already sits under that step.
+    const detail = row.detail.replace(/ \((?:step|paso) [^)]*\)$/, "");
     const words =
-      row.kind === "needsInput" && row.detail.startsWith(es ? "Necesita" : "Needs")
-        ? row.detail.charAt(0).toLowerCase() + row.detail.slice(1)
+      row.kind === "needsInput" && detail.startsWith(es ? "Necesita" : "Needs")
+        ? detail.charAt(0).toLowerCase() + detail.slice(1)
         : row.state;
     const counted = row.kind === "draft" && /^\S.* · \d+ /.test(line);
     if (!counted) expect(line, `${id}`).toBe(`${row.name} · ${words}`);

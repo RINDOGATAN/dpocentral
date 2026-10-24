@@ -49,7 +49,6 @@ import {
 import { withoutSteps, type PathConfig } from "./path";
 import { features, isDsarModuleEnabled } from "@/config/features";
 import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
-import type { PlanWindow } from "./plan";
 
 /** The vendor risk assessment module is announced, not yet available. */
 export const VENDOR_REVIEW_COMING = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.VENDOR);
@@ -106,6 +105,15 @@ export interface PathCounts {
   assessments: number;
   /** Risk assessments (DPIA and PIA) approved. */
   assessmentsApproved: number;
+  /** DPIAs approved. Optional: absent reads as none. */
+  dpiaApproved?: number;
+  /**
+   * What the organisation's own answers say about a DPIA (the applicability
+   * check, src/config/applicability.ts, item "dpiaLikely"): "applies" makes an
+   * approved DPIA the bar for the assessments step; "check" only suggests one.
+   * Optional: absent reads as neither.
+   */
+  dpiaDuty?: "applies" | "check" | null;
   /** Legitimate-interest assessments (an LIA template) in any state. */
   liaAssessments: number;
   /** Legitimate-interest assessments approved. */
@@ -314,9 +322,13 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // assessments here need no licence. Where the DPIA is not licensed,
           // the lock sits on the DPIA option inside the assessments page and
           // the type picker instead (src/components/premium/licence-lock.tsx).
-          rule: "Done when at least one risk assessment (DPIA or PIA) is approved; a vendor review or a legitimate-interest assessment does not count. Started when a risk assessment exists, leaving out drafts the quick start made on its own that nobody has answered yet.",
+          rule: "Where the organisation's applicability answers say a DPIA applies (dpiaLikely: large-scale monitoring, or two of the EDPB criteria asked), done when at least one DPIA is approved. Otherwise done when at least one risk assessment (DPIA or PIA) is approved; where the answers say a DPIA is worth checking, the step suggests one without requiring it. A vendor review or a legitimate-interest assessment does not count. Started when a risk assessment exists, leaving out drafts the quick start made on its own that nobody has answered yet.",
           status: (c) =>
-            c.assessmentsApproved > 0 ? "done" : c.assessments > 0 ? "started" : "todo",
+            (c.dpiaDuty === "applies" ? (c.dpiaApproved ?? 0) > 0 : c.assessmentsApproved > 0)
+              ? "done"
+              : c.assessments > 0
+                ? "started"
+                : "todo",
         },
         {
           id: "transfers",
@@ -451,23 +463,11 @@ const FULL_PATH: PathConfig<PathCounts> = {
 /**
  * The path this deployment shows. Without the rights-request module
  * (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts) the "dsar" step is
- * left out everywhere: the menu, the progress, the next step and the plan.
+ * left out everywhere: the menu, the progress and the next step.
  */
 export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = isDsarModuleEnabled()
   ? FULL_PATH
   : withoutSteps(FULL_PATH, ["dsar"]);
-
-/**
- * The 30/60/90-day plan over the six stages (src/components/guided/plan.ts):
- * set up and people in the first thirty days, know-your-data and assessment in
- * the next thirty, rights and response in the last thirty. Day 1 is the day
- * the program started (src/server/services/program/plan-start.ts).
- */
-export const PLAN_WINDOWS: readonly PlanWindow[] = [
-  { untilDay: 30, stages: ["setup", "people"] },
-  { untilDay: 60, stages: ["inventory", "assess"] },
-  { untilDay: 90, stages: ["rights", "respond"] },
-];
 
 /**
  * Vendor due diligence, once the vendor risk assessment module is available:

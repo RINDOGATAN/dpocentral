@@ -5520,7 +5520,7 @@
         "mockupTitle": "Program figure and areas",
         "parts": {
           "firstRun": "On first use, a short card explains how DPO Central works until you choose \"Got it\". The help button in the top bar reopens it.",
-          "figure": "The program figure, \"N of M steps confirmed\", with how many steps are to confirm, in progress and not started.",
+          "figure": "The program figure, \"N of 5 stages done\", with how many stages are to confirm, in progress and not started, and under it the stage you are in.",
           "areas": "Six area tiles, one for each stage of the path, each with its state word and its next action. A tile opens that action.",
           "documents": "Documents you can produce today, with the button \"Download ready documents\" (see Documents below).",
           "next": "Next three actions, beside Upcoming deadlines (see Next actions and deadlines below).",
@@ -5546,8 +5546,8 @@
         "title": "Next actions and deadlines",
         "description": "Two panels on the dashboard say what to do next, and one list gathers everything that waits for a person.",
         "nextBody": "The three most useful things to do now: first what waits in Needs action, then the next steps on the path. Each has an Open, Review or Continue button. When more is waiting, a link opens everything that needs action.",
-        "deadlinesBody": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, rights requests due, and the plan's next milestone (day 30, 60 or 90). Each line opens the record.",
-        "deadlinesBodyNoDsar": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, and the plan's next milestone (day 30, 60 or 90). Each line opens the record.",
+        "deadlinesBody": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, rights requests due, and reviews of activities and vendors coming due. Each line opens the record.",
+        "deadlinesBodyNoDsar": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, and reviews of activities and vendors coming due. Each line opens the record.",
         "needsBody": "Needs action, in the menu, gathers everything waiting for a person:",
         "dsarTitle": "Rights-request reminders and extensions",
         "dsarBody": "Reminder emails go out 7, 3 and 1 day before a rights request's deadline, and once when it is overdue. Where the law allows it, the \"Extend deadline\" button on the request applies one extension and records your reason. See DSAR Management, SLA Tracking."
@@ -5652,7 +5652,7 @@
           "confirmed": "The program figure, and how many drafted records wait to be confirmed",
           "areas": "The six areas, each with its state word",
           "documents": "Documents ready, out of the total",
-          "deadline": "The next deadline (a breach to notify, a rights request due or a plan milestone), with its reference",
+          "deadline": "The next deadline (a breach to notify, a rights request due or a review coming due), with its reference",
           "action": "The next action"
         },
         "outro": "Rows are sorted by the nearest deadline, the soonest or most overdue first. Select a client's name to open its dashboard; select its deadline or next action to go straight there. \"Add a client\" sits beside the title, and each row's menu offers \"Start a new client from this one\". On a phone, each client is a card with the same fields."
@@ -10093,27 +10093,35 @@
         "complianceStatus": "a recorded compliance status"
       }
     },
-    "plan": {
-      "label": "Plan",
-      "day": "Program plan: day {day} of {total}",
-      "onPlan": "On schedule",
-      "behind": "{days, plural, one {# day behind schedule} other {# days behind schedule}}",
-      "complete": "Program plan complete",
-      "remaining": "{count, plural, one {# stage left: {stages}} other {# stages left: {stages}}}",
-      "notStarted": "Not started"
-    },
     "figure": {
-      "line": "{done} of {total} steps confirmed",
+      "line": "{done} of {total} stages done",
       "toConfirm": "{count} to confirm",
       "started": "{count} in progress",
       "notStarted": "{count} not started",
       "draftsWaiting": "{count, plural, one {# drafted record waits for a person to confirm it. It counts once confirmed.} other {# drafted records wait for a person to confirm them. They count once confirmed.}}",
       "review": "Review and confirm"
     },
+    "phase": {
+      "now": "Now: stage {number}, {stage}",
+      "complete": "Program complete"
+    },
+    "finish": {
+      "quickstart": "Complete the quick start once.",
+      "applies": "Declare at least one place where you operate.",
+      "dataInventory": "Confirm one system that records the personal data it holds.",
+      "ropa": "Confirm one processing activity with its data subjects, data categories and retention period.",
+      "vendors": "Confirm one vendor in use, with the personal data it processes and where.",
+      "assessments": "Approve one risk assessment: a DPIA or a general assessment.",
+      "assessmentsDpia": "Approve one DPIA: your answers indicate that one is required.",
+      "assessmentsCheck": "Approve one risk assessment. Your answers suggest you consider a DPIA.",
+      "transfers": "Record the compliance status of at least one international transfer.",
+      "dsar": "Review and save your rights-request form.",
+      "incidents": "Complete one processing activity: the breach register is then ready for when it is needed."
+    },
     "notYetGroup": "Not in DPO Central yet",
     "stepDocsLabel": "Documents",
     "areas": {
-      "title": "Areas",
+      "title": "Stages",
       "coming": "Not in DPO Central yet",
       "confirm": "Confirm the drafted records",
       "step": "Next: {step}",
@@ -10134,7 +10142,6 @@
       "breachDecision": "Breach {ref}: decide whether to notify",
       "breachNotify": "Breach {ref}: notify",
       "dsarDue": "Rights request {ref} due",
-      "plan": "Plan: day {day} milestone",
       "activityReview": "Review of the activity {name} due",
       "vendorReview": "Review of the vendor {name} due",
       "overdue": "overdue since {date}",
@@ -10201,8 +10208,8 @@
     "needAttention": "{count, plural, one {# needs attention} other {# need attention}}",
     "columns": {
       "client": "Client",
-      "confirmed": "Confirmed",
-      "areas": "Areas",
+      "confirmed": "Progress",
+      "areas": "Stages",
       "documents": "Documents ready",
       "deadline": "Next due",
       "action": "Next action",
@@ -10623,7 +10630,7 @@
       "needsInput": "needs an input",
       "standby": "ready when needed",
       "needsModule": "needs a module",
-      "needsSetting": "needs a setting",
+      "needsSetting": "optional",
       "notYet": "not in DPO Central yet"
     },
     "legend": {
@@ -10632,11 +10639,15 @@
       "needsInput": "needs an input, named",
       "standby": "ready for when it is needed",
       "needsModule": "needs a module",
-      "needsSetting": "needs a setting",
+      "needsSetting": "optional, your choice",
       "notYet": "Not in DPO Central yet"
     },
     "needs": "needs: {input}",
     "needsLine": "Needs: {input}",
+    "needsLineStep": "Needs: {input} (step {step})",
+    "settingLine": {
+      "aiAssist": "Drafted with AI assistance, if you choose to switch it on in Settings."
+    },
     "standbyLine": "Ready for when it is needed.",
     "waitingLine": "{count, plural, one {# document to complete} other {# documents to complete}}",
     "inputs": {
@@ -10734,6 +10745,23 @@
     }
   },
   "boardReport": {
+    "steps": {
+      "title": "Steps",
+      "line": "{number} {step}",
+      "missing": "missing: {fields}"
+    },
+    "records": {
+      "title": "Records to date",
+      "note": "Counted from the start, on the date generated, so reports of different dates can be compared.",
+      "dataAssets": "Systems confirmed",
+      "activities": "Processing activities confirmed",
+      "activitiesComplete": "Of those, with the minimum record fields",
+      "transfers": "International transfers recorded",
+      "transfersAssessed": "Of those, with a recorded compliance status",
+      "rightsReceived": "Rights requests received",
+      "rightsCompleted": "Rights requests completed",
+      "incidents": "Incidents recorded"
+    },
     "title": "Executive report",
     "subtitle": "A short report for the board or management, from the data in DPO Central, for the period you choose.",
     "period": {
@@ -10761,7 +10789,7 @@
     "limited": "The executive report covers the whole organization. Ask an owner or an admin for it.",
     "programme": {
       "title": "The program",
-      "colArea": "Area",
+      "colArea": "Stage",
       "colState": "State"
     },
     "documents": {
@@ -10805,7 +10833,8 @@
       "colApproved": "Approved",
       "colPending": "Pending",
       "dpia": "Data protection impact assessments (DPIA)",
-      "lia": "Legitimate interest assessments (LIA)"
+      "lia": "Legitimate interest assessments (LIA)",
+      "pia": "General risk assessments (PIA)"
     },
     "risks": {
       "title": "Top risks and gaps",
@@ -10823,8 +10852,7 @@
       "noOwner": "Not named",
       "noDate": "No date set",
       "deadline": "{date} (deadline)",
-      "plan": "{date} (plan)",
-      "ownerNote": "Owner: the organization's privacy officer in DPO Central (or its owner). Date: the record's own deadline, or the end of the 30, 60 or 90-day window of the plan for that area.",
+      "ownerNote": "Owner: the organization's privacy officer in DPO Central (or its owner). Date: the record's own deadline in law, where it has one.",
       "empty": "Nothing left to do on the path.",
       "overdue": "{date} (overdue by {days, plural, one {# day} other {# days}})"
     },
@@ -10850,7 +10878,7 @@
     "kpi": {
       "title": "At a glance",
       "ofTotal": "of {total}",
-      "programme": "steps confirmed",
+      "programme": "stages done",
       "documents": "documents ready",
       "breaches": "breaches notified to the authority within 72 hours",
       "breachesNone": "no notifiable breaches in the period",

@@ -202,7 +202,10 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const report = page.getByTestId("board-report");
   await expect(report).toBeVisible();
   await expect(page.getByTestId("board-period-line")).toContainText(es ? "Periodo: del 1 de" : "Period: 1 ");
-  await expect(page.getByTestId("board-figure")).toContainText(es ? "pasos confirmados" : "steps confirmed");
+  await expect(page.getByTestId("board-figure")).toContainText(es ? "fases hechas" : "stages done");
+  // Every counted step with its state, and the records to date.
+  await expect(page.getByTestId("board-steps")).toBeVisible();
+  await expect(page.getByTestId("board-records")).toBeVisible();
   await expect(page.getByRole("heading", { level: 1, name: es ? "Informe ejecutivo" : "Executive report" })).toBeVisible();
   // At a glance: one breach of two notifiable within 72 hours; one request of two on time (the open request
   // past its deadline counts against the rate, src/lib/dsar-on-time.ts); one vendor of two in use with a DPA in force.
@@ -266,10 +269,11 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
     expect(response.headers()["content-type"]).toContain("application/pdf");
     const body = await response.body();
     expect(body.subarray(0, 4).toString()).toBe("%PDF");
+    // Saved before the checks, so a failing layout can be looked at.
+    if (SHOTS) writeFileSync(`${SHOTS}/${project}-${LOCALE}-executive-report-${lang}.pdf`, body);
     const pages = (body.toString("latin1").match(/\/Type\s*\/Page(?!s)/g) ?? []).length;
     expect(pages, `${lang} PDF pages`).toBeGreaterThanOrEqual(2);
     expect(pages, `${lang} PDF pages`).toBeLessThanOrEqual(3);
     expect(response.headers()["content-disposition"]).toContain(lang === "es" ? "Informe-Ejecutivo-" : "Executive-Report-");
-    if (SHOTS) writeFileSync(`${SHOTS}/${project}-${LOCALE}-executive-report-${lang}.pdf`, body);
   }
 });

@@ -5520,7 +5520,7 @@
         "mockupTitle": "Cifra del programa y áreas",
         "parts": {
           "firstRun": "La primera vez, una tarjeta breve explica cómo funciona DPO Central hasta que eliges «Entendido». El botón de ayuda de la barra superior la vuelve a abrir.",
-          "figure": "La cifra del programa, «N de M pasos confirmados», con cuántos pasos están por confirmar, en curso y sin empezar.",
+          "figure": "La cifra del programa, «N de 5 fases hechas», con cuántas fases están por confirmar, en curso y sin empezar, y debajo la fase en la que estás.",
           "areas": "Seis áreas, una por cada fase de la ruta, cada una con su estado y su siguiente acción. Al pulsar un área se abre esa acción.",
           "documents": "Los documentos que puedes generar hoy, con el botón «Descargar documentos listos» (consulta Documentos más abajo).",
           "next": "Tus tres próximas acciones, junto a Próximos plazos (consulta Próximas acciones y plazos más abajo).",
@@ -5546,8 +5546,8 @@
         "title": "Próximas acciones y plazos",
         "description": "Dos paneles del panel principal indican qué hacer a continuación, y una lista reúne todo lo que espera a una persona.",
         "nextBody": "Las tres cosas más útiles que puedes hacer ahora: primero lo que espera en Requiere acción y después los siguientes pasos de la ruta. Cada una tiene un botón Abrir, Revisar o Continuar. Cuando hay más pendiente, un enlace abre todo lo que requiere acción.",
-        "deadlinesBody": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar, solicitudes de derechos que vencen y el próximo hito del plan (día 30, 60 o 90). Cada línea abre el registro.",
-        "deadlinesBodyNoDsar": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar y el próximo hito del plan (día 30, 60 o 90). Cada línea abre el registro.",
+        "deadlinesBody": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar, solicitudes de derechos que vencen y revisiones de actividades y proveedores que vencen. Cada línea abre el registro.",
+        "deadlinesBodyNoDsar": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar y revisiones de actividades y proveedores que vencen. Cada línea abre el registro.",
         "needsBody": "Requiere acción, en el menú, reúne todo lo que espera a una persona:",
         "dsarTitle": "Recordatorios y prórrogas de las solicitudes de derechos",
         "dsarBody": "Se envían recordatorios por correo electrónico 7, 3 y 1 día antes del vencimiento de una solicitud de derechos, y una vez cuando vence. Cuando la norma lo permite, el botón «Prorrogar el plazo» de la solicitud aplica una prórroga y anota tu motivo. Consulta Ejercicio de derechos, Seguimiento de plazos."
@@ -5652,7 +5652,7 @@
           "confirmed": "La cifra del programa y cuántos registros en borrador esperan a ser confirmados",
           "areas": "Las seis áreas, cada una con su estado",
           "documents": "Documentos listos, sobre el total",
-          "deadline": "El próximo plazo (una brecha que notificar, una solicitud de derechos que vence o un hito del plan), con su referencia",
+          "deadline": "El próximo plazo (una brecha que notificar, una solicitud de derechos que vence o una revisión que vence), con su referencia",
           "action": "La siguiente acción"
         },
         "outro": "Las filas se ordenan por el plazo más próximo: primero el más cercano o el más vencido. Pulsa el nombre de un cliente para abrir su panel; pulsa su plazo o su siguiente acción para ir directamente. «Añadir un cliente» está junto al título, y el menú de cada fila ofrece «Crear un cliente nuevo a partir de este». En el móvil, cada cliente es una tarjeta con los mismos datos."
@@ -10093,27 +10093,35 @@
         "complianceStatus": "un estado de cumplimiento registrado"
       }
     },
-    "plan": {
-      "label": "Plan",
-      "day": "Plan del programa: día {day} de {total}",
-      "onPlan": "Según lo previsto",
-      "behind": "{days, plural, one {Con # día de retraso} other {Con # días de retraso}}",
-      "complete": "Plan del programa completado",
-      "remaining": "{count, plural, one {Queda # fase: {stages}} other {Quedan # fases: {stages}}}",
-      "notStarted": "Sin empezar"
-    },
     "figure": {
-      "line": "{done} de {total} pasos confirmados",
+      "line": "{done} de {total} fases hechas",
       "toConfirm": "{count} por confirmar",
       "started": "{count} en curso",
       "notStarted": "{count} sin empezar",
       "draftsWaiting": "{count, plural, one {# registro en borrador espera a que una persona lo confirme. Cuenta cuando está confirmado.} other {# registros en borrador esperan a que una persona los confirme. Cuentan cuando están confirmados.}}",
       "review": "Revisar y confirmar"
     },
+    "phase": {
+      "now": "Ahora: fase {number}, {stage}",
+      "complete": "Programa completo"
+    },
+    "finish": {
+      "quickstart": "Completa el inicio rápido una vez.",
+      "applies": "Declara al menos un lugar en el que operas.",
+      "dataInventory": "Confirma un sistema que registre los datos personales que contiene.",
+      "ropa": "Confirma una actividad de tratamiento con sus interesados, categorías de datos y plazo de conservación.",
+      "vendors": "Confirma un proveedor en uso, con los datos personales que trata y dónde.",
+      "assessments": "Aprueba una evaluación de riesgos: una EIPD o una evaluación general.",
+      "assessmentsDpia": "Aprueba una EIPD: tus respuestas indican que es obligatoria.",
+      "assessmentsCheck": "Aprueba una evaluación de riesgos. Tus respuestas indican que conviene valorar una EIPD.",
+      "transfers": "Registra el estado de cumplimiento de al menos una transferencia internacional.",
+      "dsar": "Revisa y guarda tu formulario de solicitudes de derechos.",
+      "incidents": "Completa una actividad de tratamiento: el registro de brechas queda listo para cuando haga falta."
+    },
     "notYetGroup": "Aún no en DPO Central",
     "stepDocsLabel": "Documentos",
     "areas": {
-      "title": "Áreas",
+      "title": "Fases",
       "coming": "Aún no en DPO Central",
       "confirm": "Confirma los registros en borrador",
       "step": "Siguiente: {step}",
@@ -10134,7 +10142,6 @@
       "breachDecision": "Brecha {ref}: decide si notificar",
       "breachNotify": "Brecha {ref}: notificar",
       "dsarDue": "La solicitud de derechos {ref} vence",
-      "plan": "Plan: hito del día {day}",
       "activityReview": "Vence la revisión de la actividad {name}",
       "vendorReview": "Vence la revisión del proveedor {name}",
       "overdue": "vencido desde el {date}",
@@ -10201,8 +10208,8 @@
     "needAttention": "{count, plural, one {# requiere atención} other {# requieren atención}}",
     "columns": {
       "client": "Cliente",
-      "confirmed": "Confirmado",
-      "areas": "Áreas",
+      "confirmed": "Progreso",
+      "areas": "Fases",
       "documents": "Documentos listos",
       "deadline": "Próximo vencimiento",
       "action": "Siguiente acción",
@@ -10623,7 +10630,7 @@
       "needsInput": "falta un dato",
       "standby": "a punto",
       "needsModule": "requiere módulo",
-      "needsSetting": "requiere ajuste",
+      "needsSetting": "opcional",
       "notYet": "aún no en DPO Central"
     },
     "legend": {
@@ -10632,11 +10639,15 @@
       "needsInput": "falta un dato, que se indica",
       "standby": "a punto, para cuando haga falta",
       "needsModule": "requiere un módulo",
-      "needsSetting": "requiere un ajuste",
+      "needsSetting": "opcional, a tu elección",
       "notYet": "Aún no en DPO Central"
     },
     "needs": "necesita: {input}",
     "needsLine": "Necesita: {input}",
+    "needsLineStep": "Necesita: {input} (paso {step})",
+    "settingLine": {
+      "aiAssist": "Se redacta con la asistencia de IA, si decides activarla en Ajustes."
+    },
     "standbyLine": "Listo para cuando haga falta.",
     "waitingLine": "{count, plural, one {# documento por completar} other {# documentos por completar}}",
     "inputs": {
@@ -10734,6 +10745,23 @@
     }
   },
   "boardReport": {
+    "steps": {
+      "title": "Pasos",
+      "line": "{number} {step}",
+      "missing": "falta: {fields}"
+    },
+    "records": {
+      "title": "Registros a la fecha",
+      "note": "Contados desde el inicio, en la fecha de generación, para poder comparar informes de fechas distintas.",
+      "dataAssets": "Sistemas confirmados",
+      "activities": "Actividades de tratamiento confirmadas",
+      "activitiesComplete": "De ellas, con los campos mínimos del registro",
+      "transfers": "Transferencias internacionales registradas",
+      "transfersAssessed": "De ellas, con un estado de cumplimiento registrado",
+      "rightsReceived": "Solicitudes de derechos recibidas",
+      "rightsCompleted": "Solicitudes de derechos completadas",
+      "incidents": "Incidentes registrados"
+    },
     "title": "Informe ejecutivo",
     "subtitle": "Un informe breve para el consejo o la dirección, con los datos de DPO Central, del periodo que elijas.",
     "period": {
@@ -10761,7 +10789,7 @@
     "limited": "El informe ejecutivo abarca toda la organización. Pídeselo a un propietario o a un administrador.",
     "programme": {
       "title": "El programa",
-      "colArea": "Área",
+      "colArea": "Fase",
       "colState": "Estado"
     },
     "documents": {
@@ -10805,7 +10833,8 @@
       "colApproved": "Aprobadas",
       "colPending": "Pendientes",
       "dpia": "Evaluaciones de impacto (EIPD)",
-      "lia": "Evaluaciones del interés legítimo (EIL)"
+      "lia": "Evaluaciones del interés legítimo (EIL)",
+      "pia": "Evaluaciones generales de riesgos (EIP)"
     },
     "risks": {
       "title": "Principales riesgos y carencias",
@@ -10823,8 +10852,7 @@
       "noOwner": "Sin asignar",
       "noDate": "Sin fecha",
       "deadline": "{date} (vencimiento)",
-      "plan": "{date} (plan)",
-      "ownerNote": "Responsable: la persona responsable de privacidad de la organización en DPO Central (o su propietario). Fecha: el vencimiento del propio registro o, si no lo tiene, el final del tramo de 30, 60 o 90 días del plan para esa área.",
+      "ownerNote": "Responsable: la persona responsable de privacidad de la organización en DPO Central (o su propietario). Fecha: el vencimiento legal del propio registro, cuando lo tiene.",
       "empty": "No queda nada por hacer en la ruta.",
       "overdue": "{date} (vencida hace {days, plural, one {# día} other {# días}})"
     },
@@ -10850,7 +10878,7 @@
     "kpi": {
       "title": "De un vistazo",
       "ofTotal": "de {total}",
-      "programme": "pasos confirmados",
+      "programme": "fases hechas",
       "documents": "documentos listos",
       "breaches": "brechas notificadas a la autoridad en 72 horas",
       "breachesNone": "ninguna brecha notificable en el periodo",

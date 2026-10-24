@@ -261,6 +261,13 @@ function ReportView({ report }: { report: BoardReport }) {
           </div>
         </Section>
 
+        {text.records && (
+          <Section title={text.records.title} testId="board-records">
+            <Rows rows={text.records.rows} numeric />
+            <p className="text-xs text-muted-foreground mt-2">{text.records.note}</p>
+          </Section>
+        )}
+
         <Section title={text.risks.title} testId="board-risks">
           {text.risks.items.length > 0 ? (
             <ol className="list-decimal pl-5 space-y-1.5 text-sm">
@@ -273,6 +280,12 @@ function ReportView({ report }: { report: BoardReport }) {
           )}
         </Section>
       </div>
+
+      {text.steps && (
+        <Section title={text.steps.title} testId="board-steps">
+          <Rows rows={text.steps.rows} wide />
+        </Section>
+      )}
 
       <Section title={text.actions.title} testId="board-actions">
         {text.actions.rows.length > 0 ? (
@@ -399,13 +412,32 @@ function Section({ title, testId, children }: { title: string; testId: string; c
   );
 }
 
-function Rows({ rows, numeric = false, className = "" }: { rows: Row[]; numeric?: boolean; className?: string }) {
+/** `wide`: a phrase as the value, in its own column (the steps and what finishes them). */
+function Rows({
+  rows,
+  numeric = false,
+  wide = false,
+  className = "",
+}: {
+  rows: Row[];
+  numeric?: boolean;
+  wide?: boolean;
+  className?: string;
+}) {
   return (
     <dl className={`divide-y divide-border border-y border-border text-sm ${className}`}>
       {rows.map((row, i) => (
-        <div key={i} className="flex items-start justify-between gap-3 py-1.5">
-          <dt className="min-w-0 break-words">{row.label}</dt>
-          <dd className={numeric ? "font-semibold tabular-nums shrink-0" : "text-muted-foreground text-right shrink-0"}>
+        <div key={i} className={wide ? "flex flex-col sm:flex-row sm:items-start gap-0.5 sm:gap-3 py-1.5" : "flex items-start justify-between gap-3 py-1.5"}>
+          <dt className={wide ? "min-w-0 break-words sm:w-2/5 shrink-0" : "min-w-0 break-words"}>{row.label}</dt>
+          <dd
+            className={
+              numeric
+                ? "font-semibold tabular-nums shrink-0"
+                : wide
+                  ? "min-w-0 text-muted-foreground break-words"
+                  : "text-muted-foreground text-right shrink-0"
+            }
+          >
             {row.value}
           </dd>
         </div>

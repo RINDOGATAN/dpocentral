@@ -93,10 +93,12 @@ export default async function DocsGettingStartedPage() {
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   {tg("overallLabel")}
                 </p>
-                <p className="text-lg font-semibold">{tg("figure.line", { done: 4, total: 10 })}</p>
+                <p className="text-lg font-semibold">{tg("figure.line", { done: 3, total: 5 })}</p>
                 <p className="text-xs text-muted-foreground">
-                  {tg("figure.toConfirm", { count: 1 })} · {tg("figure.started", { count: 2 })} ·{" "}
-                  {tg("figure.notStarted", { count: 3 })}
+                  {tg("figure.started", { count: 1 })} · {tg("figure.notStarted", { count: 1 })}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {tg("phase.now", { number: 3, stage: tg("stages.assess") })}
                 </p>
               </CardContent>
             </Card>
