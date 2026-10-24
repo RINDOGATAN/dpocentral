@@ -23,6 +23,7 @@ import {
   type PilotResource,
 } from "./limits";
 import { groupOrganizationIds, groupWhere } from "./umbrella";
+import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 
 export {
   PILOT_DAYS,
@@ -149,16 +150,30 @@ export type PilotDb = {
   organizationMember: MemberDelegate;
 } & PlanLookupDb;
 
+/**
+ * Our own records never use the customer's allowances: the TODO.LAW vendor
+ * the hosted service adds to every programme (sourceRef "todo-law",
+ * src/server/services/todolaw-processor.ts), its contracts and its transfers
+ * are left out of the counts. A null sourceRef must be matched explicitly,
+ * as "not equal" leaves nulls out in SQL.
+ */
+const NOT_TODOLAW_VENDOR = {
+  OR: [{ sourceRef: null }, { sourceRef: { not: TODOLAW_SOURCE_REF } }],
+};
+
 const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: Scope) => Promise<number>> = {
   dataAssets: (db, organizationId) => db.dataAsset.count({ where: { organizationId } }),
   dataElements: (db, organizationId) => db.dataElement.count({ where: { organizationId } }),
   processingActivities: (db, organizationId) =>
     db.processingActivity.count({ where: { organizationId } }),
   dataFlows: (db, organizationId) => db.dataFlow.count({ where: { organizationId } }),
-  dataTransfers: (db, organizationId) => db.dataTransfer.count({ where: { organizationId } }),
-  vendors: (db, organizationId) => db.vendor.count({ where: { organizationId } }),
+  dataTransfers: (db, organizationId) =>
+    db.dataTransfer.count({
+      where: { organizationId, OR: [{ vendorId: null }, { vendor: NOT_TODOLAW_VENDOR }] },
+    }),
+  vendors: (db, organizationId) => db.vendor.count({ where: { organizationId, ...NOT_TODOLAW_VENDOR } }),
   vendorContracts: (db, organizationId) =>
-    db.vendorContract.count({ where: { vendor: { organizationId } } }),
+    db.vendorContract.count({ where: { vendor: { organizationId, ...NOT_TODOLAW_VENDOR } } }),
   dsarRequests: (db, organizationId) => db.dSARRequest.count({ where: { organizationId } }),
   assessments: (db, organizationId) => db.assessment.count({ where: { organizationId } }),
   assessmentTemplates: (db, organizationId) =>
