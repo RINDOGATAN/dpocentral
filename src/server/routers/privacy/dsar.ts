@@ -22,10 +22,12 @@ import {
   acceptsPublicRequest,
   DSAR_MODULE_MESSAGES,
   DSAR_PUBLIC_SUBMISSION,
-  dsarModuleGate,
   effectiveRetentionDays,
   getDsarModuleAccess,
 } from "@/server/services/dsar/module";
+import { notifyVolumeStep } from "@/server/services/dsar/volume-notices";
+import { reminderMailerFromEnv } from "@/server/services/dsar/deadlineReminders";
+import { volumeUpgradeCheckoutUrl, volumeUpgradeLinks } from "@/lib/dsar-addon";
 import { sendDSARExtensionEmail } from "@/server/services/dsar/sendExtensionEmail";
 import { countRecentAccessRequests } from "@/server/services/dsar/repeat-access";
 import { generatedTaskText } from "@/server/services/dsar/generated-tasks";
@@ -35,8 +37,11 @@ import { brand } from "@/config/brand";
 import {
   assertHumanSubmission,
   assertWithinDailyLimits,
+  decoyPublicId,
+  honeypotFilled,
   issueFormToken,
   mayAcknowledge,
+  recordRejection,
 } from "@/server/services/dsar/public-intake-guard";
 
 // SLA rule of the organisation's primary jurisdiction: calendar months where
@@ -259,12 +264,8 @@ export const dsarRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Hosted paid plan without the add-on: no new request; the ones held
-      // stay readable and workable (src/server/services/dsar/module.ts).
-      // Requests entered here never count toward the public-form limits.
-      if (dsarModuleGate(ctx.organization) === "inactive") {
-        throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.inactiveCreate });
-      }
+      // Requests entered here never count toward the public form's monthly
+      // ceiling (src/server/services/dsar/module.ts).
       // The primary jurisdiction's period, else the strictest of the
       // organisation's; the GDPR month when it has none (orgDsarRule).
       const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
@@ -816,13 +817,23 @@ export const dsarRouter = createTRPCRouter({
 
   // Deadline reminder e-mails (7, 3 and 1 day before, and once overdue):
   // on by default, switched off per organisation.
-  // The module's state for this organisation (hosted pilot, add-on active
-  // or not, the kit) and how many public-form requests are left. Read by the
-  // menu and the module's pages.
+  // The public form's monthly count against its ceiling (hosted; "open" on
+  // the kit) and, below the 1,000 ceiling, the volume upgrade's payment link
+  // per currency (null where none is set). Read by the module's pages.
   moduleAccess: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
-      return getDsarModuleAccess(ctx.prisma, ctx.organization);
+      const access = await getDsarModuleAccess(ctx.prisma, ctx.organization);
+      const links = volumeUpgradeLinks();
+      const email = ctx.session.user.email;
+      const upgrade =
+        access.gate === "standard"
+          ? {
+              EUR: links.EUR ? volumeUpgradeCheckoutUrl(links.EUR, ctx.organization.id, email) : null,
+              USD: links.USD ? volumeUpgradeCheckoutUrl(links.USD, ctx.organization.id, email) : null,
+            }
+          : null;
+      return { ...access, upgrade };
     }),
 
   getReminderSettings: dsarOrganizationProcedure
@@ -877,12 +888,10 @@ export const dsarRouter = createTRPCRouter({
         });
       }
       const form = org.dsarIntakeForms[0]!;
-      // At the pilot's or the month's limit, or (hosted) with the add-on not
-      // active, the form exists but takes no request: the page shows the
-      // organisation's privacy contact instead (submitPublic refuses anyway).
-      const accepting =
-        dsarModuleGate(org) !== "inactive" &&
-        acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
+      // At the month's ceiling (hosted) the form exists but takes no
+      // request: the page shows the organisation's privacy contact instead
+      // (submitPublic refuses anyway).
+      const accepting = acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
       return {
         orgName: org.name,
         title: form.title,
@@ -924,9 +933,14 @@ export const dsarRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input: rawInput }) => {
       const input = sanitizeInput(rawInput);
-      // Abuse protection, before anything is read: the hidden field and the
-      // signed form token (minimum fill time). Refusals are counted, without
-      // personal data.
+      // Abuse protection, before anything is read. The hidden field: a
+      // script that fills it is answered as if received, and nothing is
+      // stored or counted against the monthly ceiling. Then the signed form
+      // token (minimum fill time). Refusals are counted, without personal data.
+      if (honeypotFilled(input)) {
+        await recordRejection(ctx.prisma, "honeypot", null);
+        return { publicId: decoyPublicId(), acknowledgementSent: false };
+      }
       await assertHumanSubmission(ctx.prisma, input);
       const org = await ctx.prisma.organization.findUnique({
         where: { slug: input.orgSlug },
@@ -939,7 +953,7 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      if (!org || org.dsarIntakeForms.length === 0 || dsarModuleGate(org) === "inactive") {
+      if (!org || org.dsarIntakeForms.length === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Organization or intake form not found",
@@ -951,8 +965,8 @@ export const dsarRouter = createTRPCRouter({
       assertPilotWritable(org, pilotLang);
       await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
 
-      // The module's own limit (hosted): 3 public-form requests in total on
-      // the pilot, 10 per calendar month (Madrid) with the add-on.
+      // The monthly ceiling (hosted): 100 public-form requests per calendar
+      // month (Madrid), 1,000 with the volume upgrade.
       if (!acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))) {
         throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.formClosed });
       }
@@ -1008,6 +1022,16 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
+      // At 50, 75 and 90 per cent of the month's ceiling, and at the
+      // ceiling, the owners and administrators are told once each
+      // (src/server/services/dsar/volume-notices.ts). Never throws.
+      await notifyVolumeStep(
+        ctx.prisma,
+        org,
+        org.dsarIntakeForms[0]?.privacyContactEmail,
+        reminderMailerFromEnv()
+      );
+
       // The acknowledgement carries the organisation, the type of request,
       // the due date and the reference: never the description the requester
       // typed. One address receives at most a few per day across every
@@ -1044,7 +1068,7 @@ export const dsarRouter = createTRPCRouter({
           dueDate: true,
           completedAt: true,
           metadata: true,
-          organization: { select: { name: true, slug: true, plan: true, dsarModuleStatus: true } },
+          organization: { select: { name: true, slug: true } },
         },
       });
 
@@ -1053,12 +1077,6 @@ export const dsarRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Request not found",
         });
-      }
-
-      // Hosted paid plan without the add-on: a neutral "not available" page,
-      // which names nothing about the organisation or the request.
-      if (dsarModuleGate(request.organization) === "inactive") {
-        return { available: false as const };
       }
 
       let responseUrl: string | null = null;
@@ -1137,10 +1155,10 @@ export const dsarRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const request = await ctx.prisma.dSARRequest.findUnique({
         where: { publicId: input.publicId },
-        select: { id: true, status: true, organization: { select: { plan: true, dsarModuleStatus: true } } },
+        select: { id: true, status: true },
       });
 
-      if (!request || (request.organization && dsarModuleGate(request.organization) === "inactive")) {
+      if (!request) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Request not found" });
       }
 
