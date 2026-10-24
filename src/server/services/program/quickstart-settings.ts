@@ -5,10 +5,9 @@
  * What a completed quick start leaves in the organisation's settings JSON.
  *
  * `settings.quickstart.completedAt` is what the program path's quick start
- * step reads (path-counts.ts) and what day 1 of the 30/60/90-day plan falls
- * back to (plan-start.ts). The first completion is kept, so running the quick
- * start again never moves day 1. Every other key in the settings is kept as it
- * was; the programme's name is saved when one is given.
+ * step reads (path-counts.ts). The first completion is kept, so running the
+ * quick start again never moves it. Every other key in the settings is kept as
+ * it was; the programme's name is saved when one is given.
  *
  * Pure, so the rule is tested without a database.
  */

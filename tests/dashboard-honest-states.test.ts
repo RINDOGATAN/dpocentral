@@ -67,14 +67,21 @@ describe("documents on standby", () => {
     evaluateRegister(registerFor({ dsarEnabled: true }), { ...FACTS, ...over });
   const status = (list: ReturnType<typeof docs>, id: string) => list.find((d) => d.id === id)!.status;
 
-  it("the breach register is on standby once the record of processing names the data", () => {
-    expect(isStandby(status(docs({}), "breachRegister"))).toBe(false);
-    const ready = docs({ processingActivitiesComplete: 1 });
-    expect(documentBadge(status(ready, "breachRegister"))).toBe("standby");
+  it("the breach register is on standby while no incident is recorded: a breach cannot be made to happen", () => {
+    expect(isStandby(status(docs({}), "breachRegister"))).toBe(true);
+    expect(documentBadge(status(docs({ processingActivitiesComplete: 1 }), "breachRegister"))).toBe("standby");
   });
 
-  it("the rights report is on standby once the intake is set up", () => {
+  it("the rights report is on standby while no request has arrived, set up or not", () => {
     expect(documentBadge(status(docs({ dsarIntakeConfigured: true }), "dsarPerformance"))).toBe("standby");
+    expect(documentBadge(status(docs({ dsarIntakeConfigured: false }), "dsarPerformance"))).toBe("standby");
+  });
+
+  it("the breach notification draft: standby without an incident; AI assistance is an optional note, not a gap", () => {
+    expect(documentBadge(status(docs({ aiAssistOn: false }), "breachNotification"))).toBe("standby");
+    expect(documentBadge(status(docs({ incidents: 1, aiAssistOn: false }), "breachNotification"))).toBe("needsSetting");
+    for (const bundle of [en, es]) expect(bundle.documentRegister.settingLine.aiAssist).toBeTruthy();
+    expect(es.documentRegister.state.needsSetting).toBe("opcional");
   });
 
   it("are listed after the ready documents and are not gaps on the board report", () => {
@@ -111,7 +118,8 @@ describe("a step nobody can complete", () => {
   it("vendor due diligence is not counted and never a next action while its module is announced", () => {
     const statuses = evaluatePath(DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS);
     expect(statuses.vendorDueDiligence).toBe("coming");
-    expect(programFigure(DPO_CENTRAL_PATH, statuses).total).toBe(9);
+    // The figure counts the five stages with a page; the policies stage is all to come.
+    expect(programFigure(DPO_CENTRAL_PATH, statuses).total).toBe(5);
     const ids = nextActions(DPO_CENTRAL_PATH, statuses, [], 20).map((a) => (a.kind === "step" ? a.step.id : a.kind));
     expect(ids).not.toContain("vendorDueDiligence");
     // Named once, in the documents panel's "not in DPO Central yet" line.

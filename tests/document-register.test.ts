@@ -30,6 +30,7 @@ import {
   INPUTS,
   documentStatus,
   evaluateRegister,
+  isStandby,
   registerFor,
   type DocumentFacts,
   type DocumentStatus,
@@ -219,7 +220,7 @@ describe("d4: the states", () => {
       assessmentPortfolio: "needsInput:assessment",
       dsarPerformance: "needsInput:dsarRequest",
       breachRegister: "needsInput:incident",
-      breachNotification: "needsInput:aiAssist",
+      breachNotification: "needsInput:incident",
       programmeReport: "draft",
       boardReport: "needsInput:confirmedStep",
       privacyNotice: "notYet",
@@ -229,6 +230,13 @@ describe("d4: the states", () => {
       consentRecords: "notYet",
       responseLetter: "notYet",
     });
+  });
+
+  it("an empty organisation: the documents that wait for a request or a breach are on standby, never gaps", () => {
+    const evaluated = evaluateRegister(registerFor({ dsarEnabled: true }), EMPTY);
+    for (const id of ["dsarPerformance", "breachRegister", "breachNotification"]) {
+      expect(isStandby(evaluated.find((d) => d.id === id)!.status), id).toBe(true);
+    }
   });
 
   it("after the quick start: drafts are gaps, never content (drafts count once confirmed)", () => {

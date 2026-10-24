@@ -59,10 +59,11 @@ interface PathMenuProps<C> {
   t: Translate;
   overview: { href: string; icon: LucideIcon };
   /**
-   * One quiet line under the overall progress: where the organisation is in
-   * its plan ("Day 12 of 90"). Nothing when null.
+   * One quiet line under the overall progress: the stage the organisation is
+   * in ("Now: stage 3, Assess the risk"), or that every stage is done.
+   * Nothing when null.
    */
-  planLine?: string | null;
+  phaseLine?: string | null;
   /**
    * False for a member limited to departments: the figures are the whole
    * organisation's, so the overall progress, each stage's count and each
@@ -125,7 +126,7 @@ export function PathMenu<C>({
   onNavigate,
   t,
   overview,
-  planLine = null,
+  phaseLine = null,
   showProgress = true,
   stepNotes = {},
   attention = [],
@@ -134,7 +135,7 @@ export function PathMenu<C>({
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode, auditTrail });
   const currentStep = currentStepId(config, pathname, search);
-  // The one programme figure ("2 of 10 steps confirmed"), as on the
+  // The one programme figure ("3 of 5 stages done"), as on the
   // dashboard, All clients and the Reports page (path.ts, programFigure).
   const figure = statuses && showProgress ? programFigure(config, statuses) : null;
   const onOverview = pathname === overview.href;
@@ -264,8 +265,8 @@ export function PathMenu<C>({
           </span>
         </span>
         <ProgressBar value={figure?.confirmed ?? null} total={figure?.total ?? 0} />
-        {planLine && (
-          <span className="text-xs text-muted-foreground tabular-nums">{planLine}</span>
+        {phaseLine && (
+          <span className="text-xs text-muted-foreground" data-testid="menu-phase-line">{phaseLine}</span>
         )}
       </div>
       )}

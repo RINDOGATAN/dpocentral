@@ -205,7 +205,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* The headline is the one programme figure ("2 of 10 steps confirmed"),
+      {/* The headline is the one programme figure ("3 of 5 stages done"),
           the same as on the dashboard, the menu and All clients. The weighted module score stays as detail under it, and
           its "Strong / Moderate" label only when every area has data: a label
           on partial data reads as a verdict it cannot give. */}

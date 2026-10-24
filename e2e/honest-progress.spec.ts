@@ -34,10 +34,10 @@ function localDatabase(): boolean {
   return /@(localhost|127\.0\.0\.1|postgres)(:\d+)?\//.test(url);
 }
 
-// Nine counted steps: vendor due diligence is "coming" while its module is announced.
-const TOTAL = 9;
+// Five stages with a page: "Policies and people" is all still to come.
+const TOTAL = 5;
 const FIGURE = (done: number, total: number) =>
-  es ? `${done} de ${total} pasos confirmados` : `${done} of ${total} steps confirmed`;
+  es ? `${done} de ${total} fases hechas` : `${done} of ${total} stages done`;
 
 async function shot(page: Page, name: string, project: string) {
   if (!SHOTS) return;
@@ -135,7 +135,8 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
 
   // d2 + d3: the figure stays low, and reads the same in the four places.
   const before = await figureEverywhere(page);
-  expect(before).toBe(FIGURE(2, TOTAL));
+  // Set up is done; Know your data waits for its drafts to be confirmed.
+  expect(before).toBe(FIGURE(1, TOTAL));
   await page.goto("/privacy");
   await expect(page.getByTestId("program-figure-card")).toContainText(es ? "por confirmar" : "to confirm");
   await expectNoSidewaysScroll(page, "dashboard");
@@ -158,8 +159,9 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await page.getByTestId("confirm-draft").click();
   await expect(page.getByTestId("draft-badge")).toHaveCount(0);
   await expect(page.getByTestId("confirm-draft")).toHaveCount(0);
+  // One confirmed record does not finish a stage: the figure holds, the same everywhere.
   const afterOne = await figureEverywhere(page);
-  expect(afterOne).toBe(FIGURE(3, TOTAL));
+  expect(afterOne).toBe(FIGURE(1, TOTAL));
 
   // Then the rest together, on the review page.
   await page.goto("/privacy/review");
@@ -171,7 +173,7 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await expect(page.getByTestId("review-empty")).toBeVisible();
   const after = await figureEverywhere(page);
   const [done] = after.match(/\d+/)!.map(Number);
-  expect(done).toBeGreaterThan(3);
+  expect(done).toBeGreaterThan(1);
   expect(after).toBe(FIGURE(done, TOTAL));
   await page.goto("/privacy");
   await expect(page.getByTestId("program-figure-card")).not.toContainText(es ? "por confirmar" : "to confirm");

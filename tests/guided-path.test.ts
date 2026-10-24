@@ -327,21 +327,24 @@ describe("progress and the next step", () => {
     expect(nextStep(PATH, afterSetup)?.step.id).toBe("ropa");
   });
 
-  it("gives the overall percentage as done over counted steps, rounded", () => {
-    const counted = steps.filter(isCounted);
+  it("gives the overall percentage as stages done over stages counted, rounded", () => {
+    const counted = PATH.stages.filter((stage) => stage.steps.some(isCounted));
     expect(overallPercent(PATH, evaluatePath(PATH, EMPTY_PATH_COUNTS))).toBe(0);
     expect(overallPercent(PATH, evaluatePath(PATH, COMPLETE))).toBe(100);
     for (let n = 1; n <= counted.length; n++) {
       const statuses: PathStatuses = evaluatePath(PATH, EMPTY_PATH_COUNTS);
-      for (const s of counted.slice(0, n)) statuses[s.id] = "done";
-      expect(overallPercent(PATH, statuses), `${n} done`).toBe(
-        Math.round((n / counted.length) * 100),
-      );
+      for (const stage of counted.slice(0, n)) for (const s of stage.steps.filter(isCounted)) statuses[s.id] = "done";
+      expect(overallPercent(PATH, statuses), `${n} done`).toBe(Math.round((n / counted.length) * 100));
     }
+    // A stage half done does not count: the figure moves when a stage is finished.
+    const half: PathStatuses = evaluatePath(PATH, EMPTY_PATH_COUNTS);
+    half.quickstart = "done";
+    expect(overallProgress(PATH, half).done).toBe(0);
   });
 
-  it("totals progress across the path", () => {
-    const counted = steps.filter(isCounted).length;
+  it("totals progress across the path, in stages", () => {
+    const counted = PATH.stages.filter((stage) => stage.steps.some(isCounted)).length;
+    expect(counted).toBe(5);
     expect(overallProgress(PATH, evaluatePath(PATH, COMPLETE))).toEqual({
       done: counted,
       total: counted,
@@ -360,7 +363,7 @@ describe("progress and the next step", () => {
     expect(progress.done).toBe(0);
 
     // A coming stage adds nothing to the overall total, and is never the next step.
-    const counted = steps.filter(isCounted).length;
+    const counted = PATH.stages.filter((stage) => stage.steps.some(isCounted)).length;
     expect(overallProgress(PATH, evaluatePath(PATH, COMPLETE)).total).toBe(counted);
     for (const st of people.steps) expect(nextStep(PATH, fresh)?.step.id).not.toBe(st.id);
 

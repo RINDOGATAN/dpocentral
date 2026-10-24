@@ -19,11 +19,19 @@
  * Tested in tests/board-report.test.ts.
  */
 
-import { isStandby, type DocumentGap, type DocumentStatus, type EvaluatedDocument } from "@/config/document-register";
-import type { PathConfig, PathStatuses, ProgramFigure, StageWord } from "@/components/guided/path";
-import type { PlanWindow } from "@/components/guided/plan";
+import { isOptionalSetting, isStandby, type DocumentGap, type DocumentStatus, type EvaluatedDocument } from "@/config/document-register";
+import {
+  isCounted,
+  isShown,
+  stepSequence,
+  type PathConfig,
+  type PathStatuses,
+  type ProgramFigure,
+  type StageWord,
+  type StepStatus,
+} from "@/components/guided/path";
 import type { NeedsActionItem, NeedsActionKind } from "@/lib/needs-action";
-import { NEEDS_ACTION_STAGE, nextActions, type RecordDeadline } from "@/lib/programme-overview";
+import { nextActions, type RecordDeadline } from "@/lib/programme-overview";
 
 // ---------------------------------------------------------------------------
 // The period
@@ -191,8 +199,41 @@ export interface BoardVendors {
 export interface BoardAssessments {
   dpiaApproved: number;
   dpiaPending: number;
+  /** General risk assessments (PIA). Optional for reports assembled before they were counted. */
+  piaApproved?: number;
+  piaPending?: number;
   liaApproved: number;
   liaPending: number;
+}
+
+/** One counted step of the path with its state, in path order ("3.1"). */
+export interface BoardStep {
+  stepId: string;
+  /** "3.1": the stage's number, then the step's place in it, as in the menu. */
+  number: string;
+  status: StepStatus;
+  /** For a step started but not done: the fields that would finish it (field keys only). */
+  missing?: string[];
+}
+
+/**
+ * The organisation's records on the date generated, from any period: the
+ * stable counts two reports of different dates are compared on.
+ */
+export interface BoardRecords {
+  /** Confirmed data assets (systems). */
+  dataAssets: number;
+  /** Confirmed processing activities, and of those the ones with the minimum record fields. */
+  activities: number;
+  activitiesComplete: number;
+  /** International transfers, and of those the ones with a recorded compliance status. */
+  transfers: number;
+  transfersAssessed: number;
+  /** Rights requests received, and completed, since the start. */
+  rightsReceived: number | null;
+  rightsCompleted: number | null;
+  /** Incidents recorded since the start. */
+  incidents: number;
 }
 
 /** A risk or gap: work waiting for a person, or a document that is not ready. */
@@ -209,10 +250,10 @@ export interface BoardAction {
   item: BoardActionItem;
   /** The person who holds it: the organisation's privacy officer (or its owner). Null when none is named. */
   owner: string | null;
-  /** YYYY-MM-DD: the record's own deadline, else the plan's date for its area. Null when there is none. */
+  /** YYYY-MM-DD: the record's own deadline in law. Null when there is none. */
   date: string | null;
   /** Where the date comes from. */
-  dateSource: "deadline" | "plan" | null;
+  dateSource: "deadline" | null;
   /** The deadline had passed on the date the report was generated. */
   overdue?: boolean;
 }
@@ -229,9 +270,16 @@ export interface BoardReport {
   period: BoardPeriod;
   /** ISO instant the report was generated. */
   generatedAt: string;
+  /** Stages done of the stages counted: the menu's figure. */
   figure: ProgramFigure;
-  /** The six areas in path order, each with its one state word. */
+  /** The stages in path order, each with its one state word. */
   areas: { stageId: string; word: StageWord }[];
+  /** Every counted step with its state and what finishes it. Optional for older shapes. */
+  steps?: BoardStep[];
+  /** What the organisation's answers say about a DPIA (the assessments step's bar). */
+  dpiaDuty?: "applies" | "check" | null;
+  /** The stable counts of records on the date generated. Optional for older shapes. */
+  records?: BoardRecords;
   /** Every document of the register for this deployment, with its state. */
   documents: EvaluatedDocument[];
   incidents: BoardIncidents;
@@ -258,9 +306,11 @@ export function documentSplit(documents: readonly EvaluatedDocument[]): {
   return {
     ready: documents.filter((d) => d.status.state === "ready"),
     // A document on standby (waiting only for a breach or a request, with the
-    // means in place) is not missing.
+    // means in place), or waiting only for an optional setting, is not missing.
     missing: documents.filter(
-      (d) => d.status.state === "draft" || (d.status.state === "needsInput" && !isStandby(d.status)),
+      (d) =>
+        d.status.state === "draft" ||
+        (d.status.state === "needsInput" && !isStandby(d.status) && !isOptionalSetting(d.status)),
     ),
   };
 }
@@ -330,6 +380,31 @@ export function draftGaps(status: DocumentStatus): DocumentGap[] {
   return status.state === "draft" ? status.gaps : [];
 }
 
+/**
+ * Every counted step shown for this organisation, in path order and numbered
+ * as in the menu ("3.1"), with its state and, for a step started but not done,
+ * the fields that would finish it. The same steps the figure's stages are
+ * made of, so the report's list and its figure cannot disagree.
+ */
+export function boardSteps<C>(
+  config: PathConfig<C>,
+  statuses: PathStatuses,
+  missing: Partial<Record<string, string[]>> = {},
+): BoardStep[] {
+  return stepSequence(config, statuses)
+    .filter((entry) => isCounted(entry.step) && isShown(entry.step, statuses))
+    .map((entry) => {
+      const status = statuses[entry.step.id] ?? "todo";
+      const fields = status === "started" ? (missing[entry.step.id] ?? []) : [];
+      return {
+        stepId: entry.step.id,
+        number: entry.number,
+        status,
+        ...(fields.length > 0 ? { missing: fields } : {}),
+      };
+    });
+}
+
 /** The kind of record deadline that dates each kind of waiting work. */
 const DEADLINE_OF: Partial<Record<NeedsActionKind, RecordDeadline["kind"]>> = {
   "breach-window": "breachNotify",
@@ -338,33 +413,15 @@ const DEADLINE_OF: Partial<Record<NeedsActionKind, RecordDeadline["kind"]>> = {
 };
 
 /**
- * The plan's date for a stage: the last day of the 30/60/90-day window that
- * holds it (day 1 is the plan's start). Null without a plan start or when no
- * window holds the stage.
- */
-export function planDateFor(
-  stageId: string | null,
-  windows: readonly PlanWindow[],
-  planStart: Date | string | null,
-): string | null {
-  if (!stageId || !planStart) return null;
-  const window = windows.find((w) => w.stages.includes(stageId));
-  if (!window) return null;
-  const start = typeof planStart === "string" ? new Date(planStart) : planStart;
-  if (Number.isNaN(start.getTime())) return null;
-  return new Date(start.getTime() + (window.untilDay - 1) * DAY_MS).toISOString().slice(0, 10);
-}
-
-/**
  * The next three actions, as the dashboard lists them (src/lib/programme-overview.ts
  * nextActions: what waits for a person first, most urgent first, then the
  * path's open steps), each with an owner and a date:
  *
  * - owner: the person the organisation has as its privacy officer (else its
  *   owner); DPO Central has no other owner for programme work;
- * - date: the earliest deadline of the records behind it (a breach's 72-hour
- *   window, a rights request's due date), else the plan's date for its area
- *   (the end of the 30/60/90-day window that holds it), else none.
+ * - date: the earliest deadline in law of the records behind it (a breach's
+ *   72-hour window, a rights request's due date), else none. The organisation
+ *   sets its own pace on the path, so a step carries no invented date.
  */
 export function boardActions<C>(
   config: PathConfig<C>,
@@ -373,15 +430,11 @@ export function boardActions<C>(
   context: {
     owner: string | null;
     deadlines: readonly RecordDeadline[];
-    planStart: Date | string | null;
-    windows: readonly PlanWindow[];
     /** The day the report is generated, to tell an overdue deadline. */
     now?: Date;
   },
   limit = 3,
 ): BoardAction[] {
-  const stageOfStep = (stepId: string) =>
-    config.stages.find((stage) => stage.steps.some((step) => step.id === stepId))?.id ?? null;
   return nextActions(config, statuses, needsAction, limit).map((action) => {
     if (action.kind === "needsAction") {
       const deadlineKind = DEADLINE_OF[action.item.kind];
@@ -391,22 +444,20 @@ export function boardActions<C>(
             .map((d) => d.at)
             .sort()[0]
         : undefined;
-      const plan = deadline ? null : planDateFor(NEEDS_ACTION_STAGE[action.item.kind], context.windows, context.planStart);
       const overdue = !!deadline && !!context.now && new Date(deadline).getTime() < context.now.getTime();
       return {
         item: { kind: "needsAction", needsKind: action.item.kind, count: action.item.count },
         owner: context.owner,
-        date: deadline ? deadline.slice(0, 10) : plan,
-        dateSource: deadline ? "deadline" : plan ? "plan" : null,
+        date: deadline ? deadline.slice(0, 10) : null,
+        dateSource: deadline ? "deadline" : null,
         ...(overdue ? { overdue: true } : {}),
       };
     }
-    const plan = planDateFor(stageOfStep(action.step.id), context.windows, context.planStart);
     return {
       item: { kind: "step", stepId: action.step.id, toConfirm: action.toConfirm },
       owner: context.owner,
-      date: plan,
-      dateSource: plan ? "plan" : null,
+      date: null,
+      dateSource: null,
     };
   });
 }

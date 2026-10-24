@@ -19,8 +19,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import type { PathStatuses } from "./path";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "./path-config";
-import { planState, type PlanState } from "./plan";
 
 const STALE_MS = 30_000;
 
@@ -34,8 +32,11 @@ export function useProgramPath(): PathStatuses | null {
  */
 export function useProgramPathQuery(): {
   steps: PathStatuses | null;
-  /** Day 1 of the 30/60/90-day plan (ISO), null before it starts. */
-  planStart: string | null;
+  /**
+   * What the organisation's answers say about a DPIA: "applies" makes an
+   * approved DPIA the bar for the assessments step, "check" only suggests one.
+   */
+  dpiaDuty: "applies" | "check" | null;
   /** Records drafted and not yet confirmed; null while loading. */
   drafts: number | null;
   /** Per step not yet done: the fields that would finish it (field keys only). */
@@ -49,18 +50,11 @@ export function useProgramPathQuery(): {
   );
   return {
     steps: data?.steps ?? null,
-    planStart: data?.planStart ?? null,
+    dpiaDuty: data?.dpiaDuty ?? null,
     drafts: data?.drafts ?? null,
     missing: data?.missing ?? {},
     refreshing: isFetching,
   };
-}
-
-/** The 30/60/90-day plan's state for the current organisation; null while it loads. */
-export function usePlanState(): PlanState | null {
-  const { steps, planStart } = useProgramPathQuery();
-  if (!steps) return null;
-  return planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, steps, planStart, new Date());
 }
 
 /**

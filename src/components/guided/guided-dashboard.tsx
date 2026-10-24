@@ -42,7 +42,6 @@ import { packCounts } from "@/lib/document-pack";
 import {
   nextActions,
   panelRows,
-  planMilestone,
   actionableAreas,
   programmeAreas,
   type Area,
@@ -50,11 +49,11 @@ import {
   type RegisterRow,
 } from "@/lib/programme-overview";
 import { INPUTS } from "@/config/document-register";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS, type PathCounts } from "./path-config";
-import { withoutSteps, type PathStatuses, type StageWord } from "./path";
+import { DPO_CENTRAL_PATH, type PathCounts } from "./path-config";
+import { stepSequence, withoutSteps, type PathStatuses, type StageWord } from "./path";
 import { ProgramFigureCard } from "./program-figure";
-import { planSummaryText } from "./plan-text";
-import { usePlanState, useProgramPathQuery } from "./use-program-path";
+import { useProgramPathQuery } from "./use-program-path";
+import { stepFinishText } from "./step-finish";
 import { useProgrammeOverview, type ProgrammeOverview } from "./use-programme-overview";
 import { documentBadge, documentName, gapsText, type DocumentBadge } from "./document-words";
 
@@ -72,8 +71,12 @@ const DOC_TONE: Record<DocumentBadge, StatusTone> = {
 // "Not in DPO Central yet" has its own line above the legend, so it is not repeated here.
 const LEGEND_ORDER: readonly DocumentBadge[] = ["ready", "standby", "draft", "needsInput", "needsModule", "needsSetting"];
 
-/** Rows shown at once: those that can be produced now or are ready for when they are needed. */
-const SHOWN_BADGES: ReadonlySet<DocumentBadge> = new Set(["ready", "standby", "draft"]);
+/**
+ * Rows shown at once: those that can be produced now, those ready for when
+ * they are needed, and those whose only lack is an optional setting (a
+ * choice, not something to complete).
+ */
+const SHOWN_BADGES: ReadonlySet<DocumentBadge> = new Set(["ready", "standby", "draft", "needsSetting"]);
 
 const WORD_TONE: Record<StageWord, StatusTone> = {
   done: "success",
@@ -164,21 +167,12 @@ function AreasCard({
 }) {
   const t = useTranslations("guided");
   const tv = useTranslations("views");
-  const plan = usePlanState();
   const areas = statuses && overview ? actionableAreas(programmeAreas(config, statuses, overview.needsAction)) : null;
 
   return (
     <Card data-testid="area-tiles" aria-busy={!areas}>
       <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-          <CardTitle className="text-base sm:text-lg">{t("areas.title")}</CardTitle>
-          {plan && plan.kind !== "notStarted" && (
-            <p className="text-xs text-muted-foreground tabular-nums">
-              <span className="sr-only">{t("plan.label")}: </span>
-              {planSummaryText(plan, t)}
-            </p>
-          )}
-        </div>
+        <CardTitle className="text-base sm:text-lg">{t("areas.title")}</CardTitle>
       </CardHeader>
       <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {!areas ? (
@@ -363,26 +357,41 @@ function PackDownload({ overview, hideDsar }: { overview: ProgrammeOverview; hid
   );
 }
 
+/** "2.3 Vendors and processors": the step a document belongs to, numbered as in the menu. */
+function stepReference(tg: T, stepId: string | null): string | null {
+  if (!stepId) return null;
+  const entry = stepSequence(DPO_CENTRAL_PATH).find((e) => e.step.id === stepId);
+  return entry ? `${entry.number} ${tg(`steps.${stepId}.label`)}` : null;
+}
+
 function DocumentRow({ row }: { row: RegisterRow }) {
   const t = useTranslations("documentRegister");
+  const tg = useTranslations("guided");
   const locale = useLocale();
   const { organization } = useOrganization();
   const { entry, doc } = row;
   const status = doc.status;
   const name = documentName(t, entry.id);
   const badge = documentBadge(status);
+  const step = stepReference(tg, entry.stepId);
   const detail =
     status.state === "draft"
       ? gapsText(t, status.gaps)
       : badge === "standby"
         ? t("standbyLine")
-        : status.state === "needsInput"
-        ? // Its own line, so capitalised like the other lines (the menu's
-          // inline "· needs: ..." keeps the lower case).
-          t("needsLine", { input: t(`inputs.${status.input}`) })
-        : status.state === "ready"
-          ? t("readyLine")
-          : "";
+        : badge === "needsSetting" && status.state === "needsInput"
+          ? // A choice, said plainly; nothing to complete.
+            t(`settingLine.${status.input}`)
+          : status.state === "needsInput"
+            ? // Its own line, so capitalised like the other lines (the menu's
+              // inline "· needs: ..." keeps the lower case), with the step the
+              // missing input belongs to.
+              step
+              ? t("needsLineStep", { input: t(`inputs.${status.input}`), step })
+              : t("needsLine", { input: t(`inputs.${status.input}`) })
+            : status.state === "ready"
+              ? t("readyLine")
+              : "";
   const producible = status.state === "ready" || status.state === "draft";
   const orgId = organization?.id ?? "";
 
@@ -396,7 +405,7 @@ function DocumentRow({ row }: { row: RegisterRow }) {
         </Button>
       </Link>
     );
-  } else if (status.state === "needsInput") {
+  } else if (status.state === "needsInput" && badge !== "needsSetting") {
     const input = INPUTS[status.input];
     const href = input.href === "plans" ? plansUrl(locale) : input.href;
     const label = t.has(`inputAction.${status.input}`)
@@ -491,6 +500,7 @@ function NextActionsCard({
 }) {
   const t = useTranslations("guided");
   const tv = useTranslations("views");
+  const { dpiaDuty } = useProgramPathQuery();
   const actions = statuses && overview ? nextActions(config, statuses, overview.needsAction) : null;
   const waiting = overview ? needsActionTotal(overview.needsAction) : 0;
 
@@ -507,7 +517,7 @@ function NextActionsCard({
         ) : (
           <ol className="flex flex-col gap-3">
             {actions.map((action, index) => (
-              <NextActionRow key={actionKey(action)} action={action} index={index} t={t} tv={tv} />
+              <NextActionRow key={actionKey(action)} action={action} index={index} t={t} tv={tv} dpiaDuty={dpiaDuty} />
             ))}
           </ol>
         )}
@@ -532,17 +542,30 @@ function actionKey(action: NextAction): string {
 
 type T = ReturnType<typeof useTranslations>;
 
-function NextActionRow({ action, index, t, tv }: { action: NextAction; index: number; t: T; tv: T }) {
+function NextActionRow({
+  action,
+  index,
+  t,
+  tv,
+  dpiaDuty,
+}: {
+  action: NextAction;
+  index: number;
+  t: T;
+  tv: T;
+  dpiaDuty: "applies" | "check" | null;
+}) {
   const title =
     action.kind === "needsAction"
       ? `${tv(`needsAction.kind.${action.item.kind}`)} (${action.item.count})`
       : t(`steps.${action.step.id}.label`);
+  // A step says exactly what finishes it (step-finish.ts).
   const hint =
     action.kind === "needsAction"
       ? tv(`needsAction.hint.${action.item.kind}`)
       : action.toConfirm
         ? t("nextActions.toConfirm")
-        : t(`steps.${action.step.id}.why`);
+        : stepFinishText(t, action.step.id, dpiaDuty);
   const href =
     action.kind === "needsAction" ? action.item.href : action.toConfirm ? "/privacy/review" : action.step.href!;
   const button =
@@ -582,12 +605,7 @@ function NextActionRow({ action, index, t, tv }: { action: NextAction; index: nu
 function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
   const t = useTranslations("guided");
   const locale = useLocale();
-  const { planStart } = useProgramPathQuery();
-  const plan = usePlanState();
   const now = Date.now();
-
-  // The plan's next milestone (day 30, 60 or 90), while the plan runs.
-  const milestone = planMilestone(PLAN_WINDOWS, planStart, plan);
 
   return (
     <Card data-testid="deadlines" aria-busy={!overview}>
@@ -597,7 +615,7 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
       <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {!overview ? (
           <CardSkeleton rows={2} />
-        ) : overview.deadlines.length === 0 && overview.reviews.length === 0 && !milestone ? (
+        ) : overview.deadlines.length === 0 && overview.reviews.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t("deadlines.empty")}</p>
         ) : (
           <ul className="divide-y divide-border">
@@ -649,12 +667,6 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
                 </li>
               );
             })}
-            {milestone && (
-              <li className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-3 py-2.5" data-testid="deadline-plan">
-                <span className="text-sm">{t("deadlines.plan", { day: milestone.day })}</span>
-                <span className="text-xs text-muted-foreground tabular-nums">{formatDateIn(milestone.at, locale)}</span>
-              </li>
-            )}
           </ul>
         )}
       </CardContent>

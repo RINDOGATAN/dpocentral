@@ -124,8 +124,8 @@ describe("honest progress", () => {
       aiAssistOn: false,
       dsarCompleted: 0,
     };
-    // Set-up is confirmed (2 steps) ...
-    expect(programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, facts)).confirmed).toBe(2);
+    // Set-up is done (one stage) ...
+    expect(programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, facts)).confirmed).toBe(1);
     // ... but the report has no content yet: it asks for the drafts to be confirmed.
     const board = evaluateRegister(registerFor({ dsarEnabled: true }), facts).find((d) => d.id === "boardReport")!;
     expect(board.status).toEqual({ state: "needsInput", input: "confirmDrafts" });
@@ -220,7 +220,7 @@ describe("All clients", () => {
   it("shows a request due in 32 days rather than 'None'", () => {
     const later = { kind: "dsarDue" as const, at: "2026-11-20T00:00:00Z", publicId: "abc123", href: "/privacy/dsar/1" };
     const due = clientDueItems([], [], later);
-    expect(nearestDeadline(due, null)).toEqual(later);
+    expect(nearestDeadline(due)).toEqual(later);
     // Listed once when the 30-day list already has it.
     expect(clientDueItems([later], [], later)).toHaveLength(1);
     expect(en.portfolio.noDeadline).toBe("None in the next 30 days");
@@ -236,14 +236,14 @@ describe("All clients", () => {
       href: "/privacy/data-inventory/activities/a1",
     };
     const request = { kind: "dsarDue" as const, at: "2026-11-20T00:00:00Z", publicId: "abc123", href: "/x" };
-    expect(nearestDeadline(clientDueItems([], [review], request), null)).toEqual(review);
+    expect(nearestDeadline(clientDueItems([], [review], request))).toEqual(review);
   });
 
   it("gives each client one status word", () => {
-    const base = { confirmedSteps: 3, drafts: 0, needsAttention: false, nearest: null, now };
+    const base = { confirmedStages: 3, drafts: 0, needsAttention: false, nearest: null, now };
     expect(clientStatus(base)).toBe("onTrack");
     expect(clientStatus({ ...base, drafts: 4 })).toBe("toConfirm");
-    expect(clientStatus({ ...base, confirmedSteps: 0 })).toBe("setup");
+    expect(clientStatus({ ...base, confirmedStages: 0 })).toBe("setup");
     expect(clientStatus({ ...base, needsAttention: true })).toBe("action");
     expect(
       clientStatus({ ...base, nearest: { kind: "dsarDue", at: "2026-10-01T00:00:00Z", publicId: "x", href: "/" } }),

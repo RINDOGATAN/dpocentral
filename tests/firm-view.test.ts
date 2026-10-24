@@ -2,10 +2,11 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The firm view, "All clients" as a table: the confirmed figure, the areas in words, the documents ready, the
- * next deadline (a breach window, a rights request due or the plan's next
- * milestone, with its INC-/REQ- reference) and the next action, sorted by the
- * nearest deadline. Every reading is the client's own dashboard's.
+ * The firm view, "All clients" as a table: the programme figure, the stages in words, the documents ready, the
+ * next deadline (a breach window, a rights request due or a review coming due,
+ * with its INC-/REQ- reference) and the next action, sorted by the nearest
+ * deadline. Every reading is the client's own dashboard's. There is no
+ * timetable: an organisation sets its own pace on the path.
  */
 
 import { describe, it, expect } from "vitest";
@@ -13,58 +14,29 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "@/components/guided/path-config";
-import { planState } from "@/components/guided/plan";
 import { evaluateRegister, registerFor, type DocumentFacts } from "@/config/document-register";
 import {
   documentsReady,
   nearestDeadline,
-  planMilestone,
   sortByNearestDeadline,
   type RecordDeadline,
 } from "@/lib/programme-overview";
 
 const read = (p: string) => readFileSync(path.resolve(__dirname, "..", p), "utf8");
-const DAY = 24 * 60 * 60 * 1000;
-
-describe("the plan's next milestone", () => {
-  const start = new Date("2026-10-01T00:00:00.000Z");
-  const statuses = {};
-
-  it("is the last day of the window the plan is in, while it runs", () => {
-    const plan = planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, start, new Date("2026-10-09T12:00:00Z"));
-    expect(plan.kind).toBe("running");
-    const m = planMilestone(PLAN_WINDOWS, start, plan)!;
-    expect(m.day).toBe(30);
-    expect(m.at.toISOString()).toBe(new Date(start.getTime() + 29 * DAY).toISOString());
-    const later = planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, start, new Date("2026-11-15T12:00:00Z"));
-    expect(planMilestone(PLAN_WINDOWS, start, later)!.day).toBe(60);
-  });
-
-  it("is none before the plan starts and after it ends", () => {
-    expect(planMilestone(PLAN_WINDOWS, null, { kind: "notStarted" })).toBeNull();
-    const after = planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, start, new Date("2027-03-01T00:00:00Z"));
-    expect(planMilestone(PLAN_WINDOWS, start, after)).toBeNull();
-  });
-});
 
 describe("the nearest deadline", () => {
   const breach: RecordDeadline = { kind: "breachDecision", at: "2026-10-11T09:00:00.000Z", publicId: "cinc0001abcdef", href: "/privacy/incidents/1" };
   const request: RecordDeadline = { kind: "dsarDue", at: "2026-10-20T00:00:00.000Z", publicId: "cdsr0001zyxwvu", href: "/privacy/dsar/1" };
 
-  it("is the earliest of the breach windows, the requests due and the plan milestone", () => {
-    expect(nearestDeadline([request, breach], { day: 30, at: new Date("2026-10-30T00:00:00Z") })).toBe(breach);
-    expect(nearestDeadline([request], { day: 30, at: new Date("2026-10-15T00:00:00Z") })).toEqual({
-      kind: "plan",
-      day: 30,
-      at: "2026-10-15T00:00:00.000Z",
-    });
-    expect(nearestDeadline([], null)).toBeNull();
+  it("is the earliest of the breach windows and the requests due; no invented plan date", () => {
+    expect(nearestDeadline([request, breach])).toBe(breach);
+    expect(nearestDeadline([request])).toBe(request);
+    expect(nearestDeadline([])).toBeNull();
   });
 
   it("puts an overdue one first", () => {
     const overdue: RecordDeadline = { ...request, at: "2026-09-01T00:00:00.000Z" };
-    expect(nearestDeadline([breach, overdue], null)).toBe(overdue);
+    expect(nearestDeadline([breach, overdue])).toBe(overdue);
   });
 });
 
@@ -126,7 +98,7 @@ describe("the page and the server read what the dashboard reads", () => {
   const router = read("src/server/routers/privacy/clients.ts");
 
   it("takes the figure, the areas, the next action and the deadline from the dashboard's functions", () => {
-    for (const fn of ["figureFor(", "programmeAreas(", "nextActions(", "nearestDeadline(", "planMilestone(", "documentsReady(", "sortByNearestDeadline("]) {
+    for (const fn of ["figureFor(", "programmeAreas(", "nextActions(", "nearestDeadline(", "documentsReady(", "sortByNearestDeadline("]) {
       expect(page, fn).toContain(fn);
     }
     for (const fn of ["loadDocumentFacts(", "collectNeedsAction(", "loadDeadlines(", "evaluateRegister(", "loadBusinessUnitScope("]) {
@@ -142,13 +114,16 @@ describe("the page and the server read what the dashboard reads", () => {
     }
     // "Add a client" stays (clarity defect F7).
     expect(page).toContain('t("addClient")');
+    // No timetable anywhere in the firm view.
+    expect(page).not.toMatch(/planState|planMilestone|PLAN_WINDOWS|deadlines\.plan/);
+    expect(router).not.toMatch(/planStart|loadPlanStart/);
   });
 
   it("has its words in both languages", () => {
     expect(en.portfolio.columns).toEqual({
       client: "Client",
-      confirmed: "Confirmed",
-      areas: "Areas",
+      confirmed: "Progress",
+      areas: "Stages",
       documents: "Documents ready",
       deadline: "Next due",
       action: "Next action",

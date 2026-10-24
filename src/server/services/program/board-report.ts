@@ -11,7 +11,9 @@
  * one per period (no table, no migration).
  *
  * Incidents and rights requests are counted for the period; every other
- * figure is as on the day the report is generated (the report says so). The
+ * figure is as on the day the report is generated (the report says so), and
+ * the "records to date" are counted from the start, so two reports of
+ * different dates can be set side by side to show the work done. The
  * backlog that is still open on that day (open incidents, breaches to notify,
  * overdue rights requests) is counted from any period as well, so a quiet
  * quarter never hides a live problem.
@@ -21,7 +23,7 @@
  */
 
 import type { Db } from "@/lib/prisma";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "@/components/guided/path-config";
+import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath, programFigure, withoutSteps } from "@/components/guided/path";
 import { evaluateRegister, registerFor } from "@/config/document-register";
 import { isDsarModuleEnabled } from "@/config/features";
@@ -32,6 +34,7 @@ import {
   COMMENT_MAX,
   SAVED_REPORTS_MAX,
   boardActions,
+  boardSteps,
   periodBounds,
   periodKey,
   topRisks,
@@ -42,7 +45,6 @@ import {
 import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { collectNeedsAction } from "@/server/services/views/queries";
 import { loadDocumentFacts } from "./document-facts";
-import { loadPlanStart } from "./plan-start";
 import { loadDeadlines } from "./deadlines";
 import { dpaInForceWhere } from "@/lib/vendor-contracts";
 import { CLOSED_DSAR_STATUSES, dsarOnTime } from "@/lib/dsar-on-time";
@@ -136,6 +138,8 @@ export async function loadBoardReport(
     vendorDrafts,
     dpiaApproved,
     dpiaPending,
+    piaApproved,
+    piaPending,
     liaApproved,
     liaPending,
   ] = await Promise.all([
@@ -191,12 +195,13 @@ export async function loadBoardReport(
     prisma.vendor.count({ where: { ...org, ...DRAFT_WHERE } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "DPIA" } } }),
     prisma.assessment.count({ where: { ...org, status: { in: [...PENDING_ASSESSMENT] }, template: { type: "DPIA" } } }),
+    prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "PIA" } } }),
+    prisma.assessment.count({ where: { ...org, status: { in: [...PENDING_ASSESSMENT] }, template: { type: "PIA" } } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "LIA" } } }),
     prisma.assessment.count({ where: { ...org, status: { in: [...PENDING_ASSESSMENT] }, template: { type: "LIA" } } }),
   ]);
 
   const statuses = evaluatePath(config, facts);
-  const planStart = await loadPlanStart(prisma, organizationId, statuses.quickstart === "done");
   // Rights-request work is left out for a member who does not handle requests.
   const needsAction = dsarAllowed ? needs.items : needs.items.filter((i) => i.kind !== "dsar-due");
   const documents = evaluateRegister(registerFor({ dsarEnabled: dsarAllowed }), facts);
@@ -250,17 +255,27 @@ export async function loadBoardReport(
     generatedAt: now.toISOString(),
     figure: programFigure(config, statuses),
     areas: programmeAreas(config, statuses, needsAction).map((area) => ({ stageId: area.stage.id, word: area.word })),
+    steps: boardSteps(config, statuses, facts.missing ?? {}),
+    dpiaDuty: facts.dpiaDuty ?? null,
+    records: {
+      dataAssets: Math.max(0, facts.dataAssets - facts.dataAssetsDrafts),
+      activities: Math.max(0, facts.processingActivities - facts.processingActivitiesDrafts),
+      activitiesComplete: facts.processingActivitiesComplete,
+      transfers: facts.transfers,
+      transfersAssessed: facts.transfersComplete,
+      rightsReceived: dsarAllowed ? facts.dsarRequests : null,
+      rightsCompleted: dsarAllowed ? facts.dsarCompleted : null,
+      incidents: facts.incidents,
+    },
     documents,
     incidents: { inPeriod: incidents.length, notifiedWithin72h, notifiedLate, notNotifiedYet, openNow, toNotifyNow },
     rights,
     vendors: { total: vendorsTotal, active: vendorsActive, withDpa: vendorsWithDpa, highRiskWithoutDpa, drafts: vendorDrafts },
-    assessments: { dpiaApproved, dpiaPending, liaApproved, liaPending },
+    assessments: { dpiaApproved, dpiaPending, piaApproved, piaPending, liaApproved, liaPending },
     risks: topRisks(needsAction, documents),
     actions: boardActions(config, statuses, needsAction, {
       owner,
       deadlines: deadlines.filter((d) => dsarAllowed || d.kind !== "dsarDue"),
-      planStart,
-      windows: PLAN_WINDOWS,
       now,
     }),
     comment,

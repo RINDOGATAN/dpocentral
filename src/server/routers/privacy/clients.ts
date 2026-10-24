@@ -6,7 +6,6 @@ import { logger } from "@/lib/logger";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath, type PathStatuses } from "@/components/guided/path";
 import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
-import { loadPlanStart } from "@/server/services/program/plan-start";
 import { isDsarModuleEnabled } from "@/config/features";
 import { evaluateRegister, registerFor, type EvaluatedDocument } from "@/config/document-register";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
@@ -63,7 +62,7 @@ export const clientsRouter = createTRPCRouter({
         const emptySteps: PathStatuses = {};
 
         try {
-          // The six-stage rings, the next step and the plan all read the same
+          // The stage rings, the figure and the next step all read the same
           // path counts the Guided menu reads, so a client's row in the
           // portfolio can never disagree with its own dashboard.
           // No rights-request counts when the module is off (src/config/features.ts).
@@ -131,7 +130,6 @@ export const clientsRouter = createTRPCRouter({
           ]);
 
           const steps = evaluatePath(DPO_CENTRAL_PATH, counts);
-          const planStart = await loadPlanStart(ctx.prisma, orgId, steps.quickstart === "done");
 
           const scope = await loadBusinessUnitScope(ctx.prisma, membership.id);
           const overview = scope.all
@@ -159,7 +157,6 @@ export const clientsRouter = createTRPCRouter({
             ...base,
             ...overview,
             steps,
-            planStart: planStart?.toISOString() ?? null,
             drafts: draftTotal(counts),
             openDsars,
             overdueDsars,
@@ -176,7 +173,6 @@ export const clientsRouter = createTRPCRouter({
             ...base,
             ...noOverview,
             steps: emptySteps,
-            planStart: null,
             drafts: 0,
             openDsars: 0,
             overdueDsars: 0,

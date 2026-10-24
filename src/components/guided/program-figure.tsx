@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The one programme figure, "2 of 10 steps confirmed". The number comes from `programFigure` (./path.ts) and the
+ * The one programme figure, "3 of 5 stages done". The number comes from `programFigure` (./path.ts) and the
  * words from one message (`guided.figure.line`), so the dashboard, the menu,
  * All clients and the Reports page all say exactly the same thing.
  */
@@ -31,7 +31,7 @@ export function useProgramFigure(): { figure: ProgramFigure | null; drafts: numb
   return { figure: figureFor(steps), drafts };
 }
 
-/** "2 of 10 steps confirmed": the same words wherever the figure is shown. */
+/** "3 of 5 stages done": the same words wherever the figure is shown. */
 export function ProgramFigureLine({
   figure,
   className,

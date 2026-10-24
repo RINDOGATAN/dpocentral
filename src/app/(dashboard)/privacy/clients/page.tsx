@@ -46,9 +46,8 @@ import { formatRequestRef } from "@/lib/request-ref";
 import { formatIncidentRef } from "@/lib/incident-ref";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { documentEntry } from "@/config/document-register";
-import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "@/components/guided/path-config";
+import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { withoutSteps, type PathStatuses } from "@/components/guided/path";
-import { planState } from "@/components/guided/plan";
 import { figureFor, ProgramFigureLine } from "@/components/guided/program-figure";
 import {
   clientDueItems,
@@ -56,7 +55,6 @@ import {
   documentsReady,
   nearestDeadline,
   nextActions,
-  planMilestone,
   programmeAreas,
   sortByNearestDeadline,
   type ClientDeadline,
@@ -86,7 +84,6 @@ function toRow(client: Client, now: Date): Row {
   // A member who does not handle rights requests sees none of them, as on the dashboard.
   const dsar = canHandleDsars(client.role);
   const config = dsar ? DPO_CENTRAL_PATH : withoutSteps(DPO_CENTRAL_PATH, ["dsar"]);
-  const plan = planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, client.planStart, now);
   const documents = dsar
     ? client.documents
     : client.documents.filter((d) => documentEntry(d.id)?.stepId !== "dsar");
@@ -94,7 +91,7 @@ function toRow(client: Client, now: Date): Row {
   // The next due item: deadlines at risk, reviews coming due, and the nearest
   // open request even beyond the dashboard's 30 days.
   const due = clientDueItems(client.deadlines, client.reviews, dsar ? client.nextRequestDue : null);
-  const deadline = client.limited ? null : nearestDeadline(due, planMilestone(PLAN_WINDOWS, client.planStart, plan));
+  const deadline = client.limited ? null : nearestDeadline(due);
   return {
     client,
     name: client.organizationName,
@@ -107,7 +104,7 @@ function toRow(client: Client, now: Date): Row {
     status:
       hasStatuses && !client.limited
         ? clientStatus({
-            confirmedSteps: figureFor(statuses)?.confirmed ?? 0,
+            confirmedStages: figureFor(statuses)?.confirmed ?? 0,
             drafts: client.drafts,
             needsAttention: client.needsAttention,
             nearest: deadline,
@@ -369,14 +366,6 @@ function DeadlineText({
   if (!deadline) return <span className="text-muted-foreground" data-testid="client-deadline">{t("noDeadline")}</span>;
   const at = new Date(deadline.at);
   const overdue = at.getTime() < now.getTime();
-  if (deadline.kind === "plan") {
-    return (
-      <span className="flex flex-col gap-0.5" data-testid="client-deadline">
-        <span>{tg("deadlines.plan", { day: deadline.day })}</span>
-        <span className="text-xs text-muted-foreground tabular-nums">{formatDateIn(at, locale)}</span>
-      </span>
-    );
-  }
   const review = "name" in deadline;
   const label =
     "name" in deadline

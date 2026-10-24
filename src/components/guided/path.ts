@@ -267,24 +267,28 @@ export function stageWord<C>(
   return state;
 }
 
-/** Done over counted, across the whole path. */
+/** Stages done over stages counted, across the whole path (the programme figure). */
 export function overallProgress<C>(config: PathConfig<C>, statuses: PathStatuses) {
   const figure = programFigure(config, statuses);
   return { done: figure.confirmed, total: figure.total };
 }
 
 /**
- * THE programme figure ("2 of 10 steps confirmed").
- * Computed here and only here: the dashboard, the menu, All
- * clients and the Reports page all read it through this function, so they
- * can never show different numbers.
+ * THE programme figure ("3 of 5 stages done"), counted in the stages of the
+ * path the menu shows, from each stage's own state (stageProgress), so the
+ * figure and the menu's ticks cannot disagree.
+ * Computed here and only here: the dashboard, the menu, All clients, the
+ * Reports page and the board report all read it through this function, so
+ * they can never show different numbers.
  *
- * - `total`      the counted steps shown for this organisation (a step with a
- *                page, not optional, not hidden)
- * - `confirmed`  of those, the steps whose rule is met by confirmed records
- * - `toConfirm`  steps met only by drafts waiting for a person to confirm them
- * - `started`    steps with something, but not yet enough
- * - `notStarted` steps with nothing yet
+ * - `total`      the stages that carry counted steps for this organisation
+ *                (a stage whose steps are all still to come is left out)
+ * - `confirmed`  of those, the stages done: every counted step met by
+ *                confirmed records, or ready for an event that has not
+ *                happened (a breach), which needs no work now
+ * - `toConfirm`  stages waiting only for drafts to be confirmed
+ * - `started`    stages with something, but not yet enough
+ * - `notStarted` stages with nothing yet
  *
  * The four parts always add up to `total`.
  */
@@ -299,17 +303,34 @@ export interface ProgramFigure {
 export function programFigure<C>(config: PathConfig<C>, statuses: PathStatuses): ProgramFigure {
   const figure: ProgramFigure = { confirmed: 0, total: 0, toConfirm: 0, started: 0, notStarted: 0 };
   for (const stage of config.stages) {
-    for (const step of stage.steps) {
-      if (!isCounted(step) || !isShown(step, statuses)) continue;
-      figure.total += 1;
-      const status = statuses[step.id];
-      if (isStepMet(status)) figure.confirmed += 1;
-      else if (status === "toConfirm") figure.toConfirm += 1;
-      else if (status === "started") figure.started += 1;
-      else figure.notStarted += 1;
-    }
+    const { state, total } = stageProgress(stage, statuses);
+    if (state === "coming" || total === 0) continue;
+    figure.total += 1;
+    if (state === "done" || state === "ready") figure.confirmed += 1;
+    else if (state === "toConfirm") figure.toConfirm += 1;
+    else if (state === "started") figure.started += 1;
+    else figure.notStarted += 1;
   }
   return figure;
+}
+
+/**
+ * Where the program is: the phase holding the next step not met ("phase 3 of
+ * 5"), or null when every phase is done. The same phase the menu opens on the
+ * overview and the phone bar names, so the line under the figure, the menu and
+ * the phone bar cannot disagree.
+ */
+export function currentPhase<C>(
+  config: PathConfig<C>,
+  statuses: PathStatuses,
+): { stage: PathStage<C>; number: number; total: number } | null {
+  const next = nextStep(config, statuses);
+  if (!next) return null;
+  return {
+    stage: next.stage,
+    number: stageNumber(config, next.stage.id) ?? next.stageIndex + 1,
+    total: numberedStageCount(config),
+  };
 }
 
 export interface NextStep<C> {

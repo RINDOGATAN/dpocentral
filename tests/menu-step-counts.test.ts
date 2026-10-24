@@ -129,7 +129,7 @@ describe("menu step lines state counts", () => {
   it("the programme figure is unchanged by the line", () => {
     const f = MIXED;
     const figure = programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, f));
-    expect(figure.confirmed).toBeGreaterThan(0);
+    expect(figure.total).toBe(5);
     expect(registerRows(evaluateRegister(registerFor({ dsarEnabled: true }), f)).length).toBeGreaterThan(0);
   });
 });

@@ -49,7 +49,7 @@ import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
-import { currentStepId, nextStep, numberedStageCount, overallProgress, stageNumber, withoutOrgWideSteps, withoutSteps } from "./path";
+import { currentPhase, currentStepId, nextStep, numberedStageCount, overallProgress, stageNumber, withoutOrgWideSteps, withoutSteps } from "./path";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { useAuditAccess } from "@/lib/use-audit-access";
 import { PathMenu } from "./path-menu";
@@ -57,10 +57,9 @@ import { GlobalSearch } from "./global-search";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
 import { ProgressBar } from "./progress-ring";
-import { usePlanState, useProgramPath, useProgramPathRefresh } from "./use-program-path";
-import { planDayText } from "./plan-text";
+import { useProgramPath, useProgramPathRefresh } from "./use-program-path";
 import { useProgrammeOverview } from "./use-programme-overview";
-import { recordCountsText, stepNoteText } from "./document-words";
+import { documentBadge, recordCountsText, stepNoteText } from "./document-words";
 import { isStandby } from "@/config/document-register";
 import { attentionStages, stepDocumentRows } from "@/lib/programme-overview";
 import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
@@ -96,7 +95,6 @@ export function GuidedLayout({
   // The document register's states and what needs action: the same answer
   // the dashboard panel reads.
   const { overview } = useProgrammeOverview();
-  const plan = usePlanState();
   const { organization } = useOrganization();
   const { isProfessional } = useUserType();
   // A member limited to departments sees neither the quick start nor the
@@ -132,17 +130,29 @@ export function GuidedLayout({
     auditTrail: canReadAudit === true,
     t,
     overview: OVERVIEW,
-    planLine: orgWide ? planDayText(plan, t) : null,
+    phaseLine: null as string | null,
     showProgress: !limited,
   };
   if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);
+  // Under the figure: the stage the organisation is in, from the same path
+  // the figure counts (path.ts, currentPhase), or that every stage is done.
+  if (orgWide && menuProps.statuses) {
+    const phase = currentPhase(menuProps.config, menuProps.statuses);
+    menuProps.phaseLine = phase
+      ? t("phase.now", { number: phase.number, stage: t(`stages.${phase.stage.id}`) })
+      : t("phase.complete");
+  }
   const stepRows = overview ? stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents) : {};
   // One quiet line at most under a step: its first document still missing
   // something (the dashboard lists them all). None once they are all ready or
   // ready for when they are needed.
   const stepNotes: Record<string, string> = {};
   for (const [id, rows] of Object.entries(stepRows)) {
-    const open = rows.find((row) => row.doc.status.state !== "ready" && !isStandby(row.doc.status));
+    // Nothing to do for a document on standby or one whose only lack is an optional setting.
+    const open = rows.find(
+      (row) =>
+        row.doc.status.state !== "ready" && !isStandby(row.doc.status) && documentBadge(row.doc.status) !== "needsSetting",
+    );
     if (open) stepNotes[id] = stepNoteText(td, [open], overview?.recordCounts ?? undefined);
   }
   const inventoryNote = overview?.recordCounts

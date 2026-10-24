@@ -30,7 +30,7 @@ import {
   type DocumentFacts,
   type EvaluatedDocument,
 } from "@/config/document-register";
-import { DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS, PLAN_WINDOWS } from "@/components/guided/path-config";
+import { DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS } from "@/components/guided/path-config";
 import { evaluatePath, programFigure } from "@/components/guided/path";
 import { stepDocumentRows, notYetEntries } from "@/lib/programme-overview";
 import {
@@ -50,7 +50,6 @@ const mocks = vi.hoisted(() => ({
   facts: null as unknown,
   needs: [] as unknown[],
   deadlines: [] as unknown[],
-  planStart: null as Date | null,
   dsarOn: true,
   prisma: {
     organizationMember: { findMany: vi.fn() },
@@ -69,7 +68,6 @@ vi.mock("@/server/services/views/queries", () => ({
   collectNeedsAction: async () => ({ items: mocks.needs, total: 0, departmentScoped: false }),
 }));
 vi.mock("@/server/services/program/deadlines", () => ({ loadDeadlines: async () => mocks.deadlines }));
-vi.mock("@/server/services/program/plan-start", () => ({ loadPlanStart: async () => mocks.planStart }));
 vi.mock("@/config/features", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/config/features")>();
   return { ...actual, isDsarModuleEnabled: () => mocks.dsarOn };
@@ -224,8 +222,6 @@ describe("the readings", () => {
         { kind: "breachNotify", at: "2026-10-11T09:00:00.000Z", publicId: "x", href: "/privacy/incidents/x" },
         { kind: "breachNotify", at: "2026-10-10T09:00:00.000Z", publicId: "y", href: "/privacy/incidents/y" },
       ],
-      planStart: "2026-09-01T00:00:00.000Z",
-      windows: PLAN_WINDOWS,
     });
     expect(actions).toHaveLength(3);
     expect(actions[0]).toEqual({
@@ -234,16 +230,14 @@ describe("the readings", () => {
       date: "2026-10-10",
       dateSource: "deadline",
     });
-    // The first open step of the path is in "Know your data": day 60 of the plan.
+    // An open step of the path carries no invented date: the organisation sets its own pace.
     expect(actions[1].item).toEqual({ kind: "step", stepId: "dataInventory", toConfirm: false });
-    expect(actions[1].date).toBe("2026-10-30");
-    expect(actions[1].dateSource).toBe("plan");
+    expect(actions[1].date).toBeNull();
+    expect(actions[1].dateSource).toBeNull();
 
     const undated = boardActions(DPO_CENTRAL_PATH, statuses, [], {
       owner: null,
       deadlines: [],
-      planStart: null,
-      windows: PLAN_WINDOWS,
     });
     expect(undated[0]).toMatchObject({ owner: null, date: null, dateSource: null });
   });
@@ -271,7 +265,6 @@ describe("loadBoardReport over a mocked database", () => {
     mocks.facts = { ...FACTS, jurisdictions: 1, quickstartCompleted: true };
     mocks.needs = [{ kind: "dsar-due", count: 1, href: "/privacy/dsar" }];
     mocks.deadlines = [{ kind: "dsarDue", at: "2026-10-20T00:00:00.000Z", publicId: "r", href: "/privacy/dsar/r" }];
-    mocks.planStart = new Date("2026-09-01T00:00:00Z");
     mocks.dsarOn = true;
     const p = mocks.prisma;
     p.organizationMember.findMany.mockResolvedValue([
@@ -363,12 +356,23 @@ describe("loadBoardReport over a mocked database", () => {
       status: { in: ["ACTIVE", "RENEWED"] },
       OR: [{ endDate: null }, { endDate: { gte: NOW } }],
     });
-    expect(report.assessments).toEqual({ dpiaApproved: 1, dpiaPending: 2, liaApproved: 0, liaPending: 1 });
+    expect(report.assessments).toEqual({
+      dpiaApproved: 1,
+      dpiaPending: 2,
+      piaApproved: 0,
+      piaPending: 1,
+      liaApproved: 0,
+      liaPending: 1,
+    });
     // The privacy officer holds the actions, ahead of the owner; no name, so the address.
     expect(report.actions[0].owner).toBe("dpo@example.test");
     expect(report.actions[0]).toMatchObject({ date: "2026-10-20", dateSource: "deadline" });
     expect(report.comment).toEqual({ text: "Q3 went well.", savedAt: "2026-10-02T10:00:00.000Z", savedBy: "Dee Pio" });
-    expect(report.figure.confirmed).toBe(2);
+    // Stages done: "Set up" alone (the quick start and a jurisdiction).
+    expect(report.figure.confirmed).toBe(1);
+    expect(report.steps!.map((s) => s.number)).toEqual(["1.1", "1.2", "2.1", "2.2", "2.3", "3.1", "3.2", "4.1", "5.1"]);
+    expect(report.steps!.slice(0, 2).map((s) => s.status)).toEqual(["done", "done"]);
+    expect(report.records).toMatchObject({ rightsReceived: expect.any(Number), incidents: expect.any(Number) });
     expect(report.areas.map((a) => a.stageId)).toEqual(["setup", "people", "inventory", "assess", "rights", "respond"]);
     expect(report.areas.find((a) => a.stageId === "rights")!.word).toBe("action");
     expect(report.canSave).toBe(true);
@@ -410,7 +414,7 @@ const SAMPLE: BoardReport = {
   organizationName: "Harbour Bakery",
   period: { from: "2026-07-01", to: "2026-09-30" },
   generatedAt: "2026-10-09T12:00:00.000Z",
-  figure: { confirmed: 4, total: 10, toConfirm: 1, started: 2, notStarted: 3 },
+  figure: { confirmed: 2, total: 5, toConfirm: 1, started: 1, notStarted: 1 },
   areas: [
     { stageId: "setup", word: "done" },
     { stageId: "people", word: "coming" },
@@ -429,14 +433,31 @@ const SAMPLE: BoardReport = {
   incidents: { inPeriod: 2, notifiedWithin72h: 1, notifiedLate: 0, notNotifiedYet: 1, openNow: 1 },
   rights: { received: 5, completedOnTime: 3, completedLate: 1, openOverdue: 1, openInTime: 0, closedOther: 0 },
   vendors: { total: 6, withDpa: 4, highRiskWithoutDpa: 1, drafts: 2 },
-  assessments: { dpiaApproved: 1, dpiaPending: 1, liaApproved: 0, liaPending: 1 },
+  assessments: { dpiaApproved: 1, dpiaPending: 1, piaApproved: 2, piaPending: 0, liaApproved: 0, liaPending: 1 },
+  steps: [
+    { stepId: "quickstart", number: "1.1", status: "done" },
+    { stepId: "ropa", number: "2.2", status: "started", missing: ["retention"] },
+    { stepId: "assessments", number: "3.1", status: "started" },
+    { stepId: "incidents", number: "5.1", status: "ready" },
+  ],
+  dpiaDuty: "applies",
+  records: {
+    dataAssets: 3,
+    activities: 4,
+    activitiesComplete: 2,
+    transfers: 2,
+    transfersAssessed: 1,
+    rightsReceived: 5,
+    rightsCompleted: 4,
+    incidents: 2,
+  },
   risks: [
     { kind: "needsAction", needsKind: "dsar-due", count: 1 },
     { kind: "document", id: "ropa", status: { state: "needsInput", input: "activity" } },
   ],
   actions: [
     { item: { kind: "needsAction", needsKind: "dsar-due", count: 1 }, owner: "Dee Pio", date: "2026-10-20", dateSource: "deadline" },
-    { item: { kind: "step", stepId: "ropa", toConfirm: false }, owner: "Dee Pio", date: "2026-10-30", dateSource: "plan" },
+    { item: { kind: "step", stepId: "ropa", toConfirm: false }, owner: "Dee Pio", date: null, dateSource: null },
     { item: { kind: "step", stepId: "vendors", toConfirm: true }, owner: null, date: null, dateSource: null },
   ],
   comment: { text: "Two decisions for the board.", savedAt: "2026-10-02T10:00:00.000Z", savedBy: "Dee Pio" },
@@ -454,7 +475,7 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(text.title).toBe("Executive report");
     expect(text.periodLine).toBe("Period: 1 July 2026 to 30 September 2026");
     expect(text.generatedLine).toBe("Generated on 9 October 2026");
-    expect(text.programme.figure).toBe("4 of 10 steps confirmed");
+    expect(text.programme.figure).toBe("2 of 5 stages done");
     expect(text.programme.areas.map((a) => a.value)).toEqual([
       "done",
       "to confirm",
@@ -471,7 +492,7 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(text.risks.items).toEqual(["Rights requests overdue or due soon: 1", "Records of processing (ROPA): needs: a processing activity"]);
     expect(text.actions.rows).toEqual([
       { action: "Rights requests overdue or due soon (1)", owner: "Dee Pio", date: "20 October 2026 (deadline)" },
-      { action: "Records of processing", owner: "Dee Pio", date: "30 October 2026 (plan)" },
+      { action: "Records of processing", owner: "Dee Pio", date: "No date set" },
       { action: "Vendors and processors: confirm the drafted records", owner: "Not named", date: "No date set" },
     ]);
     expect(text.vendors.note).toBe("2 drafted vendors wait to be confirmed and are not counted.");
@@ -482,7 +503,7 @@ describe("the words, the same on the page and in the PDF", () => {
     const text = boardReportText(SAMPLE, tr(es, "es"), "es");
     expect(text.title).toBe("Informe ejecutivo");
     expect(text.periodLine).toBe("Periodo: del 1 de julio de 2026 al 30 de septiembre de 2026");
-    expect(text.programme.figure).toBe("4 de 10 pasos confirmados");
+    expect(text.programme.figure).toBe("2 de 5 fases hechas");
     expect(text.assessments.rows[0][0]).toBe("Evaluaciones de impacto (EIPD)");
     expect(text.actions.rows[0].date).toBe("20 de octubre de 2026 (vencimiento)");
     expect(text.rights?.title).toBe("Solicitudes de derechos en el periodo");
@@ -518,7 +539,7 @@ describe("the words, the same on the page and in the PDF", () => {
   it("at a glance: the programme figure as the hero, then four figures with a bar and a warning where needed", () => {
     const k = boardReportText(SAMPLE, tr(en, "en"), "en").kpis;
     expect(k.title).toBe("At a glance");
-    expect(k.hero).toMatchObject({ value: "4", of: "of 10", label: "steps confirmed", ratio: 0.4 });
+    expect(k.hero).toMatchObject({ value: "2", of: "of 5", label: "stages done", ratio: 0.4 });
     expect(k.tiles.map((t) => [t.id, t.value, t.of, t.ratio, t.flag])).toEqual([
       ["documents", "2", "of 4", 0.5, null],
       ["breaches", "1", "of 2", 0.5, "1 late or not notified yet"],
@@ -576,11 +597,33 @@ describe("the words, the same on the page and in the PDF", () => {
     const actions = boardActions(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, { ...FACTS }), [{ kind: "dsar-due", count: 1, href: "/privacy/dsar" }], {
       owner: null,
       deadlines: [{ kind: "dsarDue", at: "2026-02-15T00:00:00.000Z", publicId: "r", href: "/privacy/dsar/r" }],
-      planStart: null,
-      windows: PLAN_WINDOWS,
       now: NOW,
     });
     expect(actions[0]).toMatchObject({ date: "2026-02-15", dateSource: "deadline", overdue: true });
+  });
+
+  it("lists every counted step with its state and what finishes it, and the records to date", () => {
+    const text = boardReportText(SAMPLE, tr(en, "en"), "en");
+    expect(text.steps!.rows.map((r) => r.label)).toEqual([
+      "1.1 Quick start",
+      "2.2 Records of processing",
+      "3.1 Assessments",
+      "5.1 Breach register",
+    ]);
+    expect(text.steps!.rows[0].value).toBe("done");
+    expect(text.steps!.rows[1].value).toContain("missing: the retention period");
+    // The organisation's answers require a DPIA, so the step says so.
+    expect(text.steps!.rows[2].value).toContain(en.guided.finish.assessmentsDpia);
+    expect(text.steps!.rows[3].value).toBe(en.guided.stepStatus.ready);
+    expect(text.records!.rows.map((r) => r.value)).toEqual(["3", "4", "2", "2", "1", "5", "4", "2"]);
+    expect(text.assessments.rows.map((r) => r[0])).toContain("General risk assessments (PIA)");
+    const es1 = boardReportText(SAMPLE, tr(es, "es"), "es");
+    expect(es1.steps!.title).toBe("Pasos");
+    expect(es1.records!.title).toBe("Registros a la fecha");
+    // A report of an older shape (no steps, no records) still reads.
+    const older = boardReportText({ ...SAMPLE, steps: undefined, records: undefined }, tr(en, "en"), "en");
+    expect(older.steps).toBeNull();
+    expect(older.records).toBeNull();
   });
 
   it("formats dates in UTC so a day never shifts", () => {

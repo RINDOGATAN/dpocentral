@@ -306,6 +306,7 @@ export function BoardReportDocument({
   const numbered = halves.map((box) => React.cloneElement(box as React.ReactElement<{ index: string }>, { index: ix() }));
   const pairs: React.ReactElement[][] = [];
   for (let i = 0; i < numbered.length; i += 2) pairs.push(numbered.slice(i, i + 2));
+  const stepsIx = t.steps ? ix() : "";
   const risksIx = ix();
   const actionsIx = ix();
 
@@ -360,6 +361,25 @@ export function BoardReportDocument({
         {pairs.map((pair, i) => (
           <BoxRow key={i}>{pair}</BoxRow>
         ))}
+
+        {/* Every counted step, then the records to date in one line: compact,
+            so the report stays within three pages. */}
+        {t.steps && (
+          // Allowed to flow across a page break: a whole box moved to the next
+          // page would leave half a page empty.
+          <View style={{ marginTop: GAP }}>
+            <Box index={stepsIx} title={t.steps.title}>
+              <Rows rows={t.steps.rows} wide />
+              {t.records && (
+                <View style={{ marginTop: 6, paddingTop: 5, borderTopWidth: 0.75, borderTopColor: HAIR }}>
+                  <Text style={{ ...label, marginBottom: 2 }}>{t.records.title}</Text>
+                  <Text style={{ color: INK }}>{t.records.rows.map((r) => `${r.label}: ${r.value}`).join(" · ")}</Text>
+                  <Note>{t.records.note}</Note>
+                </View>
+              )}
+            </Box>
+          </View>
+        )}
 
         <View style={{ marginTop: GAP }} wrap={false}>
           <Box index={risksIx} title={t.risks.title}>
