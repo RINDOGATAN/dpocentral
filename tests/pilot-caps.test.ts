@@ -65,6 +65,8 @@ vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined })
 vi.mock("@/lib/security", () => ({ getSecurityModule: () => null }));
 vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() } }));
 vi.mock("@/server/services/dsar/defaultIntakeForm", () => ({ ensureDefaultIntakeForm: vi.fn() }));
+const todoLaw = vi.hoisted(() => ({ ensure: vi.fn() }));
+vi.mock("@/server/services/todolaw-processor", () => ({ ensureTodoLawProcessor: todoLaw.ensure }));
 vi.mock("@/server/services/dsar/sendConfirmationEmail", () => ({
   sendDSARConfirmationEmail: vi.fn(),
 }));
@@ -199,6 +201,14 @@ describe("the data processing agreement is accepted when a pilot organisation is
     expect(entry!.changes.dpaVersion).toBe(PILOT_DPA.version);
     expect(["en", "es"]).toContain(entry!.changes.locale);
     expect(entry!.changes.document).toBe(PILOT_DPA.href[entry!.changes.locale as "en" | "es"]);
+    // TODO.LAW is added to the new organisation's programme once the acceptance is on record.
+    expect(todoLaw.ensure).toHaveBeenCalledWith(mocks.prisma, "org-new");
+  });
+
+  it("opens the organisation even if adding TODO.LAW fails", async () => {
+    hosted();
+    todoLaw.ensure.mockRejectedValueOnce(new Error("boom"));
+    await expect(orgCaller().create({ name: "First", slug: "first", acceptDpa: true })).resolves.toBeDefined();
   });
 
   it("never asks on the kit, and records nothing there", async () => {
@@ -206,6 +216,7 @@ describe("the data processing agreement is accepted when a pilot organisation is
     await orgCaller().create({ name: "Kit", slug: "kit" });
     expect(mocks.prisma.organization.create).toHaveBeenCalled();
     expect(auditActions().some((d: { action: string }) => d.action === PILOT_DPA_ACTION)).toBe(false);
+    expect(todoLaw.ensure).not.toHaveBeenCalled();
   });
 
   it("names agreement 1.1 at the storefront's addresses", () => {
@@ -283,6 +294,7 @@ describe("an organisation with no acceptance on record is asked once", () => {
     mocks.prisma.auditLog.findMany.mockResolvedValue([]);
     await callerWithRole("OWNER").acceptDpa({ organizationId: "org-1", accept: true });
     expect((dpaEntries()[0] as unknown as { changes: { dpaVersion: string } }).changes.dpaVersion).toBe("1.3");
+    expect(todoLaw.ensure).toHaveBeenCalledWith(mocks.prisma, "org-1");
   });
 
   it("reads versions numerically and ignores malformed entries", () => {

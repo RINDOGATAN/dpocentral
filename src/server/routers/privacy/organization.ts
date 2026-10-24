@@ -16,6 +16,7 @@ import {
   provenEmailOf,
 } from "@/lib/org-domain";
 import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
+import { ensureTodoLawProcessor } from "@/server/services/todolaw-processor";
 import { isDsarModuleEnabled } from "@/config/features";
 import { planTemplateRemoval, removeTemplateItems } from "@/server/services/template-items/remove";
 import { logger } from "@/lib/logger";
@@ -91,6 +92,22 @@ async function hasAcceptedCurrentDpa(
   return entries.some(
     (e) => isAcceptedDpaVersion((e.changes as { dpaVersion?: unknown } | null)?.dpaVersion)
   );
+}
+
+/**
+ * Hosted: TODO.LAW as a processor in the organisation's programme, as drafts,
+ * once its acceptance of the agreement is on record
+ * (src/server/services/todolaw-processor.ts). Never blocks the caller.
+ */
+async function addTodoLawProcessor(
+  prisma: Parameters<typeof ensureTodoLawProcessor>[0],
+  organizationId: string
+): Promise<void> {
+  try {
+    await ensureTodoLawProcessor(prisma, organizationId);
+  } catch (error) {
+    logger.error("Failed to add TODO.LAW as a processor", error, { organizationId });
+  }
 }
 
 export const organizationRouter = createTRPCRouter({
@@ -219,6 +236,7 @@ export const organizationRouter = createTRPCRouter({
           changes: { dpaVersion: PILOT_DPA.version, locale: lang, document: PILOT_DPA.href[lang] },
         },
       });
+      await addTodoLawProcessor(ctx.prisma, ctx.organization.id);
       return { accepted: true };
     }),
 
@@ -349,6 +367,7 @@ export const organizationRouter = createTRPCRouter({
             changes: { dpaVersion: PILOT_DPA.version, locale: lang, document: PILOT_DPA.href[lang] },
           },
         });
+        await addTodoLawProcessor(ctx.prisma, organization.id);
       }
 
       // Seed a default DSAR intake form so the public portal works out of the
