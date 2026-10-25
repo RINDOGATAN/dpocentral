@@ -7,7 +7,11 @@
  * prints the request: the organisation sees the read on the request page.
  *
  *   npm run db:dsar-support-read -- --request <id or public reference> \
- *     --by "operator name" --reason "ticket 1234"
+ *     --by "operator name" --reason "ticket 1234" [--show-identity] [--show-content]
+ *
+ * The requester's identity and what they wrote are printed masked unless
+ * --show-identity / --show-content are given; the trail entry records which
+ * were shown.
  *
  * Exit codes: 0 read, 1 refused input or not found, 2 unexpected error.
  */
@@ -22,17 +26,26 @@ import {
 
 export function parseArgs(argv: string[]): SupportReadInput {
   const values: Record<string, string> = {};
+  const flags: Pick<SupportReadInput, "showIdentity" | "showContent"> = {};
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
     if (!a.startsWith("--")) throw new SupportReadError(`Unexpected argument: ${a}`);
     const name = a.slice(2);
+    if (name === "show-identity") {
+      flags.showIdentity = true;
+      continue;
+    }
+    if (name === "show-content") {
+      flags.showContent = true;
+      continue;
+    }
     if (!["request", "by", "reason"].includes(name)) throw new SupportReadError(`Unknown option: ${a}`);
     const v = argv[i + 1];
     if (v === undefined || v.startsWith("--")) throw new SupportReadError(`${a} needs a value.`);
     values[name] = v;
     i++;
   }
-  return { request: values.request ?? "", operator: values.by ?? "", reason: values.reason ?? "" };
+  return { request: values.request ?? "", operator: values.by ?? "", reason: values.reason ?? "", ...flags };
 }
 
 async function main(): Promise<number> {
