@@ -2,13 +2,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The safeguards question of the first-visit welcome card (hosted service
- * only).
- *
- *   Who sees the card: the person who created the organisation on the hosted
- *   service, once, on the first visit to /privacy, before the quick start.
- *   Colleagues invited later never see it, and the kit never shows it.
- *   "Decide later" closes it and counts as option a.
+ * The safeguards question (hosted service only), asked in Settings. It is not
+ * asked on the first visit: a new organisation goes straight to the quick
+ * start. No answer, or "later" (recorded by older releases), counts as
+ * option a, the shared cloud.
  *
  *   What an answer does: a and "later" only record the choice. b (a fully
  *   managed virtual server) and c (the organisation's own hardware) can send
@@ -22,7 +19,6 @@
  */
 
 import type { SafeguardsChoice } from "@prisma/client";
-import { isHostedDeployment } from "@/lib/hosted";
 import { brand } from "@/config/brand";
 import {
   internalInboxAddresses,
@@ -65,21 +61,6 @@ export function salesInboxAddresses(
 ): string[] {
   const sales = addressList(env.SALES_INBOX_EMAIL);
   return sales.length > 0 ? sales : internalInboxAddresses();
-}
-
-/**
- * Whether the welcome card is shown to this person in this organisation:
- * hosted service only, to the person recorded as its creator, and only while
- * the question is unanswered.
- */
-export function shouldShowWelcome(
-  org: { welcomeUserId: string | null; safeguardsChoice: SafeguardsChoice | null },
-  userId: string,
-  env: Record<string, string | undefined> = process.env
-): boolean {
-  if (!isHostedDeployment(env)) return false;
-  if (!org.welcomeUserId || org.welcomeUserId !== userId) return false;
-  return org.safeguardsChoice === null;
 }
 
 const CHOICE_LABELS: Record<RequestChoice, string> = {

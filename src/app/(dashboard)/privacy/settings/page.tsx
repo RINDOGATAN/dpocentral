@@ -596,7 +596,7 @@ export default function SettingsPage() {
       {/* AI assistance (per-org posture, off by default) */}
       {org && <AiPostureCard organizationId={orgId} isAdmin={isAdmin} />}
 
-      {/* The welcome card's safeguards question (hosted service only) */}
+      {/* The safeguards question (hosted service only) */}
       {org && <SafeguardsSettingsCard organizationId={orgId} isAdmin={isAdmin} />}
 
       {/* Remove the unedited quick-start / template records in one step. */}
