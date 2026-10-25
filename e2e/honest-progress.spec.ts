@@ -37,7 +37,7 @@ function localDatabase(): boolean {
 // Five stages with a page: "Policies and people" is all still to come.
 const TOTAL = 5;
 const FIGURE = (done: number, total: number) =>
-  es ? `${done} de ${total} fases hechas` : `${done} of ${total} stages done`;
+  es ? `${done} de ${total} fases completadas` : `${done} of ${total} stages done`;
 
 async function shot(page: Page, name: string, project: string) {
   if (!SHOTS) return;

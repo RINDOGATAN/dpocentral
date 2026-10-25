@@ -503,7 +503,7 @@ describe("the words, the same on the page and in the PDF", () => {
     const text = boardReportText(SAMPLE, tr(es, "es"), "es");
     expect(text.title).toBe("Informe ejecutivo");
     expect(text.periodLine).toBe("Periodo: del 1 de julio de 2026 al 30 de septiembre de 2026");
-    expect(text.programme.figure).toBe("2 de 5 fases hechas");
+    expect(text.programme.figure).toBe("2 de 5 fases completadas");
     expect(text.assessments.rows[0][0]).toBe("Evaluaciones de impacto (EIPD)");
     expect(text.actions.rows[0].date).toBe("20 de octubre de 2026 (vencimiento)");
     expect(text.rights?.title).toBe("Solicitudes de derechos en el periodo");
