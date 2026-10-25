@@ -2679,6 +2679,21 @@
             "rightsRequest": "Rights requests"
           }
         }
+      },
+      "deleteOrganization": {
+        "title": "Delete the organization",
+        "description": "Deletes this organization and everything your team has recorded in it. Only the owner can do it.",
+        "start": "Delete the organization…",
+        "whatGoes": "Everything recorded here goes: activities, systems, vendors, assessments, incidents, rights requests with their messages, the activity log, members and pending invitations.",
+        "whatStays": "We keep only the record of the contract, with no content: the acceptance of the processing agreement, plan changes and the date of the deletion.",
+        "accounts": "Members keep their own accounts and their other organizations.",
+        "noUndo": "It cannot be undone.",
+        "exportFirst": "If you want a copy, export the program first (Settings, \"Take your program with you\").",
+        "confirmLabel": "To confirm, type the organization's name: {name}",
+        "confirm": "Delete for good",
+        "cancel": "Cancel",
+        "deleted": "The organization has been deleted.",
+        "paidPlan": "While the paid plan is active, the organization cannot be deleted here. When the plan ends you have 30 days to export everything; after that we delete it, or you can delete it yourself here."
       }
     },
     "dsar": {
@@ -11235,5 +11250,21 @@
     "moreVolume": "If you need a higher volume, reply to this e-mail.",
     "ctaText": "Open rights requests",
     "whyYou": "You receive this e-mail because you are an owner or administrator of {orgName}, or its privacy contact."
+  },
+  "orgRetentionEmail": {
+    "heading": "{orgName} will be deleted",
+    "headingReminder": "Reminder: {orgName} will be deleted in a few days",
+    "planEnded": {
+      "subject": "{orgName}: the organization will be deleted on {date}",
+      "body": "The paid plan of {orgName} has ended. Under the Cloud Plan terms you have 30 days to export your data; after that we delete the organization and everything recorded in it. It will be deleted on {date}.",
+      "keep": "To keep it, subscribe to the plan again before that date. To keep a copy, export the program from Settings."
+    },
+    "pilotInactive": {
+      "subject": "{orgName}: the pilot organization will be deleted on {date}",
+      "body": "Nobody has signed in to the pilot organization {orgName} for almost twelve months. Under the processing agreement, a pilot organization nobody uses for twelve months is deleted with its data. It will be deleted on {date}.",
+      "keep": "Signing in before that date keeps it. To keep a copy, export the program from Settings."
+    },
+    "ctaText": "Open Settings",
+    "whyYou": "You receive this e-mail because you are an owner or administrator of {orgName}."
   }
 }

@@ -291,6 +291,14 @@ export const authOptions: NextAuthOptions = {
         // Invitations waiting for this address become memberships now
         // (src/server/services/members/invitations.ts). Never blocks sign-in.
         await acceptPendingInvitations(prisma, user.id, user.email);
+        // The last sign-in, for the twelve-month inactivity rule of pilot
+        // organisations (src/server/services/organization/retention.ts).
+        // Never blocks sign-in.
+        try {
+          await prisma.user.update({ where: { id: user.id }, data: { lastSignInAt: new Date() } });
+        } catch (error) {
+          logger.error("Recording the last sign-in failed", error);
+        }
         // Stamped ONLY by a sign-in this product performed itself. A sibling's
         // token may say who the person is; it never carries this claim, and
         // platform-admin rights require it (src/server/trpc.ts).

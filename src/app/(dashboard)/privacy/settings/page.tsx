@@ -11,6 +11,7 @@ import { DepartmentsCard } from "@/components/privacy/departments-card";
 import { ControllerDetailsCard } from "@/components/privacy/controller-details-card";
 import { ProgrammeExportCard } from "@/components/privacy/programme-export-card";
 import { ProgrammeImportCard } from "@/components/privacy/programme-import-card";
+import { DeleteOrganizationCard } from "@/components/privacy/delete-organization-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -606,6 +607,9 @@ export default function SettingsPage() {
           register in, in the open format. OWNER/ADMIN, enforced server-side. */}
       {orgId && isAdmin && <ProgrammeExportCard organizationId={orgId} />}
       {orgId && isAdmin && <ProgrammeImportCard organizationId={orgId} />}
+
+      {/* Deleting the organisation (DPA clause 13). Owner only, enforced server-side. */}
+      {orgId && isOwner && <DeleteOrganizationCard organizationId={orgId} />}
 
       <DeploymentExpertCta />
 

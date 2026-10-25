@@ -2679,6 +2679,21 @@
             "rightsRequest": "Solicitudes de derechos"
           }
         }
+      },
+      "deleteOrganization": {
+        "title": "Eliminar la organización",
+        "description": "Elimina esta organización y todo lo que tu equipo ha registrado en ella. Solo puede hacerlo el propietario.",
+        "start": "Eliminar la organización…",
+        "whatGoes": "Se elimina todo lo registrado aquí: actividades, sistemas, proveedores, evaluaciones, incidentes, solicitudes de derechos con sus mensajes, el registro de actividad, los miembros y las invitaciones pendientes.",
+        "whatStays": "Solo conservamos la constancia del contrato, sin contenido: la aceptación del contrato de encargo, los cambios de plan y la fecha de la eliminación.",
+        "accounts": "Los miembros conservan sus cuentas y sus otras organizaciones.",
+        "noUndo": "No se puede deshacer.",
+        "exportFirst": "Si quieres una copia, exporta antes el programa (Ajustes, «Llévate tu programa»).",
+        "confirmLabel": "Para confirmar, escribe el nombre de la organización: {name}",
+        "confirm": "Eliminar definitivamente",
+        "cancel": "Cancelar",
+        "deleted": "La organización se ha eliminado.",
+        "paidPlan": "Mientras el plan de pago está activo, no puedes eliminar la organización desde aquí. Cuando termine el plan tendrás 30 días para exportarlo todo; después la eliminaremos, o podrás eliminarla tú desde aquí."
       }
     },
     "dsar": {
@@ -11235,5 +11250,21 @@
     "moreVolume": "Si necesitas más volumen, responde a este correo.",
     "ctaText": "Abrir las solicitudes de derechos",
     "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}, o su contacto de privacidad."
+  },
+  "orgRetentionEmail": {
+    "heading": "{orgName} se va a eliminar",
+    "headingReminder": "Recordatorio: {orgName} se eliminará dentro de unos días",
+    "planEnded": {
+      "subject": "{orgName}: la organización se eliminará el {date}",
+      "body": "El plan de pago de {orgName} ha terminado. Según las condiciones del Plan nube, tienes 30 días para exportar tus datos; después eliminamos la organización y todo lo registrado en ella. Se eliminará el {date}.",
+      "keep": "Para conservarla, vuelve a contratar el plan antes de esa fecha. Para guardar una copia, exporta el programa desde Ajustes."
+    },
+    "pilotInactive": {
+      "subject": "{orgName}: la organización piloto se eliminará el {date}",
+      "body": "Nadie ha iniciado sesión en la organización piloto {orgName} desde hace casi doce meses. Según el contrato de encargo, una organización piloto que nadie usa durante doce meses se elimina con sus datos. Se eliminará el {date}.",
+      "keep": "Si inicias sesión antes de esa fecha, se conserva. Para guardar una copia, exporta el programa desde Ajustes."
+    },
+    "ctaText": "Abrir Ajustes",
+    "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}."
   }
 }
