@@ -60,7 +60,7 @@ export async function sendDSARConfirmationEmail(
             <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">${brand.nameUppercase}</span>
           </div>
           <div style="padding: 32px 24px;">
-            <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">${escapeHtml(tEmail("greeting", { name: input.requesterName }))}</p>
+            <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">${escapeHtml(tEmail("greeting"))}</p>
             <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
               ${escapeHtml(tEmail("body", { orgName: input.organizationName, requestType: requestTypeLabel, dueDate: dueDateLabel }))}
             </p>
