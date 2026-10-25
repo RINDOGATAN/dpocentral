@@ -27,7 +27,7 @@
 export type PilotDpaLocale = "en" | "es";
 
 export const PILOT_DPA = {
-  version: "1.5",
+  version: "1.6",
   minimumAccepted: "1.1",
   href: {
     en: "https://www.todo.law/legal/eu-cloud-plan-dpa",
