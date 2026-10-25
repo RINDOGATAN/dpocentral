@@ -10711,6 +10711,7 @@
     "staffNote": "Las solicitudes que registras tú no cuentan.",
     "volumeUsage": "Este mes el formulario público ha recibido {used} de sus {limit} solicitudes (el recuento vuelve a empezar el {date}).",
     "volumeUpgrade": "La ampliación de volumen sube el límite a {upgraded, number} solicitudes al mes por {price} al mes.",
+    "volumeUpgradeAskAdmin": "Puede contratarla el propietario o un administrador de tu organización",
     "volumeUpgradeLink": "Contratar la ampliación",
     "volumeUpgradeWrite": "Escribe a {email} para añadirla",
     "volumeMore": "Si necesitas más volumen, escríbenos."

@@ -10711,6 +10711,7 @@
     "staffNote": "Requests you enter yourself do not count.",
     "volumeUsage": "This month the public form has received {used} of its {limit} requests (the count starts again on {date}).",
     "volumeUpgrade": "The volume upgrade raises the limit to {upgraded, number} requests a month for {price} a month.",
+    "volumeUpgradeAskAdmin": "Your organization's owner or an administrator can buy it",
     "volumeUpgradeLink": "Buy the upgrade",
     "volumeUpgradeWrite": "Write to {email} to add it",
     "volumeMore": "For a higher volume, write to us."

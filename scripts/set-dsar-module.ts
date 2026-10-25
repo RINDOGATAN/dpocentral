@@ -3,8 +3,8 @@
 
 /**
  * Sets an organisation's rights-request (DSAR) volume upgrade on the hosted
- * service, once its payment has arrived (the payment link carries the
- * organisation as Stripe's client reference, "dpc-dsar-<organisation id>").
+ * service by hand. The payment switches it on and off by itself
+ * (src/server/services/dsar/volume-sync.ts); this script is for corrections.
  * Operator use only, modelled on scripts/set-org-plan.ts. DRY RUN BY DEFAULT:
  * it prints the before and after and writes nothing unless --execute is given.
  *

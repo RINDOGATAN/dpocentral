@@ -64,7 +64,9 @@ import {
   warningPercentOf,
   warningThresholds,
 } from "@/server/services/dsar/module";
-import { volumeUpgradeCheckoutUrl, volumeUpgradeLinks } from "@/lib/dsar-addon";
+import { volumeUpgradeLinks } from "@/lib/dsar-addon";
+import { DSAR_VOLUME_APP_CODE, volumeUpgradeCheckoutUrl } from "@/server/services/dsar/volume-sync";
+import { parseOrgReference } from "@/lib/plan-upgrade";
 import { renderVolumeNotice } from "@/server/services/dsar/volume-notices";
 import { callerFor, sessionFor } from "./helpers";
 import en from "@/messages/en.json";
@@ -100,12 +102,12 @@ const submission = () => ({
   formToken: issueFormToken("acme", new Date(Date.now() - 10_000)),
 });
 
-function staff(orgRow: Record<string, unknown>) {
+function staff(orgRow: Record<string, unknown>, role: string = "OWNER") {
   mocks.prisma.organizationMember.findUnique.mockResolvedValue({
     id: "m-1",
     userId: "user-a",
     organizationId: "org-a",
-    role: "OWNER",
+    role,
     organization: orgRow,
     user: { locale: null },
   });
@@ -363,19 +365,47 @@ describe("the public form on the hosted service", () => {
     ).resolves.toMatchObject({ id: "dsar-1" });
   });
 
-  it("module access: no upgrade link offered while none is set; with one, it carries the organisation", async () => {
-    const c = staff(org(PAID));
+  it("module access: no upgrade link offered while none is set; with one, it carries the signed organisation reference", async () => {
+    const c = staff(org({ ...PAID, id: "orgA1" }));
     mocks.prisma.auditLog.count.mockResolvedValue(60);
+    vi.stubEnv("AUTO_UPGRADE_ENABLED", "true");
+    vi.stubEnv("PLAN_SYNC_SECRET", "test-secret");
     await expect(c.moduleAccess({ organizationId: "org-a" })).resolves.toMatchObject({
       gate: "standard",
       warningPercent: 50,
+      canBuy: true,
       upgrade: { EUR: null, USD: null },
     });
     vi.stubEnv("DSAR_VOLUME_EUR_LINK", "https://buy.stripe.com/test_eur");
     const access = await c.moduleAccess({ organizationId: "org-a" });
-    if (access.gate === "open" || !access.upgrade) throw new Error("expected a link");
-    expect(access.upgrade.EUR).toContain("client_reference_id=dpc-dsar-org-a");
+    if (access.gate === "open" || !access.upgrade?.EUR) throw new Error("expected a link");
+    const ref = new URL(access.upgrade.EUR).searchParams.get("client_reference_id");
+    expect(parseOrgReference(ref, "test-secret", DSAR_VOLUME_APP_CODE)).toEqual({ kind: "valid", orgId: "orgA1" });
+    // Never a reference the plan would accept.
+    expect(parseOrgReference(ref, "test-secret")).toEqual({ kind: "other-app", app: DSAR_VOLUME_APP_CODE });
     expect(access.upgrade.USD).toBeNull();
+  });
+
+  it("module access: no link while the automatic upgrade is switched off or has no secret", async () => {
+    const c = staff(org({ ...PAID, id: "orgA1" }));
+    vi.stubEnv("DSAR_VOLUME_EUR_LINK", "https://buy.stripe.com/test_eur");
+    vi.stubEnv("PLAN_SYNC_SECRET", "test-secret");
+    await expect(c.moduleAccess({ organizationId: "org-a" })).resolves.toMatchObject({ upgrade: { EUR: null } });
+    vi.stubEnv("AUTO_UPGRADE_ENABLED", "true");
+    vi.stubEnv("PLAN_SYNC_SECRET", "");
+    await expect(c.moduleAccess({ organizationId: "org-a" })).resolves.toMatchObject({ upgrade: { EUR: null } });
+  });
+
+  it("module access: only owners and administrators are offered the purchase", async () => {
+    vi.stubEnv("AUTO_UPGRADE_ENABLED", "true");
+    vi.stubEnv("PLAN_SYNC_SECRET", "test-secret");
+    vi.stubEnv("DSAR_VOLUME_EUR_LINK", "https://buy.stripe.com/test_eur");
+    const admin = await staff(org({ ...PAID, id: "orgA1" }), "ADMIN").moduleAccess({ organizationId: "org-a" });
+    expect(admin).toMatchObject({ canBuy: true });
+    if (admin.gate === "open") throw new Error("expected a limited gate");
+    expect(admin.upgrade?.EUR).toBeTruthy();
+    const officer = await staff(org({ ...PAID, id: "orgA1" }), "PRIVACY_OFFICER").moduleAccess({ organizationId: "org-a" });
+    expect(officer).toMatchObject({ canBuy: false, upgrade: null });
   });
 
   it("module access with the upgrade offers no further upgrade", async () => {
@@ -471,9 +501,13 @@ describe("the upgrade's words and links", () => {
       EUR: null,
       USD: "https://buy.stripe.com/u",
     });
-    const url = new URL(volumeUpgradeCheckoutUrl("https://buy.stripe.com/u", "org-a", "a@b.example"));
-    expect(url.searchParams.get("client_reference_id")).toBe("dpc-dsar-org-a");
+    const url = new URL(volumeUpgradeCheckoutUrl("https://buy.stripe.com/u", "orgA1", "a@b.example", "s"));
+    expect(parseOrgReference(url.searchParams.get("client_reference_id"), "s", DSAR_VOLUME_APP_CODE)).toEqual({
+      kind: "valid",
+      orgId: "orgA1",
+    });
     expect(url.searchParams.get("prefilled_email")).toBe("a@b.example");
+    expect(volumeUpgradeCheckoutUrl("https://buy.stripe.com/u", "orgA1", null, "s")).not.toContain("prefilled_email");
   });
 
   it("no longer claims an ID upload the form never asks for", () => {
