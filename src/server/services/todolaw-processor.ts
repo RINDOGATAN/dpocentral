@@ -244,6 +244,14 @@ export async function ensureTodoLawProcessor(
   };
 
   const vendorId = await db.$transaction((tx) => write(tx as Prisma.TransactionClient));
+  // The ready-made assessment, measures and checklist for the transfer. A
+  // failure here leaves the three records in place; the backfill completes it.
+  try {
+    const { prefillTodoLawTransfer } = await import("./todolaw-transfer-assessment");
+    await prefillTodoLawTransfer(db, organizationId, acceptance.locale);
+  } catch {
+    // Best effort: scripts/backfill-todolaw-tia.ts fills it later.
+  }
   return { added: true, vendorId };
 }
 
