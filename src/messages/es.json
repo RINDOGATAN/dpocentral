@@ -3714,7 +3714,7 @@
     "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
     "clientName": "Nombre de tu primer cliente",
     "clientNamePlaceholder": "p. ej., Panadería del Puerto, S.L.",
-    "clientNameHint": "Cada organización a la que asesoras es aquí un cliente. Tu propio despacho no necesita una. Los demás los añades desde Todos los clientes.",
+    "clientNameHint": "Cada organización a la que asesoras es aquí un cliente. Tu propio despacho no necesita una. Los demás los añades desde la vista «Todos los clientes».",
     "getStarted": "Comenzar",
     "settingUp": "Configurando...",
     "persona": {
@@ -5718,7 +5718,7 @@
       "navigation": {
         "title": "El menú",
         "description": "El menú de la izquierda sigue la ruta de un programa de privacidad, en cinco fases numeradas.",
-        "organisation": "Arriba está la organización en la que trabajas. Abre la lista de tus organizaciones, que termina con «Nueva organización», o «Añadir un cliente» para los profesionales de la privacidad. Los profesionales de la privacidad ven también Todos los clientes, una tabla con cada cliente.",
+        "organisation": "Arriba está la organización en la que trabajas. Abre la lista de tus organizaciones, que termina con «Nueva organización», o «Añadir un cliente» para los profesionales de la privacidad. Los profesionales de la privacidad ven también la vista «Todos los clientes», una tabla con cada cliente.",
         "stages": "Después vienen Resumen (el panel) y las cinco fases numeradas. Cada fase se abre en sus pasos:",
         "states": "Cada fase y cada paso muestran su estado: hecho, a punto (listo para cuando haga falta), en curso, sin empezar, por confirmar o requiere acción.",
         "documentLines": "Una línea bajo cada paso indica los documentos que genera y su estado.",
@@ -5770,7 +5770,7 @@
         },
         "privacyProfessional": {
           "label": "Profesional de privacidad",
-          "desc": "Para consultores de privacidad y DPD que asesoran a varias organizaciones. Tienes Todos los clientes, una tabla que muestra en qué punto está cada organización cliente."
+          "desc": "Para consultores de privacidad y DPD que asesoran a varias organizaciones. Tienes la vista «Todos los clientes», una tabla que muestra en qué punto está cada organización cliente."
         },
         "tipPrefix": "Puedes cambiar tu tipo de cuenta en cualquier momento desde la página de ",
         "tipSettings": "Ajustes",
@@ -5791,7 +5791,7 @@
       "clientDashboard": {
         "title": "Todos los clientes",
         "description": "En qué punto está cada una de tus organizaciones cliente, en una tabla.",
-        "intro": "Todos los clientes (para profesionales de la privacidad) tiene una fila por cada organización cliente de la que eres miembro. Cada fila lee las mismas cifras que el panel de ese cliente:",
+        "intro": "La vista «Todos los clientes» (para profesionales de la privacidad) tiene una fila por cada organización cliente de la que eres miembro. Cada fila lee las mismas cifras que el panel de ese cliente:",
         "items": {
           "client": "El cliente, con tu rol en él",
           "confirmed": "La cifra del programa y cuántos registros en borrador esperan a ser confirmados",
@@ -6821,7 +6821,7 @@
       "subtitle": "Supervisa el estado de cumplimiento en privacidad de tu organización con una única puntuación, un desglose por módulo e indicadores de riesgo que señalan qué hacer. Exporta informes listos para la dirección y demuestra la responsabilidad proactiva.",
       "score": {
         "title": "Puntuación de cumplimiento",
-        "description": "La página Informes empieza por la cifra del programa, la misma que en el panel, el menú y Todos los clientes. Debajo figura una puntuación ponderada por módulos, de 0 a 100.",
+        "description": "La página Informes empieza por la cifra del programa, la misma que en el panel, el menú y la vista «Todos los clientes». Debajo figura una puntuación ponderada por módulos, de 0 a 100.",
         "mockupTitle": "Pesos por módulo",
         "weightSubtitle": "peso",
         "modules": {

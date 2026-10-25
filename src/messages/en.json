@@ -3714,7 +3714,7 @@
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "clientName": "Your first client's name",
     "clientNamePlaceholder": "e.g., Harbour Bakery Ltd",
-    "clientNameHint": "Each organization you advise is a client here. Your own firm does not need one. You add the others from All clients.",
+    "clientNameHint": "Each organization you advise is a client here. Your own firm does not need one. You add the others from the All clients view.",
     "getStarted": "Get started",
     "settingUp": "Setting up...",
     "persona": {
@@ -5718,7 +5718,7 @@
       "navigation": {
         "title": "The menu",
         "description": "The left menu follows the path of a privacy program, in five numbered stages.",
-        "organisation": "At the top is the organization you are working in. It opens the list of your organizations, which ends with \"New organization\", or \"Add a client\" for privacy professionals. Privacy professionals also see All clients, a table of every client.",
+        "organisation": "At the top is the organization you are working in. It opens the list of your organizations, which ends with \"New organization\", or \"Add a client\" for privacy professionals. Privacy professionals also see the All clients view, a table of every client.",
         "stages": "Then Overview (the dashboard) and the five numbered stages. Each stage opens to its steps:",
         "states": "Each stage and each step shows its state: done, ready (for when it is needed), in progress, not started, to confirm or needs action.",
         "documentLines": "A line under a step names the documents it produces and their states.",
@@ -5770,7 +5770,7 @@
         },
         "privacyProfessional": {
           "label": "Privacy professional",
-          "desc": "For privacy consultants and DPOs who advise several organizations. You get All clients, a table showing where each client organization stands."
+          "desc": "For privacy consultants and DPOs who advise several organizations. You get the All clients view, a table showing where each client organization stands."
         },
         "tipPrefix": "You can change your account type at any time from the ",
         "tipSettings": "Settings",
@@ -5791,7 +5791,7 @@
       "clientDashboard": {
         "title": "All clients",
         "description": "Where each of your client organizations stands, in one table.",
-        "intro": "All clients (for privacy professionals) has one row per client organization you belong to. Each row reads the same figures as that client's own dashboard:",
+        "intro": "The All clients view (for privacy professionals) has one row per client organization you belong to. Each row reads the same figures as that client's own dashboard:",
         "items": {
           "client": "The client, with your role in it",
           "confirmed": "The program figure, and how many drafted records wait to be confirmed",
@@ -6821,7 +6821,7 @@
       "subtitle": "Monitor your organization's privacy compliance posture with a single score, module-level breakdowns, and actionable risk indicators. Export board-ready reports to demonstrate accountability.",
       "score": {
         "title": "Compliance posture score",
-        "description": "The Reports page leads with the program figure, the same as on the dashboard, the menu and All clients. Under it sits a weighted module score from 0 to 100.",
+        "description": "The Reports page leads with the program figure, the same as on the dashboard, the menu and the All clients view. Under it sits a weighted module score from 0 to 100.",
         "mockupTitle": "Module weights",
         "weightSubtitle": "weight",
         "modules": {
@@ -10311,7 +10311,7 @@
       "step3": "Keep it current: run the assessments each law expects, answer rights requests on time, and log any breach.",
       "promise": "One privacy program: the records, assessments and requests each law expects, kept in one place.",
       "clientsLine": "Working for several clients?",
-      "clientsLink": "All clients shows where each one stands.",
+      "clientsLink": "The All clients view shows where each client stands.",
       "guidesTitle": "Start with a short guide",
       "dismiss": "Got it",
       "reopen": "Reopen it any time from the help button."
