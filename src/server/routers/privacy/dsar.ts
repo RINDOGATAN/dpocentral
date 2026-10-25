@@ -11,7 +11,7 @@ import { calculateDSARDueDate, orgDsarRule } from "@/server/services/privacy/sla
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
-import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
+import { assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
@@ -27,7 +27,9 @@ import {
 } from "@/server/services/dsar/module";
 import { notifyVolumeStep } from "@/server/services/dsar/volume-notices";
 import { reminderMailerFromEnv } from "@/server/services/dsar/deadlineReminders";
-import { volumeUpgradeCheckoutUrl, volumeUpgradeLinks } from "@/lib/dsar-addon";
+import { volumeUpgradeLinks } from "@/lib/dsar-addon";
+import { volumeUpgradeCheckoutUrl } from "@/server/services/dsar/volume-sync";
+import { autoUpgradeEnabled, planSyncSecret } from "@/lib/plan-upgrade";
 import { sendDSARExtensionEmail } from "@/server/services/dsar/sendExtensionEmail";
 import { countRecentAccessRequests } from "@/server/services/dsar/repeat-access";
 import { generatedTaskText } from "@/server/services/dsar/generated-tasks";
@@ -819,21 +821,22 @@ export const dsarRouter = createTRPCRouter({
   // on by default, switched off per organisation.
   // The public form's monthly count against its ceiling (hosted; "open" on
   // the kit) and, below the 1,000 ceiling, the volume upgrade's payment link
-  // per currency (null where none is set). Read by the module's pages.
+  // per currency (null where none is set, or while the automatic upgrade is
+  // switched off). Only owners and administrators may buy it (canBuy); the
+  // links carry the organisation's signed reference. Read by the module's pages.
   moduleAccess: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const access = await getDsarModuleAccess(ctx.prisma, ctx.organization);
+      const canBuy = ctx.membership.role === "OWNER" || ctx.membership.role === "ADMIN";
+      const secret = autoUpgradeEnabled() ? planSyncSecret() : null;
       const links = volumeUpgradeLinks();
       const email = ctx.session.user.email;
+      const link = (base: string | null) =>
+        base && secret ? volumeUpgradeCheckoutUrl(base, ctx.organization.id, email, secret) : null;
       const upgrade =
-        access.gate === "standard"
-          ? {
-              EUR: links.EUR ? volumeUpgradeCheckoutUrl(links.EUR, ctx.organization.id, email) : null,
-              USD: links.USD ? volumeUpgradeCheckoutUrl(links.USD, ctx.organization.id, email) : null,
-            }
-          : null;
-      return { ...access, upgrade };
+        access.gate === "standard" && canBuy ? { EUR: link(links.EUR), USD: link(links.USD) } : null;
+      return { ...access, canBuy, upgrade };
     }),
 
   getReminderSettings: dsarOrganizationProcedure
@@ -960,10 +963,11 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      // Hosted pilot caps also bound the public intake (no-op on the kit)
+      // A read-only pilot also closes the public intake (no-op on the kit).
+      // Rights requests are outside the pilot's records ceiling: the monthly
+      // ceiling below is their only limit.
       const pilotLang = pilotLocale(input.locale);
       assertPilotWritable(org, pilotLang);
-      await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
 
       // The monthly ceiling (hosted): 100 public-form requests per calendar
       // month (Madrid), 1,000 with the volume upgrade.

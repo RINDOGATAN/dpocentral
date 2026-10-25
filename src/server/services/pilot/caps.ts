@@ -4,7 +4,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Prisma } from "@prisma/client";
 import { brand } from "@/config/brand";
-import { isDsarModuleEnabled } from "@/config/features";
 import {
   isHostedDeployment,
   PILOT_EXPORT_PATH,
@@ -142,7 +141,6 @@ export type PilotDb = {
   dataTransfer: CountDelegate;
   vendor: CountDelegate;
   vendorContract: CountDelegate;
-  dSARRequest: CountDelegate;
   assessment: CountDelegate;
   assessmentTemplate: CountDelegate;
   incident: CountDelegate;
@@ -174,7 +172,6 @@ const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: Scope) => Pr
   vendors: (db, organizationId) => db.vendor.count({ where: { organizationId, ...NOT_TODOLAW_VENDOR } }),
   vendorContracts: (db, organizationId) =>
     db.vendorContract.count({ where: { vendor: { organizationId, ...NOT_TODOLAW_VENDOR } } }),
-  dsarRequests: (db, organizationId) => db.dSARRequest.count({ where: { organizationId } }),
   assessments: (db, organizationId) => db.assessment.count({ where: { organizationId } }),
   assessmentTemplates: (db, organizationId) =>
     db.assessmentTemplate.count({ where: { organizationId } }),
@@ -213,7 +210,6 @@ export const CAPPED_CREATE_PATHS: Record<string, PilotResource> = {
   "dataInventory.createTransfer": "dataTransfers",
   "vendor.create": "vendors",
   "vendor.addContract": "vendorContracts",
-  "dsar.create": "dsarRequests",
   "assessment.create": "assessments",
   "assessment.createForTransfer": "assessments",
   "assessment.createTemplate": "assessmentTemplates",
@@ -622,7 +618,6 @@ const STATUS_RESOURCES: PilotResource[] = [
   "dataAssets",
   "processingActivities",
   "vendors",
-  "dsarRequests",
   "assessments",
   "incidents",
   "aiSystems",
@@ -666,8 +661,7 @@ export async function getPilotStatus(
   }
   const ids = await groupOrganizationIds(db, org);
   const usage = await Promise.all(
-    // Rights requests are not listed when the module is not part of this plan.
-    STATUS_RESOURCES.filter((r) => r !== "dsarRequests" || isDsarModuleEnabled()).map(async (resource) => ({
+    STATUS_RESOURCES.map(async (resource) => ({
       resource,
       used: await COUNTERS[resource](db, scopeOf(ids)),
       limit: PILOT_LIMITS[resource],

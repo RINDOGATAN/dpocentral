@@ -9,8 +9,9 @@
  *    works fully. One ceiling guards our costs against floods: at most
  *    STANDARD_PUBLIC_REQUESTS_PER_MONTH requests through the public form per
  *    calendar month (Europe/Madrid), or UPGRADED_PUBLIC_REQUESTS_PER_MONTH
- *    with the volume upgrade (`dsarModuleStatus` ACTIVE, recorded by the
- *    operator's script scripts/set-dsar-module.ts once the upgrade is paid).
+ *    with the volume upgrade (`dsarModuleStatus` ACTIVE, set by its payment
+ *    through src/server/services/dsar/volume-sync.ts, or by the operator's
+ *    script scripts/set-dsar-module.ts for a correction).
  *
  * Only requests that came through the public form count. Requests entered by
  * staff never do. Each public-form request writes one organisation audit-log

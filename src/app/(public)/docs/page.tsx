@@ -46,9 +46,7 @@ export default async function DocsOverviewPage() {
   // Without the rights-request module (src/config/features.ts) the overview
   // leaves it out of the ceilings, modules, reports and core items.
   const dsarOn = isDsarModuleEnabled();
-  const ceilings = (Object.keys(PILOT_LIMITS) as PilotResource[])
-    .filter((resource) => dsarOn || resource !== "dsarRequests")
-    .map((resource) => ({
+  const ceilings = (Object.keys(PILOT_LIMITS) as PilotResource[]).map((resource) => ({
     resource,
     limit: PILOT_LIMITS[resource],
     label: RESOURCE_LABELS[resource][locale],

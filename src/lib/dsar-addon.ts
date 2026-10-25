@@ -12,9 +12,13 @@
  *
  * The purchase: a Stripe payment link per currency, from
  * DSAR_VOLUME_EUR_LINK and DSAR_VOLUME_USD_LINK (no link is written in the
- * code). Unset, the app offers no purchase button and says to write to us.
- * The payment is recorded on the organisation by the operator's script
- * (scripts/set-dsar-module.ts --status ACTIVE).
+ * code), offered to the organisation's owners and administrators with a
+ * signed organisation reference (src/server/services/dsar/volume-sync.ts).
+ * Unset, or with the automatic upgrade switched off, the app offers no
+ * purchase button and says to write to us. The confirmed payment switches the
+ * upgrade on by itself (POST /api/plan/dsar-volume-sync, relayed by the
+ * storefront's Stripe webhook), and its end switches it off; the operator's
+ * script (scripts/set-dsar-module.ts) remains for corrections.
  */
 
 import type { Currency } from "@/lib/region";
@@ -39,20 +43,4 @@ export function volumeUpgradeLinks(env: Env = process.env): Record<Currency, str
     EUR: httpsLink(env.DSAR_VOLUME_EUR_LINK),
     USD: httpsLink(env.DSAR_VOLUME_USD_LINK),
   };
-}
-
-/**
- * The link the organisation's buyer follows: the payment link with the
- * organisation as Stripe's client reference (so the operator can match the
- * payment) and the buyer's e-mail prefilled.
- */
-export function volumeUpgradeCheckoutUrl(
-  link: string,
-  organizationId: string,
-  email: string | null | undefined
-): string {
-  const url = new URL(link);
-  url.searchParams.set("client_reference_id", `dpc-dsar-${organizationId}`.replace(/[^A-Za-z0-9_-]/g, "_"));
-  if (email) url.searchParams.set("prefilled_email", email);
-  return url.toString();
 }

@@ -48,7 +48,9 @@ export function DsarModuleAccessNote() {
             upgraded: UPGRADED_PUBLIC_REQUESTS_PER_MONTH,
             price: price(DSAR_VOLUME_UPGRADE_MONTHLY_PRICE),
           })}{" "}
-          {link ? (
+          {!access.canBuy ? (
+            t("volumeUpgradeAskAdmin")
+          ) : link ? (
             <a className="underline underline-offset-4 text-primary" href={link}>
               {t("volumeUpgradeLink")}
             </a>

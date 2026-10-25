@@ -7297,7 +7297,7 @@
         },
         "dsar": {
           "title": "DSAR management",
-          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. On the hosted service, offered separately, when available."
+          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. On the hosted service it is included, with up to 100 requests a month through the public form (1,000 with the volume upgrade)."
         },
         "assessments": {
           "title": "Assessments",
@@ -10017,7 +10017,6 @@
         "dataTransfers": "Transfers",
         "vendors": "Vendors",
         "vendorContracts": "Vendor contracts",
-        "dsarRequests": "Data subject requests",
         "assessments": "Assessments",
         "assessmentTemplates": "Assessment templates",
         "incidents": "Incidents",
@@ -10712,6 +10711,7 @@
     "staffNote": "Requests you enter yourself do not count.",
     "volumeUsage": "This month the public form has received {used} of its {limit} requests (the count starts again on {date}).",
     "volumeUpgrade": "The volume upgrade raises the limit to {upgraded, number} requests a month for {price} a month.",
+    "volumeUpgradeAskAdmin": "Your organization's owner or an administrator can buy it",
     "volumeUpgradeLink": "Buy the upgrade",
     "volumeUpgradeWrite": "Write to {email} to add it",
     "volumeMore": "For a higher volume, write to us."

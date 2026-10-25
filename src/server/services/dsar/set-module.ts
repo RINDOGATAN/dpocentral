@@ -6,8 +6,8 @@
  * dsarModuleStatus, dsarModuleSubscriptionId, dsarModuleRenewsAt; ACTIVE
  * raises the public form's monthly ceiling from 100 to 1,000), for the
  * operator's script scripts/set-dsar-module.ts. Modelled on the plan setter
- * (src/server/services/pilot/plan.ts): payment is collected outside the app
- * and an operator records the result here.
+ * (src/server/services/pilot/plan.ts). A payment sets the same fields by
+ * itself (volume-sync.ts); the script is for corrections.
  *
  * Each change writes one audit-trail entry on the organisation (action
  * DSAR_MODULE_CHANGE) with the status and renewal date before and after. The

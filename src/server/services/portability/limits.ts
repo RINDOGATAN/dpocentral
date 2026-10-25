@@ -28,7 +28,6 @@ const RESOURCES: Array<[PilotResource, keyof AddingCounts]> = [
   ["dataTransfers", "dataTransfers"],
   ["vendors", "vendors"],
   ["vendorContracts", "vendorContracts"],
-  ["dsarRequests", "dsarRequests"],
   ["assessments", "assessments"],
   ["assessmentTemplates", "assessmentTemplates"],
   ["incidents", "incidents"],

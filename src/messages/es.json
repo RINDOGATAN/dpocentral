@@ -7297,7 +7297,7 @@
         },
         "dsar": {
           "title": "Ejercicio de derechos",
-          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción. En el servicio alojado, se ofrecerá por separado, cuando esté disponible."
+          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción. En el servicio alojado está incluido, con hasta 100 solicitudes al mes por el formulario público (1.000 con la ampliación de volumen)."
         },
         "assessments": {
           "title": "Evaluaciones",
@@ -10017,7 +10017,6 @@
         "dataTransfers": "Transferencias",
         "vendors": "Proveedores",
         "vendorContracts": "Contratos con proveedores",
-        "dsarRequests": "Solicitudes de interesados",
         "assessments": "Evaluaciones",
         "assessmentTemplates": "Plantillas de evaluación",
         "incidents": "Incidencias",
@@ -10712,6 +10711,7 @@
     "staffNote": "Las solicitudes que registras tú no cuentan.",
     "volumeUsage": "Este mes el formulario público ha recibido {used} de sus {limit} solicitudes (el recuento vuelve a empezar el {date}).",
     "volumeUpgrade": "La ampliación de volumen sube el límite a {upgraded, number} solicitudes al mes por {price} al mes.",
+    "volumeUpgradeAskAdmin": "Puede contratarla el propietario o un administrador de tu organización",
     "volumeUpgradeLink": "Contratar la ampliación",
     "volumeUpgradeWrite": "Escribe a {email} para añadirla",
     "volumeMore": "Si necesitas más volumen, escríbenos."
