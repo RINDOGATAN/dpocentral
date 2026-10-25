@@ -244,6 +244,14 @@ describe("F5: the vendors card counts every vendor it lists", () => {
     expect(stats.activeVendors).toBe(0);
     expect(stats.totalVendors).toBe(3);
   });
+
+  it("carries no audit entries (they may hold requester details; the trail is for privacy staff)", async () => {
+    const stats = await callerFor(organizationRouter, sessionFor("user-1")).getDashboardStats({
+      organizationId: "org-1",
+    });
+    expect(stats).not.toHaveProperty("recentAuditLogs");
+    expect(mocks.prisma.auditLog.findMany).not.toHaveBeenCalled();
+  });
 });
 
 describe("F7: a blank client can be added in the Guided layout", () => {

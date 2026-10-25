@@ -407,7 +407,8 @@ export const organizationRouter = createTRPCRouter({
         organizationId: z.string(),
         name: z.string().min(1).max(200).optional(),
         domain: z.string().optional().nullable(),
-        settings: z.record(z.string(), z.any()).optional(),
+        // No free-form settings: the server keeps its own values there
+        // (pending invitations, signup region, quick-start state).
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -442,7 +443,6 @@ export const organizationRouter = createTRPCRouter({
         data: {
           name: input.name,
           domain,
-          settings: input.settings,
         },
       });
 
@@ -893,7 +893,6 @@ export const organizationRouter = createTRPCRouter({
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const now = new Date();
-      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       // The inventory counts follow the member's department limit, like the
       // inventory lists: a limited member is shown their department's figures,
       // not the whole organisation's.
@@ -912,7 +911,6 @@ export const organizationRouter = createTRPCRouter({
         openIncidents,
         activeVendors,
         totalVendors,
-        recentAuditLogs,
       ] = await Promise.all([
         ctx.prisma.dataAsset.count({
           where: { organizationId: ctx.organization.id, ...deptWhere },
@@ -962,20 +960,6 @@ export const organizationRouter = createTRPCRouter({
         ctx.prisma.vendor.count({
           where: { organizationId: ctx.organization.id },
         }),
-        ctx.prisma.auditLog.findMany({
-          where: {
-            organizationId: ctx.organization.id,
-            createdAt: { gte: thirtyDaysAgo },
-            ...(dsarOn ? {} : { entityType: { not: "DSARRequest" } }),
-          },
-          orderBy: { createdAt: "desc" },
-          take: 10,
-          include: {
-            user: {
-              select: { name: true, email: true },
-            },
-          },
-        }),
       ]);
 
       return {
@@ -987,7 +971,6 @@ export const organizationRouter = createTRPCRouter({
         openIncidents,
         activeVendors,
         totalVendors,
-        recentAuditLogs,
       };
     }),
 });

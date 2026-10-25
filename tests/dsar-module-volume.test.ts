@@ -365,6 +365,24 @@ describe("the public form on the hosted service", () => {
     ).resolves.toMatchObject({ id: "dsar-1" });
   });
 
+  it("the organisation audit entry for a staff-entered request records only its type and reference", async () => {
+    const c = staff(org(PAID));
+    await c.create({
+      organizationId: "org-a",
+      type: "ACCESS",
+      requesterName: "R",
+      requesterEmail: "r@test.example",
+      requesterPhone: "+34 600 000 000",
+      requesterAddress: "Calle 1",
+      description: "Quiero mis datos",
+    });
+    const entry = mocks.prisma.auditLog.create.mock.calls
+      .map((call) => call[0].data)
+      .find((d) => d.entityType === "DSARRequest" && d.action === "CREATE");
+    expect(Object.keys(entry.changes).sort()).toEqual(["requestId", "type"]);
+    expect(JSON.stringify(entry.changes)).not.toMatch(/r@test\.example|600 000|Calle|Quiero/);
+  });
+
   it("module access: no upgrade link offered while none is set; with one, it carries the signed organisation reference", async () => {
     const c = staff(org({ ...PAID, id: "orgA1" }));
     mocks.prisma.auditLog.count.mockResolvedValue(60);
