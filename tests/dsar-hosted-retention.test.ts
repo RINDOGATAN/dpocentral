@@ -280,7 +280,7 @@ describe("support read", () => {
         dsarRequestId: "dsar-1",
         action: SUPPORT_ACTION,
         performedBy: "SUPPORT:op",
-        details: { reason: "ticket 9", at: NOW.toISOString() },
+        details: { reason: "ticket 9", at: NOW.toISOString(), identityShown: false, contentShown: false },
       },
     });
   });
