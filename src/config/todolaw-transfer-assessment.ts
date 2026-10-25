@@ -5,10 +5,10 @@
  * The ready-made transfer impact assessment (TIA, in Spanish EIT) for the
  * TODO.LAW transfer that every hosted organisation holds
  * (src/server/services/todolaw-processor.ts): RINDOGATAN LLC, the processor,
- * is a United States company that is not certified under the EU-US Data
- * Privacy Framework; the data stays in Frankfurt and its staff may reach it
- * from the United States, under the EU standard contractual clauses, Module
- * Two, incorporated into the processing agreement (clause 9).
+ * is a United States company and no adequacy decision covers the transfer;
+ * the data stays in Frankfurt and its staff may reach it from the United
+ * States, under the EU standard contractual clauses, Module Two, incorporated
+ * into the processing agreement (clause 9), and the supplementary measures.
  *
  * The answers follow the system TIA template (src/config/assessment-templates-v2.ts,
  * six steps of EDPB Recommendations 01/2020) and describe only the measures
@@ -31,7 +31,7 @@ export const TODOLAW_TIA_CHOICES: Record<string, string | string[] | boolean> = 
   tiav2_1_2: "Module 2: controller to processor",
   tiav2_1_3: ["Contact details", "Identifiers"],
   tiav2_1_5: false,
-  tiav2_2_1: "Yes, partial adequacy",
+  tiav2_2_1: "No adequacy decision",
   tiav2_2_2: "Access exists but with effective oversight and safeguards",
   tiav2_2_3: "No: never received such a request",
   tiav2_2_4: "Yes: independent judicial review",
@@ -49,7 +49,6 @@ export const TODOLAW_TIA_CHOICES: Record<string, string | string[] | boolean> = 
   tiav2_4_3: "Yes: essentially equivalent protection",
   tiav2_5_1: [
     "New legislation or executive order in the destination",
-    "Adequacy decision revoked or challenged",
     "The importer receives a government access request",
     "Change in data categories or volume",
     "Change of sub-processor or onward transfer",
@@ -65,9 +64,9 @@ export const TODOLAW_TIA_TEXT: Record<PilotDpaLocale, Record<string, string>> = 
       "Exporter: the organisation, as controller, established in the European Economic Area. Importer: RINDOGATAN LLC (TODO.LAW), a Wyoming company in the United States, as processor under the processing agreement accepted when the organisation was opened. " +
       "The data (the accounts of the organisation's users and what its team records in the programme, including rights requests where the module is used) is stored in European Union data centres in Frankfurt, and the server functions run there too. " +
       "The transfer takes the form of remote access by a small number of the importer's staff from the United States, only to provide, maintain or protect the service or to help the organisation when it asks (processing agreement, clause 6). " +
-      "Onward transfers go only to the sub-processors listed in Annex III of the agreement, several of them United States companies, each under the Data Privacy Framework where certified and otherwise under standard contractual clauses. AI features are off by default; only if an administrator switches them on are the details of the record being drafted sent to the AI provider in Annex III.",
+      "Onward transfers go only to the sub-processors listed in Annex III of the agreement, several of them United States companies, each with the transfer safeguards stated in that annex. AI features are off by default; only if an administrator switches them on are the details of the record being drafted sent to the AI provider in Annex III.",
     tiav2_2_5:
-      "The United States has an adequacy decision of 10 July 2023 (EU-US Data Privacy Framework), but it covers only certified organisations, and RINDOGATAN LLC is not certified; the transfer therefore relies on the standard contractual clauses. " +
+      "No adequacy decision covers this transfer: it relies on the standard contractual clauses (Module Two) and the supplementary measures in step 3. " +
       "The laws considered are Section 702 of the Foreign Intelligence Surveillance Act (the importer hosts customer data and may qualify as a provider that can receive directives), Executive Order 12333 (collection outside the United States, including in transit) and the CLOUD Act (orders to providers subject to US jurisdiction, wherever the data is stored). " +
       "Executive Order 14086 limits signals intelligence to what is necessary and proportionate and created the Data Protection Review Court; those safeguards apply to data of people in the EU whatever transfer tool is used. " +
       "In practice, the importer has not received any government request for access to customer data to date, and the data (privacy programme records of businesses and the rights requests they receive) is of low interest for intelligence purposes.",
@@ -79,16 +78,16 @@ export const TODOLAW_TIA_TEXT: Record<PilotDpaLocale, Record<string, string>> = 
       "Organisational: staff are bound by written confidentiality commitments (clause 6); the importer has a representative in the Union (clause 15). " +
       "Taken together, and given the low likelihood of access, the measures address the risks identified.",
     tiav2_4_4:
-      "None beyond the measures described. Re-evaluate at least every twelve months, and at once if the importer receives a government access request, if the Data Privacy Framework or Executive Order 14086 changes, or if the sub-processors change.",
+      "None beyond the measures described. Re-evaluate at least every twelve months, and at once if the importer receives a government access request, if Executive Order 14086 or the US laws considered in step 2 change, or if the sub-processors change.",
   },
   es: {
     tiav2_1_4:
       "Exportador: la organización, como responsable, establecida en el Espacio Económico Europeo. Importador: RINDOGATAN LLC (TODO.LAW), sociedad de Wyoming (Estados Unidos), como encargado con el contrato de encargo aceptado al abrir la organización. " +
       "Los datos (las cuentas de los usuarios de la organización y lo que su equipo registra en el programa, incluidas las solicitudes de derechos si se usa el módulo) se guardan en centros de datos de la Unión Europea, en Fráncfort, y las funciones de servidor también se ejecutan allí. " +
       "La transferencia consiste en el acceso remoto de un número reducido de personas del importador desde Estados Unidos, solo para prestar, mantener o proteger el servicio o para ayudar a la organización cuando lo pide (contrato de encargo, cláusula 6). " +
-      "Las transferencias ulteriores van solo a los subencargados del anexo III del contrato, varios de ellos sociedades estadounidenses, cada uno con el Marco de Privacidad de Datos si está certificado y, si no, con SCC. Las funciones de IA están desactivadas por defecto; solo si un administrador las activa se envían los datos del registro que se redacta al proveedor de IA del anexo III.",
+      "Las transferencias ulteriores van solo a los subencargados del anexo III del contrato, varios de ellos sociedades estadounidenses, cada uno con las garantías de transferencia que indica ese anexo. Las funciones de IA están desactivadas por defecto; solo si un administrador las activa se envían los datos del registro que se redacta al proveedor de IA del anexo III.",
     tiav2_2_5:
-      "Estados Unidos tiene una decisión de adecuación de 10 de julio de 2023 (Marco de Privacidad de Datos UE-EE. UU.), pero solo cubre a las organizaciones certificadas, y RINDOGATAN LLC no lo está; por eso la transferencia se basa en las SCC. " +
+      "Ninguna decisión de adecuación cubre esta transferencia: se basa en las SCC (módulo 2) y en las medidas complementarias del paso 3. " +
       "Se han tenido en cuenta el artículo 702 de la Ley de Vigilancia de Inteligencia Extranjera (el importador aloja datos de clientes y puede considerarse un proveedor que recibe requerimientos), la Orden Ejecutiva 12333 (recogida fuera de Estados Unidos, también en tránsito) y la CLOUD Act (órdenes a proveedores sujetos a la jurisdicción estadounidense, estén donde estén los datos). " +
       "La Orden Ejecutiva 14086 limita la inteligencia de señales a lo necesario y proporcionado y crea el Tribunal de Revisión de la Protección de Datos; esas garantías se aplican a los datos de personas de la UE sea cual sea el instrumento de transferencia. " +
       "En la práctica, el importador no ha recibido hasta hoy ninguna solicitud de acceso de las autoridades a datos de clientes, y los datos (registros de programas de privacidad de empresas y las solicitudes de derechos que reciben) tienen poco interés para fines de inteligencia.",
@@ -100,7 +99,7 @@ export const TODOLAW_TIA_TEXT: Record<PilotDpaLocale, Record<string, string>> = 
       "Organizativas: el personal está obligado por compromisos de confidencialidad por escrito (cláusula 6); el importador tiene un representante en la Unión (cláusula 15). " +
       "En conjunto, y dada la baja probabilidad de acceso, las medidas cubren los riesgos identificados.",
     tiav2_4_4:
-      "Ninguna además de las medidas descritas. Vuelve a evaluarla al menos cada doce meses, y en cuanto el importador reciba una solicitud de acceso de las autoridades, cambien el Marco de Privacidad de Datos o la Orden Ejecutiva 14086, o cambien los subencargados.",
+      "Ninguna además de las medidas descritas. Vuelve a evaluarla al menos cada doce meses, y en cuanto el importador reciba una solicitud de acceso de las autoridades, cambien la Orden Ejecutiva 14086 o las leyes estadounidenses del paso 2, o cambien los subencargados.",
   },
 };
 

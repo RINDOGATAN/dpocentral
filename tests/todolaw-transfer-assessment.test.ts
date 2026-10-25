@@ -49,4 +49,10 @@ describe("the ready-made TODO.LAW transfer assessment", () => {
     expect(all).not.toMatch(/\bCCT\b/);
     expect(all).not.toContain("—");
   });
+
+  it("relies on the SCC and the measures, with no adequacy or Data Privacy Framework claim", () => {
+    const all = JSON.stringify([TODOLAW_TIA_TEXT, TODOLAW_CHECKLIST, TODOLAW_TIA_CHOICES]);
+    expect(TODOLAW_TIA_CHOICES.tiav2_2_1).toBe("No adequacy decision");
+    expect(all).not.toMatch(/Privacy Framework|Marco de Privacidad|\bDPF\b|partial adequacy/i);
+  });
 });
