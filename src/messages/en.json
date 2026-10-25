@@ -746,7 +746,137 @@
         "activityLink": "Processing activity: {name}",
         "noActivity": "No processing activity linked",
         "vendorLink": "Vendor: {name}",
-        "noVendor": "No vendor linked"
+        "noVendor": "No vendor linked",
+        "checklistCategories": {
+          "know": "Know your transfers",
+          "tool": "Identify the transfer tool",
+          "law": "Assess the destination country's law",
+          "measures": "Supplementary measures",
+          "procedural": "Procedural steps",
+          "monitor": "Monitor developments"
+        },
+        "checklistItems": {
+          "s2_1_map_transfers": {
+            "question": "Have you mapped all international transfers of personal data, including onward transfers by processors?",
+            "help": "List every data flow leaving the EEA, including those of sub-processors, cloud providers and support teams."
+          },
+          "s2_1_verify_necessity": {
+            "question": "Is each transfer necessary, or could the processing take place within the EEA?",
+            "help": "Consider whether the same result could be achieved without sending data to a third country. Data minimisation applies to transfers too."
+          },
+          "s2_2_identify_mechanism": {
+            "question": "Have you identified the transfer mechanism under GDPR Chapter V for each transfer (adequacy, SCC, BCR, derogation)?",
+            "help": "Each transfer must rely on one of the mechanisms in Articles 45 to 49 GDPR. Record which one applies and check that it is current."
+          },
+          "s2_2_scc_version": {
+            "question": "If you use SCC, are they the current European Commission clauses (2021)?",
+            "help": "The old clauses (2001 and 2010) are no longer valid. Every agreement must use the 2021 clauses."
+          },
+          "s2_3_assess_laws": {
+            "question": "Have you assessed whether the destination country's law offers essentially equivalent protection?",
+            "help": "Consider surveillance powers, data protection law, the rule of law and effective remedies for data subjects. The EDPB recommendations give guidance."
+          },
+          "s2_3_access_requests": {
+            "question": "Have you assessed whether public authorities in the destination country can access the transferred data?",
+            "help": "Assess the legal framework for government access (national security, law enforcement) and whether it is limited to what is necessary and proportionate."
+          },
+          "s2_3_practical_experience": {
+            "question": "Have you considered practical experience of government access requests?",
+            "help": "Ask the importer which government access requests it has received, to complete the legal analysis."
+          },
+          "s2_4_supplementary_needed": {
+            "question": "If the assessment shows gaps, have you identified supplementary measures to close them?",
+            "help": "Measures can be technical (encryption, pseudonymisation), contractual (additional clauses) or organisational (policies, audits)."
+          },
+          "s2_4_measures_effective": {
+            "question": "Do the supplementary measures ensure essentially equivalent protection in practice?",
+            "help": "Technical measures are usually the most effective. Contractual and organisational measures alone may not be enough if the law allows disproportionate government access."
+          },
+          "s2_5_formal_steps": {
+            "question": "Have you taken the formal steps the chosen mechanism requires (for example, authority approval of BCR)?",
+            "help": "Some mechanisms need prior approval or notice to the supervisory authority. Check that every procedural requirement is met."
+          },
+          "s2_5_documentation": {
+            "question": "Have you documented the transfer impact assessment (TIA) and its conclusions?",
+            "help": "Keep a record of your assessment as part of accountability (Article 5(2) GDPR). Review and update the TIA regularly."
+          },
+          "s2_6_monitor": {
+            "question": "Do you have a process to monitor legal and political developments in the destination country?",
+            "help": "Changes in law, court rulings or enforcement may affect your transfer mechanism. Set up alerts and schedule periodic reviews."
+          },
+          "s2_6_suspend_plan": {
+            "question": "Do you have a plan to suspend transfers if protection can no longer be ensured?",
+            "help": "If protection is no longer essentially equivalent and measures cannot remedy it, you must suspend the transfer and, where needed, notify the supervisory authority."
+          }
+        },
+        "measures": {
+          "tech_encryption_transit": {
+            "name": "Encryption in transit",
+            "description": "TLS 1.2 or higher, or equivalent, for all data in transit. Keys are managed within the EEA or an adequate country."
+          },
+          "tech_encryption_rest": {
+            "name": "Encryption at rest",
+            "description": "Personal data encrypted at rest with AES-256 or equivalent. Keys held by the exporter or a trusted third party in an adequate jurisdiction, out of reach of the importer and of third-country authorities."
+          },
+          "tech_pseudonymization": {
+            "name": "Pseudonymisation",
+            "description": "Directly identifying data replaced with pseudonyms before the transfer. The mapping table stays in the EEA, out of the importer's reach."
+          },
+          "tech_access_controls": {
+            "name": "Strict access controls",
+            "description": "Role-based access, multi-factor authentication and least privilege on every system that processes the transferred data."
+          },
+          "tech_split_processing": {
+            "name": "Split or multi-party processing",
+            "description": "Data spread across several jurisdictions or providers so that no single party in a non-adequate country holds the complete dataset."
+          },
+          "cont_enhanced_clauses": {
+            "name": "Enhanced contractual clauses",
+            "description": "Specific obligations for the importer to challenge disproportionate government access requests and to notify the exporter promptly."
+          },
+          "cont_transparency_obligations": {
+            "name": "Transparency obligations",
+            "description": "The importer reports regularly on government access requests received and confirms it meets its obligations."
+          },
+          "cont_audit_rights": {
+            "name": "Audit rights",
+            "description": "A contractual right to audit the importer's compliance with the transfer safeguards, including unannounced audits."
+          },
+          "cont_warrant_canary": {
+            "name": "Notice of access requests",
+            "description": "A clause requiring the importer to notify the exporter of any legally binding access request by a public authority, as far as the law allows."
+          },
+          "org_policies": {
+            "name": "Internal policies and procedures",
+            "description": "Internal policies for government access requests, with escalation, legal review and records."
+          },
+          "org_training": {
+            "name": "Staff training",
+            "description": "Regular training for the people who process the transferred data on their GDPR obligations and the safeguards in place."
+          },
+          "org_dpo_involvement": {
+            "name": "DPO involvement",
+            "description": "The data protection officer takes part in assessing and monitoring international transfers and has access to all TIA documents."
+          },
+          "org_certification": {
+            "name": "Certifications and standards",
+            "description": "Importers that hold relevant certifications (ISO 27001, SOC 2, ISO 27701) showing mature security and privacy controls are required or preferred."
+          }
+        },
+        "checklistState": {
+          "DONE": "Done",
+          "NA": "Not applicable",
+          "PENDING": "Pending"
+        },
+        "checklistSummary": "{pending, plural, =0 {Every point is answered.} one {# point pending out of {total}.} other {# points pending out of {total}.}}",
+        "checklistNote": "Note (optional)",
+        "checklistNoteSave": "Save note",
+        "checklistGo": {
+          "measures": "Go to supplementary measures",
+          "tia": "Open the TIA",
+          "edit": "Edit the transfer",
+          "transfers": "See all transfers"
+        }
       },
       "edit": {
         "title": "Edit transfer compliance",
@@ -3466,6 +3596,7 @@
       "VIEWED": "Opened",
       "GENERATE_DPA": "Data processing agreement generated",
       "UPDATE_COMPLIANCE": "Compliance updated",
+      "UPDATE_CHECKLIST": "Transfer checklist updated",
       "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
       "REQUEST_CREATED": "Request created",
       "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
@@ -10985,6 +11116,7 @@
       "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
       "GENERATE_DPA": "Data processing agreement generated",
       "UPDATE_COMPLIANCE": "Compliance updated",
+      "UPDATE_CHECKLIST": "Transfer checklist updated",
       "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
       "REQUEST_CREATED": "Request created",
       "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",

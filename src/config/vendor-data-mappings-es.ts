@@ -391,7 +391,7 @@ export const VENDOR_QUICKSTART_TEXT = {
     transferName: (vendor: string, country: string) => `Transferencia a ${vendor} (${country})`,
     transferDescription: (vendor: string, country: string) =>
       `Transferencia de datos a los servidores de ${vendor} en ${country}`,
-    transferSafeguards: "Cláusulas contractuales tipo (CCT) con medidas complementarias",
+    transferSafeguards: "Cláusulas contractuales tipo (SCC) con medidas complementarias",
     transferSafeguardsDpf:
       "El proveedor declara estar certificado en el Marco de Privacidad de Datos UE-EE. UU. (DPF). Comprueba su inscripción en la lista del DPF (dataprivacyframework.gov) y regístrala en esta transferencia; hasta entonces, la decisión de adecuación no la cubre.",
   },

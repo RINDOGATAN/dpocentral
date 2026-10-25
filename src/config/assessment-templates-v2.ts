@@ -384,7 +384,7 @@ const tiaV2: V2Template = {
           id: "tiav2_1_2",
           type: "select",
           showIf: whenAnyOf("tiav2_1_1", ["Standard Contractual Clauses (Art. 46)"]),
-          text: L("Which SCC module applies?", "¿Qué módulo de las CCT se aplica?"),
+          text: L("Which SCC module applies?", "¿Qué módulo de las SCC se aplica?"),
           options: [
             L("Module 1: controller to controller", "Módulo 1: de responsable a responsable"),
             L("Module 2: controller to processor", "Módulo 2: de responsable a encargado"),
@@ -549,7 +549,7 @@ const tiaV2: V2Template = {
           ],
           help: L(
             "Contract terms bind the importer to resist and report access and to let the exporter act. Example: \"Duty to challenge and to notify, plus a suspension clause.\" Source: EDPB Recommendations 01/2020, Annex 2; SCC clause 15.",
-            "Las cláusulas contractuales obligan al importador a resistir e informar del acceso y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las CCT.",
+            "Las cláusulas contractuales obligan al importador a resistir e informar del acceso y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las SCC.",
           ),
         },
         {

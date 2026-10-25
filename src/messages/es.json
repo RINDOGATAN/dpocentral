@@ -690,7 +690,7 @@
         "needsReview": "Requiere revisión",
         "nonCompliant": "No conforme",
         "expiring30d": "Caduca en 30 días",
-        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en CCT no tiene} other {<b>#</b> transferencias basadas en CCT no tienen}} aún evaluación de impacto de la transferencia (EIT). Tras Schrems II, las CCT exigen una EIT.",
+        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en SCC no tiene} other {<b>#</b> transferencias basadas en SCC no tienen}} aún evaluación de impacto de la transferencia (EIT). Tras Schrems II, las SCC exigen una EIT.",
         "all": "Todas las transferencias",
         "allSubtitle": "Pulsa una transferencia para revisar los detalles de cumplimiento y la lista de comprobación de Schrems II.",
         "empty": "Aún no hay transferencias registradas",
@@ -698,7 +698,7 @@
         "linkedTo": "vinculada a {name}",
         "tiaDone": "EIT hecha",
         "tiaPending": "EIT pendiente",
-        "sccExpires": "Las CCT caducan el {date}",
+        "sccExpires": "Las SCC caducan el {date}",
         "create": "Crear",
         "descriptionLabel": "Descripción"
       },
@@ -722,7 +722,7 @@
         "complianceStatus": "Estado de cumplimiento",
         "suggestedFromData": "Sugerido a partir de los datos actuales: <b>{status}</b>",
         "schremsTitle": "Lista de comprobación Schrems II",
-        "schremsSubtitle": "Diligencia debida exigida para las transferencias basadas en CCT a jurisdicciones sin adecuación (TJUE, C-311/18).",
+        "schremsSubtitle": "Diligencia debida exigida para las transferencias basadas en SCC a jurisdicciones sin adecuación (TJUE, C-311/18).",
         "required": "Obligatorio",
         "supplementaryTitle": "Medidas complementarias",
         "supplementarySubtitle": "Activa las medidas técnicas, contractuales y organizativas adicionales que tengas implantadas.",
@@ -730,7 +730,7 @@
         "category_contractual": "Contractuales",
         "category_organizational": "Organizativas",
         "measuresActive": "{count, plural, one {# medida activa} other {# medidas activas}}",
-        "sccExpires": "Las CCT caducan el {date}.",
+        "sccExpires": "Las SCC caducan el {date}.",
         "sccExpired": "Estas cláusulas ya han caducado: renuévalas de inmediato.",
         "sccExpiringSoon": "{count, plural, one {Solo queda # día: programa la renovación.} other {Solo quedan # días: programa la renovación.}}",
         "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
@@ -739,14 +739,144 @@
         "startTia": "Iniciar EIT",
         "withinEea": "Dentro del EEE (no es una transferencia restringida)",
         "partialUnconfirmedBadge": "Adecuación parcial: sin confirmar",
-        "partialUnconfirmedBody": "Este registro no indica que el destinatario esté dentro de ese ámbito, así que la decisión no cubre la transferencia: se aplica la garantía registrada abajo (con CCT, hace falta una evaluación de impacto de la transferencia).",
+        "partialUnconfirmedBody": "Este registro no indica que el destinatario esté dentro de ese ámbito, así que la decisión no cubre la transferencia: se aplica la garantía registrada abajo (con SCC, hace falta una evaluación de impacto de la transferencia).",
         "recordScope": "Registrar la situación del destinatario",
         "scopeCheckedOn": "Comprobado el {date}.",
         "scopeReference": "Referencia: {reference}",
         "activityLink": "Actividad de tratamiento: {name}",
         "noActivity": "Sin actividad de tratamiento vinculada",
         "vendorLink": "Proveedor: {name}",
-        "noVendor": "Sin proveedor vinculado"
+        "noVendor": "Sin proveedor vinculado",
+        "checklistCategories": {
+          "know": "Conoce tus transferencias",
+          "tool": "Identifica el instrumento de transferencia",
+          "law": "Evalúa la legislación del país de destino",
+          "measures": "Medidas complementarias",
+          "procedural": "Trámites",
+          "monitor": "Seguimiento"
+        },
+        "checklistItems": {
+          "s2_1_map_transfers": {
+            "question": "¿Has inventariado todas las transferencias internacionales de datos personales, incluidas las transferencias ulteriores de los encargados?",
+            "help": "Enumera cada flujo de datos que sale del EEE, incluidos los de subencargados, proveedores de nube y equipos de soporte."
+          },
+          "s2_1_verify_necessity": {
+            "question": "¿Es necesaria cada transferencia o podría hacerse el tratamiento dentro del EEE?",
+            "help": "Valora si se obtiene el mismo resultado sin enviar datos a un tercer país. La minimización de datos también se aplica a las transferencias."
+          },
+          "s2_2_identify_mechanism": {
+            "question": "¿Has identificado el instrumento de transferencia del capítulo V del RGPD para cada transferencia (adecuación, SCC, NCV, excepción)?",
+            "help": "Cada transferencia debe basarse en uno de los instrumentos de los artículos 45 a 49 del RGPD. Anota cuál se aplica y comprueba que está vigente."
+          },
+          "s2_2_scc_version": {
+            "question": "Si usas SCC, ¿son las cláusulas vigentes de la Comisión Europea (2021)?",
+            "help": "Las cláusulas antiguas (2001 y 2010) ya no son válidas. Todos los contratos deben usar las de 2021."
+          },
+          "s2_3_assess_laws": {
+            "question": "¿Has evaluado si la legislación del país de destino ofrece una protección esencialmente equivalente?",
+            "help": "Ten en cuenta las facultades de vigilancia, la legislación de protección de datos, el Estado de Derecho y las vías de recurso efectivas para los interesados. Las recomendaciones del CEPD orientan este análisis."
+          },
+          "s2_3_access_requests": {
+            "question": "¿Has evaluado si las autoridades públicas del país de destino pueden acceder a los datos transferidos?",
+            "help": "Analiza el marco jurídico del acceso público (seguridad nacional, persecución de delitos) y si se limita a lo necesario y proporcionado."
+          },
+          "s2_3_practical_experience": {
+            "question": "¿Has tenido en cuenta la experiencia práctica con solicitudes de acceso de las autoridades?",
+            "help": "Pide al importador qué solicitudes de acceso de las autoridades ha recibido, para completar el análisis jurídico."
+          },
+          "s2_4_supplementary_needed": {
+            "question": "Si la evaluación muestra carencias, ¿has identificado medidas complementarias para cubrirlas?",
+            "help": "Las medidas pueden ser técnicas (cifrado, seudonimización), contractuales (cláusulas adicionales) u organizativas (políticas, auditorías)."
+          },
+          "s2_4_measures_effective": {
+            "question": "¿Garantizan las medidas complementarias, en la práctica, una protección esencialmente equivalente?",
+            "help": "Las medidas técnicas suelen ser las más eficaces. Las contractuales y organizativas por sí solas pueden no bastar si la ley permite un acceso público desproporcionado."
+          },
+          "s2_5_formal_steps": {
+            "question": "¿Has hecho los trámites que exige el instrumento elegido (por ejemplo, la aprobación de unas NCV por la autoridad)?",
+            "help": "Algunos instrumentos requieren autorización previa o aviso a la autoridad de control. Comprueba que se cumplen todos los requisitos de procedimiento."
+          },
+          "s2_5_documentation": {
+            "question": "¿Has documentado la evaluación de impacto de la transferencia (EIT) y sus conclusiones?",
+            "help": "Conserva tu evaluación como parte de la responsabilidad proactiva (artículo 5.2 del RGPD). Revisa y actualiza la EIT con regularidad."
+          },
+          "s2_6_monitor": {
+            "question": "¿Tienes un procedimiento para seguir la evolución legal y política del país de destino?",
+            "help": "Los cambios legislativos, las sentencias o la práctica de las autoridades pueden afectar a tu instrumento de transferencia. Configura avisos y programa revisiones periódicas."
+          },
+          "s2_6_suspend_plan": {
+            "question": "¿Tienes un plan para suspender las transferencias si ya no puede garantizarse la protección?",
+            "help": "Si la protección deja de ser esencialmente equivalente y las medidas no lo remedian, debes suspender la transferencia y, cuando proceda, avisar a la autoridad de control."
+          }
+        },
+        "measures": {
+          "tech_encryption_transit": {
+            "name": "Cifrado en tránsito",
+            "description": "TLS 1.2 o superior, o equivalente, para todos los datos en tránsito. Las claves se gestionan dentro del EEE o en un país adecuado."
+          },
+          "tech_encryption_rest": {
+            "name": "Cifrado en reposo",
+            "description": "Datos personales cifrados en reposo con AES-256 o equivalente. Claves en poder del exportador o de un tercero de confianza en una jurisdicción adecuada, fuera del alcance del importador y de las autoridades del tercer país."
+          },
+          "tech_pseudonymization": {
+            "name": "Seudonimización",
+            "description": "Los datos que identifican directamente se sustituyen por seudónimos antes de la transferencia. La tabla de correspondencias se queda en el EEE, fuera del alcance del importador."
+          },
+          "tech_access_controls": {
+            "name": "Controles de acceso estrictos",
+            "description": "Acceso por funciones, autenticación multifactor y mínimo privilegio en todos los sistemas que tratan los datos transferidos."
+          },
+          "tech_split_processing": {
+            "name": "Tratamiento dividido o entre varias partes",
+            "description": "Datos repartidos entre varias jurisdicciones o proveedores, de modo que nadie en un país no adecuado tenga el conjunto completo."
+          },
+          "cont_enhanced_clauses": {
+            "name": "Cláusulas contractuales reforzadas",
+            "description": "Obligaciones concretas para que el importador impugne las solicitudes de acceso desproporcionadas de las autoridades y avise enseguida al exportador."
+          },
+          "cont_transparency_obligations": {
+            "name": "Obligaciones de transparencia",
+            "description": "El importador informa con regularidad de las solicitudes de acceso recibidas y confirma que cumple sus obligaciones."
+          },
+          "cont_audit_rights": {
+            "name": "Derecho de auditoría",
+            "description": "Derecho contractual a auditar el cumplimiento de las garantías por parte del importador, incluidas auditorías sin previo aviso."
+          },
+          "cont_warrant_canary": {
+            "name": "Aviso de solicitudes de acceso",
+            "description": "Cláusula que obliga al importador a avisar al exportador de toda solicitud de acceso jurídicamente vinculante de una autoridad pública, en la medida en que la ley lo permita."
+          },
+          "org_policies": {
+            "name": "Políticas y procedimientos internos",
+            "description": "Políticas internas para las solicitudes de acceso de las autoridades, con escalado, revisión jurídica y registro."
+          },
+          "org_training": {
+            "name": "Formación del personal",
+            "description": "Formación periódica de quienes tratan los datos transferidos sobre sus obligaciones del RGPD y las garantías aplicadas."
+          },
+          "org_dpo_involvement": {
+            "name": "Participación del DPD",
+            "description": "El delegado de protección de datos participa en la evaluación y el seguimiento de las transferencias y accede a toda la documentación de la EIT."
+          },
+          "org_certification": {
+            "name": "Certificaciones y normas",
+            "description": "Se exige o se prefiere a importadores con certificaciones pertinentes (ISO 27001, SOC 2, ISO 27701) que acrediten controles maduros de seguridad y privacidad."
+          }
+        },
+        "checklistState": {
+          "DONE": "Hecho",
+          "NA": "No aplica",
+          "PENDING": "Pendiente"
+        },
+        "checklistSummary": "{pending, plural, =0 {Todos los puntos están respondidos.} one {Queda # punto pendiente de {total}.} other {Quedan # puntos pendientes de {total}.}}",
+        "checklistNote": "Nota (opcional)",
+        "checklistNoteSave": "Guardar nota",
+        "checklistGo": {
+          "measures": "Ir a las medidas complementarias",
+          "tia": "Abrir la EIT",
+          "edit": "Editar la transferencia",
+          "transfers": "Ver todas las transferencias"
+        }
       },
       "edit": {
         "title": "Editar cumplimiento de la transferencia",
@@ -754,15 +884,15 @@
         "complianceStatusSubtitle": "Ajuste manual del estado de cumplimiento de la transferencia",
         "status": "Estado",
         "tia": "Evaluación de impacto de la transferencia (EIT)",
-        "tiaSubtitle": "Obligatoria para transferencias basadas en CCT a jurisdicciones sin adecuación (Schrems II).",
+        "tiaSubtitle": "Obligatoria para transferencias basadas en SCC a jurisdicciones sin adecuación (Schrems II).",
         "tiaCompleted": "EIT completada",
         "tiaDate": "Fecha de finalización de la EIT",
-        "sccAndSafeguards": "CCT y salvaguardas",
-        "sccAndSafeguardsSubtitle": "Validez de las CCT y salvaguardas adicionales",
-        "sccExpiry": "Fecha de caducidad de las CCT",
+        "sccAndSafeguards": "SCC y salvaguardas",
+        "sccAndSafeguardsSubtitle": "Validez de las SCC y salvaguardas adicionales",
+        "sccExpiry": "Fecha de caducidad de las SCC",
         "sccExpiryHelp": "Fecha en la que caducan las cláusulas contractuales. Las transferencias que caduquen en 30 días aparecen en el panel de cumplimiento.",
         "safeguards": "Salvaguardas (descripción)",
-        "safeguardsPlaceholder": "p. ej., CCT de la UE de 2021, módulo 2 + cifrado en reposo + EIPD",
+        "safeguardsPlaceholder": "p. ej., SCC de la UE de 2021, módulo 2 + cifrado en reposo + EIPD",
         "saving": "Guardando...",
         "save": "Guardar cambios",
         "errorPrefix": "Error: {message}",
@@ -778,7 +908,7 @@
       },
       "adequacy": {
         "withinEea": "{country} está en el EEE: no es una transferencia internacional restringida y no necesita garantías del capítulo V.",
-        "none": "{country} no tiene decisión de adecuación de la UE: elige una garantía (por ejemplo, CCT) y completa una evaluación de impacto de la transferencia.",
+        "none": "{country} no tiene decisión de adecuación de la UE: elige una garantía (por ejemplo, SCC) y completa una evaluación de impacto de la transferencia.",
         "full": "{country} tiene una decisión de adecuación de la UE: esta transferencia no necesita más garantías.",
         "partialTitle": "{country}: la decisión de adecuación solo cubre a algunos destinatarios",
         "partialBody": {
@@ -1571,13 +1701,13 @@
       },
       "contractDialog": {
         "title": "Añadir contrato",
-        "subtitle": "Registra un contrato, un contrato de encargo del tratamiento o unas CCT para este proveedor.",
+        "subtitle": "Registra un contrato, un contrato de encargo del tratamiento o unas SCC para este proveedor.",
         "nameLabel": "Nombre *",
         "namePlaceholder": "p. ej., Contrato marco de servicios 2026",
         "typeLabel": "Tipo *",
         "type": {
           "DPA": "DPA (contrato de encargo del tratamiento)",
-          "SCC": "CCT (cláusulas contractuales tipo)",
+          "SCC": "SCC (cláusulas contractuales tipo)",
           "MSA": "MSA (contrato marco de servicios)",
           "NDA": "NDA (acuerdo de confidencialidad)",
           "OTHER": "Otro"
@@ -2710,7 +2840,7 @@
         "mechanismLabel": "Mecanismo de transferencia",
         "mechanismPlaceholder": "Selecciona un mecanismo...",
         "safeguardsLabel": "Garantías",
-        "safeguardsPlaceholder": "p. ej., CCT UE (2021) + medidas complementarias",
+        "safeguardsPlaceholder": "p. ej., SCC UE (2021) + medidas complementarias",
         "descriptionLabel": "Descripción",
         "create": "Crear",
         "countryHint": "Se guarda con su código ISO 3166 de dos letras (por ejemplo, IN para India).",
@@ -2731,7 +2861,7 @@
       },
       "mechanism": {
         "ADEQUACY_DECISION": "Decisión de adecuación",
-        "STANDARD_CONTRACTUAL_CLAUSES": "CCT",
+        "STANDARD_CONTRACTUAL_CLAUSES": "SCC",
         "BINDING_CORPORATE_RULES": "NCV",
         "DEROGATION": "Excepción",
         "CERTIFICATION": "Certificación",
@@ -3391,7 +3521,7 @@
       "DPA": "Contrato de encargo",
       "MSA": "MSA",
       "NDA": "NDA",
-      "SCC": "CCT",
+      "SCC": "SCC",
       "SUBPROCESSOR": "Subencargado",
       "OTHER": "Otro"
     },
@@ -3466,6 +3596,7 @@
       "VIEWED": "Consultada",
       "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
       "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "UPDATE_CHECKLIST": "Lista de comprobación de la transferencia actualizada",
       "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
       "REQUEST_CREATED": "Solicitud creada",
       "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
@@ -4943,7 +5074,7 @@
         "authority": "Autoridad"
       },
       "transferExposure": "Exposición a transferencias internacionales",
-      "transferDesc": "Las transferencias de datos a países sin decisión de adecuación requieren garantías adicionales, como cláusulas contractuales tipo (CCT), normas corporativas vinculantes (NCV) o mecanismos de certificación aprobados.",
+      "transferDesc": "Las transferencias de datos a países sin decisión de adecuación requieren garantías adicionales, como cláusulas contractuales tipo (SCC), normas corporativas vinculantes (NCV) o mecanismos de certificación aprobados.",
       "transferColumns": {
         "country": "País",
         "transfers": "Transferencias",
@@ -5485,7 +5616,7 @@
           "schremsIi": "Lista de verificación de Schrems II",
           "adequacy": "Decisiones de adecuación",
           "supplementaryMeasures": "Medidas complementarias",
-          "sccTracking": "Seguimiento de las CCT"
+          "sccTracking": "Seguimiento de las SCC"
         }
       },
       "regulations": {
@@ -5932,7 +6063,7 @@
         "calloutBody": "El sistema envía notificaciones por correo electrónico 90, 60 y 30 días antes del vencimiento de un contrato, para que tengas tiempo de renovar o renegociar las condiciones.",
         "types": {
           "DPA": "Contrato de encargo",
-          "DPA_SCC": "Contrato de encargo + CCT"
+          "DPA_SCC": "Contrato de encargo + SCC"
         }
       },
       "questionnaires": {
@@ -6184,7 +6315,7 @@
           },
           "transfers": {
             "label": "Transferencias internacionales",
-            "desc": "Registros de transferencia para cada ubicación de datos fuera de la UE, con las CCT como garantía"
+            "desc": "Registros de transferencia para cada ubicación de datos fuera de la UE, con las SCC como garantía"
           }
         },
         "tipTitle": "Cuántos proveedores puedes importar",
@@ -6427,7 +6558,7 @@
     },
     "transferCompliance": {
       "title": "Gestor de cumplimiento de transferencias",
-      "subtitle": "Supervisa y gestiona las transferencias internacionales de datos con un panel de cumplimiento centralizado. Controla las decisiones de adecuación, las CCT y el estado de las EIT en todos tus flujos internacionales de datos.",
+      "subtitle": "Supervisa y gestiona las transferencias internacionales de datos con un panel de cumplimiento centralizado. Controla las decisiones de adecuación, las SCC y el estado de las EIT en todos tus flujos internacionales de datos.",
       "overview": {
         "title": "Visión general del cumplimiento de transferencias",
         "description": "Tras Schrems II, las transferencias internacionales requieren una gestión cuidadosa del cumplimiento. El Gestor de cumplimiento de transferencias ofrece una vista centralizada de todos los flujos de datos internacionales.",
@@ -6438,7 +6569,7 @@
             "subtitle": "Decisiones de adecuación activas"
           },
           "scc": {
-            "label": "Seguimiento de CCT",
+            "label": "Seguimiento de SCC",
             "value": "Activo",
             "subtitle": "Contratos supervisados"
           },
@@ -6460,9 +6591,9 @@
           "PENDING": "PENDIENTE"
         },
         "descriptions": {
-          "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o con CCT válidas y una evaluación de impacto de la transferencia completada. No hace falta ninguna acción.",
-          "NEEDS_REVIEW": "Hay CCT en vigor, pero no se ha completado ninguna EIT o las medidas complementarias pueden estar desactualizadas. Se recomienda revisar.",
-          "NON_COMPLIANT": "Las CCT han caducado o no hay ningún mecanismo de transferencia válido. Hace falta actuar de inmediato para evitar riesgos regulatorios.",
+          "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o con SCC válidas y una evaluación de impacto de la transferencia completada. No hace falta ninguna acción.",
+          "NEEDS_REVIEW": "Hay SCC en vigor, pero no se ha completado ninguna EIT o las medidas complementarias pueden estar desactualizadas. Se recomienda revisar.",
+          "NON_COMPLIANT": "Las SCC han caducado o no hay ningún mecanismo de transferencia válido. Hace falta actuar de inmediato para evitar riesgos regulatorios.",
           "PENDING": "La transferencia se ha registrado pero aún no se ha evaluado. Completa la revisión de cumplimiento para asignarle un estado."
         }
       },
@@ -6476,7 +6607,7 @@
           },
           "tool": {
             "title": "Identifica el instrumento de transferencia",
-            "description": "Determina el instrumento de transferencia adecuado: decisión de adecuación, cláusulas contractuales tipo (CCT), normas corporativas vinculantes (NCV) o una excepción del artículo 49."
+            "description": "Determina el instrumento de transferencia adecuado: decisión de adecuación, cláusulas contractuales tipo (SCC), normas corporativas vinculantes (NCV) o una excepción del artículo 49."
           },
           "assess": {
             "title": "Evalúa el derecho del tercer país",
@@ -6488,15 +6619,15 @@
           },
           "procedural": {
             "title": "Completa los trámites",
-            "description": "Completa los trámites necesarios: firma las CCT, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de la transferencia (EIT)."
+            "description": "Completa los trámites necesarios: firma las SCC, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de la transferencia (EIT)."
           },
           "monitor": {
             "title": "Sigue la evolución",
             "description": "Sigue de forma continua la evolución legal y política de los países de destino. Vuelve a evaluar las transferencias cuando cambien las circunstancias."
           }
         },
-        "warningTitle": "Las CCT por sí solas pueden no ser suficientes",
-        "warningBody": "En la sentencia Schrems II, el TJUE estableció que las cláusulas contractuales tipo deben complementarse con garantías adicionales cuando la legislación del país de destino no ofrezca una protección esencialmente equivalente. Completa siempre una evaluación de impacto de la transferencia junto con tus CCT."
+        "warningTitle": "Las SCC por sí solas pueden no ser suficientes",
+        "warningBody": "En la sentencia Schrems II, el TJUE estableció que las cláusulas contractuales tipo deben complementarse con garantías adicionales cuando la legislación del país de destino no ofrezca una protección esencialmente equivalente. Completa siempre una evaluación de impacto de la transferencia junto con tus SCC."
       },
       "adequacy": {
         "title": "Decisiones de adecuación",
@@ -6537,14 +6668,14 @@
         }
       },
       "sccTracking": {
-        "title": "Seguimiento del vencimiento de las CCT",
-        "description": "El Gestor de cumplimiento de transferencias monitoriza automáticamente las fechas de vencimiento de las CCT y envía alertas para que nunca se te pase un plazo de renovación.",
-        "mockupTitle": "Cronología de vencimientos de las CCT",
+        "title": "Seguimiento del vencimiento de las SCC",
+        "description": "El Gestor de cumplimiento de transferencias monitoriza automáticamente las fechas de vencimiento de las SCC y envía alertas para que nunca se te pase un plazo de renovación.",
+        "mockupTitle": "Cronología de vencimientos de las SCC",
         "expiresLabel": "Vence el {date}",
         "remaining": "{count} d restantes",
         "expiredLabel": "Vencido",
         "tipTitle": "Indica fechas de vencimiento al crear transferencias",
-        "tipBody": "Introduce siempre la fecha de vencimiento de las CCT al registrar una transferencia internacional. El sistema envía avisos automáticos por correo electrónico 30 y 7 días antes del vencimiento, para que tengas tiempo de renovar o renegociar con el importador de datos."
+        "tipBody": "Introduce siempre la fecha de vencimiento de las SCC al registrar una transferencia internacional. El sistema envía avisos automáticos por correo electrónico 30 y 7 días antes del vencimiento, para que tengas tiempo de renovar o renegociar con el importador de datos."
       },
       "nav": {
         "previous": "Autocompletado de EIPD",
@@ -7022,14 +7153,14 @@
         "evalItems": {
           "legal": "El marco jurídico del país destinatario",
           "surveillance": "Leyes de vigilancia y acceso por autoridades",
-          "supplementary": "Si se necesitan medidas complementarias además de las CCT o las NCV",
+          "supplementary": "Si se necesitan medidas complementarias además de las SCC o las NCV",
           "technical": "Medidas técnicas en vigor (cifrado, seudonimización)",
           "org": "Medidas organizativas (controles de acceso, derechos de auditoría)",
           "contractual": "Medidas contractuales (cláusulas mejoradas, garantías)"
         },
         "safeguardsTitle": "Salvaguardas comunes de transferencia",
         "safeguards": {
-          "sccs": "Cláusulas contractuales tipo (CCT)",
+          "sccs": "Cláusulas contractuales tipo (SCC)",
           "bcrs": "Normas corporativas vinculantes (NCV)",
           "adequacy": "Decisiones de adecuación",
           "consent": "Consentimiento (específico)",
@@ -7337,7 +7468,7 @@
       },
       "transfers": {
         "title": "Transferencias internacionales",
-        "intro": "Lleva el seguimiento de las transferencias internacionales de datos con sus mecanismos jurídicos. Documenta cláusulas contractuales tipo (CCT), decisiones de adecuación, normas corporativas vinculantes (NCV) y otras garantías.",
+        "intro": "Lleva el seguimiento de las transferencias internacionales de datos con sus mecanismos jurídicos. Documenta cláusulas contractuales tipo (SCC), decisiones de adecuación, normas corporativas vinculantes (NCV) y otras garantías.",
         "items": {
           "adequacy": {
             "mechanism": "Decisión de adecuación",
@@ -7932,7 +8063,7 @@
           "dpaTitle": "Contrato de encargo del tratamiento (PDF)",
           "dpaDesc": "Contrato entre responsable y encargado conforme al artículo 28, con términos negociados y anexos I a IV: descripción del tratamiento, medidas técnicas y organizativas (MTO), incorporación de las cláusulas contractuales tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la evaluación de impacto de la transferencia. Los anexos III y IV aparecen automáticamente cuando el encargado está establecido fuera del EEE o del Reino Unido.",
           "tiaTitle": "EIT independiente (PDF)",
-          "tiaDesc": "El anexo IV reproducido sin modificaciones, precedido de un encabezado de identificación y listo para ponerlo a disposición de la autoridad de control que lo solicite conforme a la cláusula 14 de las CCT incorporadas. Sigue el marco de seis pasos de las Recomendaciones 01/2020 del CEPD."
+          "tiaDesc": "El anexo IV reproducido sin modificaciones, precedido de un encabezado de identificación y listo para ponerlo a disposición de la autoridad de control que lo solicite conforme a la cláusula 14 de las SCC incorporadas. Sigue el marco de seis pasos de las Recomendaciones 01/2020 del CEPD."
         },
         "steps": {
           "open": {
@@ -8011,7 +8142,7 @@
       },
       "contracts": {
         "title": "Gestión de contratos",
-        "intro": "Lleva el seguimiento de los contratos de encargo del tratamiento (DPA), las cláusulas contractuales tipo (CCT) y otros documentos contractuales de cada proveedor. Registra las fechas de renovación y de fin: los contratos próximos a vencer aparecen en el panel de proveedores.",
+        "intro": "Lleva el seguimiento de los contratos de encargo del tratamiento (DPA), las cláusulas contractuales tipo (SCC) y otros documentos contractuales de cada proveedor. Registra las fechas de renovación y de fin: los contratos próximos a vencer aparecen en el panel de proveedores.",
         "label": "Documentos contractuales clave",
         "items": {
           "dpa": {
@@ -8019,7 +8150,7 @@
             "purpose": "Define los términos del tratamiento según el artículo 28 del RGPD"
           },
           "sccs": {
-            "doc": "Cláusulas contractuales tipo (CCT)",
+            "doc": "Cláusulas contractuales tipo (SCC)",
             "purpose": "Salvaguardas para transferencias internacionales de datos"
           },
           "sub": {
@@ -8557,7 +8688,7 @@
         "tia1_3": {
           "text": "¿Cuál es el mecanismo de transferencia (art. 46 del RGPD)?",
           "options": [
-            "Cláusulas contractuales tipo (CCT)",
+            "Cláusulas contractuales tipo (SCC)",
             "Normas corporativas vinculantes (NCV)",
             "Código de conducta aprobado",
             "Mecanismo de certificación aprobado",
@@ -8626,7 +8757,7 @@
           ]
         },
         "tia3_2": {
-          "text": "¿Qué medidas contractuales complementan las CCT o el acuerdo de transferencia?",
+          "text": "¿Qué medidas contractuales complementan las SCC o el acuerdo de transferencia?",
           "options": [
             "Obligación de impugnar las solicitudes de acceso gubernamental",
             "Obligación de notificar al exportador el acceso gubernamental (cuando esté legalmente permitido)",
@@ -8715,7 +8846,7 @@
           ]
         },
         "tiav2_1_2": {
-          "text": "¿Qué módulo de las CCT se aplica?",
+          "text": "¿Qué módulo de las SCC se aplica?",
           "helpText": "Las cláusulas contractuales tipo de 2021 tienen cuatro módulos según los papeles del exportador y del importador. Elige el que corresponda. Ejemplo: «Módulo 2: somos el responsable y el importador es nuestro encargado». Fuente: Decisión de Ejecución (UE) 2021/914 de la Comisión.",
           "options": [
             "Módulo 1: de responsable a responsable",
@@ -8804,7 +8935,7 @@
         },
         "tiav2_3_2": {
           "text": "¿Qué medidas contractuales complementan el instrumento de transferencia?",
-          "helpText": "Las cláusulas contractuales obligan al importador a resistir e informar del acceso y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las CCT.",
+          "helpText": "Las cláusulas contractuales obligan al importador a resistir e informar del acceso y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las SCC.",
           "options": [
             "Obligación de impugnar las solicitudes de acceso gubernamental",
             "Obligación de notificar al exportador el acceso (cuando sea lícito)",
@@ -10985,6 +11116,7 @@
       "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
       "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
       "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "UPDATE_CHECKLIST": "Lista de comprobación de la transferencia actualizada",
       "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
       "REQUEST_CREATED": "Solicitud creada",
       "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",

@@ -217,7 +217,7 @@ export const VENDOR_QUESTIONNAIRES_ES: Record<string, string> = {
   "No specific commitment": "Sin compromiso concreto",
   "Less than annually": "Menos de una vez al año",
   "EU adequacy decision": "Decisión de adecuación de la UE",
-  "Standard Contractual Clauses (SCCs)": "Cláusulas contractuales tipo (CCT)",
+  "Standard Contractual Clauses (SCCs)": "Cláusulas contractuales tipo (SCC)",
   "Binding Corporate Rules": "Normas corporativas vinculantes",
   "EU-US Data Privacy Framework": "Marco de privacidad de datos UE-EE. UU.",
   "Explicit consent": "Consentimiento explícito",
