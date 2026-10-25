@@ -42,15 +42,17 @@ export default async function DashboardLayout({
   // One decision from the request headers (src/lib/plan-upgrade.ts): the
   // currency the customer will be charged, which every in-app price hint
   // shows, and whether "Move to the paid plan" is offered (automatic upgrade
-  // switched on and a payment link set for that same currency).
+  // switched on and a payment link set for that same currency), yearly and,
+  // when its link is set, monthly too.
   const offer = inAppPlanOffer(await headers());
   const upgrade = offer.link !== null;
+  const upgradeMonthly = offer.monthlyLink !== null;
 
   return (
     <ChargeCurrencyProvider currency={offer.currency}>
       {/* The pilot bar, only once a person is signed in: for the whole pilot,
           the stronger wording in its last days, and once it is read-only. */}
-      <SignedInPilotBanner upgrade={upgrade} />
+      <SignedInPilotBanner upgrade={upgrade} upgradeMonthly={upgradeMonthly} />
       <DashboardShell menuCollapsed={menuCollapsed}>
         {children}
       </DashboardShell>
