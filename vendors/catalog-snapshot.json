@@ -1,8 +1,8 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-23T23:32:23.169Z",
-  "sourceCommit": "99e3d9b",
-  "count": 937,
+  "generatedAt": "2026-10-25T00:09:42.669Z",
+  "sourceCommit": "1480003",
+  "count": 936,
   "vendors": [
     {
       "id": "cmm4xdpq60020xcj84de8yfg5",
@@ -9957,22 +9957,20 @@
       "legalName": null,
       "category": "Marketing Automation",
       "subcategory": "Growth & Lifecycle",
-      "description": "Y Combinator created a new model for funding early stage startups. Four times a year we invest in a large number of startups.",
-      "descriptionEs": null,
-      "website": "https://www.ycombinator.com",
-      "privacyPolicyUrl": "https://www.ycombinator.com/legal#privacy",
+      "description": "Low-code tool for building sign-up flows and forms with verification steps and integrations with other systems. Its website, arengu.com, no longer serves the product.",
+      "descriptionEs": "Herramienta de poco código para crear flujos de registro y formularios con pasos de verificación e integraciones con otros sistemas. Su sitio web, arengu.com, ya no ofrece el producto.",
+      "website": null,
+      "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
-      "securityPageUrl": "https://ycombinator.com/security",
+      "securityPageUrl": null,
       "termsUrl": null,
       "certifications": [],
       "frameworks": [],
       "gdprCompliant": false,
       "ccpaCompliant": false,
       "hipaaCompliant": null,
-      "dataLocations": [
-        "US"
-      ],
+      "dataLocations": [],
       "hasEuDataCenter": null,
       "subprocessors": [
         {
@@ -10037,7 +10035,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:33.006Z",
-      "updatedAt": "2026-10-02T07:01:53.308Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -17556,9 +17554,9 @@
       "legalName": null,
       "category": "Marketing Automation",
       "subcategory": "Growth & Lifecycle",
-      "description": "“Devotion And Desire” (2025) available now in celebration of our 25th \nanniversary",
-      "descriptionEs": null,
-      "website": "https://www.baysidebayside.com",
+      "description": "Former marketing technology brand. Its web address, byside.com, now redirects to CoreMedia, a digital experience platform.",
+      "descriptionEs": "Antigua marca de tecnología de marketing. Su dirección web, byside.com, redirige ahora a CoreMedia, una plataforma de experiencia digital.",
+      "website": null,
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
@@ -17610,7 +17608,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:36.542Z",
-      "updatedAt": "2026-10-22T23:30:43.707Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -27755,8 +27753,8 @@
       "subcategory": "Conversion Optimization",
       "description": null,
       "descriptionEs": null,
-      "website": "https://tracxn.com",
-      "privacyPolicyUrl": "https://tracxn.com/privacypolicy",
+      "website": null,
+      "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
@@ -27766,9 +27764,7 @@
       "gdprCompliant": false,
       "ccpaCompliant": false,
       "hipaaCompliant": null,
-      "dataLocations": [
-        "IN"
-      ],
+      "dataLocations": [],
       "hasEuDataCenter": null,
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
@@ -27809,7 +27805,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:40.963Z",
-      "updatedAt": "2026-10-02T07:00:58.343Z",
+      "updatedAt": "2026-10-24T23:56:08.060Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -33827,12 +33823,12 @@
     {
       "id": "cmleeq7wn0035kov25y5twt58",
       "slug": "duoban",
-      "name": "Duoban",
+      "name": "Douban",
       "legalName": "北京豆网科技有限公司",
       "category": "Marketing Automation",
       "subcategory": "Social Media",
-      "description": "提供图书、电影、音乐唱片的推荐、评论和价格比较，以及城市独特的文化生活。",
-      "descriptionEs": null,
+      "description": "Chinese-language website and community with recommendations, reviews and price comparison for books, films and music, and local cultural listings.",
+      "descriptionEs": "Sitio web y comunidad en chino con recomendaciones, reseñas y comparación de precios de libros, películas y música, y agenda cultural de las ciudades.",
       "website": "https://www.douban.com",
       "privacyPolicyUrl": "https://www.douban.com/about/privacy",
       "trustCenterUrl": null,
@@ -33887,7 +33883,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:43.559Z",
-      "updatedAt": "2026-10-19T01:41:07.436Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -36258,7 +36254,7 @@
     {
       "id": "cmleeq8yx003fkov2oryyrerz",
       "slug": "esputnik",
-      "name": "eSputnik",
+      "name": "Yespo",
       "legalName": "RETENTION YES SP. Z.O.O",
       "category": "Marketing Automation",
       "subcategory": "Email Marketing",
@@ -36397,7 +36393,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:44.938Z",
-      "updatedAt": "2026-10-19T02:06:21.805Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 33
@@ -36843,8 +36839,8 @@
       "slug": "facebook-like",
       "name": "Facebook Like",
       "legalName": null,
-      "category": "Content Management",
-      "subcategory": "CMS",
+      "category": "Marketing Automation",
+      "subcategory": "Social Media",
       "description": null,
       "descriptionEs": null,
       "website": "https://www.facebook.com",
@@ -36901,7 +36897,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:45.427Z",
-      "updatedAt": "2026-10-19T01:36:12.094Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": 55,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 17
@@ -47776,9 +47772,9 @@
       "legalName": null,
       "category": "Personalization & Engagement",
       "subcategory": "A/B Testing",
-      "description": "Google Optimize - AB Testing technology",
-      "descriptionEs": null,
-      "website": "https://www.google-optimize.com",
+      "description": "Google's former A/B testing tool for websites, discontinued on 30 September 2023.",
+      "descriptionEs": "Antigua herramienta de Google para pruebas A/B en sitios web, retirada el 30 de septiembre de 2023.",
+      "website": null,
       "privacyPolicyUrl": "https://policies.google.com/privacy",
       "trustCenterUrl": "https://business.safety.google/compliance/",
       "dpaUrl": null,
@@ -47836,7 +47832,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:49.068Z",
-      "updatedAt": "2026-10-02T07:01:11.247Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -53212,8 +53208,8 @@
       "legalName": null,
       "category": "Analytics & BI",
       "subcategory": "Heatmaps",
-      "description": "Use Howuku to literally see what your web visitors are doing on your website with tools, such as heatmaps, A/B testing, recordings & more.",
-      "descriptionEs": null,
+      "description": "Website analytics tool with heatmaps, A/B testing and visitor recordings. The product has been retired; howuku.com keeps the former product blog as an archive.",
+      "descriptionEs": "Herramienta de analítica web con mapas de calor, pruebas A/B y grabaciones de visitantes. El producto se ha retirado; howuku.com conserva como archivo el antiguo blog del producto.",
       "website": "https://howuku.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
@@ -53268,7 +53264,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:51.260Z",
-      "updatedAt": "2026-10-13T14:38:11.060Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -57515,9 +57511,9 @@
       "legalName": null,
       "category": "Surveys & Research",
       "subcategory": "Feedback",
-      "description": "Insight Platforms is the leading directory, online training and virtual events site for market & user research, customer insights and CX.",
-      "descriptionEs": null,
-      "website": "https://www.insightplatforms.com",
+      "description": "Former customer feedback and survey vendor. Its web address now redirects to Emplifi, and the product is no longer offered under this name.",
+      "descriptionEs": "Antiguo proveedor de encuestas y comentarios de clientes. Su dirección web redirige ahora a Emplifi y el producto ya no se ofrece con este nombre.",
+      "website": null,
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
@@ -57572,7 +57568,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:53.407Z",
-      "updatedAt": "2026-10-19T22:01:59.489Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -59647,8 +59643,8 @@
       "legalName": "June Inc.",
       "category": "Analytics & BI",
       "subcategory": "Product Analytics",
-      "description": "Product analytics for B2B SaaS with instant company-level insights, activation tracking, and retention analysis.",
-      "descriptionEs": null,
+      "description": "Product analytics for B2B SaaS. The standalone product was wound down on 8 August 2025, when the founding team joined Amplitude.",
+      "descriptionEs": "Analítica de producto para empresas SaaS B2B. El producto independiente se cerró el 8 de agosto de 2025, cuando el equipo fundador se incorporó a Amplitude.",
       "website": "https://www.june.so",
       "privacyPolicyUrl": "https://help.june.so/en/articles/6823521-privacy-policy",
       "trustCenterUrl": null,
@@ -59703,7 +59699,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-04T13:01:46.701Z",
-      "updatedAt": "2026-10-19T22:01:59.489Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -60019,9 +60015,9 @@
       "legalName": null,
       "category": "Surveys & Research",
       "subcategory": "Feedback",
-      "description": "Discover the best SaaS solutions and B2B services on the DiscoverCloud. Our B2B marketplace features an ever-growing number of SaaS solutions and outsourced services. Check us out online!",
-      "descriptionEs": null,
-      "website": "https://www.discovercloud.com",
+      "description": "Digital feedback and survey platform for websites and apps, acquired by Medallia in 2016 and since sold as Medallia Digital.",
+      "descriptionEs": "Plataforma de comentarios y encuestas digitales para sitios web y aplicaciones, que Medallia adquirió en 2016 y vende desde entonces como Medallia Digital.",
+      "website": null,
       "privacyPolicyUrl": "https://www.medallia.com/privacy-policy",
       "trustCenterUrl": null,
       "dpaUrl": null,
@@ -60075,7 +60071,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:58.757Z",
-      "updatedAt": "2026-10-02T07:03:36.605Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -68092,13 +68088,13 @@
     {
       "id": "cmleepypd000kkov2ujb6uk09",
       "slug": "magento",
-      "name": "Magento",
+      "name": "Adobe Commerce (Magento)",
       "legalName": null,
       "category": "E-commerce",
       "subcategory": "Platform",
-      "description": "Get everything you need to create your website, your way. With a free easy-to-use website builder, integrated hosting, and essential business solutions.",
-      "descriptionEs": null,
-      "website": "https://wix.com",
+      "description": "E-commerce platform for building and running online stores, now sold by Adobe as Adobe Commerce, with a free edition, Magento Open Source.",
+      "descriptionEs": "Plataforma de comercio electrónico para crear y gestionar tiendas online, que Adobe vende hoy como Adobe Commerce, con una edición gratuita, Magento Open Source.",
+      "website": null,
       "privacyPolicyUrl": "https://www.adobe.com/privacy/policy.html",
       "trustCenterUrl": "https://www.adobe.com/trust.html",
       "dpaUrl": null,
@@ -68163,7 +68159,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:31.633Z",
-      "updatedAt": "2026-10-22T23:30:43.707Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -88697,82 +88693,16 @@
       "dpaCcpaScore": null
     },
     {
-      "id": "cmleeqphn0082kov2r3z4eitu",
-      "slug": "pluso",
-      "name": "Pluso",
-      "legalName": null,
-      "category": "Marketing Automation",
-      "subcategory": "Social Media",
-      "description": "Quietum Plus is a 100% natural supplement designed to address ear ringing and other hearing issues. This formula uses only the best in class and natural ingredients to achieve desired results.",
-      "descriptionEs": null,
-      "website": "https://quietum-plus.supplements.best",
-      "privacyPolicyUrl": "https://privacy.paramount.com/childrens",
-      "trustCenterUrl": null,
-      "dpaUrl": null,
-      "securityPageUrl": null,
-      "termsUrl": null,
-      "certifications": [],
-      "frameworks": [],
-      "gdprCompliant": false,
-      "ccpaCompliant": false,
-      "hipaaCompliant": null,
-      "dataLocations": [],
-      "hasEuDataCenter": null,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
-      "supportsDsars": null,
-      "hasDesignatedDpo": null,
-      "hasRecentBreach": null,
-      "euAiActCompliant": null,
-      "aiCapabilities": [],
-      "modelHosting": null,
-      "aiTechniques": [],
-      "euAiActRole": null,
-      "euAiActAnnexIIIDomains": [],
-      "iso42001Certified": null,
-      "supportsAuditLogs": null,
-      "supportsExplainability": null,
-      "hasBiasMonitoring": null,
-      "hasModelCard": null,
-      "aiIncidentNotificationSLA": null,
-      "dataProcessingTransparency": null,
-      "aiModels": null,
-      "trainingUse": null,
-      "retention": null,
-      "privacyTechnologies": [],
-      "tags": [],
-      "logoUrl": null,
-      "isVerified": false,
-      "publicProfileEnabled": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "source": "processors.json",
-      "senecaLitigation": {
-        "cases": [],
-        "found": false,
-        "vendor": "Pluso",
-        "fetchedAt": "2026-10-02T07:01:54.489Z",
-        "riskProfile": null
-      },
-      "createdAt": "2026-02-09T00:02:06.348Z",
-      "updatedAt": "2026-10-02T07:01:54.489Z",
-      "dpaComplianceScore": null,
-      "dpaGdprScore": null,
-      "dpaCcpaScore": null
-    },
-    {
       "id": "cmleeqplb0083kov2lsnpzqnx",
       "slug": "poder",
       "name": "Poder",
       "legalName": null,
       "category": "Marketing Automation",
       "subcategory": "Growth & Lifecycle",
-      "description": "See relevant content for poder.com",
+      "description": null,
       "descriptionEs": null,
       "website": "https://www.poder.com",
-      "privacyPolicyUrl": "https://www.poderworks.org/privacy",
+      "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
@@ -88825,7 +88755,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:06.479Z",
-      "updatedAt": "2026-10-02T07:01:56.098Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -93921,8 +93851,8 @@
       "legalName": null,
       "category": "Developer Tools",
       "subcategory": "Tag Management",
-      "description": "Qubit Opentag - Tag Management Platform technology",
-      "descriptionEs": null,
+      "description": "Tag management system from Qubit for managing a website's marketing and analytics tags in one place. Qubit was acquired by Coveo in 2021, and qubit.com now redirects to Coveo.",
+      "descriptionEs": "Sistema de gestión de etiquetas de Qubit para administrar desde un solo lugar las etiquetas de marketing y analítica de un sitio web. Coveo adquirió Qubit en 2021 y qubit.com redirige ahora a Coveo.",
       "website": "https://www.qubit-opentag.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
@@ -93975,7 +93905,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:08.611Z",
-      "updatedAt": "2026-10-19T01:38:11.054Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -96268,8 +96198,8 @@
       "legalName": null,
       "category": "Personalization & Engagement",
       "subcategory": "Conversion Optimization",
-      "description": "Reflektion - Personalization technology",
-      "descriptionEs": null,
+      "description": "AI-powered search and personalization platform for online retail, acquired by Sitecore in 2021; its core products have been integrated into Sitecore's digital experience platform.",
+      "descriptionEs": "Plataforma de búsqueda y personalización con IA para el comercio minorista online, que Sitecore adquirió en 2021; sus productos principales se han integrado en la plataforma de experiencia digital de Sitecore.",
       "website": "https://www.reflektion.com",
       "privacyPolicyUrl": "https://www.reflektion.com/privacy",
       "trustCenterUrl": null,
@@ -96322,7 +96252,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:09.495Z",
-      "updatedAt": "2026-09-08T00:22:25.420Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -99529,9 +99459,9 @@
       "legalName": null,
       "category": "Developer Tools",
       "subcategory": "Observability",
-      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
-      "descriptionEs": null,
-      "website": "https://www.youtube.com",
+      "description": "Former name of the application performance monitoring product that became Dynatrace. The ruxit.com address now redirects to Dynatrace.",
+      "descriptionEs": "Antiguo nombre del producto de monitorización del rendimiento de aplicaciones que pasó a ser Dynatrace. La dirección ruxit.com redirige ahora a Dynatrace.",
+      "website": null,
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
@@ -99583,7 +99513,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:10.785Z",
-      "updatedAt": "2026-10-19T01:38:11.054Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -122085,10 +122015,10 @@
       "slug": "triggered-messaging",
       "name": "Triggered Messaging",
       "legalName": "Trigger Message (Pty) Ltd",
-      "category": "Personalization & Engagement",
-      "subcategory": "Conversion Optimization",
-      "description": "AI-driven licence plate and facial recognition with automated alerts and customer engagement tools. Strengthen security and improve operations across all sites.",
-      "descriptionEs": null,
+      "category": "Security & Identity",
+      "subcategory": null,
+      "description": "Recognition and security platform for businesses: licence plate and facial recognition, AI behaviour detection, alerts by WhatsApp, e-mail and Telegram, and cloud backup of CCTV footage.",
+      "descriptionEs": "Plataforma de reconocimiento y seguridad para empresas: reconocimiento de matrículas y de rostros, detección de comportamientos con IA, alertas por WhatsApp, correo electrónico y Telegram, y copia de seguridad en la nube de las grabaciones de CCTV.",
       "website": "https://www.triggermessage.io",
       "privacyPolicyUrl": "https://www.triggermessage.co.za/privacy-policy/",
       "trustCenterUrl": null,
@@ -122147,7 +122077,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:19.768Z",
-      "updatedAt": "2026-10-22T23:30:43.707Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -130650,10 +130580,10 @@
       "legalName": null,
       "category": "Personalization & Engagement",
       "subcategory": "Conversion Optimization",
-      "description": "1 billion members | Manage your professional identity. Build and engage with your professional network. Access knowledge, insights and opportunities.",
+      "description": null,
       "descriptionEs": null,
-      "website": "https://in.linkedin.com",
-      "privacyPolicyUrl": "https://in.linkedin.com/legal/privacy-policy?trk=linkedin-tc_auth-button_privacy-policy",
+      "website": null,
+      "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
@@ -130663,11 +130593,7 @@
       "gdprCompliant": false,
       "ccpaCompliant": false,
       "hipaaCompliant": null,
-      "dataLocations": [
-        "US",
-        "EU",
-        "UK"
-      ],
+      "dataLocations": [],
       "hasEuDataCenter": null,
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
@@ -130708,7 +130634,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:23.562Z",
-      "updatedAt": "2026-10-02T07:02:38.247Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -130870,9 +130796,7 @@
       "dpaUrl": "https://wisepops.com/data-processing-agreement",
       "securityPageUrl": "https://support.wisepops.com/en/articles/10308191-data-security-policy",
       "termsUrl": "https://wisepops.com/terms-of-service",
-      "certifications": [
-        "SOC 2"
-      ],
+      "certifications": [],
       "frameworks": [],
       "gdprCompliant": true,
       "ccpaCompliant": null,
@@ -130922,7 +130846,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-01T23:53:42.719Z",
-      "updatedAt": "2026-10-22T23:30:43.707Z",
+      "updatedAt": "2026-10-24T23:56:08.060Z",
       "dpaComplianceScore": 65,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 17
@@ -133941,9 +133865,9 @@
       "legalName": null,
       "category": "Marketing Automation",
       "subcategory": "Growth & Lifecycle",
-      "description": "Lower bandwidth. Higher-resolution streaming. Smarter solutions. Axis elevates video quality and efficiency.",
-      "descriptionEs": null,
-      "website": "https://www.axis.com",
+      "description": "Former programmatic media buying and advertising technology brand of WPP's media business. Its web address now redirects to WPP Media.",
+      "descriptionEs": "Antigua marca de compra programática de medios y tecnología publicitaria del negocio de medios de WPP. Su dirección web redirige ahora a WPP Media.",
+      "website": null,
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
@@ -133995,7 +133919,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:12.415Z",
-      "updatedAt": "2026-10-19T02:06:21.805Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -136006,10 +135930,10 @@
       "legalName": null,
       "category": "Personalization & Engagement",
       "subcategory": "A/B Testing",
-      "description": "Shop Target online and in-store for everything from groceries and essentials to clothing and electronics. Choose contactless pickup or delivery today.",
-      "descriptionEs": null,
-      "website": "https://www.target.com",
-      "privacyPolicyUrl": "https://www.target.com/c/target-privacy-policy/-/N-4sr7p",
+      "description": "Conversion rate optimization tools for websites (A/B testing, heatmaps, session recording, polls and feedback). Acquired by Freshworks in August 2017.",
+      "descriptionEs": "Herramientas de optimización de la conversión para sitios web (pruebas A/B, mapas de calor, grabación de sesiones, encuestas y comentarios). Freshworks la adquirió en agosto de 2017.",
+      "website": null,
+      "privacyPolicyUrl": null,
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
@@ -136019,40 +135943,9 @@
       "gdprCompliant": false,
       "ccpaCompliant": false,
       "hipaaCompliant": null,
-      "dataLocations": [
-        "US"
-      ],
+      "dataLocations": [],
       "hasEuDataCenter": null,
-      "subprocessors": [
-        {
-          "name": "TD Bank USA N.A.",
-          "source": "ai-enriched",
-          "purpose": "Card issuing for Target MasterCard and Target Credit Card",
-          "location": "US"
-        },
-        {
-          "name": "Pathward, N.A.",
-          "source": "ai-enriched",
-          "purpose": "Card issuing for Target Circle Card Account",
-          "location": "US"
-        },
-        {
-          "name": "Shipt, Inc.",
-          "source": "ai-enriched",
-          "purpose": "Subsidiary services",
-          "location": "US"
-        },
-        {
-          "name": "Google",
-          "source": "ai-enriched",
-          "purpose": "Advertising and reporting coordination"
-        },
-        {
-          "name": "Meta",
-          "source": "ai-enriched",
-          "purpose": "Advertising and reporting coordination"
-        }
-      ],
+      "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
       "transferSafeguards": null,
@@ -136091,7 +135984,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:24.823Z",
-      "updatedAt": "2026-10-02T07:04:25.537Z",
+      "updatedAt": "2026-10-25T00:08:12.583Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
