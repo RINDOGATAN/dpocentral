@@ -5665,7 +5665,7 @@
         "mockupTitle": "Cifra del programa y áreas",
         "parts": {
           "firstRun": "La primera vez, una tarjeta breve explica cómo funciona DPO Central hasta que eliges «Entendido». El botón de ayuda de la barra superior la vuelve a abrir.",
-          "figure": "La cifra del programa, «N de 5 fases hechas», con cuántas fases están por confirmar, en curso y sin empezar, y debajo la fase en la que estás.",
+          "figure": "La cifra del programa, «N de 5 fases completadas», con cuántas fases están por confirmar, en curso y sin empezar, y debajo la fase en la que estás.",
           "areas": "Seis áreas, una por cada fase de la ruta, cada una con su estado y su siguiente acción. Al pulsar un área se abre esa acción.",
           "documents": "Los documentos que puedes generar hoy, con el botón «Descargar documentos listos» (consulta Documentos más abajo).",
           "next": "Tus tres próximas acciones, junto a Próximos plazos (consulta Próximas acciones y plazos más abajo).",
@@ -10239,7 +10239,7 @@
       }
     },
     "figure": {
-      "line": "{done} de {total} fases hechas",
+      "line": "{done} de {total} fases completadas",
       "toConfirm": "{count} por confirmar",
       "started": "{count} en curso",
       "notStarted": "{count} sin empezar",
@@ -11019,7 +11019,7 @@
     "kpi": {
       "title": "De un vistazo",
       "ofTotal": "de {total}",
-      "programme": "fases hechas",
+      "programme": "fases completadas",
       "documents": "documentos listos",
       "breaches": "brechas notificadas a la autoridad en 72 horas",
       "breachesNone": "ninguna brecha notificable en el periodo",

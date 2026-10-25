@@ -313,7 +313,7 @@ describe("d3: one programme figure", () => {
       expect(bundle.guided.figure.line).toMatch(/\{done\}.*\{total\}/);
     }
     expect(en.guided.figure.line).toBe("{done} of {total} stages done");
-    expect(es.guided.figure.line).toBe("{done} de {total} fases hechas");
+    expect(es.guided.figure.line).toBe("{done} de {total} fases completadas");
     // The line under it says where the organisation is, never a timetable.
     expect(es.guided.phase.now).toBe("Ahora: fase {number}, {stage}");
     expect(en.guided.phase.now).toBe("Now: stage {number}, {stage}");
