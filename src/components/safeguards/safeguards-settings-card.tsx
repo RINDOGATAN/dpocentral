@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Settings: the welcome card's safeguards question, next to the AI setting.
+ * Settings: the safeguards question, next to the AI setting.
  * Hosted service only (nothing renders on the kit). An owner or admin can
  * change the answer; answers b and c can send the short request form.
  */
@@ -58,7 +58,6 @@ export function SafeguardsSettingsCard({
   const refresh = () => {
     setDirty(false);
     utils.safeguards.getStatus.invalidate({ organizationId });
-    utils.safeguards.getWelcome.invalidate({ organizationId });
   };
 
   const setChoiceMutation = trpc.safeguards.setChoice.useMutation({

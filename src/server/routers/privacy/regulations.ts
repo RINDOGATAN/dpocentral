@@ -47,6 +47,11 @@ export const regulationsRouter = createTRPCRouter({
       });
       const appliedCodes = new Set(orgJurisdictions.map((oj) => oj.jurisdiction.code));
 
+      // A law no longer offered (src/config/jurisdiction-places.ts,
+      // NOT_OFFERED_CODES) is listed only to an organisation that applied it.
+      const { isOfferedCode } = await import("@/config/jurisdiction-places");
+      filtered = filtered.filter((j) => isOfferedCode(j.code) || appliedCodes.has(j.code));
+
       return {
         jurisdictions: filtered.map((j) => ({
           ...j,
@@ -152,8 +157,11 @@ export const regulationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
 
+      const { IMPLIED_LAWS, isOfferedCode } = await import("@/config/jurisdiction-places");
       const catalogEntry = JURISDICTION_CATALOG.find((j) => j.code === input.jurisdictionCode);
-      if (!catalogEntry) {
+      // A law no longer offered is never applied anew; where it is already
+      // applied, it stays as it is.
+      if (!catalogEntry || !isOfferedCode(catalogEntry.code)) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Jurisdiction not found in catalog",
@@ -162,7 +170,6 @@ export const regulationsRouter = createTRPCRouter({
 
       // A law that only applies with another (Spain's LOPDGDD with the GDPR)
       // brings it along; an existing link is left as it is.
-      const { IMPLIED_LAWS } = await import("@/config/jurisdiction-places");
       for (const impliedCode of IMPLIED_LAWS[catalogEntry.code] ?? []) {
         const implied = JURISDICTION_CATALOG.find((j) => j.code === impliedCode);
         if (!implied) continue;
@@ -251,10 +258,14 @@ export const regulationsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
-      const { isPlaceCode, PLACE_CODES, withImpliedLaws } = await import("@/config/jurisdiction-places");
-      // A law that only applies with another (Spain's LOPDGDD with the GDPR)
-      // brings it along, so the GDPR cannot be left out while Spain is chosen.
-      const codes = withImpliedLaws([...new Set(input.codes)]);
+      const { isOfferedCode, isPlaceCode, PLACE_CODES, withImpliedLaws } = await import("@/config/jurisdiction-places");
+      // A law no longer offered (Spain, Andorra) that a page still open from
+      // before sends is left out: it is neither added nor removed here.
+      const offered = [...new Set(input.codes)].filter(isOfferedCode);
+      // Nothing offered left: the same as "not sure yet", nothing changes.
+      if (offered.length === 0) return { codes: [] as string[], added: 0, removed: 0 };
+      // A law that only applies with another brings it along.
+      const codes = withImpliedLaws(offered);
       const unknown = codes.filter((c) => !isPlaceCode(c));
       if (unknown.length > 0) {
         throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown place: ${unknown.join(", ")}` });
@@ -267,8 +278,16 @@ export const regulationsRouter = createTRPCRouter({
       });
       const currentCodes = new Set(current.map((oj) => oj.jurisdiction.code));
       const added = codes.filter((c) => !currentCodes.has(c));
+      // A stored law that is no longer offered keeps what it brings with it
+      // (the GDPR with Spain's LOPDGDD), as removeJurisdiction does.
+      const kept = new Set(
+        withImpliedLaws([...currentCodes].filter((c) => !isOfferedCode(c)))
+      );
       const removed = current.filter(
-        (oj) => PLACE_CODES.includes(oj.jurisdiction.code) && !codes.includes(oj.jurisdiction.code)
+        (oj) =>
+          PLACE_CODES.includes(oj.jurisdiction.code) &&
+          !codes.includes(oj.jurisdiction.code) &&
+          !kept.has(oj.jurisdiction.code)
       );
 
       for (const code of added) {

@@ -39,7 +39,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useLocale, useTranslations } from "next-intl";
 import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { toneMark } from "@/config/status-palette";
-import { bringersOf, placeOptions } from "@/config/jurisdiction-places";
+import { bringersOf, placeOf } from "@/config/jurisdiction-places";
 
 export default function RegulationsPage() {
   const t = useTranslations("pages.regulations");
@@ -78,7 +78,6 @@ export default function RegulationsPage() {
   const catalogItems = (catalog?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
   const appliedItems = (applied?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
   const appliedCodes = appliedItems.map((j) => j.code);
-  const places = placeOptions(locale);
   const tab = tabChoice ?? (appliedItems.length > 0 ? "applied" : "catalog");
 
   const utils = trpc.useUtils();
@@ -265,7 +264,7 @@ export default function RegulationsPage() {
                 const reqStatus = statusByJurisdiction.get(j.jurisdictionId);
                 // Included with another applied law (the GDPR with Spain): not removable on its own.
                 const bringerCode = bringersOf(j.code, appliedCodes)[0];
-                const bringer = bringerCode ? places.find((p) => p.code === bringerCode) : undefined;
+                const bringer = bringerCode ? placeOf(bringerCode, locale) : undefined;
                 return (
                   <Card key={j.id}>
                     <CardContent className="py-4 space-y-4">

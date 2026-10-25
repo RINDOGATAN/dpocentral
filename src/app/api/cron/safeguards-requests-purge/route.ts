@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 // ---------------------------------------------------------------------------
 // Vercel Cron: delete safeguards requests closed more than six months ago
 //
-// A request for a managed server or own hardware (the welcome card's options
+// A request for a managed server or own hardware (the safeguards question's options
 // b and c) is kept until it is closed and then for six months (revised to six months to match the privacy
 // notice). Open requests are never touched. Scheduled in
 // vercel.json at "30 3 * * *" (daily 03:30 UTC).

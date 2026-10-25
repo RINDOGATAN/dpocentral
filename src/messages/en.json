@@ -9928,13 +9928,6 @@
   },
   "safeguards": {
     "welcome": {
-      "title": "Welcome to a new generation of privacy and AI governance software.",
-      "ai": "Designed from day one to work with AI: AI drafts impact assessments and incident analyses from your own records, and you review and confirm. Off by default.",
-      "question": "Before you start, one question. What security, confidentiality and data protection safeguards do you need?",
-      "continue": "Continue",
-      "later": "Decide later",
-      "note": "You can change your answer in Settings. AI comes switched off.",
-      "whereData": "Where your data lives",
       "saveError": "Your answer could not be saved. Please try again in a moment."
     },
     "choices": {
@@ -9981,13 +9974,11 @@
       "alreadyOpen": "We already have your request and will write to you."
     },
     "sent": {
-      "title": "Thank you",
-      "text": "We have your request, and someone from our team will write to you by e-mail. Meanwhile you can keep trying the demo with test data.",
-      "continue": "Continue"
+      "text": "We have your request, and someone from our team will write to you by e-mail. Meanwhile you can keep trying the demo with test data."
     },
     "settings": {
       "title": "Security and data protection safeguards",
-      "description": "The question from the welcome card. You can change your answer at any time.",
+      "description": "You can answer this question, or change your answer, at any time.",
       "question": "What security, confidentiality and data protection safeguards do you need?",
       "current": "Your answer: {choice}",
       "none": "No answer yet. Until you answer, the shared EU cloud applies.",

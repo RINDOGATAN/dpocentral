@@ -3,8 +3,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The parts the welcome card and the Settings card share: the three answers
- * to the safeguards question, and the short request form for answers b and c
+ * The parts of the Settings card: the three answers to the safeguards
+ * question, and the short request form for answers b and c
  * (src/server/services/safeguards).
  */
 

@@ -862,16 +862,6 @@ export const APPLICABILITY_QUESTIONS_ES: Record<string, { question: string; help
     helpText:
       "Suiza tiene su propia ley de protección de datos (nDSG/FADP), distinta del RGPD de la UE, aunque muy próxima a él.",
   },
-  spain_presence: {
-    question: "¿Tu organización está establecida en España o trata datos de personas que se encuentran en España?",
-    helpText:
-      "La LOPDGDD completa el RGPD con normas nacionales (por ejemplo, sobre la edad del consentimiento, los datos de los trabajadores y el DPD). Siempre se aplica junto con el RGPD.",
-  },
-  andorra_presence: {
-    question: "¿Tu organización está establecida en Andorra o trata datos de personas que se encuentran en Andorra?",
-    helpText:
-      "Andorra no forma parte de la UE y tiene su propia ley de protección de datos (la LQPD), muy próxima al RGPD.",
-  },
   california_consumers: {
     question: "¿Tienes clientes o usuarios en California, o recoges datos de residentes en California?",
     helpText:

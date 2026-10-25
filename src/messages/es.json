@@ -9928,13 +9928,6 @@
   },
   "safeguards": {
     "welcome": {
-      "title": "Te damos la bienvenida a una nueva generación de herramientas para gestionar programas de privacidad y de gobierno de la IA.",
-      "ai": "Diseñado desde el primer día para trabajar con IA: la IA prepara borradores de evaluaciones de impacto y de análisis de incidentes a partir de tus propios registros, y tú revisas y confirmas. Desactivada por defecto.",
-      "question": "Antes de empezar, una pregunta. ¿Qué garantías de seguridad, confidencialidad y protección de datos necesitas?",
-      "continue": "Continuar",
-      "later": "Decidir más tarde",
-      "note": "Puedes cambiar tu respuesta en Ajustes. La IA viene desactivada.",
-      "whereData": "Dónde viven tus datos",
       "saveError": "No hemos podido guardar tu respuesta. Inténtalo de nuevo dentro de un momento."
     },
     "choices": {
@@ -9981,13 +9974,11 @@
       "alreadyOpen": "Ya tenemos tu solicitud y te escribiremos."
     },
     "sent": {
-      "title": "Gracias",
-      "text": "Hemos recibido tu solicitud y alguien de nuestro equipo te escribirá por correo electrónico. Mientras tanto, puedes seguir probando la demo con datos de prueba.",
-      "continue": "Continuar"
+      "text": "Hemos recibido tu solicitud y alguien de nuestro equipo te escribirá por correo electrónico. Mientras tanto, puedes seguir probando la demo con datos de prueba."
     },
     "settings": {
       "title": "Garantías de seguridad y de protección de datos",
-      "description": "La pregunta de la bienvenida. Puedes cambiar tu respuesta cuando quieras.",
+      "description": "Puedes responder a esta pregunta, o cambiar tu respuesta, cuando quieras.",
       "question": "¿Qué garantías de seguridad, confidencialidad y protección de datos necesitas?",
       "current": "Tu respuesta: {choice}",
       "none": "Sin respuesta todavía. Mientras no respondas, se aplica la nube compartida de la UE.",

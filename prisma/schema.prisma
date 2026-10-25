@@ -129,12 +129,10 @@ model Organization {
   // and once overdue). On by default; switched off in the request settings.
   dsarRemindersEnabled Boolean @default(true)
 
-  // Hosted service: the safeguards question of the first-visit welcome card
-  // (src/server/services/safeguards). welcomeUserId is the person who created
-  // the organisation on the hosted service and has not answered yet; the card
-  // is shown to that person only, and the column is cleared once they answer
-  // or choose "decide later". Null on the kit and on organisations created
-  // before the card existed. The choice itself (with who and when) stays.
+  // Hosted service: the safeguards question, asked in Settings
+  // (src/server/services/safeguards). welcomeUserId was set by older releases
+  // for a first-visit welcome card that asked it; it is no longer written or
+  // read, and an answer clears it. The choice itself (with who and when) stays.
   welcomeUserId        String?
   safeguardsChoice     SafeguardsChoice?
   safeguardsChoiceById String?

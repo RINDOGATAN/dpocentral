@@ -2,11 +2,12 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The first-visit welcome card and its safeguards question:
+ * The safeguards question (hosted service, in Settings):
  *
- *  - who sees it: the organisation's creator on the hosted service, once,
- *    while unanswered; never a colleague, never on the kit;
- *  - "decide later" closes it and is recorded as "later" (counts as a);
+ *  - it is not asked on the first visit: a new organisation records no
+ *    welcome card, and the router offers none, so the dashboard goes
+ *    straight to the quick start;
+ *  - "decide later" is recorded as "later" (counts as a);
  *  - answers b and c store a request and mail it to the sales inbox only
  *    (SALES_INBOX_EMAIL, else the operator's inbox), with a calm result even
  *    when the mail service fails;
@@ -62,7 +63,6 @@ import {
   purgeClosedSafeguardsRequests,
   purgeCutoff,
   salesInboxAddresses,
-  shouldShowWelcome,
 } from "@/server/services/safeguards";
 import { GET as purgeCron } from "@/app/api/cron/safeguards-requests-purge/route";
 import { callerFor, sessionFor } from "./helpers";
@@ -157,35 +157,12 @@ afterEach(() => {
   }
 });
 
-describe("who sees the welcome card", () => {
-  it("the creator, on the hosted service, while unanswered", () => {
-    const env = { VERCEL_ENV: "production" };
-    expect(shouldShowWelcome(org(), "creator", env)).toBe(true);
-    expect(shouldShowWelcome(org(), "colleague", env)).toBe(false);
-    expect(shouldShowWelcome(org({ safeguardsChoice: "later" }), "creator", env)).toBe(false);
-    expect(shouldShowWelcome(org({ welcomeUserId: null }), "creator", env)).toBe(false);
+describe("no welcome card on the first visit", () => {
+  it("the router offers no welcome card", () => {
+    expect("getWelcome" in safeguardsRouter._def.procedures).toBe(false);
   });
 
-  it("never on a self-hosted install", () => {
-    expect(shouldShowWelcome(org(), "creator", {})).toBe(false);
-    expect(shouldShowWelcome(org(), "creator", { AUTH_COOKIE_DOMAIN: ".todo.law" })).toBe(true);
-  });
-
-  it("getWelcome tells the creator to show it, with the form's pre-fill", async () => {
-    const result = await as("creator", "OWNER").getWelcome({ organizationId: "org-a" });
-    expect(result).toEqual({
-      show: true,
-      prefill: { name: "creator", email: "creator@firm.example", organizationName: "Org A" },
-    });
-  });
-
-  it("getWelcome hides it from a colleague invited later, and on the kit", async () => {
-    expect(await as("colleague", "ADMIN").getWelcome({ organizationId: "org-a" })).toEqual({ show: false });
-    hosted(false);
-    expect(await as("creator", "OWNER").getWelcome({ organizationId: "org-a" })).toEqual({ show: false });
-  });
-
-  it("a new organisation on the hosted service records its creator; on the kit, nobody", async () => {
+  it("a new organisation on the hosted service records no welcome card", async () => {
     mocks.prisma.organization.findUnique.mockResolvedValue(null);
     mocks.prisma.user.findUnique.mockResolvedValue(null);
     mocks.prisma.organizationMember.count.mockResolvedValue(0);
@@ -194,50 +171,22 @@ describe("who sees the welcome card", () => {
       ...data,
       members: [],
     }));
-    const create = (userId: string) =>
-      (callerFor(organizationRouter, sessionFor(userId)) as ReturnType<
-        typeof organizationRouter.createCaller
-      // The hosted pilot asks for the data processing agreement (src/config/pilot-dpa.ts).
-      >).create({ name: "Nueva", slug: "nueva", acceptDpa: true });
-
-    await create("creator");
-    expect(mocks.prisma.organization.create.mock.calls[0][0].data.welcomeUserId).toBe("creator");
-
-    hosted(false);
-    await create("someone");
-    expect(mocks.prisma.organization.create.mock.calls[1][0].data.welcomeUserId).toBeNull();
-  });
-
-  it("asks once per account: a consultant's next client does not ask again", async () => {
-    mocks.prisma.organization.findUnique.mockResolvedValue(null);
-    mocks.prisma.user.findUnique.mockResolvedValue(null);
-    mocks.prisma.organizationMember.count.mockResolvedValue(0);
-    mocks.prisma.organization.create.mockImplementation(async ({ data }: { data: object }) => ({
-      id: "org-next",
-      ...data,
-      members: [],
-    }));
-    // The person already answered (or was already asked) in another organisation.
-    mocks.prisma.organization.findMany.mockImplementation(async (args: { where?: { OR?: unknown } }) =>
-      args?.where?.OR ? [{ id: "org-first" }] : [],
-    );
-    const before = mocks.prisma.organization.create.mock.calls.length;
     await (callerFor(organizationRouter, sessionFor("creator")) as ReturnType<
       typeof organizationRouter.createCaller
-    >).create({ name: "Cliente dos", slug: "cliente-dos", acceptDpa: true });
-    expect(mocks.prisma.organization.create.mock.calls[before][0].data.welcomeUserId).toBeNull();
-    expect(mocks.prisma.organization.findMany).toHaveBeenCalledWith({
-      where: { OR: [{ safeguardsChoiceById: "creator" }, { welcomeUserId: "creator" }] },
-      select: { id: true },
-      take: 1,
-    });
-    mocks.prisma.organization.findMany.mockReset();
-    mocks.prisma.organization.findMany.mockResolvedValue([]);
+      // The hosted pilot asks for the data processing agreement (src/config/pilot-dpa.ts).
+    >).create({ name: "Nueva", slug: "nueva", acceptDpa: true });
+    const data = mocks.prisma.organization.create.mock.calls[0][0].data;
+    expect(data.welcomeUserId).toBeUndefined();
+    expect(data.safeguardsChoice).toBeUndefined();
+    // Nobody is looked up to decide whether to ask.
+    expect(mocks.prisma.organization.findMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({ where: { OR: expect.anything() } })
+    );
   });
 });
 
 describe("decide later", () => {
-  it("records 'later', clears the card and sends nothing", async () => {
+  it("records 'later', clears an older release's welcome marker and sends nothing", async () => {
     await as("creator", "OWNER").setChoice({ organizationId: "org-a", choice: "later" });
     expect(mocks.prisma.organization.update).toHaveBeenCalledWith({
       where: { id: "org-a" },

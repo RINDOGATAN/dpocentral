@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The safeguards question: the first-visit welcome card on /privacy and the
- * same question in Settings, next to the AI setting. Hosted service only;
+ * The safeguards question, in Settings next to the AI setting. Hosted service only;
  * see src/server/services/safeguards for the rules.
  */
 
@@ -18,7 +17,6 @@ import {
   REQUEST_CHOICES,
   USER_COUNT_BANDS,
   sendSafeguardsRequestNotice,
-  shouldShowWelcome,
 } from "@/server/services/safeguards";
 
 const ALL_CHOICES = ["shared_eu", "managed", "own_hardware", "later"] as const;
@@ -33,22 +31,6 @@ function assertHosted() {
 }
 
 export const safeguardsRouter = createTRPCRouter({
-  /** Whether the welcome card is shown to this person, with the form's pre-fill. */
-  getWelcome: organizationProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx }) => {
-      const show = shouldShowWelcome(ctx.organization, ctx.session.user.id);
-      if (!show) return { show: false as const };
-      return {
-        show: true as const,
-        prefill: {
-          name: ctx.session.user.name ?? "",
-          email: ctx.session.user.email ?? "",
-          organizationName: ctx.organization.name,
-        },
-      };
-    }),
-
   /** The recorded answer and any open request, for the Settings card. */
   getStatus: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
@@ -74,7 +56,8 @@ export const safeguardsRouter = createTRPCRouter({
 
   /**
    * Record an answer without a request: a, "decide later" (counts as a), or
-   * b/c when the person chose "Not now" on the short form. Closes the card.
+   * b/c when the person chose "Not now" on the short form. Also clears
+   * welcomeUserId, which older releases set for their welcome card.
    */
   setChoice: adminOrgProcedure
     .input(

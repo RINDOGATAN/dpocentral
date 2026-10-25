@@ -25,7 +25,7 @@ import { evaluatePath, overallProgress, programFigure, stageProgress } from "@/c
 import { confirmDrafts, DRAFT_WHERE, DraftNotFoundError } from "@/server/services/template-items/drafts";
 import { canConfirmDrafts, isDraftRecord } from "@/lib/drafts";
 import { buildNeedsAction, NEEDS_ACTION_KINDS } from "@/lib/needs-action";
-import { isPlaceCode, PLACE_CODES, placeOptions } from "@/config/jurisdiction-places";
+import { isPlaceCode, NOT_OFFERED_CODES, PLACE_CODES, placeOptions } from "@/config/jurisdiction-places";
 import { JURISDICTION_CATALOG } from "@/config/jurisdiction-catalog";
 import { formatIncidentRef } from "@/lib/incident-ref";
 
@@ -352,9 +352,11 @@ describe("d3: one programme figure", () => {
 });
 
 describe("d8: the quick start asks where the organisation operates", () => {
-  it("offers every data-protection law of the catalog as a place, and no AI-governance entry", () => {
+  it("offers every data-protection law of the catalog as a place, and no AI-governance or not-offered entry", () => {
     expect(PLACE_CODES).not.toContain("EU_AI_ACT");
-    const laws = JURISDICTION_CATALOG.filter((j) => j.category !== "ai_governance").map((j) => j.code);
+    const laws = JURISDICTION_CATALOG.filter(
+      (j) => j.category !== "ai_governance" && !NOT_OFFERED_CODES.includes(j.code)
+    ).map((j) => j.code);
     expect([...PLACE_CODES].sort()).toEqual([...laws].sort());
     expect(isPlaceCode("GDPR")).toBe(true);
     expect(isPlaceCode("NOPE")).toBe(false);
@@ -382,7 +384,7 @@ describe("d8: the quick start asks where the organisation operates", () => {
     const router = read("src/server/routers/privacy/regulations.ts");
     expect(router).toMatch(/setJurisdictions: writerProcedure/);
     // Only places are ever removed: an AI-governance entry stays.
-    expect(router).toMatch(/PLACE_CODES\.includes\(oj\.jurisdiction\.code\) && !codes\.includes/);
+    expect(router).toMatch(/PLACE_CODES\.includes\(oj\.jurisdiction\.code\) &&\s+!codes\.includes/);
     for (const bundle of [en, es]) {
       expect(bundle.pages.quickstart.applies.placesQuestion).toBeTruthy();
       expect(bundle.jurisdictionPicker.group.us).toBeTruthy();

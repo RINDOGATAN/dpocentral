@@ -161,6 +161,8 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
   {
     // Llei 29/2021, qualificada de protecció de dades personals (BOPA 119/2021,
     // 17 Nov 2021). In force six months after publication (final provision four).
+    // Kept for organisations that applied it; not offered as a choice
+    // (src/config/jurisdiction-places.ts, NOT_OFFERED_CODES).
     code: "LQPD",
     name: "Qualified Law 29/2021 on the Protection of Personal Data (LQPD)",
     shortName: "LQPD",
@@ -193,7 +195,8 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
   {
     // Ley Orgánica 3/2018 (BOE-A-2018-16673), in force 7 Dec 2018. It applies
     // together with the GDPR: choosing it also applies GDPR
-    // (src/config/jurisdiction-places.ts, IMPLIED_LAWS).
+    // (src/config/jurisdiction-places.ts, IMPLIED_LAWS). Kept for
+    // organisations that applied it; not offered as a choice (NOT_OFFERED_CODES).
     code: "LOPDGDD",
     name: "Organic Law 3/2018 on the Protection of Personal Data and Guarantee of Digital Rights (LOPDGDD)",
     shortName: "LOPDGDD",
@@ -1379,20 +1382,6 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
     helpText:
       "Switzerland has its own data protection law (nDSG/FADP) separate from the EU GDPR, though closely aligned.",
     relevantJurisdictions: ["FADP"],
-  },
-  {
-    id: "spain_presence",
-    question: "Are you established in Spain, or do you process data of individuals in Spain?",
-    helpText:
-      "Spain's LOPDGDD complements the EU GDPR with national rules (for example on the age of consent, employee data and the DPO). It always applies together with the GDPR.",
-    relevantJurisdictions: ["LOPDGDD"],
-  },
-  {
-    id: "andorra_presence",
-    question: "Are you established in Andorra, or do you process data of individuals in Andorra?",
-    helpText:
-      "Andorra is not in the EU and has its own data protection law (the LQPD), closely aligned with the GDPR.",
-    relevantJurisdictions: ["LQPD"],
   },
   {
     id: "california_consumers",
