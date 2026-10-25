@@ -42,7 +42,7 @@ export function renderExtensionEmail(input: Omit<DSARExtensionEmailInput, "to">)
   });
   const statusUrl = `${brand.appUrl.replace(/\/$/, "")}/dsar/status/${input.publicId}`;
   const subject = t("subject", { orgName: input.organizationName });
-  const greeting = t("greeting", { name: input.requesterName });
+  const greeting = t("greeting");
   const body = t("body", { orgName: input.organizationName, newDate });
   const reasons = t("reasons", { orgName: input.organizationName });
   const reference = `${t("referenceLabel")}: ${input.publicId}`;

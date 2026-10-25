@@ -4036,7 +4036,7 @@
     },
     "email": {
       "subject": "{orgName}: Hemos recibido tu solicitud",
-      "greeting": "Hola, {name}:",
+      "greeting": "Hola:",
       "body": "{orgName} ha recibido tu {requestType}. Te responderemos antes del {dueDate}.",
       "referenceLabel": "Número de referencia",
       "ctaText": "Comprobar estado de la solicitud",
@@ -4045,7 +4045,7 @@
     "communicationEmail": {
       "subject": "{orgName}: Actualización sobre tu solicitud de datos",
       "subjectWithCustom": "{orgName}: {subject}",
-      "greeting": "Hola, {name}:",
+      "greeting": "Hola:",
       "intro": "{orgName} te ha enviado un mensaje sobre tu solicitud de datos:",
       "referenceLabel": "Número de referencia",
       "ctaText": "Ver estado de la solicitud",
@@ -4053,7 +4053,7 @@
     },
     "extensionEmail": {
       "subject": "{orgName}: nueva fecha para tu solicitud",
-      "greeting": "Hola, {name}:",
+      "greeting": "Hola:",
       "body": "{orgName} ha ampliado el plazo para responder a tu solicitud. La nueva fecha es el {newDate}.",
       "reasons": "{orgName} te enviará los motivos de la ampliación.",
       "referenceLabel": "Número de referencia",
