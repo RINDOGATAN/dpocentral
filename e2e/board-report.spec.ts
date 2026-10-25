@@ -202,7 +202,7 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const report = page.getByTestId("board-report");
   await expect(report).toBeVisible();
   await expect(page.getByTestId("board-period-line")).toContainText(es ? "Periodo: del 1 de" : "Period: 1 ");
-  await expect(page.getByTestId("board-figure")).toContainText(es ? "fases hechas" : "stages done");
+  await expect(page.getByTestId("board-figure")).toContainText(es ? "fases completadas" : "stages done");
   // Every counted step with its state, and the records to date.
   await expect(page.getByTestId("board-steps")).toBeVisible();
   await expect(page.getByTestId("board-records")).toBeVisible();
