@@ -7297,7 +7297,7 @@
         },
         "dsar": {
           "title": "DSAR management",
-          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. On the hosted service, offered separately, when available."
+          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. On the hosted service it is included, with up to 100 requests a month through the public form (1,000 with the volume upgrade)."
         },
         "assessments": {
           "title": "Assessments",
@@ -10017,7 +10017,6 @@
         "dataTransfers": "Transfers",
         "vendors": "Vendors",
         "vendorContracts": "Vendor contracts",
-        "dsarRequests": "Data subject requests",
         "assessments": "Assessments",
         "assessmentTemplates": "Assessment templates",
         "incidents": "Incidents",

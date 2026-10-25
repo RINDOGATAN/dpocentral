@@ -33,7 +33,7 @@ const mocks = vi.hoisted(() => {
       },
       user: { findUnique: vi.fn() },
       businessUnitMember: { findMany: vi.fn().mockResolvedValue([]) },
-      auditLog: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
+      auditLog: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]), count: vi.fn().mockResolvedValue(0) },
       dataAsset: { ...counter(), findMany: vi.fn().mockResolvedValue([]) },
       dataElement: counter(),
       processingActivity: { ...counter(), findMany: vi.fn().mockResolvedValue([]) },
@@ -81,6 +81,7 @@ import { GET as exportOrganizationData } from "@/app/api/export/organization-dat
 import { isHostedDeployment } from "@/lib/hosted";
 import {
   assertPilotCapacity,
+  CAPPED_CREATE_PATHS,
   getPilotStatus,
   PILOT_CLOCK_START,
   PILOT_DAYS,
@@ -595,9 +596,10 @@ describe("the clock starts at the first sign-in", () => {
       dsarIntakeForms: [{ id: "form-1" }],
       jurisdictions: [],
     });
-    mocks.prisma.dSARRequest.count.mockResolvedValue(PILOT_LIMITS.dsarRequests);
+    // This month's public-form requests are at the monthly ceiling.
+    mocks.prisma.auditLog.count.mockResolvedValue(100);
     const anon = callerFor(dsarRouter, null) as ReturnType<typeof dsarRouter.createCaller>;
-    // Refused only by the ceiling, not by the clock; and a visitor never starts the clock.
+    // Refused only by the monthly ceiling, not by the clock; and a visitor never starts the clock.
     await expect(
       anon.submitPublic({
         orgSlug: "org",
@@ -606,7 +608,7 @@ describe("the clock starts at the first sign-in", () => {
         requesterEmail: "a@test.example",
         formToken: issueFormToken("org", new Date(Date.now() - 10_000)),
       })
-    ).rejects.toThrow("pilot limit");
+    ).rejects.toThrow("not taking requests");
     expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
   });
 });
@@ -698,14 +700,22 @@ describe("records ceiling", () => {
     expect(mocks.prisma.dataAsset.count).not.toHaveBeenCalled();
   });
 
-  it("bounds the public request intake on the hosted pilot", async () => {
+  it("leaves rights requests out of the records ceiling", () => {
+    expect(Object.keys(PILOT_LIMITS)).not.toContain("dsarRequests");
+    expect(Object.values(CAPPED_CREATE_PATHS)).not.toContain("dsarRequests");
+    expect(CAPPED_CREATE_PATHS["dsar.create"]).toBeUndefined();
+  });
+
+  it("bounds the public request intake on the hosted pilot by the monthly ceiling only", async () => {
     hosted();
     mocks.prisma.organization.findUnique.mockResolvedValue({
       ...ORG,
       dsarIntakeForms: [{ id: "form-1" }],
       jurisdictions: [],
     });
-    mocks.prisma.dSARRequest.count.mockResolvedValue(PILOT_LIMITS.dsarRequests);
+    // Many requests held in total, and this month's public-form count at the ceiling.
+    mocks.prisma.dSARRequest.count.mockResolvedValue(1000);
+    mocks.prisma.auditLog.count.mockResolvedValue(100);
     const anon = callerFor(dsarRouter, null) as ReturnType<typeof dsarRouter.createCaller>;
     await expect(
       anon.submitPublic({

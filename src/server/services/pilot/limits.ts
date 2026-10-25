@@ -37,14 +37,17 @@ export type PilotResource =
   | "dataTransfers"
   | "vendors"
   | "vendorContracts"
-  | "dsarRequests"
   | "assessments"
   | "assessmentTemplates"
   | "incidents"
   | "aiSystems"
   | "members";
 
-/** Records ceiling on the hosted pilot, per paying customer (all their organisations together). */
+/**
+ * Records ceiling on the hosted pilot, per paying customer (all their
+ * organisations together). Rights requests are not in it: their only limit
+ * is the module's monthly ceiling on the public form (src/server/services/dsar/module.ts).
+ */
 export const PILOT_LIMITS: Record<PilotResource, number> = {
   dataAssets: 25,
   dataElements: 250,
@@ -53,7 +56,6 @@ export const PILOT_LIMITS: Record<PilotResource, number> = {
   dataTransfers: 50,
   vendors: 50,
   vendorContracts: 50,
-  dsarRequests: 100,
   assessments: 25,
   assessmentTemplates: 10,
   incidents: 25,
@@ -70,7 +72,6 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
   dataTransfers: { en: "transfers", es: "transferencias" },
   vendors: { en: "vendors", es: "proveedores" },
   vendorContracts: { en: "vendor contracts", es: "contratos con proveedores" },
-  dsarRequests: { en: "data subject requests", es: "solicitudes de ejercicio de derechos" },
   assessments: { en: "assessments", es: "evaluaciones" },
   assessmentTemplates: { en: "assessment templates", es: "plantillas de evaluación" },
   incidents: { en: "incidents", es: "incidencias" },

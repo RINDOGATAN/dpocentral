@@ -11,7 +11,7 @@ import { calculateDSARDueDate, orgDsarRule } from "@/server/services/privacy/sla
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
-import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
+import { assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
@@ -960,10 +960,11 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      // Hosted pilot caps also bound the public intake (no-op on the kit)
+      // A read-only pilot also closes the public intake (no-op on the kit).
+      // Rights requests are outside the pilot's records ceiling: the monthly
+      // ceiling below is their only limit.
       const pilotLang = pilotLocale(input.locale);
       assertPilotWritable(org, pilotLang);
-      await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
 
       // The monthly ceiling (hosted): 100 public-form requests per calendar
       // month (Madrid), 1,000 with the volume upgrade.

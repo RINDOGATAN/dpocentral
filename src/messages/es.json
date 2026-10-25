@@ -7297,7 +7297,7 @@
         },
         "dsar": {
           "title": "Ejercicio de derechos",
-          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción. En el servicio alojado, se ofrecerá por separado, cuando esté disponible."
+          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción. En el servicio alojado está incluido, con hasta 100 solicitudes al mes por el formulario público (1.000 con la ampliación de volumen)."
         },
         "assessments": {
           "title": "Evaluaciones",
@@ -10017,7 +10017,6 @@
         "dataTransfers": "Transferencias",
         "vendors": "Proveedores",
         "vendorContracts": "Contratos con proveedores",
-        "dsarRequests": "Solicitudes de interesados",
         "assessments": "Evaluaciones",
         "assessmentTemplates": "Plantillas de evaluación",
         "incidents": "Incidencias",
