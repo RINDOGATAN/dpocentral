@@ -78,7 +78,7 @@ describe("help pages", () => {
     expect(incidents).toContain("formatDateTimeIn(entry.time, locale");
     expect(transfers).toContain('new Intl.DisplayNames([DATE_LOCALE[locale]');
     expect(vendors).toContain("t(`contracts.types.${contract.type}`)");
-    expect(es.docs.vendors.contracts.types.DPA_SCC).toBe("Contrato de encargo + CCT");
+    expect(es.docs.vendors.contracts.types.DPA_SCC).toBe("Contrato de encargo + SCC");
     // Every status the mockup uses has a label in both languages.
     for (const code of ["HIGH", "MEDIUM", "CRITICAL", "LOW"]) {
       expect(es.enums.incidentSeverity[code as "LOW"]).toBeTruthy();

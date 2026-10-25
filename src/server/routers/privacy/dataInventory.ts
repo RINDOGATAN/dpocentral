@@ -24,6 +24,7 @@ import {
   type BusinessUnitScope,
 } from "@/server/services/business-units/scope";
 import type { Db } from "@/lib/prisma";
+import { CHECKLIST_STATES, checklistAnswersOf, withChecklistAnswer } from "@/lib/transfer-checklist";
 import {
   generateFlowsForActivity,
   syncGeneratedFlows,
@@ -1705,6 +1706,53 @@ export const dataInventoryRouter = createTRPCRouter({
       return updated;
     }),
 
+  // One answer on the Schrems II checklist (done, not applicable or pending,
+  // with an optional note), kept in the transfer's metadata.
+  updateTransferChecklistItem: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        itemId: z.string(),
+        state: z.enum(CHECKLIST_STATES),
+        note: z.string().max(1000).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { SCHREMS_II_CHECKLIST } = await import("@/config/transfer-compliance-rules");
+      if (!SCHREMS_II_CHECKLIST.some((item) => item.id === input.itemId)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown checklist item" });
+      }
+      const scope = await scopeOf(ctx);
+      const transfer = await ctx.prisma.dataTransfer.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id, ...transferScopeWhere(scope) },
+        select: { id: true, metadata: true },
+      });
+      if (!transfer) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Data transfer not found" });
+      }
+      const metadata = withChecklistAnswer(transfer.metadata, input.itemId, {
+        state: input.state,
+        note: input.note?.trim() || undefined,
+        at: new Date().toISOString(),
+      });
+      await ctx.prisma.dataTransfer.update({
+        where: { id: input.id },
+        data: { metadata: metadata as Prisma.InputJsonValue },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataTransfer",
+          entityId: input.id,
+          action: "UPDATE_CHECKLIST",
+          changes: { itemId: input.itemId, state: input.state },
+        },
+      });
+      return { success: true };
+    }),
+
   // Get Schrems II compliance checklist for a transfer
   getTransferComplianceChecklist: organizationProcedure
     .input(z.object({ organizationId: z.string(), transferId: z.string() }))
@@ -1789,6 +1837,7 @@ export const dataInventoryRouter = createTRPCRouter({
         isAdequateCountry: isAdequate,
         adequacyDecision,
         checklist,
+        checklistAnswers: isAdequate ? {} : checklistAnswersOf(transfer.metadata),
         supplementaryMeasures: supplementaryMeasuresList,
       };
     }),

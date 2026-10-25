@@ -31,6 +31,14 @@ import { useOrgRole } from "@/lib/use-org-role";
 import { DeleteRecordButton } from "@/components/privacy/delete-record-button";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 import { formatDateIn } from "@/lib/utils";
+import {
+  CHECKLIST_STATES,
+  checklistSection,
+  checklistTarget,
+  pendingChecklistItems,
+  type ChecklistAnswers,
+  type ChecklistState,
+} from "@/lib/transfer-checklist";
 
 /** The country's name in `locale` (Intl), or undefined when the runtime has none. */
 function regionName(code: string, locale: string): string | undefined {
@@ -107,7 +115,18 @@ export default function TransferDetailPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  const updateChecklistItem = trpc.dataInventory.updateTransferChecklistItem.useMutation({
+    onSuccess: () => {
+      utils.dataInventory.getTransferComplianceChecklist.invalidate({
+        organizationId: orgId,
+        transferId: id,
+      });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   const [openChecklistItem, setOpenChecklistItem] = useState<string | null>(null);
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
 
   if (checklistLoading || !checklistData) {
     return (
@@ -119,7 +138,51 @@ export default function TransferDetailPage() {
 
   const { transfer, isAdequateCountry, adequacyDecision, adequacyCoverage, checklist, supplementaryMeasures } =
     checklistData;
+  const checklistAnswers = (checklistData.checklistAnswers ?? {}) as ChecklistAnswers;
+  const pendingItems = pendingChecklistItems(
+    checklist.map((item) => item.id),
+    checklistAnswers
+  );
   const tAdq = tTransfers;
+
+  // The texts of a checklist item or measure in the reader's language; the
+  // English of the rules file only when a translation is missing.
+  const itemQuestion = (item: { id: string; question: string }) =>
+    t.has(`checklistItems.${item.id}.question` as "checklistItems.s2_1_map_transfers.question")
+      ? t(`checklistItems.${item.id}.question` as "checklistItems.s2_1_map_transfers.question")
+      : item.question;
+  const itemHelp = (item: { id: string; helpText: string }) =>
+    t.has(`checklistItems.${item.id}.help` as "checklistItems.s2_1_map_transfers.help")
+      ? t(`checklistItems.${item.id}.help` as "checklistItems.s2_1_map_transfers.help")
+      : item.helpText;
+  const measureName = (m: { id: string; name: string }) =>
+    t.has(`measures.${m.id}.name` as "measures.tech_encryption_transit.name")
+      ? t(`measures.${m.id}.name` as "measures.tech_encryption_transit.name")
+      : m.name;
+  const measureDescription = (m: { id: string; description: string }) =>
+    t.has(`measures.${m.id}.description` as "measures.tech_encryption_transit.description")
+      ? t(`measures.${m.id}.description` as "measures.tech_encryption_transit.description")
+      : m.description;
+
+  const answerItem = (itemId: string, state: ChecklistState, note?: string) => {
+    updateChecklistItem.mutate({
+      organizationId: orgId,
+      id,
+      itemId,
+      state,
+      ...(note !== undefined ? { note } : checklistAnswers[itemId]?.note ? { note: checklistAnswers[itemId].note } : {}),
+    });
+  };
+
+  const tiaHref = transfer.tia
+    ? `/privacy/assessments/${transfer.tia.id}`
+    : `/privacy/assessments/new?type=TIA&transferId=${id}`;
+  const targetHref: Record<string, string> = {
+    transfers: "/privacy/transfers",
+    edit: `/privacy/transfers/${id}/edit`,
+    measures: "#supplementary-measures",
+    tia: tiaHref,
+  };
 
   const supplementaryMeasuresObj = (transfer.supplementaryMeasures as Record<string, boolean> | null) ?? {};
   const enabledMeasures = Object.keys(supplementaryMeasuresObj).filter(
@@ -353,33 +416,92 @@ export default function TransferDetailPage() {
           <CardHeader>
             <CardTitle>{t("schremsTitle")}</CardTitle>
             <CardDescription>{t("schremsSubtitle")}</CardDescription>
+            <div className="flex flex-wrap items-center gap-2 pt-2" data-testid="checklist-summary">
+              <p className="text-sm text-foreground">
+                {t("checklistSummary", { pending: pendingItems.length, total: checklist.length })}
+              </p>
+              <Link href={tiaHref} className="ml-auto">
+                <Button size="sm" variant="outline">
+                  <Shield className="w-4 h-4 mr-2" />
+                  {t("checklistGo.tia")}
+                </Button>
+              </Link>
+            </div>
           </CardHeader>
           <CardContent className="space-y-2">
             {checklist.map((item) => {
               const isOpen = openChecklistItem === item.id;
+              const answer = checklistAnswers[item.id];
+              const state: ChecklistState = answer?.state ?? "PENDING";
+              const section = checklistSection(item.id);
+              const target = checklistTarget(item.id);
+              const noteDraft = noteDrafts[item.id] ?? answer?.note ?? "";
               return (
-                <div key={item.id} className="border rounded-md">
-                  <button
-                    type="button"
-                    onClick={() => setOpenChecklistItem(isOpen ? null : item.id)}
-                    className="w-full text-left p-3 flex items-start gap-3 hover:bg-muted/50"
-                  >
-                    <div className="w-5 h-5 border-2 border-muted-foreground rounded shrink-0 mt-0.5 flex items-center justify-center">
-                      <span className="text-xs text-muted-foreground">{item.category[0]}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
+                <div key={item.id} className="border rounded-md" data-testid={`checklist-item-${item.id}`}>
+                  <div className="p-3 flex flex-col sm:flex-row sm:items-start gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setOpenChecklistItem(isOpen ? null : item.id)}
+                      className="flex-1 min-w-0 text-left"
+                      aria-expanded={isOpen}
+                    >
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        {item.category}
+                        {t(`checklistCategories.${section}` as "checklistCategories.know")}
+                        {item.required ? ` · ${t("required")}` : ""}
                       </p>
-                      <p className="font-medium text-sm">{item.question}</p>
+                      <p className="font-medium text-sm">
+                        {state === "DONE" && <CheckCircle2 className="inline w-4 h-4 mr-1 text-primary align-text-bottom" />}
+                        {itemQuestion(item)}
+                      </p>
+                      {answer?.note && !isOpen && (
+                        <p className="text-xs text-muted-foreground mt-1 truncate">{answer.note}</p>
+                      )}
+                    </button>
+                    <div className="flex shrink-0 gap-1" role="group" aria-label={itemQuestion(item)}>
+                      {CHECKLIST_STATES.map((s) => (
+                        <Button
+                          key={s}
+                          type="button"
+                          size="sm"
+                          variant={state === s && (answer || s !== "PENDING") ? "default" : "outline"}
+                          disabled={!canWrite || updateChecklistItem.isPending}
+                          onClick={() => answerItem(item.id, s)}
+                          data-testid={`checklist-${item.id}-${s}`}
+                        >
+                          {t(`checklistState.${s}` as "checklistState.DONE")}
+                        </Button>
+                      ))}
                     </div>
-                    {item.required && (
-                      <Badge variant="outline" className="text-xs shrink-0">{t("required")}</Badge>
-                    )}
-                  </button>
+                  </div>
                   {isOpen && (
-                    <div className="px-3 pb-3 text-sm text-muted-foreground">
-                      {item.helpText}
+                    <div className="px-3 pb-3 space-y-2 text-sm">
+                      <p className="text-muted-foreground">{itemHelp(item)}</p>
+                      <Link href={targetHref[target]} className="inline-flex items-center text-primary hover:underline">
+                        {t(`checklistGo.${target}` as "checklistGo.tia")}
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                      {canWrite && (
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <input
+                            type="text"
+                            className="flex-1 rounded-md border bg-background px-2 py-1 text-sm"
+                            placeholder={t("checklistNote")}
+                            aria-label={t("checklistNote")}
+                            value={noteDraft}
+                            maxLength={1000}
+                            onChange={(e) => setNoteDrafts((d) => ({ ...d, [item.id]: e.target.value }))}
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={updateChecklistItem.isPending || noteDraft === (answer?.note ?? "")}
+                            onClick={() => answerItem(item.id, state, noteDraft)}
+                          >
+                            {t("checklistNoteSave")}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -391,7 +513,7 @@ export default function TransferDetailPage() {
 
       {/* Supplementary measures */}
       {!isAdequateCountry && supplementaryMeasures.length > 0 && (
-        <Card>
+        <Card id="supplementary-measures" className="scroll-mt-20">
           <CardHeader>
             <CardTitle>{t("supplementaryTitle")}</CardTitle>
             <CardDescription>{t("supplementarySubtitle")}</CardDescription>
@@ -421,8 +543,8 @@ export default function TransferDetailPage() {
                           disabled={updateCompliance.isPending}
                         />
                         <div>
-                          <p className="font-medium text-sm">{m.name}</p>
-                          <p className="text-xs text-muted-foreground">{m.description}</p>
+                          <p className="font-medium text-sm">{measureName(m)}</p>
+                          <p className="text-xs text-muted-foreground">{measureDescription(m)}</p>
                         </div>
                       </label>
                     ))}
@@ -474,7 +596,7 @@ export default function TransferDetailPage() {
                 <p className="text-muted-foreground">{t("tiaPendingBody")}</p>
               </div>
             </div>
-            <Link href={`/privacy/assessments/new?type=TIA&transferId=${id}`} className="shrink-0">
+            <Link href={tiaHref} className="shrink-0">
               <Button size="sm">
                 {t("startTia")} <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
