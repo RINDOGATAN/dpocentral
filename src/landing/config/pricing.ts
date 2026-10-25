@@ -6,7 +6,8 @@
  * simple block, right under the hosting block, in both languages, matching
  * the storefront home's pricing block. A title, one row (what is offered |
  * what it costs), a "Start free" button to the existing sign-up, a small
- * "Subscribe" link to the yearly payment link, and one quiet line to the
+ * "Subscribe" link to the yearly payment link (two links, monthly and yearly,
+ * once the monthly link is set), and one quiet line to the
  * storefront's contact wizard for a managed instance or your own hardware.
  * The same block, copy and classes are on AI Sentinel's landing.
  *
@@ -21,7 +22,10 @@
  * nothing about tax.
  *
  * Payment links: the euro link is the storefront's (src/content/plan-nube-ue.ts),
- * the dollar link is a separate payment link. Only yearly links exist. The pilot's days
+ * the dollar link is a separate payment link. The yearly links are below; the monthly
+ * links come from NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK and
+ * NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK (the same values the in-app checkout uses,
+ * src/lib/plan-upgrade.ts), and the block offers monthly only where its link is set. The pilot's days
  * are read from the value the service enforces (src/server/services/pilot/limits.ts).
  */
 
@@ -36,6 +40,20 @@ export const PRICING_ANCHOR: Record<LandingLocale, string> = { en: "pricing", es
 export const PLAN_PAYMENT_LINK: Record<Currency, string> = {
   USD: "https://buy.stripe.com/aFa9AU73h3UV26v7ur4sE05",
   EUR: "https://buy.stripe.com/fZubJ273hbnnbH56qn4sE04",
+};
+
+function httpsOrNull(value: string | undefined): string | null {
+  const link = (value ?? "").trim();
+  return /^https:\/\/\S+$/.test(link) ? link : null;
+}
+
+/**
+ * The monthly payment link, per currency, or null while it is not set. Read
+ * with literal names so the build inlines them into the page.
+ */
+export const PLAN_MONTHLY_PAYMENT_LINK: Record<Currency, string | null> = {
+  USD: httpsOrNull(process.env.NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK),
+  EUR: httpsOrNull(process.env.NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK),
 };
 
 /** The storefront's contact wizard for a managed instance or your own hardware. */
@@ -91,6 +109,9 @@ export interface PricingCopy {
   price: (days: number, currency: Currency) => string;
   start: string;
   subscribe: string;
+  /** The two links shown instead of `subscribe` once the monthly link is set. */
+  subscribeMonthly: string;
+  subscribeYearly: string;
   /** The small line under the price row: the legal links' labels. */
   legal: Record<PricingLegalKey, string>;
   /** The quiet line: the question, then the linked request. */
@@ -112,6 +133,8 @@ export const PRICING_COPY: Record<LandingLocale, PricingCopy> = {
     price: (days, currency) => `Start free (${days}-day trial), then ${PLAN_PRICE_EN[currency]}`,
     start: "Start free",
     subscribe: "Subscribe",
+    subscribeMonthly: "Subscribe monthly",
+    subscribeYearly: "Subscribe yearly",
     legal: { terms: "Terms", dpa: "DPA", subprocessors: "Sub-processors" },
     contact: { question: "Managed instance or your own hardware?", link: "Get a quotation." },
   },
@@ -123,6 +146,8 @@ export const PRICING_COPY: Record<LandingLocale, PricingCopy> = {
     price: (days) => `Empieza gratis (${days} días de prueba); después, 179 € al mes o 1.800 € al año`,
     start: "Empieza gratis",
     subscribe: "Contratar",
+    subscribeMonthly: "Contratar con pago mensual",
+    subscribeYearly: "Contratar con pago anual",
     legal: { terms: "Condiciones", dpa: "Encargo del tratamiento", subprocessors: "Subencargados" },
     contact: { question: "¿Instancia gestionada o tu propio hardware?", link: "Solicita una oferta." },
   },

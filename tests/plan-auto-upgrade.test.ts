@@ -127,6 +127,7 @@ import {
   signSyncBody,
   verifySyncSignature,
   upgradeLinkFor,
+  inAppPlanOffer,
 } from "@/lib/plan-upgrade";
 import { POST as sync } from "@/app/api/plan/stripe-sync/route";
 import { GET as checkout } from "@/app/api/plan/checkout/route";
@@ -602,6 +603,61 @@ describe("GET /api/plan/checkout", () => {
     expect((await get("cmorg1", { "x-vercel-ip-country": "FR" })).status).toBe(303);
     vi.stubEnv("PLAN_CLOUD_EUR_LINK", "");
     expect((await get("cmorg1", { "x-vercel-ip-country": "FR" })).status).toBe(404);
+  });
+});
+
+describe("GET /api/plan/checkout: paying monthly", () => {
+  const EUR_MONTHLY = "https://buy.stripe.com/test_eur_monthly";
+  const USD_MONTHLY = "https://buy.stripe.com/test_usd_monthly";
+  const get = (query: string, headers: Record<string, string> = { "x-vercel-ip-country": "ES" }) =>
+    checkout(new Request(`http://localhost/api/plan/checkout?org=cmorg1${query}`, { headers }));
+  const linkOf = (res: Response) => {
+    const loc = new URL(res.headers.get("location")!);
+    return `${loc.origin}${loc.pathname}`;
+  };
+
+  beforeEach(() => {
+    org("cmorg1");
+    state.members.push({ organizationId: "cmorg1", email: "owner@example.test", role: "OWNER" });
+    state.sessionEmail = "owner@example.test";
+  });
+
+  it("is 404 for monthly while its link is not set, and yearly is unchanged", async () => {
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK", "");
+    expect((await get("&interval=month")).status).toBe(404);
+    expect(linkOf(await get(""))).toBe(EUR_LINK);
+    expect(linkOf(await get("&interval=year"))).toBe(EUR_LINK);
+  });
+
+  it("sends monthly to the monthly link of the visitor's currency, with the signed reference", async () => {
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK", EUR_MONTHLY);
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK", USD_MONTHLY);
+    const res = await get("&interval=month");
+    expect(res.status).toBe(303);
+    expect(linkOf(res)).toBe(EUR_MONTHLY);
+    const loc = new URL(res.headers.get("location")!);
+    expect(parseOrgReference(loc.searchParams.get("client_reference_id"), SECRET)).toEqual({
+      kind: "valid",
+      orgId: "cmorg1",
+    });
+    expect(linkOf(await get("&interval=month", { "x-vercel-ip-country": "US" }))).toBe(USD_MONTHLY);
+    // Yearly stays the default.
+    expect(linkOf(await get(""))).toBe(EUR_LINK);
+  });
+
+  it("is 400 for an unknown interval", async () => {
+    expect((await get("&interval=weekly")).status).toBe(400);
+  });
+
+  it("never offers monthly without the yearly link of the same currency", () => {
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK", EUR_MONTHLY);
+    const es = new Headers({ "x-vercel-ip-country": "ES" });
+    expect(inAppPlanOffer(es)).toEqual({ currency: "EUR", link: EUR_LINK, monthlyLink: EUR_MONTHLY });
+    vi.stubEnv("PLAN_CLOUD_EUR_LINK", "");
+    expect(inAppPlanOffer(es).monthlyLink).toBeNull();
+    on();
+    vi.stubEnv("AUTO_UPGRADE_ENABLED", "false");
+    expect(inAppPlanOffer(es).monthlyLink).toBeNull();
   });
 });
 
