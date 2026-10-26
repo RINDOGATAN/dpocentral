@@ -23,7 +23,7 @@
   },
   "clientTemplate": {
     "titleCurrent": "Start from another client",
-    "titleNew": "Start a new client from this one",
+    "titleNew": "Create a new client from this one",
     "cardHint": "Copy the data inventory, processing activities, vendors and templates from one of your other clients, as drafts.",
     "descriptionCurrent": "Copy a program from one of your other clients into this one, as drafts. The other client's full name is replaced with this client's. Anything else that may point back to it is listed below for you to review before copying.",
     "descriptionNew": "Create a new client and copy this client's program into it, as drafts. {source}'s full name is replaced with the new client's. Anything else that may point back to it is listed below for you to review before copying.",
@@ -2569,7 +2569,7 @@
         "privacyProfessional": "Privacy professional",
         "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
         "privacyProfessionalDescHosted": "A law firm, a consultancy, or another adviser managing privacy for up to five organizations",
-        "businessNeedsOneOrganization": "A business account works with one organization. To switch to it, first delete all your organizations but one."
+        "businessNeedsOneOrganization": "A business account works with one organization. To switch to it, first delete all your organizations but one. You can delete a client from the menu on its row in <link>All clients</link>."
       },
       "language": {
         "title": "Language",
@@ -2715,19 +2715,23 @@
         }
       },
       "deleteOrganization": {
-        "title": "Delete the organization",
-        "description": "Deletes this organization and everything your team has recorded in it. Only the owner can do it.",
-        "start": "Delete the organization…",
+        "title": "Delete this organization",
+        "description": "Deletes only the organization open now, {name}, and everything recorded in it. Your account and your other organizations stay. Only an owner can do it.",
+        "start": "Delete this organization…",
         "whatGoes": "Everything recorded here goes: activities, systems, vendors, assessments, incidents, rights requests with their messages, the activity log, members and pending invitations.",
         "whatStays": "We keep only the record of the contract, with no content: the acceptance of the processing agreement, plan changes and the date of the deletion.",
         "accounts": "Members keep their own accounts and their other organizations.",
-        "noUndo": "It cannot be undone.",
+        "noUndo": "It is deleted at once. There is no waiting period, and you cannot undo it or restore it.",
         "exportFirst": "If you want a copy, export the program first (Settings, \"Take your program with you\").",
         "confirmLabel": "To confirm, type the organization's name: {name}",
         "confirm": "Delete for good",
         "cancel": "Cancel",
         "deleted": "The organization has been deleted.",
-        "paidPlan": "While the paid plan is active, the organization cannot be deleted here. When the plan ends you have 30 days to export everything; after that we delete it, or you can delete it yourself here."
+        "paidPlan": "This is the last organization on the paid plan, so it cannot be deleted here while the plan is active. When the plan ends you have 30 days to export everything; after that we delete it, or you can delete it yourself here.",
+        "backups": "What remains in our backups is erased within 30 days.",
+        "planContinues": "Deleting it does not cancel the paid plan, which carries on for your other organizations.",
+        "otherClients": "To delete a different client, use the menu on its row in <link>All clients</link>.",
+        "dsarModule": "While the rights-request volume upgrade is active, this organization cannot be deleted here. Once the upgrade has ended, you can delete it."
       }
     },
     "dsar": {
@@ -5849,7 +5853,7 @@
           "deadline": "The next deadline (a breach to notify, a rights request due or a review coming due), with its reference",
           "action": "The next action"
         },
-        "outro": "Rows are sorted by the nearest deadline, the soonest or most overdue first. Select a client's name to open its dashboard; select its deadline or next action to go straight there. \"Add a client\" sits beside the title, and each row's menu offers \"Start a new client from this one\". On a phone, each client is a card with the same fields."
+        "outro": "Rows are sorted by the nearest deadline, the soonest or most overdue first. Select a client's name to open its dashboard; select its deadline or next action to go straight there. \"Add a client\" sits beside the title, and each row's menu (⋯) offers \"Create a new client from this one\" and, for an owner of that client, \"Delete this client\", which deletes only that client. On a phone, each client is a card with the same fields."
       },
       "settings": {
         "title": "Changing your account type",
@@ -10507,7 +10511,25 @@
       "onTrack": "On track"
     },
     "limited": "Limited to your departments: the organization-wide figures are not shown.",
-    "sortNote": "Sorted by the nearest deadline, the soonest first; clients with no deadline follow, by name."
+    "sortNote": "Sorted by the nearest deadline, the soonest first; clients with no deadline follow, by name.",
+    "menu": {
+      "label": "Actions for {name}",
+      "delete": "Delete this client"
+    },
+    "delete": {
+      "title": "Delete {name}",
+      "intro": "This deletes only this client. Your account and your other clients stay as they are.",
+      "whatGoes": "Everything recorded for this client goes: activities, systems, vendors, assessments, incidents, rights requests with their messages, the activity log, members and pending invitations.",
+      "whatStays": "We keep only the record of the contract, with no content: the acceptance of the processing agreement, plan changes and the date of the deletion.",
+      "accounts": "Members keep their own accounts and their other organizations.",
+      "current": "You have this client open now. Once it is deleted, we open another of your clients.",
+      "exportFirst": "If you want a copy, open this client and export its program first (Settings, \"Take your program with you\").",
+      "confirmLabel": "To confirm, type the client's name: {name}",
+      "confirm": "Delete this client for good",
+      "cancel": "Cancel",
+      "deleted": "{name} has been deleted.",
+      "loading": "Checking whether this client can be deleted"
+    }
   },
   "applicability": {
     "cardTitle": "What applies to you",
@@ -10782,7 +10804,7 @@
   },
   "serverErrors": {
     "exact": {
-      "businessNeedsOneOrganization": "To switch to a business account, first delete all your organizations but one.",
+      "businessNeedsOneOrganization": "To switch to a business account, first delete all your organizations but one. You can delete a client from the menu on its row in All clients.",
       "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
       "dsarReadRestricted": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
       "aCustomerWithThisEmailAlreadyExists": "A customer with this email already exists",
@@ -10903,7 +10925,10 @@
       "sendingTimeOnlyWithSent": "A sending time is recorded only with the status SENT.",
       "sendingTimeNotInFuture": "The sending time cannot be in the future.",
       "invitationNotFound": "Invitation not found",
-      "webAddressOnly": "Use a web address that starts with https:// or http://."
+      "webAddressOnly": "Use a web address that starts with https:// or http://.",
+      "orgDeletionPaidPlan": "The organization is on the paid plan; it can be deleted once the plan has ended.",
+      "orgDeletionDsarModule": "The organization has the rights-request upgrade; it can be deleted once the upgrade has ended.",
+      "orgDeletionNameMismatch": "The name typed does not match the organization's name."
     },
     "pattern": {
       "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",

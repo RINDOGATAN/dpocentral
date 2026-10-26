@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ApplicabilityCard } from "@/components/privacy/applicability-check";
@@ -287,46 +288,54 @@ export default function SettingsPage() {
                     ? tAccountType("privacyProfessionalDescHosted")
                     : tAccountType("privacyProfessionalDesc");
               return (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => {
-                    if (!isCurrent && !blocked && !setUserType.isPending) {
-                      setUserType.mutate({ userType: type as UserType });
-                    }
-                  }}
-                  disabled={isCurrent || blocked || setUserType.isPending}
-                  data-testid={`account-type-${type}`}
-                  className={`w-full flex items-center gap-4 p-3 rounded-lg border text-left transition-colors ${
-                    isCurrent
-                      ? "border-primary bg-primary/5 cursor-default"
-                      : blocked
-                        ? "cursor-not-allowed"
-                        : "hover:border-primary/40 cursor-pointer"
-                  }`}
-                >
-                  <div
-                    className={`p-2 rounded-lg shrink-0 ${
-                      isCurrent ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                <div key={type}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isCurrent && !blocked && !setUserType.isPending) {
+                        setUserType.mutate({ userType: type as UserType });
+                      }
+                    }}
+                    disabled={isCurrent || blocked || setUserType.isPending}
+                    data-testid={`account-type-${type}`}
+                    className={`w-full flex items-center gap-4 p-3 rounded-lg border text-left transition-colors ${
+                      isCurrent
+                        ? "border-primary bg-primary/5 cursor-default"
+                        : blocked
+                          ? "cursor-not-allowed"
+                          : "hover:border-primary/40 cursor-pointer"
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm">{label}</p>
-                    <p className="text-xs text-muted-foreground">{description}</p>
-                    {blocked && (
-                      <p className="mt-1 text-xs text-foreground" data-testid="account-type-business-blocked">
-                        {tAccountType("businessNeedsOneOrganization")}
-                      </p>
+                    <div
+                      className={`p-2 rounded-lg shrink-0 ${
+                        isCurrent ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm">{label}</p>
+                      <p className="text-xs text-muted-foreground">{description}</p>
+                    </div>
+                    {isCurrent && (
+                      <Badge variant="outline" className="border-primary text-primary text-xs">
+                        {tAccountType("current")}
+                      </Badge>
                     )}
-                  </div>
-                  {isCurrent && (
-                    <Badge variant="outline" className="border-primary text-primary text-xs">
-                      {tAccountType("current")}
-                    </Badge>
+                  </button>
+                  {/* Outside the (disabled) button, so the link can be followed. */}
+                  {blocked && (
+                    <p className="mt-1 px-3 text-xs text-foreground" data-testid="account-type-business-blocked">
+                      {tAccountType.rich("businessNeedsOneOrganization", {
+                        link: (chunks) => (
+                          <Link href="/privacy/clients" className="text-primary underline underline-offset-4">
+                            {chunks}
+                          </Link>
+                        ),
+                      })}
+                    </p>
                   )}
-                </button>
+                </div>
               );
             })}
           </CardContent>
@@ -628,7 +637,9 @@ export default function SettingsPage() {
       {orgId && isAdmin && <ProgrammeImportCard organizationId={orgId} />}
 
       {/* Deleting the organisation (DPA clause 13). Owner only, enforced server-side. */}
-      {orgId && isOwner && <DeleteOrganizationCard organizationId={orgId} />}
+      {orgId && isOwner && (
+        <DeleteOrganizationCard organizationId={orgId} showClientsLink={organizations.length > 1} />
+      )}
 
       <DeploymentExpertCta />
 
