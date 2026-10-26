@@ -33,6 +33,9 @@ import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
 import { assertUsersAreMembers } from "../../org-ownership";
 import { departmentScopeConditions, loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { recordName } from "@/lib/record-name";
+import { pilotLocale } from "../../services/pilot/caps";
+import { applyCatalogueTransferPack } from "@/server/services/catalogue-transfer-pack";
+import { logger } from "@/lib/logger";
 
 export const vendorRouter = createTRPCRouter({
   // ============================================================
@@ -236,6 +239,23 @@ export const vendorRouter = createTRPCRouter({
           changes: input as any,
         },
       });
+
+      // A catalogue vendor with a transfer pack (src/config/catalogue-transfer-packs.ts)
+      // gets its transfer, measures, checklist and a TIA for approval. Best
+      // effort: the vendor is created either way.
+      const catalogSlug = (input.metadata as { catalogSlug?: unknown } | undefined)?.catalogSlug;
+      if (typeof catalogSlug === "string") {
+        try {
+          await applyCatalogueTransferPack(ctx.prisma, {
+            organizationId: ctx.organization.id,
+            vendorId: vendor.id,
+            slug: catalogSlug,
+            locale: pilotLocale(localeFromCookieGetter(ctx.getCookie)),
+          });
+        } catch (error) {
+          logger.error("Catalogue transfer pack failed", error, { vendorId: vendor.id, catalogSlug });
+        }
+      }
 
       if (activity && !activity.recipients.includes(vendor.name)) {
         await ctx.prisma.processingActivity.update({
