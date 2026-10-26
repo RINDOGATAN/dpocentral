@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusChip } from "@/components/ui/status-chip";
 import type { StatusTone } from "@/config/status-tone";
@@ -21,6 +20,7 @@ import { DocSection } from "@/components/docs/doc-section";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { RolePermissions } from "@/components/docs/role-permissions";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import Link from "next/link";
 import { features, isDsarModuleEnabled } from "@/config/features";
@@ -36,7 +36,6 @@ import { features, isDsarModuleEnabled } from "@/config/features";
 export default async function DocsGettingStartedPage() {
   const t = await getTranslations("docs.gettingStarted");
   const tg = await getTranslations("guided");
-  const tRole = await getTranslations("enums.role");
   const tv = await getTranslations("views");
   const td = await getTranslations("documentRegister");
   // Without the rights-request module (src/config/features.ts) the guide
@@ -77,7 +76,6 @@ export default async function DocsGettingStartedPage() {
     ["needsAction", "incomplete", "reports", "auditTrail", "experts", "skills", "help", "settings"] as const
   ).filter((item) => item !== "experts" || features.expertDirectoryEnabled);
 
-  const roleRows = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
 
   return (
     <div className="space-y-10">
@@ -294,29 +292,7 @@ export default async function DocsGettingStartedPage() {
       </DocSection>
 
       <DocSection id="roles" title={t("roles.title")} description={t("roles.description")}>
-        <div className="rounded-lg border overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-muted/50">
-                <th className="text-left font-medium px-4 py-2">{t("roles.columnRole")}</th>
-                <th className="text-left font-medium px-4 py-2">{t("roles.columnPermissions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {roleRows.map((role, i) => (
-                <tr key={role} className={i % 2 ? "bg-muted/20" : ""}>
-                  <td className="px-4 py-2">
-                    <Badge variant="outline" className="text-xs">{tRole(role)}</Badge>
-                  </td>
-                  <td className="px-4 py-2 text-muted-foreground">{t(`roles.rows.${role}`)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <InfoCallout type="info" title={t("roles.inheritanceTitle")}>
-          {t("roles.inheritanceBody")}
-        </InfoCallout>
+        <RolePermissions />
       </DocSection>
 
       <DocNavFooter
