@@ -225,8 +225,17 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const incidents = page.getByTestId("board-incidents");
   await expect(incidents).toContainText(es ? "Notificados a la autoridad en 72 horas" : "Notified to the authority within 72 hours");
   const incidentValues = await incidents.locator("dd").allInnerTexts();
-  // The last row is the backlog on the day generated: breach B, open and still to notify.
-  expect(incidentValues.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "1", "1"]);
+  // The sixth row is the backlog on the day generated: breach B, open and still to notify.
+  // The last row is the breach-readiness confirmation, not given in this walk.
+  expect(incidentValues.map((v) => v.trim())).toEqual([
+    "2",
+    "1",
+    "0",
+    "1",
+    "1",
+    "1",
+    es ? "Sin confirmar todavía" : "Not confirmed yet",
+  ]);
   const rights = await page.getByTestId("board-rights").locator("dd").allInnerTexts();
   // The last row is the backlog on the day generated: the erasure request, open and overdue.
   expect(rights.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "0", "0", "1"]);
