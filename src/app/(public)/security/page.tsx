@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   Fingerprint,
   Mail,
+  DatabaseBackup,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -158,6 +159,12 @@ const categories: CategoryDef[] = [
         badgeKey: "badges.edgeNetwork",
         badgeClass: `border-transparent ${toneChip("info")}`,
         itemKeys: ["items.infra1", "items.infra2", "items.infra3", "items.infra4"],
+      },
+      {
+        id: "backups",
+        icon: DatabaseBackup,
+        titleKey: "sections.backups",
+        itemKeys: ["items.backup1", "items.backup2", "items.backup3", "items.backup4"],
       },
     ],
   },

@@ -1,0 +1,68 @@
+# Uptime check for the hosted services. Every 15 minutes it asks each health
+# address once (no retry loop: the hosting firewall blocks rapid requests).
+# When one is down it opens a single issue labelled "outage", or comments on
+# the one already open; when every address answers again it closes it.
+# It reads only public addresses and writes only issues in this repository.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check the health addresses
+        id: health
+        run: |
+          down=""
+          for url in \
+            "https://dpocentral.todo.law/api/health" \
+            "https://aisentinel.todo.law/api/health"; do
+            body=$(curl -s -m 20 -w '\n%{http_code}' "$url" || printf '\n000')
+            code=$(printf '%s' "$body" | tail -n 1)
+            if [ "$code" = "200" ] && printf '%s' "$body" | grep -Eq '"status":"ok"|"ok":true'; then
+              echo "up   $url"
+            else
+              echo "down $url ($code)"
+              down="${down}- ${url} answered ${code}\n"
+            fi
+          done
+          {
+            echo "down<<EOF"
+            printf '%b' "$down"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open, update or close the outage issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DOWN: ${{ steps.health.outputs.down }}
+        run: |
+          now=$(date -u +"%Y-%m-%d %H:%M UTC")
+          open=$(gh issue list --label outage --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)
+          if [ -n "$DOWN" ]; then
+            gh label create outage --color B60205 --description "A hosted service failed its health check" 2>/dev/null || true
+            if [ -n "$open" ]; then
+              gh issue comment "$open" --body "Still failing at ${now}:
+          ${DOWN}"
+            else
+              gh issue create --label outage --title "Outage: health check failing" --body "Failing at ${now}:
+          ${DOWN}
+          This issue closes by itself when every address answers again."
+            fi
+          elif [ -n "$open" ]; then
+            gh issue close "$open" --comment "Every health address has answered again at ${now}."
+          fi

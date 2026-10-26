@@ -140,11 +140,16 @@ describe("the gate", () => {
     expect(dsarModuleGate({ dsarModuleStatus: "ACTIVE" }, false)).toBe("open");
   });
 
-  it("on the hosted service: standard for everyone, upgraded with the volume upgrade", () => {
+  it("on the hosted service: standard for everyone, upgraded with the volume upgrade on the paid plan", () => {
     for (const s of [null, undefined, "NONE", "CANCELLED"]) {
-      expect(dsarModuleGate({ dsarModuleStatus: s }, true)).toBe("standard");
+      expect(dsarModuleGate({ dsarModuleStatus: s, plan: "EU_CLOUD" }, true)).toBe("standard");
     }
-    expect(dsarModuleGate({ dsarModuleStatus: "ACTIVE" }, true)).toBe("upgraded");
+    expect(dsarModuleGate({ dsarModuleStatus: "ACTIVE", plan: "EU_CLOUD" }, true)).toBe("upgraded");
+  });
+
+  it("ends the upgrade with the Plan: an active upgrade without the paid plan counts as standard", () => {
+    expect(dsarModuleGate({ dsarModuleStatus: "ACTIVE", plan: "PILOT" }, true)).toBe("standard");
+    expect(dsarModuleGate({ dsarModuleStatus: "ACTIVE" }, true)).toBe("standard");
   });
 
   it("has ceilings of 100 and 1,000 and warns at 50, 75 and 90 per cent", () => {
@@ -249,6 +254,22 @@ describe("the public form on the hosted service", () => {
       accepting: false,
       contactEmail: "privacy@acme.example",
     });
+  });
+
+  it("once a pilot is read-only, the form shows the privacy contact and refuses with the neutral message, never a plan note", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2028-03-01T12:00:00Z"));
+    const ended = org({ pilotStartedAt: new Date("2027-06-01T00:00:00Z") });
+    mocks.prisma.organization.findUnique.mockResolvedValue(ended);
+    await expect(anon().getPublicForm({ orgSlug: "acme" })).resolves.toMatchObject({
+      accepting: false,
+      contactEmail: "privacy@acme.example",
+    });
+    mocks.prisma.dSARRequest.create.mockClear();
+    const refusal = anon().submitPublic(submission());
+    await expect(refusal).rejects.toMatchObject({ code: "FORBIDDEN", message: expect.stringContaining("not taking requests") });
+    await expect(anon().submitPublic(submission())).rejects.not.toMatchObject({ message: expect.stringMatching(/plan|read-only|pilot/i) });
+    expect(mocks.prisma.dSARRequest.create).not.toHaveBeenCalled();
   });
 
   it("the count starts again on the first of the month, Madrid time", async () => {
@@ -424,6 +445,19 @@ describe("the public form on the hosted service", () => {
     expect(admin.upgrade?.EUR).toBeTruthy();
     const officer = await staff(org({ ...PAID, id: "orgA1" }), "PRIVACY_OFFICER").moduleAccess({ organizationId: "org-a" });
     expect(officer).toMatchObject({ canBuy: false, upgrade: null });
+  });
+
+  it("module access: a pilot organisation is not offered the upgrade, which comes with the paid plan", async () => {
+    vi.stubEnv("AUTO_UPGRADE_ENABLED", "true");
+    vi.stubEnv("PLAN_SYNC_SECRET", "test-secret");
+    vi.stubEnv("DSAR_VOLUME_EUR_LINK", "https://buy.stripe.com/test_eur");
+    const pilot = await staff(org({ id: "orgA1" })).moduleAccess({ organizationId: "org-a" });
+    expect(pilot).toMatchObject({ gate: "standard", canBuy: true, onPlan: false, upgrade: null });
+  });
+
+  it("module access: an upgrade left active after the Plan ended counts as standard", async () => {
+    const c = staff(org({ plan: "PILOT", dsarModuleStatus: "ACTIVE" }));
+    await expect(c.moduleAccess({ organizationId: "org-a" })).resolves.toMatchObject({ gate: "standard", limit: 100 });
   });
 
   it("module access with the upgrade offers no further upgrade", async () => {

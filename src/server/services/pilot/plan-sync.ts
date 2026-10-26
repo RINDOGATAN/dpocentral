@@ -51,6 +51,8 @@ type SyncOrgRow = PlanState & {
   id: string;
   planStripeSubscriptionId: string | null;
   billingOwnerId: string | null;
+  /** The rights-request volume upgrade (src/server/services/dsar/module.ts). */
+  dsarModuleStatus?: string | null;
 };
 
 const ORG_SELECT = {
@@ -61,6 +63,7 @@ const ORG_SELECT = {
   planRenewsAt: true,
   planNote: true,
   planStripeSubscriptionId: true,
+  dsarModuleStatus: true,
 } as const;
 
 type OrgData = {
@@ -292,6 +295,15 @@ export async function applyPlanNotice(
           "subscription"
         )
       );
+      // The rights-request upgrade ends with the Plan (terms, clause 11): it
+      // stops raising the ceiling at once (dsarModuleGate). Its own
+      // subscription is cancelled by the operator in Stripe.
+      if (row.dsarModuleStatus === "ACTIVE") {
+        logger.warn("Plan ended while the rights-request upgrade is active; cancel the upgrade's subscription", {
+          organizationId: row.id,
+          eventId: notice.eventId,
+        });
+      }
     }
     return results.length ? results : unmatched("no-organisation-for-subscription", notice);
   }

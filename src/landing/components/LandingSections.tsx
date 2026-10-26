@@ -77,7 +77,9 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
       { icon: HardDrive, action: "mail" },
     ],
     captionsLang: "es",
-    logos: true,
+    // The customer logo row stays off until each organisation's written
+    // permission to be named is on file (src/landing/config/customer-logos.ts).
+    logos: false,
   },
   en: {
     bullets: { ais: 4, dpc: 5, vw: 3 },
@@ -89,8 +91,8 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
       { icon: HardDrive, action: "mail" },
     ],
     captionsLang: "en",
-    // Customer logos on the English page too.
-    logos: true,
+    // Off, as in Spanish, until written permission is on file.
+    logos: false,
   },
 };
 

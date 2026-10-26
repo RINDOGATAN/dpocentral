@@ -15,7 +15,7 @@ branch.
 | Area | Hosted service | Self-hosted bundle (`deploy/sovereign`) |
 |---|---|---|
 | Machine, operating system, network | The hosting platform | The firm that installs it |
-| Database, its backups and restores | The managed database provider (point-in-time restore); the maintainer decides a restore | The firm: `backup.sh` and `restore.sh`, on the firm's schedule |
+| Database, its backups and restores | The managed database provider (7-day point-in-time history and a daily copy kept 30 days, Frankfurt); the maintainer decides a restore | The firm: `backup.sh` and `restore.sh`, on the firm's schedule |
 | Application updates | The maintainer: every merge to `main` deploys | The firm: `./suite.sh update` or `docker compose pull`, when it chooses |
 | Schema changes | Applied by the hosted build (`prisma migrate deploy`) | Applied by the one-shot migrator on the next boot |
 | Secrets | Platform environment, set by the maintainer | `.env` beside the compose file, set by the firm (`chmod 600`) |
@@ -65,13 +65,28 @@ with `CRON_SECRET`. Without the secret the route refuses to run.
 the real ceiling is higher than the configured one when the platform runs
 several instances.
 
+**Backups and recovery.** The database is kept by the managed database
+provider in Frankfurt (EU), encrypted at rest with AES-256, and every
+connection uses TLS. Two kinds of copy, in the same region with the same
+encryption: a continuous history of changes for 7 days (recovery to any
+moment in that week) and a copy of the whole database taken every day and
+kept for 30 days. Only the named maintainers reach them, through personal
+accounts with two-factor authentication. The provider also keeps its own
+internal copies, encrypted, for up to 30 days; we cannot use or restore them.
+Targets: the service restored within one business day of an incident; a
+customer's own records recovered to an earlier moment within those periods,
+on request, without changing other customers' data, at no charge and within
+two business days. Deleted data leaves every copy within 30 days. The hosting
+platform holds no customer database data and no customer files.
+
 **Checklist for the maintainer**
 
 - `NEXT_PUBLIC_LOCAL_AUTH_ENABLED` absent; `NEXTAUTH_SECRET`, `CRON_SECRET`
   and `DPC_IMPORT_API_KEYS` set; `ADMIN_EMAILS` limited to the maintainers.
 - `DATABASE_URL` points at this app's own database, never at a shared one.
-- A restore from the provider's point-in-time history is rehearsed on a
-  branch database once a quarter and the date recorded.
+- A restore from the provider's history is rehearsed on a separate branch
+  database once a quarter and the date recorded. The first rehearsal is
+  scheduled for November 2026; none is recorded before it.
 - The CI audit gate (`npm audit --audit-level=high`) is green before merging.
 
 ## Self-hosted bundle

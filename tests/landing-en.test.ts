@@ -115,9 +115,9 @@ describe("English sections", () => {
       expect(v, k).not.toMatch(/\bthe (first|only)\b|\b(leading|best|unrivaled|world-class|revolutionary)\b/i);
       expect(v, k).not.toMatch(/\bexecute\b/i);
     }
-    // The only images are the customer logos, above the footer.
-    expect((html.match(/<img /g) ?? []).length).toBe((html.match(/src="\/images\/clients\//g) ?? []).length);
-    expect(html).toContain(">Trusted by</h2>");
+    // No customer logo row until written permission is on file; no images at all.
+    expect(html).not.toMatch(/src="\/images\/clients\//);
+    expect(html).not.toContain(">Trusted by</h2>");
   });
 
   it("use no long dash and US spelling", () => {
