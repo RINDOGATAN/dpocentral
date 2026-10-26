@@ -55,6 +55,7 @@ import {
   CalendarPlus,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useEnumLabels } from "@/lib/enum-labels";
@@ -111,6 +112,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const locale = useLocale();
   const tp = useTranslations("pages.dsarDetail");
   const tList = useTranslations("pages.dsar");
+  const tRelPublic = useTranslations("dsarPublic.form.relationship");
+  const tRelStaff = useTranslations("pages.newDsar.requester.relationshipOptions");
   const tCommon = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
@@ -123,6 +126,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const tm = useTranslations("pages.dsarDetail.modelReplies");
   const [responseLinkDraft, setResponseLinkDraft] = useState({ url: "", expiresAt: "" });
   const [isExtendOpen, setIsExtendOpen] = useState(false);
+  const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
   const [extendReason, setExtendReason] = useState("");
 
   const { data: request, isLoading, error: loadError } = trpc.dsar.getById.useQuery(
@@ -320,6 +324,13 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const existingResponseUrl = typeof responseMeta?.responseUrl === "string" ? responseMeta.responseUrl : "";
   const existingResponseExpiresAt = typeof responseMeta?.responseExpiresAt === "string" ? responseMeta.responseExpiresAt : "";
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  // Closing with tasks still open asks first: one click used to close a
+  // request with none of its tasks done.
+  const openTasks = totalTasks - completedTasks;
+  const requestStatusChange = (next: DSARStatus) => {
+    if (next === DSARStatus.COMPLETED && openTasks > 0) setIsCompleteConfirmOpen(true);
+    else handleStatusChange(next);
+  };
   const daysRemaining = request.daysUntilDue ?? 0;
   const isCompleted = request.status === "COMPLETED" || request.status === "CANCELLED" || request.status === "REJECTED";
   const isOverdue = !isCompleted && daysRemaining < 0;
@@ -360,7 +371,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             <>
               <Select
                 value={request.status}
-                onValueChange={(value) => handleStatusChange(value as DSARStatus)}
+                onValueChange={(value) => requestStatusChange(value as DSARStatus)}
               >
                 <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue />
@@ -374,7 +385,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                 </SelectContent>
               </Select>
               <Button
-                onClick={() => handleStatusChange(DSARStatus.COMPLETED)}
+                onClick={() => requestStatusChange(DSARStatus.COMPLETED)}
                 disabled={updateStatus.isPending}
               >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
@@ -433,7 +444,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              {isCompleted ? tp("sla.closed") : tp("sla.due")}: {formatDateIn(new Date(request.dueDate), locale)}
+              {isCompleted ? tp("sla.closed") : tp("sla.due")}:{" "}
+              {formatDateIn(new Date(isCompleted ? (request.completedAt ?? request.updatedAt ?? request.dueDate) : request.dueDate), locale)}
             </p>
             {!isCompleted && request.extension.allowed && (
               <Button
@@ -496,7 +508,13 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             </div>
             <div>
               <p className="text-sm text-muted-foreground">{tp("requester.relationship")}</p>
-              <p className="font-medium">{request.relationship || tp("requester.empty")}</p>
+              <p className="font-medium">{request.relationship
+                  ? tRelPublic.has(request.relationship as never)
+                    ? tRelPublic(request.relationship as never)
+                    : tRelStaff.has(request.relationship as never)
+                      ? tRelStaff(request.relationship as never)
+                      : request.relationship
+                  : tp("requester.empty")}</p>
             </div>
           </div>
           {request.description && (
@@ -824,6 +842,21 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </form>
         </SheetContent>
       </Sheet>
+
+      {/* Closing with tasks still open asks first. */}
+      <ConfirmDialog
+        open={isCompleteConfirmOpen}
+        onOpenChange={setIsCompleteConfirmOpen}
+        title={tp("completeConfirm.title")}
+        description={tp("completeConfirm.description", { count: openTasks })}
+        confirmText={tp("completeConfirm.confirm")}
+        cancelText={tCommon("cancel")}
+        pending={updateStatus.isPending}
+        onConfirm={() => {
+          setIsCompleteConfirmOpen(false);
+          handleStatusChange(DSARStatus.COMPLETED);
+        }}
+      />
 
       {/* Extend deadline: the law's own extension, once, with a reason */}
       {request.extension.allowed && (

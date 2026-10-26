@@ -28,11 +28,13 @@ export default function PrivacyDashboardPage() {
     { enabled: !!organization?.id }
   );
 
-  // Auto-redirect brand-new orgs (all zeros) straight to quickstart
+  // Auto-redirect brand-new orgs (all zeros) straight to quickstart. The
+  // vendor figure leaves out the TODO.LAW vendor the hosted service adds to
+  // every organisation, so the hosted first run reaches the quick start too.
   const isEmptyOrg = !isLoading &&
     (stats?.totalAssets ?? 0) === 0 &&
     (stats?.totalActivities ?? 0) === 0 &&
-    (stats?.activeVendors ?? 0) === 0;
+    (stats?.ownActiveVendors ?? stats?.activeVendors ?? 0) === 0;
   const fromQuickstart = searchParams.get("from") === "quickstart";
 
   // A member limited to departments is never sent to the quick start, an

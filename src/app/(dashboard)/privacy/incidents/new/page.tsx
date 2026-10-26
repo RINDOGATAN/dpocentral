@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, AlertTriangle, X } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { parseDateInput, toDateInputValue } from "@/lib/date-input";
@@ -53,6 +54,7 @@ export default function NewIncidentPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newIncident");
+  const locale = useLocale();
   const tCommon = useTranslations("common");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -388,7 +390,7 @@ export default function NewIncidentPage() {
                   <SelectContent>
                     {jurisdictions.map((j) => (
                       <SelectItem key={j.id} value={j.id}>
-                        {j.name}
+                        {localizeJurisdiction({ code: j.code, region: j.region, name: j.name }, locale).name}
                       </SelectItem>
                     ))}
                   </SelectContent>

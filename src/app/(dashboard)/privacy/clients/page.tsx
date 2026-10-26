@@ -333,13 +333,18 @@ function Confirmed({ row }: { row: Row }) {
   );
 }
 
-/** The six areas with their state words, as the dashboard's tiles say them. */
+/**
+ * The areas with their state words, as the dashboard's tiles say them. An
+ * area DPO Central does not cover yet ("coming") is left out: the table lists
+ * what the client can act on.
+ */
 function AreasInWords({ row }: { row: Row }) {
   const tg = useTranslations("guided");
-  if (row.areas.length === 0) return null;
+  const areas = row.areas.filter((area) => area.word !== "coming");
+  if (areas.length === 0) return null;
   return (
     <ul className="flex flex-col gap-0.5 text-xs" data-testid="client-areas">
-      {row.areas.map((area) => (
+      {areas.map((area) => (
         <li key={area.stage.id} className="flex flex-wrap items-baseline gap-x-1.5" data-word={area.word}>
           <span className="text-muted-foreground">{tg(`stages.${area.stage.id}`)}:</span>
           <span className={cn("font-medium", area.word === "action" && "text-destructive")}>
