@@ -148,6 +148,12 @@ export interface PathCounts {
   dsarIntakeTouched?: boolean;
 
   incidents: number;
+  /**
+   * Whether the DPO has confirmed breach readiness for exactly the laws
+   * declared now (src/server/services/program/breach-readiness.ts).
+   * Optional: absent reads as not confirmed.
+   */
+  breachReadinessConfirmed?: boolean;
 
   /** AI systems using personal data (read-only; governed in AI Sentinel). */
   aiSystems: number;
@@ -427,8 +433,13 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // A breach cannot be made to happen, so readiness is the bar: the
           // register is ready when needed once the record of processing says
           // which data and people a breach would touch (Art. 33(3)(a)).
-          rule: "Done when at least one incident (breach) is recorded. Ready when needed (met) once one processing activity is complete (the record names the data and people a breach would affect). Not started before.",
-          status: (c) => (c.incidents > 0 ? "done" : c.processingActivitiesComplete > 0 ? "ready" : "todo"),
+          rule: "Done when the DPO has confirmed breach readiness (the notification deadlines of each declared law, that an incident is assessed before deciding whether it is a breach, the internal contact, the authority and where the register is kept) for the laws declared now, or when at least one incident (breach) is recorded. Ready when needed (met) once one processing activity is complete (the record names the data and people a breach would affect). Not started before.",
+          status: (c) =>
+            c.incidents > 0 || c.breachReadinessConfirmed
+              ? "done"
+              : c.processingActivitiesComplete > 0
+                ? "ready"
+                : "todo",
         },
         // The board report: a short
         // report to the board or management for a period, from data already

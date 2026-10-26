@@ -313,7 +313,7 @@ describe("loadBoardReport over a mocked database", () => {
 
   it("counts the period's incidents and their notification to the authority", async () => {
     const report = await load();
-    expect(report.incidents).toEqual({ inPeriod: 4, notifiedWithin72h: 1, notifiedLate: 1, notNotifiedYet: 1, openNow: 2, toNotifyNow: 2 });
+    expect(report.incidents).toEqual({ inPeriod: 4, notifiedWithin72h: 1, notifiedLate: 1, notNotifiedYet: 1, openNow: 2, toNotifyNow: 2, breachReadiness: null });
     // The backlog to notify is counted from any period: open, notifiable, nothing sent to the authority.
     const backlog = mocks.prisma.incident.count.mock.calls.map((c) => c[0].where).find((w) => w.notificationRequired);
     expect(backlog).toMatchObject({ notificationRequired: true, notifications: { none: { recipientType: "DPA", sentAt: { not: null } } } });

@@ -16,6 +16,7 @@ import { feedbackRouter } from "./feedback";
 import { quickstartRouter } from "./privacy/quickstart";
 import { programPathRouter } from "./privacy/programPath";
 import { boardReportRouter } from "./privacy/boardReport";
+import { breachReadinessRouter } from "./privacy/breachReadiness";
 import { draftsRouter } from "./privacy/drafts";
 import { userRouter } from "./privacy/user";
 import { expertsRouter } from "./privacy/experts";
@@ -54,6 +55,7 @@ export const appRouter = createTRPCRouter({
   quickstart: quickstartRouter,
   programPath: programPathRouter,
   boardReport: boardReportRouter,
+  breachReadiness: breachReadinessRouter,
   drafts: draftsRouter,
   user: userRouter,
   experts: expertsRouter,

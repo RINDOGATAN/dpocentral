@@ -37,6 +37,7 @@ import { toneForRiskTier } from "@/config/status-tone";
 
 import { formatDateIn, formatNumberIn } from "@/lib/utils";
 import { useOrgRole } from "@/lib/use-org-role";
+import { BreachReadinessCard } from "@/components/privacy/breach-readiness-card";
 // Severity goes through the shared tones. The old map printed CRITICAL as
 // white on mid grey, 2.59 to 1, and told the four levels apart by weight alone.
 
@@ -143,6 +144,8 @@ export default function IncidentsPage() {
           </>
         }
       />
+
+      {organization?.id && <BreachReadinessCard organizationId={organization.id} canConfirm={isOfficer} />}
 
       {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">

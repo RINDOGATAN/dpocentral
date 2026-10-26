@@ -46,6 +46,7 @@ import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { collectNeedsAction } from "@/server/services/views/queries";
 import { loadDocumentFacts } from "./document-facts";
 import { loadDeadlines } from "./deadlines";
+import { declaredLawCodes, isReadinessCurrent, readBreachReadiness } from "./breach-readiness";
 import { dpaInForceWhere } from "@/lib/vendor-contracts";
 import { CLOSED_DSAR_STATUSES, dsarOnTime } from "@/lib/dsar-on-time";
 
@@ -240,6 +241,11 @@ export async function loadBoardReport(
   }
 
   const saved = savedReports(organization?.settings)[periodKey(period)];
+  const readinessRecord = readBreachReadiness(organization?.settings);
+  const readinessLaws = readinessRecord ? await declaredLawCodes(prisma, organizationId) : [];
+  const breachReadiness = readinessRecord
+    ? { confirmedAt: readinessRecord.confirmedAt, current: isReadinessCurrent(readinessRecord, readinessLaws) }
+    : null;
   let comment: BoardComment | null = null;
   if (saved) {
     comment = { text: saved.comment, savedAt: saved.savedAt, savedBy: null };
@@ -268,7 +274,7 @@ export async function loadBoardReport(
       incidents: facts.incidents,
     },
     documents,
-    incidents: { inPeriod: incidents.length, notifiedWithin72h, notifiedLate, notNotifiedYet, openNow, toNotifyNow },
+    incidents: { inPeriod: incidents.length, notifiedWithin72h, notifiedLate, notNotifiedYet, openNow, toNotifyNow, breachReadiness },
     rights,
     vendors: { total: vendorsTotal, active: vendorsActive, withDpa: vendorsWithDpa, highRiskWithoutDpa, drafts: vendorDrafts },
     assessments: { dpiaApproved, dpiaPending, piaApproved, piaPending, liaApproved, liaPending },
