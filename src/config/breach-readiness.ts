@@ -137,6 +137,27 @@ export const VERIFIED_BREACH_DEADLINES: Readonly<Record<string, VerifiedDeadline
     source:
       "https://inforegulator.org.za/wp-content/uploads/2020/07/ENFORCEMENT-NOTICE-DOJCD-MATTER-090523.pdf (read 26 Oct 2026)",
   },
+  // APPI: the PPC's page on responding to leakage sets two reports: a
+  // preliminary report (sokuhō) within 3 to 5 days of discovery, reported
+  // promptly, and a final report (kakuhō) within 30 days, or 60 days where the
+  // leakage may have been caused with a wrongful purpose. The page states no
+  // timing for notifying individuals, so none is stated here.
+  // https://www.ppc.go.jp/personalinfo/legal/leakAction/ (read 26 Oct 2026).
+  APPI: {
+    en: {
+      authority:
+        "A preliminary report to the Personal Information Protection Commission promptly, within 3 to 5 days of discovering the leakage, and a final report within 30 days (60 days where it may have been caused with a wrongful purpose).",
+      individuals:
+        "The people affected must also be notified; the Commission's guidance does not set a number of days, so check its guidelines for the timing.",
+    },
+    es: {
+      authority:
+        "Un primer informe a la Personal Information Protection Commission sin demora, en los 3 a 5 días siguientes a descubrir la filtración, y un informe final en 30 días (60 días si ha podido producirse con un fin ilícito).",
+      individuals:
+        "También hay que avisar a las personas afectadas; la guía de la Commission no fija un número de días, así que comprueba el plazo en sus directrices.",
+    },
+    source: "https://www.ppc.go.jp/personalinfo/legal/leakAction/ (read 26 Oct 2026)",
+  },
 };
 
 /** Catalog codes that are not data-protection laws with a breach duty. */
