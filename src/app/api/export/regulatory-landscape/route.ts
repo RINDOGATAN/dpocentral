@@ -6,9 +6,9 @@ import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { buildRegulatoryLandscapeExport } from "@/server/services/export/documents/regulatory-landscape";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(request: NextRequest) {
+async function handleGET(request: NextRequest) {
   const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
@@ -54,3 +54,5 @@ export async function GET(request: NextRequest) {
     return pdfErrorResponse(err, "regulatory-landscape");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

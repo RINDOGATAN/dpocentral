@@ -25,13 +25,14 @@
  *
  * Never on the self-hosted kit: there we are not the processor. Idempotent:
  * an organisation that already has a vendor from this source, or one named
- * TODO.LAW, is left as it is. Written in the language of the acceptance.
+ * TODO.LAW, is left as it is. Written in the language of the acceptance (the
+ * language the person was using when they opened the organisation); shown in
+ * each reader's language (src/lib/system-content/).
  */
 
 import type { Prisma } from "@prisma/client";
 import type { Db as AppDb } from "@/lib/prisma";
 import {
-  PILOT_DPA,
   PILOT_DPA_ACTION,
   isAcceptedDpaVersion,
   type PilotDpaLocale,
@@ -41,61 +42,17 @@ import { isHostedDeployment } from "@/lib/hosted";
 /** The vendor's sourceRef and the catalogue slug it comes from. */
 export { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
-export const TODOLAW_VENDOR_NAME = "TODO.LAW";
-export const TODOLAW_ENTITY = "RINDOGATAN LLC";
-
-export const TODOLAW_LINKS = {
-  website: "https://www.todo.law",
-  sccs: "https://www.todo.law/legal/sccs/eu-c2p/",
-  dpa: PILOT_DPA.href,
-  subprocessors: {
-    en: "https://www.todo.law/legal/eu-cloud-plan-subprocessors",
-    es: "https://www.todo.law/es/legal/subencargados-plan-nube-ue",
-  },
-} as const;
-
-const TEXT: Record<
-  PilotDpaLocale,
-  {
-    description: string;
-    contractName: (version: string) => string;
-    contractDescription: (subprocessors: string) => string;
-    transferName: string;
-    transferDescription: string;
-    safeguards: string;
-  }
-> = {
-  en: {
-    description:
-      "Provides DPO Central (and AI Sentinel and VendorWatch, where used) as a cloud service. " +
-      `${TODOLAW_ENTITY}, a Wyoming (United States) company, acts as processor under the processing agreement the organization accepted. ` +
-      "The data is stored in European Union data centres (Frankfurt); its staff may access it from the United States.",
-    contractName: (version) =>
-      `Data processing agreement (TODO.LAW cloud services), version ${version}`,
-    contractDescription: (subprocessors) =>
-      "Accepted when the organization was opened on the TODO.LAW cloud. It incorporates the EU standard contractual clauses, Module Two. " +
-      `Sub-processors: ${subprocessors}`,
-    transferName: "TODO.LAW: access from the United States",
-    transferDescription: `${TODOLAW_ENTITY} is a United States company. The data stays in European Union data centres; its staff may access it from the United States, only in the cases the processing agreement sets out (clause 6).`,
-    safeguards:
-      "EU standard contractual clauses (Commission Implementing Decision (EU) 2021/914), Module Two (controller to processor), incorporated into the processing agreement (clause 9).",
-  },
-  es: {
-    description:
-      "Presta DPO Central (y AI Sentinel y VendorWatch, si se usan) como servicio en la nube. " +
-      `${TODOLAW_ENTITY}, sociedad de Wyoming (Estados Unidos), actúa como encargado del tratamiento con el contrato de encargo que la organización ha aceptado. ` +
-      "Los datos se guardan en centros de datos de la Unión Europea (Fráncfort); su personal puede acceder a ellos desde Estados Unidos.",
-    contractName: (version) =>
-      `Contrato de encargo del tratamiento (servicios en la nube de TODO.LAW), versión ${version}`,
-    contractDescription: (subprocessors) =>
-      "Aceptado al abrir la organización en la nube de TODO.LAW. Incorpora las cláusulas contractuales tipo de la UE, módulo dos. " +
-      `Subencargados: ${subprocessors}`,
-    transferName: "TODO.LAW: acceso desde Estados Unidos",
-    transferDescription: `${TODOLAW_ENTITY} es una sociedad estadounidense. Los datos se quedan en centros de datos de la Unión Europea; su personal puede acceder a ellos desde Estados Unidos, solo en los casos que fija el contrato de encargo (cláusula 6).`,
-    safeguards:
-      "Cláusulas contractuales tipo de la UE (Decisión de Ejecución (UE) 2021/914), módulo dos (de responsable a encargado), incorporadas al contrato de encargo (cláusula 9).",
-  },
-};
+export {
+  TODOLAW_VENDOR_NAME,
+  TODOLAW_ENTITY,
+  TODOLAW_LINKS,
+} from "@/config/todolaw-processor-text";
+import {
+  TODOLAW_VENDOR_NAME,
+  TODOLAW_ENTITY,
+  TODOLAW_LINKS,
+  TODOLAW_PROCESSOR_TEXT as TEXT,
+} from "@/config/todolaw-processor-text";
 
 type Db = AppDb;
 

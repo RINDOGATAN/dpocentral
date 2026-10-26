@@ -5,7 +5,7 @@ import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { buildPrivacyProgramExport } from "@/server/services/export/documents/privacy-program";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 
 /**
@@ -15,7 +15,7 @@ import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
  * report and the document pack.
  */
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
 
@@ -59,3 +59,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "privacy-program");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

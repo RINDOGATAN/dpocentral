@@ -58,6 +58,16 @@ export function AccountLocaleSync() {
 
 export function AccountLanguageSwitcher() {
   const save = trpc.user.setLocale.useMutation();
-  // Saving is best effort: the cookie already carries the choice.
-  return <LanguageSwitcher onChange={(l) => save.mutate({ locale: l }, { onError: () => undefined })} />;
+  const utils = trpc.useUtils();
+  // Saving is best effort: the cookie already carries the choice. The data
+  // already on screen is fetched again, so the records the app wrote itself
+  // (src/lib/system-content/) follow the new language too.
+  return (
+    <LanguageSwitcher
+      onChange={(l) => {
+        save.mutate({ locale: l }, { onError: () => undefined });
+        void utils.invalidate();
+      }}
+    />
+  );
 }

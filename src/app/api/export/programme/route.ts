@@ -25,7 +25,7 @@ import { PROGRAMME_FORMAT } from "@/server/services/portability/format";
 import type { DocumentRow } from "@/server/services/portability/read";
 import { canExportProgramme } from "@/server/services/portability/access";
 import { exportStamp } from "@/server/services/export/integrity";
-import { nameForFile, resolveExportLocale, today } from "@/server/services/export/documents/context";
+import { nameForFile, resolveExportLocale, today, withExportLanguage } from "@/server/services/export/documents/context";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { evaluateRegister, registerFor } from "@/config/document-register";
 import { logger } from "@/lib/logger";
@@ -33,7 +33,7 @@ import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 
 export const maxDuration = 60;
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
   if (!organizationId) {
@@ -139,3 +139,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "programme");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

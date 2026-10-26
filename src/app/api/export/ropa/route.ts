@@ -8,9 +8,9 @@ import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { buildRopaExport, ropaDraftNote, type RopaFormat } from "@/server/services/export/documents/ropa";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { getTranslations } from "next-intl/server";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
   const requested = searchParams.get("format");
@@ -81,3 +81,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "ropa");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

@@ -7,9 +7,9 @@ import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { isDsarModuleEnabled } from "@/config/features";
 import { buildDsarPerformanceExport } from "@/server/services/export/documents/dsar-performance";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(request: NextRequest) {
+async function handleGET(request: NextRequest) {
   // Not served when the rights-request module is off (src/config/features.ts);
   // src/middleware.ts answers the address 404 before it gets here.
   if (!isDsarModuleEnabled()) {
@@ -59,3 +59,5 @@ export async function GET(request: NextRequest) {
     return pdfErrorResponse(err, "dsar-performance");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

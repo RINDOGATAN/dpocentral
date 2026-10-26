@@ -11,7 +11,8 @@
  *   - the status "compliant", on a record that stays a draft until a person
  *     confirms TODO.LAW;
  *   - a transfer impact assessment (TIA, in Spanish EIT) on the system
- *     template, answered in the organisation's language, waiting for the
+ *     template, answered in the organisation's language (shown in each
+ *     reader's language, src/lib/system-content/), waiting for the
  *     organisation's approval (status PENDING_APPROVAL), with an approval
  *     request addressed to the organisation's owner (or, failing an owner, an
  *     administrator or privacy officer), so the assessment page offers

@@ -6,9 +6,9 @@ import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { buildAssessmentPortfolioExport } from "@/server/services/export/documents/assessment-portfolio";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(request: NextRequest) {
+async function handleGET(request: NextRequest) {
   const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
@@ -52,3 +52,5 @@ export async function GET(request: NextRequest) {
     return pdfErrorResponse(err, "assessment-portfolio");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

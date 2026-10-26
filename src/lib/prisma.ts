@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { PrismaClient } from "@prisma/client";
+import { localizeForReader } from "@/lib/system-content/runtime";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<typeof createPrismaClient> | undefined;
@@ -15,8 +16,11 @@ function createPrismaClient() {
         : ["error"],
   }).$extends({
     query: {
-      $allOperations({ args, query }) {
-        return withRetry(() => query(args));
+      // Inside a request that shows data to a person, the records the app
+      // wrote itself (src/lib/system-content/) come back in that person's
+      // language; elsewhere they come back exactly as stored.
+      async $allOperations({ args, query }) {
+        return localizeForReader(await withRetry(() => query(args)));
       },
     },
   });

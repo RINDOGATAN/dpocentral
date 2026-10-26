@@ -15,6 +15,7 @@
 import type { Db } from "@/lib/prisma";
 import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { getCookieLocale } from "@/i18n/server-locale";
+import { withReaderLanguage } from "@/lib/system-content/runtime";
 import type { DraftNote } from "../draft-gaps-page";
 
 export interface ExportArgs {
@@ -49,6 +50,21 @@ export async function resolveExportLocale(requested: string | null): Promise<Loc
       (l): l is Locale => !!l && (locales as readonly string[]).includes(l),
     ) ?? defaultLocale
   );
+}
+
+/**
+ * An export route's handler, run in the export's language: the records the
+ * app wrote itself (the TODO.LAW processor, its transfer and its TIA) are read
+ * in that language (src/lib/system-content/), so the file says what the
+ * reader's screen says.
+ */
+export function withExportLanguage<A extends [Request, ...unknown[]], R>(
+  handler: (...args: A) => Promise<R>,
+): (...args: A) => Promise<R> {
+  return async (...args: A) => {
+    const locale = await resolveExportLocale(new URL(args[0].url).searchParams.get("locale"));
+    return withReaderLanguage(locale, () => handler(...args));
+  };
 }
 
 /** The organisation's name as it appears in a file name. */
