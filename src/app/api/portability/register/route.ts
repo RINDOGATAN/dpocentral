@@ -12,6 +12,11 @@
  *   mapping          optional: JSON array, one field key (or null) per column;
  *                    without it the suggested match is used
  *   step             "check" (columns, match, dry run; writes nothing) or "import"
+ *   ai               optional, check only: "1" asks the organisation's AI engine
+ *                    for suggestions (column matches, values from closed lists),
+ *                    see src/server/services/portability/ai-import.ts
+ *   aiAccepted       optional: JSON array of the suggestions the person accepted
+ *                    ({ row, field, value }); checked again, then applied
  *
  * Owners and admins only. Rows arrive as drafts; nothing is overwritten; the
  * same file twice creates nothing new. Vendor names are matched against the
@@ -42,8 +47,18 @@ import { applyImport, ImportRefusedError, planImport, type ImportOptions } from 
 import { importLimitChecker } from "@/server/services/portability/limits";
 import { checkImportAccess, uploadedFile } from "@/server/services/portability/route-access";
 import { MAX_UPLOAD_BYTES } from "@/server/services/portability/upload";
+import { TRPCError } from "@trpc/server";
+import { requireAiEngine } from "@/server/services/ai/posture";
+import { orgKeyRequired, ORG_KEY_SETTINGS_PATH } from "@/server/services/ai/org-key";
+import {
+  acceptedOverrides,
+  AI_IMPORT_MAX_ROWS,
+  classifyImport,
+  type AiImportResult,
+} from "@/server/services/portability/ai-import";
 
-export const maxDuration = 60;
+// A check with AI suggestions makes up to five engine calls in sequence.
+export const maxDuration = 300;
 
 function parseMapping(raw: FormDataEntryValue | null, columns: number, register: CsvRegister): ColumnMapping | null {
   if (typeof raw !== "string" || !raw) return null;
@@ -101,8 +116,50 @@ export async function POST(request: Request) {
   }
   if (table.headers.length === 0) return Response.json({ error: "The file is empty." }, { status: 422 });
   const mapping = parseMapping(form.get("mapping"), table.headers.length, register) ?? suggestMapping(register, table.headers);
-  const catalogue = needsCatalogue(register, mapping) ? await loadCatalogueIndex(prisma) : undefined;
-  const conversion = tableToProgramme(register, table, mapping, new Date(), catalogue);
+  const aiRequested = step === "check" && form.get("ai") === "1";
+  const catalogue = needsCatalogue(register, mapping) || aiRequested ? await loadCatalogueIndex(prisma) : undefined;
+  const plain = tableToProgramme(register, table, mapping, new Date(), catalogue);
+
+  // AI: whether the organisation may use it now, and (on request) suggestions.
+  // Nothing the engine says is applied here: only suggestions the person
+  // accepted, sent back as aiAccepted and checked again, change the rows.
+  let ai: { available: boolean; code: string | null; keyRequired: boolean; settingsPath: string; maxRows: number; result?: AiImportResult } = {
+    available: false,
+    code: null,
+    keyRequired: orgKeyRequired(),
+    settingsPath: ORG_KEY_SETTINGS_PATH,
+    maxRows: AI_IMPORT_MAX_ROWS,
+  };
+  let gate: Awaited<ReturnType<typeof requireAiEngine>> | null = null;
+  try {
+    gate = await requireAiEngine(prisma, access.organizationId);
+    ai.available = true;
+  } catch (err) {
+    ai.code = err instanceof TRPCError ? err.message : "ai_unavailable";
+  }
+  if (aiRequested && gate) {
+    try {
+      ai = {
+        ...ai,
+        result: await classifyImport(
+          { prisma, organizationId: access.organizationId, userId: access.userId, posture: gate.settings.posture, engine: gate.engine },
+          { register, table, mapping, problems: plain.problems, notes: plain.notes, catalogue },
+        ),
+      };
+    } catch (err) {
+      logger.error("AI import classification failed", err);
+      ai.code = "ai_failed";
+    }
+  }
+
+  let accepted: unknown = null;
+  try {
+    accepted = JSON.parse(String(form.get("aiAccepted") ?? "null"));
+  } catch {
+    accepted = null;
+  }
+  const overrides = acceptedOverrides(register, mapping, accepted, locale, catalogue, table);
+  const conversion = overrides.size ? tableToProgramme(register, table, mapping, new Date(), catalogue, overrides) : plain;
 
   const options: ImportOptions = {
     organizationId: access.organizationId,
@@ -128,11 +185,12 @@ export async function POST(request: Request) {
     rowNotes: conversion.notes.slice(0, 200),
     rowNoteCount: conversion.notes.length,
     catalogueLinks: conversion.catalogueLinks,
+    aiApplied: overrides.size,
   };
 
   try {
     if (step === "check") {
-      return Response.json({ step, columns, summary: await planImport(prisma, conversion.programme, options) });
+      return Response.json({ step, columns, ai, summary: await planImport(prisma, conversion.programme, options) });
     }
     const result = await applyImport(prisma, conversion.programme, options);
     return Response.json({ step, columns, summary: result.summary, created: result.created, importId: result.importId });

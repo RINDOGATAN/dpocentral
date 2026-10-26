@@ -14,7 +14,7 @@ import {
   DataCategory,
   DocumentType,
 } from "@prisma/client";
-import { requireAi, assertAiRateLimit, recordGeneration, postureLane } from "../../services/ai/posture";
+import { requireAiEngine, assertAiRateLimit, recordGeneration, postureLane } from "../../services/ai/posture";
 import { chatComplete } from "../../services/ai/llm-door";
 import {
   buildBreachNotificationSystemPrompt,
@@ -647,7 +647,7 @@ export const incidentRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Posture gate FIRST — posture off/missing means zero AI calls and
       // no prompt building at all.
-      const settings = await requireAi(ctx.prisma, ctx.organization.id);
+      const { settings, engine } = await requireAiEngine(ctx.prisma, ctx.organization.id);
       await assertAiRateLimit(ctx.prisma, ctx.organization.id);
 
       const incident = await ctx.prisma.incident.findFirst({
@@ -700,8 +700,10 @@ export const incidentRouter = createTRPCRouter({
         }),
         maxTokens: 1500,
         temperature: 0.3,
-        // Route through the lane the organization acknowledged.
+        // Route through the lane the organization acknowledged; the
+        // organisation's own key, when it has one, answers instead.
         lane: postureLane(settings.posture),
+        engine,
       });
 
       const generation = await recordGeneration(ctx.prisma, {

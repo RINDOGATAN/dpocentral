@@ -33,6 +33,7 @@ import { createHash } from "crypto";
 import AdmZip from "adm-zip";
 import { readSheet } from "read-excel-file/node";
 import type { Db } from "@/lib/prisma";
+import { canonicalCountryCode, isIsoCountryCode } from "@/lib/country-code";
 import { Programme, PROGRAMME_FORMAT, type ProgrammeDoc } from "./format";
 import { enumWords, mainTable, normalizeHeader, type CsvColumn, type EnumName } from "./registers";
 
@@ -213,9 +214,10 @@ export type CsvRegister = (typeof CSV_REGISTERS)[number];
 const NOT_IMPORTED = new Set(["confirmationState", "createdAt", "updatedAt", "systems", "contracts", "businessUnitId"]);
 
 /**
- * Fields one imports that the register's own CSV view does not carry: the
- * vendors or systems named on a processing activity. They are matched
- * against the vendor catalogue and kept in the record's metadata.
+ * Fields one imports that the register's own CSV view does not carry, kept
+ * in the record's metadata: the vendors or systems named on a processing
+ * activity (matched against the vendor catalogue) and the countries its data
+ * goes to (ISO codes where the cell gives one, else as written).
  */
 const IMPORT_ONLY: Partial<Record<CsvRegister, CsvColumn[]>> = {
   processingActivities: [
@@ -240,6 +242,22 @@ const IMPORT_ONLY: Partial<Record<CsvRegister, CsvColumn[]>> = {
         "herramientas",
         "service providers",
         "prestadores de servicios",
+      ],
+    },
+    {
+      key: "transferCountries",
+      en: "Countries the data goes to",
+      es: "Países a los que van los datos",
+      kind: "list",
+      synonyms: [
+        "transfers",
+        "transferencias",
+        "international transfers",
+        "transferencias internacionales",
+        "destination countries",
+        "paises de destino",
+        "third countries",
+        "terceros paises",
       ],
     },
   ],
@@ -452,9 +470,26 @@ function catalogueNote(row: number, field: string, name: string, match: Catalogu
 }
 
 /**
+ * Values a person accepted for one row (the AI-assisted import,
+ * ./ai-import.ts): `fields` replace what the cells gave, `meta` is added to
+ * the record's metadata (`vendorLinks` maps a vendor name of the row to a
+ * catalogue slug), and `resolves` names the fields whose row notes and
+ * problems the accepted values answer.
+ */
+export interface RowOverride {
+  fields?: Record<string, unknown>;
+  meta?: Record<string, unknown> & { vendorLinks?: Record<string, string> };
+  resolves?: string[];
+}
+
+/** Spreadsheet row number (the header is row 1) to what was accepted for it. */
+export type RowOverrides = Map<number, RowOverride>;
+
+/**
  * Turn the table into a programme holding one register. `row` numbers in
  * problems count the header as row 1, as a spreadsheet does. With a
  * catalogue index, vendor names are matched against it (see the header).
+ * With overrides, accepted values replace what the cells gave.
  */
 export function tableToProgramme(
   register: CsvRegister,
@@ -462,6 +497,7 @@ export function tableToProgramme(
   mapping: ColumnMapping,
   now: Date = new Date(),
   catalogue?: CatalogueIndex,
+  overrides?: RowOverrides,
 ): CsvConversion {
   const fields = new Map(importFields(register).map((f) => [f.key, f]));
   const problems: RowProblem[] = [];
@@ -484,6 +520,8 @@ export function tableToProgramme(
       if (!field) return;
       rec[key] = readCell(field, cells[col] ?? "", rowNo, problems);
     });
+    const override = overrides?.get(rowNo);
+    if (override?.fields) Object.assign(rec, override.fields);
     const missing = required.filter((k) => rec[k] === null || rec[k] === undefined || rec[k] === "");
     if (missing.length) {
       leftOut++;
@@ -514,6 +552,11 @@ export function tableToProgramme(
       notes.push(catalogueNote(rowNo, field, name, match));
       return null;
     };
+    if (register === "processingActivities" && "transferCountries" in rec) {
+      const places = (rec.transferCountries as string[] | null) ?? [];
+      delete rec.transferCountries;
+      if (places.length) meta.transferCountries = places.map((p) => (isIsoCountryCode(p) ? canonicalCountryCode(p) : p));
+    }
     if (register === "processingActivities" && "vendorNames" in rec) {
       const names = (rec.vendorNames as string[] | null) ?? [];
       delete rec.vendorNames;
@@ -524,6 +567,16 @@ export function tableToProgramme(
     } else if (register === "dataAssets" && typeof rec.vendor === "string" && rec.vendor) {
       const slug = link("vendor", rec.vendor);
       if (slug) meta.vendorCatalogSlug = slug;
+    }
+
+    if (override?.meta) {
+      const { vendorLinks, ...rest } = override.meta;
+      if (vendorLinks && Array.isArray(meta.vendors)) {
+        meta.vendors = (meta.vendors as Array<{ name: string; catalogSlug: string | null }>).map((v) =>
+          v.catalogSlug || !vendorLinks[v.name] ? v : { ...v, catalogSlug: vendorLinks[v.name]! },
+        );
+      }
+      Object.assign(meta, rest);
     }
 
     records.push({ ...rec, id });
@@ -604,5 +657,14 @@ export function tableToProgramme(
   }
   const programme: ProgrammeDoc = Programme.parse(draft);
 
-  return { programme, rows: rows.length, leftOut, problems, notes, catalogueLinks };
+  // Notes and problems that an accepted value answers are no longer shown.
+  const answered = (p: RowProblem) => overrides?.get(p.row)?.resolves?.includes(p.field) ?? false;
+  return {
+    programme,
+    rows: rows.length,
+    leftOut,
+    problems: problems.filter((p) => !answered(p)),
+    notes: notes.filter((p) => !answered(p)),
+    catalogueLinks,
+  };
 }

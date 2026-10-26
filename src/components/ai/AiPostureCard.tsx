@@ -8,6 +8,11 @@
  * Posture defaults to off: no AI calls ever happen until an OWNER/ADMIN
  * picks a posture AND ticks the acknowledgment sentence. The acknowledgment
  * is recorded as acknowledgedById/At. Non-admins see the card read-only.
+ *
+ * The same card holds the organisation's own API inference key
+ * (#ai-inference-key): OWNER/ADMIN save or remove it; once saved, only the
+ * provider, the model and the last four characters are ever shown. Where the
+ * deployment requires an organisation key, AI works only with it.
  */
 
 import { useEffect, useState } from "react";
@@ -20,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -73,6 +79,28 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
       setPosture(status.posture as Posture);
     }
   }, [status, dirty]);
+
+  const [keyProvider, setKeyProvider] = useState<string>("anthropic");
+  const [keyValue, setKeyValue] = useState("");
+  const [keyBaseUrl, setKeyBaseUrl] = useState("");
+  const [keyModel, setKeyModel] = useState("");
+  const keyError = (message: string) =>
+    toast.error(message.startsWith("ai_key_") ? t(`errors.${message}`) : message);
+  const setKeyMutation = trpc.ai.setKey.useMutation({
+    onSuccess: () => {
+      toast.success(t("keyCard.saved"));
+      setKeyValue("");
+      utils.ai.getStatus.invalidate();
+    },
+    onError: (e) => keyError(e.message),
+  });
+  const removeKeyMutation = trpc.ai.removeKey.useMutation({
+    onSuccess: () => {
+      toast.success(t("keyCard.removed"));
+      utils.ai.getStatus.invalidate();
+    },
+    onError: (e) => keyError(e.message),
+  });
 
   const setPostureMutation = trpc.ai.setPosture.useMutation({
     onSuccess: () => {
@@ -155,14 +183,16 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
           <p className="text-xs text-muted-foreground">
             {status.configured
               ? t("postureCard.engineConfigured", { provider: status.providerName ?? tCommon("notStated") })
-              : t("postureCard.engineNotConfigured")}
+              : status.orgKeyRequired
+                ? t("errors.ai_key_required")
+                : t("postureCard.engineNotConfigured")}
           </p>
         </div>
 
         {showNotConfiguredWarning && (
           <div className={`flex items-start gap-2 p-3 rounded-md border text-sm ${toneBorder("warning")} ${toneTint("warning")}`}>
             <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${toneMark("warning")}`} />
-            <span>{t("postureCard.notConfiguredWarning")}</span>
+            <span>{status.orgKeyRequired ? t("errors.ai_key_required") : t("postureCard.notConfiguredWarning")}</span>
           </div>
         )}
 
@@ -193,6 +223,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
                 </Label>
                 <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-0.5">
                   <li>{t("postureCard.ackBullets.data")}</li>
+                  <li>{t("postureCard.ackBullets.provider")}</li>
                   <li>{t("postureCard.ackBullets.review")}</li>
                   <li>{t("postureCard.ackBullets.off")}</li>
                 </ul>
@@ -228,6 +259,114 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
         {!isAdmin && (
           <p className="text-xs text-muted-foreground">{t("postureCard.adminOnly")}</p>
         )}
+
+        <div id="ai-inference-key" className="space-y-3 border-t pt-4 scroll-mt-24" data-testid="ai-inference-key">
+          <div className="space-y-1">
+            <p className="text-sm font-medium">{t("keyCard.title")}</p>
+            <p className="text-xs text-muted-foreground">
+              {status.orgKeyRequired ? t("keyCard.leadRequired") : t("keyCard.leadOptional")}
+            </p>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {status.key.state === "unreadable"
+              ? t("keyCard.unreadable")
+              : status.key.last4 && status.key.setAt
+                ? `${t("keyCard.current", {
+                    provider: status.providers.find((p) => p.id === status.key.provider)?.label ?? status.key.provider ?? "",
+                    last4: status.key.last4,
+                    date: formatDateIn(new Date(status.key.setAt), locale),
+                  })}${status.key.model ? ` ${t("keyCard.currentModel", { model: status.key.model })}` : ""}`
+                : t("keyCard.none")}
+          </p>
+          {isAdmin ? (
+            <form
+              className="space-y-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setKeyMutation.mutate({
+                  organizationId,
+                  provider: keyProvider,
+                  apiKey: keyValue,
+                  baseUrl: keyProvider === "openai_compatible" ? keyBaseUrl : null,
+                  model: keyModel || null,
+                });
+              }}
+            >
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <Label htmlFor="ai-key-provider">{t("keyCard.provider")}</Label>
+                  <Select value={keyProvider} onValueChange={setKeyProvider}>
+                    <SelectTrigger id="ai-key-provider">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {status.providers.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="ai-key-model">{t("keyCard.model")}</Label>
+                  <Input id="ai-key-model" value={keyModel} onChange={(e) => setKeyModel(e.target.value)} autoComplete="off" />
+                  <p className="text-xs text-muted-foreground">
+                    {(() => {
+                      const def = status.providers.find((p) => p.id === keyProvider)?.defaultModel;
+                      return def ? t("keyCard.modelHint", { model: def }) : t("keyCard.modelRequired");
+                    })()}
+                  </p>
+                </div>
+              </div>
+              {keyProvider === "openai_compatible" && (
+                <div className="space-y-1">
+                  <Label htmlFor="ai-key-base-url">{t("keyCard.baseUrl")}</Label>
+                  <Input
+                    id="ai-key-base-url"
+                    type="url"
+                    value={keyBaseUrl}
+                    onChange={(e) => setKeyBaseUrl(e.target.value)}
+                    placeholder="https://api.example.com/v1"
+                    autoComplete="off"
+                  />
+                  <p className="text-xs text-muted-foreground">{t("keyCard.baseUrlHint")}</p>
+                </div>
+              )}
+              <div className="space-y-1">
+                <Label htmlFor="ai-key-value">{t("keyCard.key")}</Label>
+                <Input
+                  id="ai-key-value"
+                  type="password"
+                  value={keyValue}
+                  onChange={(e) => setKeyValue(e.target.value)}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <p className="text-xs text-muted-foreground">{t("keyCard.keyHint")}</p>
+              </div>
+              <div className="flex flex-wrap justify-end gap-2">
+                {status.key.state !== "none" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={removeKeyMutation.isPending}
+                    onClick={() => removeKeyMutation.mutate({ organizationId })}
+                  >
+                    {t("keyCard.remove")}
+                  </Button>
+                )}
+                <Button type="submit" size="sm" disabled={!keyValue.trim() || setKeyMutation.isPending}>
+                  {setKeyMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {t("keyCard.save")}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <p className="text-xs text-muted-foreground">{t("keyCard.adminOnly")}</p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

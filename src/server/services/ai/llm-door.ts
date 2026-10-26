@@ -18,6 +18,19 @@
  * because no deployment set it and the provider was listed nowhere. An
  * OpenAI endpoint can still be reached through the gateway, option 1.)
  *
+ * Organisation keys: a caller may pass `engine`, an organisation's own API
+ * inference key resolved by services/ai/org-key.ts (Anthropic, or any
+ * OpenAI-compatible base address). It takes precedence over the deployment
+ * engines above. Where AI_REQUIRE_ORG_KEY is in force (services/ai/
+ * deployment.ts: the default on the shared hosted service) the deployment
+ * engines are never used: without `engine` there is no provider and the
+ * call is a clean null.
+ *
+ * Structured output: with `json` (a name and a JSON Schema) the door asks
+ * for that shape (Anthropic: one forced tool; OpenAI-compatible:
+ * response_format json_schema, retried once without it when the endpoint
+ * refuses the field) and returns the JSON text. Callers still validate it.
+ *
  * Posture-routed lanes (optional): a deployment may configure DIFFERENT
  * gateway engines per confidentiality lane with suffixed variables —
  * LLM_GATEWAY_URL_EU / LLM_GATEWAY_KEY_EU / LLM_MODEL_ALIAS_EU (cloud_eu),
@@ -36,6 +49,7 @@
  */
 
 import { logger } from "@/lib/logger";
+import { orgKeyRequired } from "./deployment";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -67,6 +81,23 @@ export interface ChatResult {
   durationMs: number;
 }
 
+/** An engine given by the caller (an organisation's own key), not by the environment. */
+export interface DirectEngine {
+  kind: "anthropic" | "openai_compatible";
+  /** OpenAI-compatible only: the base address up to and including /v1 (no trailing slash). */
+  baseUrl: string | null;
+  apiKey: string;
+  model: string;
+  /** For display: provider and model. Never the key. */
+  label: string;
+}
+
+/** A JSON Schema the answer must follow (structured output). */
+export interface JsonShape {
+  name: string;
+  schema: Record<string, unknown>;
+}
+
 export interface ChatParams {
   system: string;
   user: string;
@@ -76,9 +107,13 @@ export interface ChatParams {
   temperature?: number;
   /** The organization's acknowledged posture; routes to that lane's engine. */
   lane?: AiLane;
+  /** The organisation's own engine; takes precedence over the deployment's. */
+  engine?: DirectEngine | null;
+  /** Ask for JSON of this shape; the answer's content is that JSON as text. */
+  json?: JsonShape;
 }
 
-type ResolvedChatParams = Required<Omit<ChatParams, "lane">>;
+type ResolvedChatParams = Required<Omit<ChatParams, "lane" | "engine" | "json">> & { json?: JsonShape };
 
 const MAX_TOKENS_CEILING = 4096;
 const DEFAULT_MAX_TOKENS = 2500;
@@ -102,8 +137,13 @@ function laneEnv(base: string, lane?: AiLane): string | undefined {
   return env(base);
 }
 
-/** Which provider would answer (for the given lane), or null when nothing is configured. */
+/**
+ * Which deployment provider would answer (for the given lane), or null when
+ * nothing is configured or the deployment's engines may not be used
+ * (AI_REQUIRE_ORG_KEY in force).
+ */
 export function getProvider(lane?: AiLane): AiProvider | null {
+  if (orgKeyRequired()) return null;
   if (laneEnv("LLM_GATEWAY_URL", lane) && laneEnv("LLM_MODEL_ALIAS", lane)) return "gateway";
   if (env("ANTHROPIC_API_KEY")) return "anthropic";
   return null;
@@ -160,22 +200,31 @@ async function callOpenAICompatible(
   params: ResolvedChatParams,
   label: string
 ): Promise<{ content: string; model: string; usage: ChatUsage | null } | null> {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: params.system },
-        { role: "user", content: params.user },
-      ],
-      max_tokens: params.maxTokens,
-      temperature: params.temperature,
-    }),
-  });
+  const send = (withSchema: boolean) =>
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: params.system },
+          { role: "user", content: params.user },
+        ],
+        max_tokens: params.maxTokens,
+        temperature: params.temperature,
+        ...(withSchema && params.json
+          ? { response_format: { type: "json_schema", json_schema: { name: params.json.name, schema: params.json.schema, strict: false } } }
+          : {}),
+      }),
+    });
+
+  let response = await send(true);
+  // Some OpenAI-compatible endpoints refuse response_format: ask once more
+  // without it (the prompt still asks for JSON; the caller validates).
+  if (params.json && response.status === 400) response = await send(false);
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
@@ -205,15 +254,16 @@ async function callOpenAICompatible(
 
 interface AnthropicResponse {
   model?: string;
-  content?: { type: string; text?: string }[];
+  content?: { type: string; text?: string; input?: unknown }[];
   usage?: { input_tokens?: number; output_tokens?: number };
 }
 
-const ANTHROPIC_DEFAULT_MODEL = "claude-sonnet-4-20250514";
+export const ANTHROPIC_DEFAULT_MODEL = "claude-sonnet-4-20250514";
 
 async function callAnthropic(
   apiKey: string,
-  params: ResolvedChatParams
+  params: ResolvedChatParams,
+  model: string = ANTHROPIC_DEFAULT_MODEL
 ): Promise<{ content: string; model: string; usage: ChatUsage | null } | null> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -223,11 +273,18 @@ async function callAnthropic(
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: ANTHROPIC_DEFAULT_MODEL,
+      model,
       max_tokens: params.maxTokens,
       temperature: params.temperature,
       system: params.system,
       messages: [{ role: "user", content: params.user }],
+      // Structured output: one tool whose input is the requested shape, forced.
+      ...(params.json
+        ? {
+            tools: [{ name: params.json.name, description: "Return the answer in this shape.", input_schema: params.json.schema }],
+            tool_choice: { type: "tool", name: params.json.name },
+          }
+        : {}),
     }),
   });
 
@@ -241,14 +298,17 @@ async function callAnthropic(
   }
 
   const data = (await response.json()) as AnthropicResponse;
-  const textBlock = data.content?.find((b) => b.type === "text");
+  const toolBlock = params.json ? data.content?.find((b) => b.type === "tool_use") : undefined;
+  const textBlock = toolBlock
+    ? { text: JSON.stringify(toolBlock.input ?? null) }
+    : data.content?.find((b) => b.type === "text");
   if (!textBlock?.text) return null;
 
   const input = data.usage?.input_tokens ?? null;
   const output = data.usage?.output_tokens ?? null;
   return {
     content: textBlock.text,
-    model: data.model || ANTHROPIC_DEFAULT_MODEL,
+    model: data.model || model,
     usage:
       input !== null || output !== null
         ? {
@@ -272,7 +332,8 @@ async function callAnthropic(
  * provider errors (they are logged without prompt/output text).
  */
 export async function chatComplete(params: ChatParams): Promise<ChatResult | null> {
-  const provider = getProvider(params.lane);
+  const engine = params.engine ?? null;
+  const provider = engine ? "organization" : getProvider(params.lane);
   if (!provider) return null;
 
   const resolved: ResolvedChatParams = {
@@ -280,13 +341,25 @@ export async function chatComplete(params: ChatParams): Promise<ChatResult | nul
     user: params.user,
     maxTokens: Math.min(Math.max(1, params.maxTokens ?? DEFAULT_MAX_TOKENS), MAX_TOKENS_CEILING),
     temperature: params.temperature ?? DEFAULT_TEMPERATURE,
+    json: params.json,
   };
 
   const startedAt = Date.now();
   try {
     let raw: { content: string; model: string; usage: ChatUsage | null } | null = null;
 
-    if (provider === "gateway") {
+    if (engine) {
+      raw =
+        engine.kind === "anthropic"
+          ? await callAnthropic(engine.apiKey, resolved, engine.model)
+          : await callOpenAICompatible(
+              `${(engine.baseUrl ?? "").replace(/\/+$/, "")}/chat/completions`,
+              engine.apiKey,
+              engine.model,
+              resolved,
+              "Organization engine"
+            );
+    } else if (provider === "gateway") {
       const base = laneEnv("LLM_GATEWAY_URL", params.lane)!.replace(/\/+$/, "");
       raw = await callOpenAICompatible(
         `${base}/v1/chat/completions`,

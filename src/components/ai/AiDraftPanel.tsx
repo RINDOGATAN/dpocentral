@@ -135,7 +135,7 @@ export function AiDraftPanel({
     return (
       <div className={`flex items-start gap-2 text-xs text-muted-foreground ${className ?? ""}`}>
         <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-        <span>{t("panel.notConfiguredHint")}</span>
+        <span>{status.orgKeyRequired ? t("panel.needsKeyHint") : t("panel.notConfiguredHint")}</span>
       </div>
     );
   }
@@ -151,7 +151,9 @@ export function AiDraftPanel({
       if (generationSeq.current !== seq) return; // cancelled while waiting
       const message = error instanceof Error ? error.message : undefined;
       const code = knownErrorCode(message);
-      toast.error(code ? t(`errors.${code}`) : message || t("errors.ai_failed"));
+      // Where only the organisation's own key is used, "not configured" means "add your key".
+      const shown = code === "ai_not_configured" && status.orgKeyRequired ? "ai_key_required" : code;
+      toast.error(shown ? t(`errors.${shown}`) : message || t("errors.ai_failed"));
     } finally {
       if (generationSeq.current === seq) setIsGenerating(false);
     }
