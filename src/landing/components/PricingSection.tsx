@@ -7,7 +7,7 @@
  * one simple block in both languages, matching the storefront home's (a
  * left-aligned title over a short "Product | Price" table): one row (what is
  * offered | what it costs), the "Start free" button and a small "Subscribe"
- * link, then one quiet line to the contact wizard. Under the price row, one
+ * link (two, monthly and yearly, once the monthly link is set), then one quiet line to the contact wizard. Under the price row, one
  * small line links the plan's terms and sub-processors (same tab; for the
  * dollar plan, also the DPA); the block
  * says nothing about tax.
@@ -20,6 +20,7 @@
 
 import { Fragment } from "react";
 import {
+  PLAN_MONTHLY_PAYMENT_LINK,
   PLAN_PAYMENT_LINK,
   PRICING_ANCHOR,
   PRICING_CONTACT_URL,
@@ -39,6 +40,10 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
   const currency = currencyFor(locale, useIsEu());
   const c = PRICING_COPY[locale];
   const quiet = "underline underline-offset-4 hover:text-foreground transition-colors";
+  const subscribeClass =
+    "text-sm font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors";
+  // Monthly only where its link is set (src/landing/config/pricing.ts).
+  const monthly = PLAN_MONTHLY_PAYMENT_LINK[currency];
   const anchor = PRICING_ANCHOR[locale];
   const other = PRICING_ANCHOR[locale === "en" ? "es" : "en"];
   return (
@@ -91,14 +96,20 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
             <a href="/sign-in" className="btn-primary" data-testid="pricing-start">
               {c.start}
             </a>
-            <a
-              href={PLAN_PAYMENT_LINK[currency]}
-              rel="noopener"
-              className="text-sm font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
-              data-testid="pricing-subscribe"
-            >
-              {c.subscribe}
-            </a>
+            {monthly ? (
+              <>
+                <a href={monthly} rel="noopener" className={subscribeClass} data-testid="pricing-subscribe-monthly">
+                  {c.subscribeMonthly}
+                </a>
+                <a href={PLAN_PAYMENT_LINK[currency]} rel="noopener" className={subscribeClass} data-testid="pricing-subscribe">
+                  {c.subscribeYearly}
+                </a>
+              </>
+            ) : (
+              <a href={PLAN_PAYMENT_LINK[currency]} rel="noopener" className={subscribeClass} data-testid="pricing-subscribe">
+                {c.subscribe}
+              </a>
+            )}
           </div>
         </div>
 

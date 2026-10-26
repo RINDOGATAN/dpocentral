@@ -10012,6 +10012,8 @@
       "ending": "Tu piloto termina el {date}. Pasa al plan de pago para seguir editando con todos tus registros.",
       "readOnly": "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras.",
       "upgrade": "Pasar al plan de pago",
+      "upgradeMonthly": "Pago mensual",
+      "upgradeYearly": "Pago anual",
       "pricing": "Ver precios",
       "dismiss": "Cerrar"
     },

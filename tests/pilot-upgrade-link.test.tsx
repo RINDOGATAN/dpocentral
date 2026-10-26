@@ -43,14 +43,14 @@ vi.mock("@/lib/trpc", () => ({
 
 import { HostedPilotEndBar } from "@/components/pilot/hosted-pilot";
 
-function render(locale: "en" | "es", upgrade: boolean) {
+function render(locale: "en" | "es", upgrade: boolean, upgradeMonthly = false) {
   return renderToStaticMarkup(
     createElement(
       NextIntlClientProvider,
       { locale, timeZone: "UTC", messages: locale === "en" ? en : es } as unknown as ComponentProps<
         typeof NextIntlClientProvider
       >,
-      createElement(HostedPilotEndBar, { upgrade })
+      createElement(HostedPilotEndBar, { upgrade, upgradeMonthly })
     )
   );
 }
@@ -88,5 +88,31 @@ describe("pilot banner: move to the paid plan", () => {
   it("states no price", () => {
     expect(en.pilot.endBar.upgrade).not.toMatch(/\d|€|\$/);
     expect(es.pilot.endBar.upgrade).not.toMatch(/\d|€|\$/);
+  });
+});
+
+describe("pilot banner: monthly and yearly", () => {
+  it("offers two links, monthly then yearly, once the monthly link is set", () => {
+    selected.org = pilotOrg("OWNER");
+    const html = render("en", true, true);
+    expect(html).toContain('href="/api/plan/checkout?org=cmorg1&amp;interval=month"');
+    expect(html).toContain('data-testid="pilot-upgrade-monthly-link"');
+    expect(html).toContain('href="/api/plan/checkout?org=cmorg1"');
+    expect(html).toContain("Pay monthly");
+    expect(html).toContain("Pay yearly");
+    expect(html).not.toContain("Move to the paid plan");
+    expect(html.indexOf("Pay monthly")).toBeLessThan(html.indexOf("Pay yearly"));
+    const es = render("es", true, true);
+    expect(es).toContain("Pago mensual");
+    expect(es).toContain("Pago anual");
+  });
+
+  it("keeps the single link while monthly is not set, and shows neither to other roles", () => {
+    selected.org = pilotOrg("OWNER");
+    const html = render("en", true, false);
+    expect(html).toContain("Move to the paid plan");
+    expect(html).not.toContain("pilot-upgrade-monthly-link");
+    selected.org = pilotOrg("MEMBER");
+    expect(render("en", true, true)).not.toContain("pilot-upgrade");
   });
 });

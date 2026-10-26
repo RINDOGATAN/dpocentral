@@ -189,6 +189,17 @@ describe("organization.update: the same rule, against the OWNER's address", () =
     expect(mocks.prisma.organization.update).not.toHaveBeenCalled();
   });
 
+  it("free-form settings sent by an admin are never stored (pending invitations live there)", async () => {
+    await adminOfOrgA("owner").update({
+      organizationId: "org-a",
+      name: "Renamed",
+      settings: { pendingInvites: [{ email: "x@example.test", role: "OWNER" }], pendingInviteEmails: ["x@example.test"] },
+    } as never);
+    const call = mocks.prisma.organization.update.mock.calls[0][0];
+    expect(call.data).not.toHaveProperty("settings");
+    expect(mocks.prisma.auditLog.create.mock.calls[0][0].data.changes).not.toHaveProperty("settings");
+  });
+
   it("an update that does not mention the domain leaves it alone", async () => {
     await adminOfOrgA("owner").update({ organizationId: "org-a", name: "Renamed" });
     expect(storedDomainOnUpdate()).toBeUndefined();

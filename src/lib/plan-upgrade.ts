@@ -9,9 +9,12 @@
  *
  * The pieces, all behind AUTO_UPGRADE_ENABLED (off unless exactly "true"):
  *   - GET /api/plan/checkout sends an owner or admin to the plan's Stripe
- *     payment link for the visitor's currency (src/lib/plan-currency.ts:
- *     PLAN_CLOUD_EUR_LINK or PLAN_CLOUD_USD_LINK; no link is written in the
- *     code) with a signed organisation reference
+ *     payment link for the visitor's currency (src/lib/plan-currency.ts)
+ *     and the billing interval chosen: yearly from PLAN_CLOUD_EUR_LINK or
+ *     PLAN_CLOUD_USD_LINK, monthly from NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK
+ *     or NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK (public, as the landing's
+ *     pricing block shows the same links; no link is written in the code),
+ *     with a signed organisation reference
  *     (client_reference_id) and their e-mail (prefilled_email);
  *   - the storefront's Stripe webhook, which receives the account's payment
  *     events, relays each plan payment or plan end to
@@ -49,16 +52,42 @@ export function planSyncSecret(env: Env = process.env): string | null {
   return s.length > 0 ? s : null;
 }
 
-/** The payment link for a currency, from PLAN_CLOUD_EUR_LINK / PLAN_CLOUD_USD_LINK; null when unset. */
-export function paymentLinkFor(currency: PlanCurrency, env: Env = process.env): string | null {
-  const raw = (currency === "EUR" ? env.PLAN_CLOUD_EUR_LINK : env.PLAN_CLOUD_USD_LINK) ?? "";
-  const link = raw.trim();
+/** How often the plan is paid: yearly (the default) or monthly. */
+export type PlanInterval = "year" | "month";
+
+/** Reads the checkout's `interval` parameter: absent means yearly; anything unknown is null. */
+export function parsePlanInterval(value: string | null | undefined): PlanInterval | null {
+  if (value === null || value === undefined || value === "" || value === "year") return "year";
+  return value === "month" ? "month" : null;
+}
+
+function rawLink(currency: PlanCurrency, interval: PlanInterval, env: Env): string | undefined {
+  if (interval === "month") {
+    return currency === "EUR"
+      ? env.NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK
+      : env.NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK;
+  }
+  return currency === "EUR" ? env.PLAN_CLOUD_EUR_LINK : env.PLAN_CLOUD_USD_LINK;
+}
+
+/**
+ * The payment link for a currency and interval; null when unset. Yearly:
+ * PLAN_CLOUD_EUR_LINK / PLAN_CLOUD_USD_LINK. Monthly:
+ * NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK / NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK.
+ */
+export function paymentLinkFor(
+  currency: PlanCurrency,
+  env: Env = process.env,
+  interval: PlanInterval = "year"
+): string | null {
+  const link = (rawLink(currency, interval, env) ?? "").trim();
   return /^https:\/\/\S+$/.test(link) ? link : null;
 }
 
 /**
  * The in-app plan offer for a request: the currency the customer will be
- * charged and the payment link "Move to the paid plan" would use (null when
+ * charged and the payment links "Move to the paid plan" would use, yearly
+ * and, when its link is set, monthly (null when
  * it cannot be offered: not the hosted service, switched off, no secret, or
  * no link set for that currency). The signed-in layout hands `currency` to
  * every in-app price hint (ChargeCurrencyProvider), and the checkout route
@@ -68,18 +97,25 @@ export function paymentLinkFor(currency: PlanCurrency, env: Env = process.env): 
 export function inAppPlanOffer(
   headers: { get(name: string): string | null },
   env: Env = process.env
-): { currency: PlanCurrency; link: string | null } {
+): { currency: PlanCurrency; link: string | null; monthlyLink: string | null } {
   const currency = planCurrencyFromHeaders(headers);
   const offered = isHostedDeployment(env) && autoUpgradeEnabled(env) && planSyncSecret(env) !== null;
-  return { currency, link: offered ? paymentLinkFor(currency, env) : null };
+  return {
+    currency,
+    link: offered ? paymentLinkFor(currency, env, "year") : null,
+    // Monthly is offered only beside the yearly link, never alone.
+    monthlyLink: offered && paymentLinkFor(currency, env, "year") ? paymentLinkFor(currency, env, "month") : null,
+  };
 }
 
-/** The payment link the in-app upgrade would use for this request, or null (see inAppPlanOffer). */
+/** The payment link the in-app upgrade would use for this request and interval, or null (see inAppPlanOffer). */
 export function upgradeLinkFor(
   headers: { get(name: string): string | null },
-  env: Env = process.env
+  env: Env = process.env,
+  interval: PlanInterval = "year"
 ): string | null {
-  return inAppPlanOffer(headers, env).link;
+  const offer = inAppPlanOffer(headers, env);
+  return interval === "month" ? offer.monthlyLink : offer.link;
 }
 
 function referenceSignature(secret: string, app: string, orgId: string): string {

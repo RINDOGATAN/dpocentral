@@ -552,47 +552,4 @@ export const reportsRouter = createTRPCRouter({
         },
       };
     }),
-
-  // ============================================================
-  // BOARD REPORT DATA
-  // ============================================================
-
-  getBoardReportData: organizationProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx }) => {
-      const orgId = ctx.organization.id;
-
-      const [complianceScore, moduleStats, trend, recentActivities] = await Promise.all([
-        computeComplianceScore(ctx.prisma, orgId),
-        // Inline module stats query for board report (reuses same logic)
-        scoredAssessmentsWithDerivedRisk(ctx.prisma, orgId).then((rows) =>
-          rows
-            .filter((a) => a.riskLevel === "HIGH" || a.riskLevel === "CRITICAL")
-            .sort((a, b) => b.riskScore - a.riskScore)
-            .slice(0, 5)
-            .map(({ id, name, riskLevel, riskScore, status }) => ({ id, name, riskLevel, riskScore, status }))
-        ),
-        ctx.prisma.complianceSnapshot.findMany({
-          where: { organizationId: orgId },
-          orderBy: { month: "asc" },
-          take: 12,
-        }),
-        ctx.prisma.auditLog.findMany({
-          where: { organizationId: orgId },
-          orderBy: { createdAt: "desc" },
-          take: 20,
-          include: {
-            user: { select: { id: true, name: true, email: true } },
-          },
-        }),
-      ]);
-
-      return {
-        complianceScore,
-        topRisks: moduleStats,
-        trend,
-        recentActivities,
-        generatedAt: new Date().toISOString(),
-      };
-    }),
 });

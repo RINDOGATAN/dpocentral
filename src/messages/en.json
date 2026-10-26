@@ -10012,6 +10012,8 @@
       "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
       "readOnly": "Your pilot has ended: the organization is read-only and you can export it at any time.",
       "upgrade": "Move to the paid plan",
+      "upgradeMonthly": "Pay monthly",
+      "upgradeYearly": "Pay yearly",
       "pricing": "See pricing",
       "dismiss": "Close"
     },

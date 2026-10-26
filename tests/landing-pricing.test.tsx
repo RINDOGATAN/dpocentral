@@ -15,7 +15,7 @@
  *   - plain copy: no long dash; Spanish says tú.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
@@ -214,5 +214,42 @@ describe("pricing block: legal links, no tax", () => {
   it.each(["llms.txt", "llms-full.txt"])("public/%s never mentions VAT, IVA or reverse charge", (file) => {
     const body = readFileSync(join(process.cwd(), "public", file), "utf8");
     expect(body).not.toMatch(/\bVAT\b|\bIVA\b|reverse.?charge|inversión del sujeto|sujeto pasivo/i);
+  });
+});
+
+describe("monthly subscription links", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  const fresh = async (locale: L) => {
+    vi.resetModules();
+    const { default: Section } = await import("@/landing/components/PricingSection");
+    return renderToStaticMarkup(createElement(Section, { locale }));
+  };
+
+  it("shows only the yearly link while the monthly link is not set", async () => {
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK", "");
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK", "");
+    const html = await fresh("en");
+    expect(html).not.toContain("pricing-subscribe-monthly");
+    expect(text(html)).toContain(" Subscribe ");
+  });
+
+  it("shows monthly then yearly, each with the link of the page's currency", async () => {
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_USD_MONTHLY_LINK", "https://buy.stripe.com/test_usd_monthly");
+    vi.stubEnv("NEXT_PUBLIC_PLAN_CLOUD_EUR_MONTHLY_LINK", "https://buy.stripe.com/test_eur_monthly");
+    const en = await fresh("en");
+    expect(en).toMatch(/<a href="https:\/\/buy\.stripe\.com\/test_usd_monthly"[^>]*data-testid="pricing-subscribe-monthly"/);
+    expect(en).toContain(`href="${PLAN_PAYMENT_LINK.USD}"`);
+    expect(en).not.toContain("test_eur_monthly");
+    expect(text(en)).toContain("Subscribe monthly");
+    expect(text(en)).toContain("Subscribe yearly");
+    const es = await fresh("es");
+    expect(es).toContain('href="https://buy.stripe.com/test_eur_monthly"');
+    expect(es).not.toContain("test_usd_monthly");
+    expect(text(es)).toContain("Contratar con pago mensual");
+    expect(text(es)).toContain("Contratar con pago anual");
   });
 });
