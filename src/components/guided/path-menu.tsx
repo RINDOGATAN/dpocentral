@@ -30,6 +30,7 @@ import {
   stageProgress,
   stageWord,
   isStepMet,
+  keptOpenStages,
   type PathConfig,
   type PathStage,
   type PathStatuses,
@@ -43,6 +44,14 @@ export type Translate = (key: string, values?: Record<string, string | number>) 
 interface PathMenuProps<C> {
   config: PathConfig<C>;
   statuses: PathStatuses | null;
+  /**
+   * The statuses that decide which steps are listed (a step shown only for
+   * some organisations, `shownWhen`), when they are known before `statuses`
+   * may be shown: a caller holding the progress back (the member's scope
+   * still loading) must not make such a step vanish meanwhile. Defaults to
+   * `statuses`.
+   */
+  shownStatuses?: PathStatuses | null;
   pathname: string;
   /** The address's query (`view=due-diligence`): some steps are views of a page. */
   search?: string;
@@ -106,9 +115,13 @@ const FOCUS =
   "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 /** Where a stage's icon leads when the menu shows icons only: its first step not done. */
-function stageTarget<C>(stage: PathStage<C>, statuses: PathStatuses | null): string | null {
+function stageTarget<C>(
+  stage: PathStage<C>,
+  statuses: PathStatuses | null,
+  shownStatuses: PathStatuses | null,
+): string | null {
   const open = stage.steps.find(
-    (s) => s.href && isCounted(s) && isShown(s, statuses) && !isStepMet(statuses?.[s.id]),
+    (s) => s.href && isCounted(s) && isShown(s, shownStatuses) && !isStepMet(statuses?.[s.id]),
   );
   return (open ?? stage.steps.find((s) => s.href))?.href ?? null;
 }
@@ -116,6 +129,7 @@ function stageTarget<C>(stage: PathStage<C>, statuses: PathStatuses | null): str
 export function PathMenu<C>({
   config,
   statuses,
+  shownStatuses,
   pathname,
   search = "",
   stripeEnabled,
@@ -134,6 +148,7 @@ export function PathMenu<C>({
   lockedSteps = [],
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode, auditTrail });
+  const shown = shownStatuses === undefined ? statuses : shownStatuses;
   const currentStep = currentStepId(config, pathname, search);
   // The one programme figure ("3 of 5 stages done"), as on the
   // dashboard, All clients and the Reports page (path.ts, programFigure).
@@ -145,14 +160,25 @@ export function PathMenu<C>({
 
   // The stage holding the current page (on the overview, the stage holding
   // the next step) is open unless it was closed on this very page; any other
-  // stage is open only when opened by hand.
+  // stage is open only when opened by hand. A stage opened by default stays
+  // open for the rest of the page even when the default moves (the progress
+  // arriving or being refetched), so its steps never close by themselves
+  // (path.ts, keptOpenStages).
   const [opened, setOpened] = useState<Record<string, boolean>>({});
-  const [closedCurrentOn, setClosedCurrentOn] = useState<string | null>(null);
+  const [closedOn, setClosedOn] = useState<Record<string, string>>({});
+  const [kept, setKept] = useState(() => keptOpenStages(null, pathname, openStage?.id ?? null));
+  const keptNow = keptOpenStages(kept, pathname, openStage?.id ?? null);
+  // Adjusting state while rendering, the documented React pattern for state
+  // that follows a prop; keptOpenStages returns the same object once settled.
+  if (keptNow !== kept) setKept(keptNow);
+  const keptByDefault = (stage: PathStage<C>) => keptNow.ids.includes(stage.id);
   const isOpen = (stage: PathStage<C>) =>
-    stage.id === openStage?.id ? closedCurrentOn !== pathname : !!opened[stage.id];
+    keptByDefault(stage) ? closedOn[stage.id] !== pathname : !!opened[stage.id];
   const toggle = (stage: PathStage<C>) => {
-    if (stage.id === openStage?.id) setClosedCurrentOn(isOpen(stage) ? pathname : null);
-    else setOpened((o) => ({ ...o, [stage.id]: !o[stage.id] }));
+    if (keptByDefault(stage)) {
+      const closeIt = isOpen(stage);
+      setClosedOn((c) => ({ ...c, [stage.id]: closeIt ? pathname : "" }));
+    } else setOpened((o) => ({ ...o, [stage.id]: !o[stage.id] }));
   };
 
   const sheet = variant === "sheet";
@@ -189,7 +215,7 @@ export function PathMenu<C>({
         <div className="my-1 h-px w-8 bg-border" />
         {config.stages.map((stage) => {
           const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
-          const href = stageTarget(stage, statuses);
+          const href = stageTarget(stage, statuses, shown);
           // A stage with no step available yet carries no number (stageNumber),
           // so it must not borrow its position and repeat the next stage's.
           const number = stageNumber(config, stage.id);
@@ -291,10 +317,10 @@ export function PathMenu<C>({
           const holdsCurrent = stage.id === currentStage?.id;
           // Steps with no page yet are not listed here: they are gathered in
           // the "Not in DPO Central yet" group at the foot.
-          const shownSteps = stage.steps.filter((step) => isShown(step, statuses) && !step.coming);
+          const shownSteps = stage.steps.filter((step) => isShown(step, shown) && !step.coming);
           if (shownSteps.length === 0) return null;
           // Nothing to open: no chevron, and the row is plain text.
-          const expandable = stageExpandable(stage, statuses);
+          const expandable = stageExpandable(stage, shown);
           const stepList = (
             <ul className="min-h-0 overflow-hidden flex flex-col gap-0.5 pl-5">
               {shownSteps.map((step) => (
