@@ -2569,7 +2569,7 @@
         "privacyProfessional": "Profesional de privacidad",
         "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
         "privacyProfessionalDescHosted": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de hasta cinco organizaciones",
-        "businessNeedsOneOrganization": "Una cuenta de empresa trabaja con una sola organización. Para cambiar a ella, primero tienes que eliminar todas tus organizaciones menos una."
+        "businessNeedsOneOrganization": "Una cuenta de empresa trabaja con una sola organización. Para cambiar a ella, primero tienes que eliminar todas tus organizaciones menos una. Puedes eliminar un cliente desde el menú de su fila en <link>Todos los clientes</link>."
       },
       "language": {
         "title": "Idioma",
@@ -2686,19 +2686,23 @@
         }
       },
       "deleteOrganization": {
-        "title": "Eliminar la organización",
-        "description": "Elimina esta organización y todo lo que tu equipo ha registrado en ella. Solo puede hacerlo el propietario.",
-        "start": "Eliminar la organización…",
+        "title": "Eliminar esta organización",
+        "description": "Elimina solo la organización abierta ahora, {name}, y todo lo registrado en ella. Tu cuenta y tus otras organizaciones se mantienen. Solo puede hacerlo un propietario.",
+        "start": "Eliminar esta organización…",
         "whatGoes": "Se elimina todo lo registrado aquí: actividades, sistemas, proveedores, evaluaciones, incidentes, solicitudes de derechos con sus mensajes, el registro de actividad, los miembros y las invitaciones pendientes.",
         "whatStays": "Solo conservamos la constancia del contrato, sin contenido: la aceptación del contrato de encargo, los cambios de plan y la fecha de la eliminación.",
         "accounts": "Los miembros conservan sus cuentas y sus otras organizaciones.",
-        "noUndo": "No se puede deshacer.",
+        "noUndo": "Se elimina en el acto. No hay plazo de espera, y no puedes deshacerlo ni recuperarla.",
         "exportFirst": "Si quieres una copia, exporta antes el programa (Ajustes, «Llévate tu programa»).",
         "confirmLabel": "Para confirmar, escribe el nombre de la organización: {name}",
         "confirm": "Eliminar definitivamente",
         "cancel": "Cancelar",
         "deleted": "La organización se ha eliminado.",
-        "paidPlan": "Mientras el plan de pago está activo, no puedes eliminar la organización desde aquí. Cuando termine el plan tendrás 30 días para exportarlo todo; después la eliminaremos, o podrás eliminarla tú desde aquí."
+        "paidPlan": "Es la última organización del plan de pago, así que no puedes eliminarla desde aquí mientras el plan esté activo. Cuando termine el plan tendrás 30 días para exportarlo todo; después la eliminaremos, o podrás eliminarla tú desde aquí.",
+        "backups": "Lo que quede en nuestras copias de seguridad se borra en un plazo de 30 días.",
+        "planContinues": "Eliminarla no cancela el plan de pago, que sigue vigente para tus otras organizaciones.",
+        "otherClients": "Para eliminar otro cliente, usa el menú de su fila en <link>Todos los clientes</link>.",
+        "dsarModule": "Mientras la ampliación de volumen de solicitudes de derechos esté activa, no puedes eliminar esta organización desde aquí. Cuando termine la ampliación, podrás eliminarla."
       }
     },
     "dsar": {
@@ -5820,7 +5824,7 @@
           "deadline": "El próximo plazo (una brecha que notificar, una solicitud de derechos que vence o una revisión que vence), con su referencia",
           "action": "La siguiente acción"
         },
-        "outro": "Las filas se ordenan por el plazo más próximo: primero el más cercano o el más vencido. Pulsa el nombre de un cliente para abrir su panel; pulsa su plazo o su siguiente acción para ir directamente. «Añadir un cliente» está junto al título, y el menú de cada fila ofrece «Crear un cliente nuevo a partir de este». En el móvil, cada cliente es una tarjeta con los mismos datos."
+        "outro": "Las filas se ordenan por el plazo más próximo: primero el más cercano o el más vencido. Pulsa el nombre de un cliente para abrir su panel; pulsa su plazo o su siguiente acción para ir directamente. «Añadir un cliente» está junto al título, y el menú de cada fila (⋯) ofrece «Crear un cliente nuevo a partir de este» y, si eres propietario de ese cliente, «Eliminar este cliente», que elimina solo ese cliente. En el móvil, cada cliente es una tarjeta con los mismos datos."
       },
       "settings": {
         "title": "Cambiar el tipo de cuenta",
@@ -10445,7 +10449,25 @@
       "onTrack": "Al día"
     },
     "limited": "Limitado a tus departamentos: no se muestran las cifras de toda la organización.",
-    "sortNote": "Ordenados por el plazo más próximo, el más cercano primero; después, los clientes sin plazo, por nombre."
+    "sortNote": "Ordenados por el plazo más próximo, el más cercano primero; después, los clientes sin plazo, por nombre.",
+    "menu": {
+      "label": "Acciones de {name}",
+      "delete": "Eliminar este cliente"
+    },
+    "delete": {
+      "title": "Eliminar {name}",
+      "intro": "Esto elimina solo este cliente. Tu cuenta y tus otros clientes se quedan como están.",
+      "whatGoes": "Se elimina todo lo registrado para este cliente: actividades, sistemas, proveedores, evaluaciones, incidentes, solicitudes de derechos con sus mensajes, el registro de actividad, los miembros y las invitaciones pendientes.",
+      "whatStays": "Solo conservamos la constancia del contrato, sin contenido: la aceptación del contrato de encargo, los cambios de plan y la fecha de la eliminación.",
+      "accounts": "Los miembros conservan sus cuentas y sus otras organizaciones.",
+      "current": "Tienes este cliente abierto ahora. Cuando se elimine, abriremos otro de tus clientes.",
+      "exportFirst": "Si quieres una copia, abre este cliente y exporta antes su programa (Ajustes, «Llévate tu programa»).",
+      "confirmLabel": "Para confirmar, escribe el nombre del cliente: {name}",
+      "confirm": "Eliminar este cliente definitivamente",
+      "cancel": "Cancelar",
+      "deleted": "{name} se ha eliminado.",
+      "loading": "Comprobando si se puede eliminar este cliente"
+    }
   },
   "applicability": {
     "cardTitle": "Normativa aplicable",
@@ -10720,7 +10742,7 @@
   },
   "serverErrors": {
     "exact": {
-      "businessNeedsOneOrganization": "Para cambiar a una cuenta de empresa, primero tienes que eliminar todas tus organizaciones menos una.",
+      "businessNeedsOneOrganization": "Para cambiar a una cuenta de empresa, primero tienes que eliminar todas tus organizaciones menos una. Puedes eliminar un cliente desde el menú de su fila en Todos los clientes.",
       "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
       "dsarReadRestricted": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas",
       "aCustomerWithThisEmailAlreadyExists": "Ya existe un cliente con este correo electrónico.",
@@ -10841,7 +10863,10 @@
       "sendingTimeOnlyWithSent": "La hora de envío solo se registra con el estado Enviada.",
       "sendingTimeNotInFuture": "La hora de envío no puede ser futura.",
       "invitationNotFound": "No se ha encontrado la invitación.",
-      "webAddressOnly": "Usa una dirección web que empiece por https:// o http://."
+      "webAddressOnly": "Usa una dirección web que empiece por https:// o http://.",
+      "orgDeletionPaidPlan": "La organización está en el plan de pago; podrás eliminarla cuando el plan haya terminado.",
+      "orgDeletionDsarModule": "La organización tiene la ampliación de volumen de solicitudes de derechos; podrás eliminarla cuando la ampliación haya terminado.",
+      "orgDeletionNameMismatch": "El nombre escrito no coincide con el de la organización."
     },
     "pattern": {
       "freeSlotsPortfolio": "Puedes importar hasta 5 proveedores gratis desde tu cartera de Vendor.Watch. {remaining, plural, one {Te queda # plaza gratuita} other {Te quedan # plazas gratuitas}}. Suscríbete al complemento Catálogo de proveedores para importar más.",

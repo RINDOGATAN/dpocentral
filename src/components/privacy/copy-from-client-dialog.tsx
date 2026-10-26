@@ -7,7 +7,7 @@
  *
  *  - from the quick start, into the client open now: choose the client to copy
  *    from ("current");
- *  - from the portfolio row menu, "Start a new client from this one": the row's
+ *  - from the portfolio row menu, "Create a new client from this one": the row's
  *    client is the source, and the dialog creates the new one
  *    (organization.create, the same path as adding a client) before copying
  *    into it ("new").
