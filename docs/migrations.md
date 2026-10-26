@@ -27,7 +27,7 @@ database it finds.
 
 | Posture | When | How |
 |---|---|---|
-| Hosted service | On every build from `main` | `npm run build` runs `scripts/assert-safe-db.ts`, then `scripts/migrate-deploy.mjs` (which runs `prisma migrate deploy`, see below), then the Next.js build. Merging a migration to `main` applies it to the hosted database |
+| Hosted service | On every build from `main` | `npm run build` runs `scripts/assert-safe-db.ts`, then `scripts/build-migrate.mjs` (which runs `prisma migrate deploy`, see below), then the Next.js build. Merging a migration to `main` applies it to the hosted database |
 | Self-hosted bundle | On every boot of the one-shot migrator, before the app starts | `deploy/sovereign/migrate.sh`: `prisma migrate deploy`, with automatic baselining for installs created before the migrations history existed and recovery from a half-finished first run (P3005). The app does not start unless the migrator exits 0 |
 | CI | Never against a database | CI builds with `npx next build` and a dummy `DATABASE_URL`; it does not migrate |
 
@@ -36,19 +36,20 @@ database it finds.
 The hosted database is serverless: it may be asleep when a build starts
 (Prisma error P1001, server unreachable), and two overlapping builds can
 contend for Prisma's migration lock (P1002, "timed out acquiring advisory
-lock"). `scripts/migrate-deploy.mjs` handles both without any extra secret
+lock"). `scripts/build-migrate.mjs` handles both without any extra secret
 or database access from CI:
 
 1. On a Vercel build whose `VERCEL_ENV` is not `production` it skips
    migrations. Production builds and a local `npm run build` migrate.
-2. It wakes the database with `SELECT 1` (`prisma db execute`), retrying.
+2. It wakes the database with `SELECT 1` (`prisma db execute`), retrying
+   on the same errors.
 3. It runs `prisma migrate deploy`, retrying only on P1001, P1002 or the
-   advisory-lock timeout, with waits of 10, 20, 30, 45 and then 60 seconds,
-   for up to 7 minutes in total (`MIGRATE_RETRY_BUDGET_SECONDS` changes the
-   budget). Any other error fails the build at once.
+   advisory-lock timeout, with waits starting at 5 seconds and doubling up to
+   60 seconds, for up to 7 minutes in total (`BUILD_MIGRATE_BUDGET_MS`
+   changes the budget). Any other error fails the build at once.
 
 The schema has a single `url`, so it connects with `DATABASE_URL` as before.
-Connection strings are masked in its output. The self-hosted migrator and CI
+Connection strings and host names are masked in its output. The self-hosted migrator and CI
 do not use it.
 
 The migrator then refreshes built-in content (catalog, system templates,
