@@ -167,6 +167,19 @@ export function evaluatePath<C>(config: PathConfig<C>, counts: C): PathStatuses 
   return out;
 }
 
+/**
+ * The statuses with one step marked done, for a save that by the step's own
+ * rule completes it (the breach-readiness confirmation completes "incidents").
+ * Written into the path's cache at once, so the menu and the figure do not
+ * wait for the refetch that follows; that refetch remains the answer. A step
+ * that is not listed, hidden or still to come is left as it is.
+ */
+export function withStepDone(statuses: PathStatuses, stepId: string): PathStatuses {
+  const current = statuses[stepId];
+  if (current === undefined || current === "hidden" || current === "coming" || current === "done") return statuses;
+  return { ...statuses, [stepId]: "done" };
+}
+
 /** A step that counts towards progress: it has a page and is not situational. */
 export function isCounted<C>(step: PathStep<C>): boolean {
   return !step.coming && !step.optional;
@@ -523,6 +536,37 @@ export function stageOpenByDefault<C>(
   if (!onOverview) return null;
   if (!statuses) return config.stages[0] ?? null;
   return nextStep(config, statuses)?.stage ?? null;
+}
+
+/** The stages the menu keeps open by itself on one page (see keptOpenStages). */
+export interface KeptOpenStages {
+  pathname: string;
+  ids: readonly string[];
+}
+
+/**
+ * The stages the menu keeps open without being asked, for the page shown.
+ *
+ * The stage open by default can change while the person stays on one page:
+ * on the overview it follows the next step, which is the first stage while the
+ * progress loads and moves whenever a refetch answers differently. Closing
+ * the stage that was open then hid its steps under the person's finger. So, on
+ * one page, a stage once opened by default stays open (until closed by hand),
+ * and a newly chosen one is opened beside it. A new page starts again from
+ * its own default. Returns `previous` itself when nothing changes.
+ */
+export function keptOpenStages(
+  previous: KeptOpenStages | null,
+  pathname: string,
+  openStageId: string | null,
+): KeptOpenStages {
+  if (!previous || previous.pathname !== pathname) {
+    return { pathname, ids: openStageId ? [openStageId] : [] };
+  }
+  if (openStageId && !previous.ids.includes(openStageId)) {
+    return { pathname, ids: [...previous.ids, openStageId] };
+  }
+  return previous;
 }
 
 /** The library entry the current page belongs to, if it is not a step. */

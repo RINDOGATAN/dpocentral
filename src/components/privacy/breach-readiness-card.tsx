@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { formatDateIn } from "@/lib/utils";
 import { readinessLaws, type ReadinessLocale } from "@/config/breach-readiness";
+import { withStepDone } from "@/components/guided/path";
 
 export function BreachReadinessCard({ organizationId, canConfirm }: { organizationId: string; canConfirm: boolean }) {
   const t = useTranslations("breachReadiness");
@@ -55,6 +56,13 @@ export function BreachReadinessCard({ organizationId, canConfirm }: { organizati
       toast.success(t("saved"));
       setEditing(false);
       setAcknowledged(false);
+      // The confirmation completes step 5 (path-config.ts, "incidents"): show
+      // it in the menu and the figure now, not after the refetch below, which
+      // asks for every query on the page in one batch and then corrects this
+      // if the server reads it otherwise.
+      utils.programPath.status.setData({ organizationId }, (old) =>
+        old ? { ...old, steps: withStepDone(old.steps, "incidents") } : old,
+      );
       await utils.invalidate();
     },
     onError: (e) => toast.error(e.message),

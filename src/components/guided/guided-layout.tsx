@@ -122,7 +122,12 @@ export function GuidedLayout({
 
   const menuProps = {
     config: limited ? LIMITED_PATH : DPO_CENTRAL_PATH,
+    // The progress waits until the member's scope is known (a limited member
+    // never sees the organisation's figures), but which steps are listed does
+    // not: holding it back too made a step listed only for some organisations
+    // vanish from the menu until the scope answered.
     statuses: limited === null ? null : statuses,
+    shownStatuses: statuses,
     pathname,
     search,
     stripeEnabled: features.stripeEnabled,

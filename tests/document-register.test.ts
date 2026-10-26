@@ -403,7 +403,7 @@ describe("the menu and the dashboard cannot disagree", () => {
 
   it("the menu does not list the steps with no page yet: the documents panel names them once", () => {
     const menu = read("src/components/guided/path-menu.tsx");
-    expect(menu).toContain("isShown(step, statuses) && !step.coming");
+    expect(menu).toContain("isShown(step, shown) && !step.coming");
     const layout = read("src/components/guided/guided-layout.tsx");
     expect(layout).not.toContain("notYetEntries(");
     expect(layout).toContain("stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents)");

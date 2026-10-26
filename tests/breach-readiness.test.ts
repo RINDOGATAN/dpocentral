@@ -11,7 +11,8 @@ import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 import { readinessLaws, sameLaws, VERIFIED_BREACH_DEADLINES } from "@/config/breach-readiness";
 import { DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS, type PathCounts } from "@/components/guided/path-config";
-import { evaluatePath } from "@/components/guided/path";
+import { evaluatePath, stageProgress, withStepDone } from "@/components/guided/path";
+import { loadPathCounts } from "@/server/services/program/path-counts";
 import {
   BREACH_READINESS_ACTION,
   confirmBreachReadiness,
@@ -138,6 +139,56 @@ describe("the record and the step", () => {
     expect(data.breachReadiness.confirmedAt).toBe("2026-10-26T09:00:00.000Z");
     expect(create.mock.calls[0][0].data.action).toBe(BREACH_READINESS_ACTION);
     expect(JSON.stringify(create.mock.calls[0][0].data.changes)).not.toContain("dpo@example.com");
+  });
+});
+
+describe("the path reads the confirmation", () => {
+  // A database with nothing in it but the organisation's settings and its
+  // declared laws: every count is 0, every list empty.
+  function dbWith(settings: unknown, codes: string[]) {
+    const model = (name: string) => ({
+      count: vi.fn().mockResolvedValue(0),
+      findMany: vi.fn().mockResolvedValue(
+        name === "organizationJurisdiction" ? codes.map((code) => ({ jurisdiction: { code } })) : [],
+      ),
+      findFirst: vi.fn().mockResolvedValue(name === "organization" ? { settings } : null),
+    });
+    return new Proxy({} as Record<string, unknown>, {
+      get: (cache, prop: string) => (cache[prop] ??= model(prop)),
+    });
+  }
+  const confirmed = {
+    breachReadiness: { confirmedAt: "2026-10-26T08:00:00.000Z", confirmedBy: "u1", laws: ["GDPR", "CCPA"], contact: "dpo@x" },
+  };
+  const respond = DPO_CENTRAL_PATH.stages.find((s) => s.id === "respond")!;
+
+  it("marks step 5 done once confirmed for the laws declared now", async () => {
+    const counts = await loadPathCounts(dbWith(confirmed, ["CCPA", "GDPR"]) as never, "o1");
+    expect(counts.breachReadinessConfirmed).toBe(true);
+    const steps = evaluatePath(DPO_CENTRAL_PATH, counts);
+    expect(steps.incidents).toBe("done");
+    expect(stageProgress(respond, steps).state).toBe("done");
+  });
+
+  it("asks again when the declared laws have changed, and without a confirmation", async () => {
+    const stale = await loadPathCounts(dbWith(confirmed, ["GDPR"]) as never, "o1");
+    expect(stale.breachReadinessConfirmed).toBe(false);
+    const none = await loadPathCounts(dbWith({}, ["GDPR"]) as never, "o1");
+    expect(none.breachReadinessConfirmed).toBe(false);
+    expect(evaluatePath(DPO_CENTRAL_PATH, none).incidents).toBe("todo");
+  });
+
+  it("shows the step done in the menu's cache at once, from ready as from not started", () => {
+    const ready = evaluatePath(DPO_CENTRAL_PATH, { ...EMPTY_PATH_COUNTS, processingActivitiesComplete: 1 });
+    expect(stageProgress(respond, ready).state).toBe("ready");
+    const after = withStepDone(ready, "incidents");
+    expect(after.incidents).toBe("done");
+    expect(stageProgress(respond, after).state).toBe("done");
+    expect(withStepDone(evaluatePath(DPO_CENTRAL_PATH, EMPTY_PATH_COUNTS), "incidents").incidents).toBe("done");
+    // Nothing else moves, and a step that is not shown is left alone.
+    expect({ ...after, incidents: ready.incidents }).toEqual(ready);
+    expect(withStepDone({ incidents: "hidden" }, "incidents").incidents).toBe("hidden");
+    expect(withStepDone({}, "incidents")).toEqual({});
   });
 });
 

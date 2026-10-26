@@ -2575,7 +2575,8 @@
         "businessOwnerDesc": "Cumplimiento de privacidad para tu organización",
         "privacyProfessional": "Profesional de privacidad",
         "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
-        "privacyProfessionalDescHosted": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de hasta cinco organizaciones"
+        "privacyProfessionalDescHosted": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de hasta cinco organizaciones",
+        "businessNeedsOneOrganization": "Una cuenta de empresa trabaja con una sola organización. Para cambiar a ella, primero tienes que eliminar todas tus organizaciones menos una."
       },
       "language": {
         "title": "Idioma",
@@ -10722,6 +10723,7 @@
   },
   "serverErrors": {
     "exact": {
+      "businessNeedsOneOrganization": "Para cambiar a una cuenta de empresa, primero tienes que eliminar todas tus organizaciones menos una.",
       "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
       "dsarReadRestricted": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas",
       "aCustomerWithThisEmailAlreadyExists": "Ya existe un cliente con este correo electrónico.",
