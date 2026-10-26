@@ -914,7 +914,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "JP",
     effectiveDate: "2022-04-01",
     dsarDeadlineDays: 14, // "Without delay" — operational approximation (matches jurisdiction-data.ts)
-    breachNotificationHours: 72,
+    breachNotificationHours: 0, // No fixed hour count (see jurisdiction-data.ts, PPC leakage page)
     description:
       "Japan's personal information protection law (as amended in 2022) with enhanced individual rights and stricter cross-border transfer rules.",
     keyRequirements: [

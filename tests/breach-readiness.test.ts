@@ -44,9 +44,20 @@ describe("the deadlines shown per declared law", () => {
     expect(ca.authority).toMatch(/^Check the deadline/);
     expect(ca.authority).toContain("separate breach notification law");
     expect(ca.authority).not.toMatch(/\d+ (days|hours)/);
-    const [jp] = readinessLaws(["APPI"], "es");
-    expect(jp.verified).toBe(false);
-    expect(jp.authority).toMatch(/^Comprueba el plazo/);
+    const [br] = readinessLaws(["LGPD"], "es");
+    expect(br.verified).toBe(false);
+    expect(br.authority).toMatch(/^Comprueba el plazo/);
+  });
+
+  it("states the APPI's two reports as the PPC sets them, with no hour count", () => {
+    const [jp] = readinessLaws(["APPI"], "en");
+    expect(jp.verified).toBe(true);
+    expect(jp.authority).toContain("3 to 5 days");
+    expect(jp.authority).toContain("30 days");
+    expect(jp.authority).toContain("60 days");
+    expect(jp.authority).not.toMatch(/72/);
+    const [jpEs] = readinessLaws(["APPI"], "es");
+    expect(jpEs.authority).toContain("3 a 5 días");
   });
 
   it("leaves out the AI Act and unknown codes, and repeats nothing", () => {

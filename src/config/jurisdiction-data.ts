@@ -135,7 +135,7 @@ export const JURISDICTION_CORE_DATA: JurisdictionCoreData[] = [
     region: "JP",
     dsarDeadlineDays: 14, // "Without delay"
     dsarExtensionDays: 0,
-    breachNotificationHours: 72,
+    breachNotificationHours: 0, // No fixed hour count: preliminary report to the PPC promptly (PPC: within 3 to 5 days of discovery), final report within 30 days (60 if a wrongful purpose is suspected). https://www.ppc.go.jp/personalinfo/legal/leakAction/ (read 26 Oct 2026)
     dpaName: "Personal Information Protection Commission (PPC)",
   },
 ];
