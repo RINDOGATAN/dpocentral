@@ -22,8 +22,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 import {
-  APPLICABILITY_QUESTIONS,
-  ROLE_QUESTIONS,
+  applicabilityQuestionsFor,
   evaluateApplicability,
   type ApplicabilityAnswer,
   type ApplicabilityAnswers,
@@ -84,14 +83,22 @@ function QuestionRow({
   );
 }
 
+/**
+ * The questions for the jurisdictions declared (src/config/applicability.ts,
+ * applicabilityQuestionsFor): the role first, then one group per regime. A
+ * question that no declared law needs is not shown.
+ */
 export function ApplicabilityQuestions({
   answers,
   onChange,
+  jurisdictionCodes,
   disabled,
   idPrefix = "applicability",
 }: {
   answers: ApplicabilityAnswers;
   onChange: (next: ApplicabilityAnswers) => void;
+  /** The jurisdictions declared (or being chosen on the same screen). */
+  jurisdictionCodes: readonly string[];
   disabled?: boolean;
   /** Keeps radio names apart when the questions appear twice on a page. */
   idPrefix?: string;
@@ -99,34 +106,36 @@ export function ApplicabilityQuestions({
   const t = useTranslations("applicability");
   const set = (q: ApplicabilityQuestion) => (a: ApplicabilityAnswer) =>
     onChange({ ...answers, [q]: a });
-  const others = APPLICABILITY_QUESTIONS.filter((q) => !ROLE_QUESTIONS.includes(q));
+  const sections = applicabilityQuestionsFor(jurisdictionCodes);
+  const hasHint = (id: string) => id === "eu" || id === "uk" || id === "us";
   return (
     <div className="space-y-5">
-      <div className="space-y-4">
-        <p className="text-sm font-medium">{t("roleTitle")}</p>
-        {ROLE_QUESTIONS.map((q) => (
-          <QuestionRow
-            key={q}
-            question={q}
-            value={answers[q]}
-            onChange={set(q)}
-            disabled={disabled}
-            idPrefix={idPrefix}
-          />
-        ))}
-      </div>
-      <div className="space-y-4 border-t border-border pt-4">
-        {others.map((q) => (
-          <QuestionRow
-            key={q}
-            question={q}
-            value={answers[q]}
-            onChange={set(q)}
-            disabled={disabled}
-            idPrefix={idPrefix}
-          />
-        ))}
-      </div>
+      {sections.map((section, i) => (
+        <div
+          key={section.id}
+          className={cn("space-y-4", i > 0 && "border-t border-border pt-4")}
+          data-testid={`applicability-section-${section.id}`}
+        >
+          <div>
+            <p className="text-sm font-medium">{t(`sections.${section.id}`)}</p>
+            {hasHint(section.id) && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {t(`sectionHints.${section.id as "eu" | "uk" | "us"}`)}
+              </p>
+            )}
+          </div>
+          {section.questions.map((q) => (
+            <QuestionRow
+              key={q}
+              question={q}
+              value={answers[q]}
+              onChange={set(q)}
+              disabled={disabled}
+              idPrefix={idPrefix}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
@@ -157,15 +166,18 @@ function ItemLine({ item }: { item: ApplicabilityItem }) {
 export function ApplicabilityResult({
   jurisdictionCodes,
   answers,
+  asked,
   placesAbove = false,
 }: {
   jurisdictionCodes: readonly string[];
   answers: ApplicabilityAnswers;
+  /** The questions asked so far (stored answers); omitted while editing: every question shown counts. */
+  asked?: readonly ApplicabilityQuestion[];
   /** The places picker is on the same screen, above this result (the quick start). */
   placesAbove?: boolean;
 }) {
   const t = useTranslations("applicability");
-  const items = evaluateApplicability(jurisdictionCodes, answers);
+  const items = evaluateApplicability(jurisdictionCodes, answers, asked);
   const applies = items.filter((i) => i.state === "applies");
   const check = items.filter((i) => i.state === "check");
 
@@ -247,11 +259,16 @@ export function ApplicabilityCard({
         <ApplicabilityQuestions
           answers={answers}
           onChange={setEdits}
+          jurisdictionCodes={data.jurisdictionCodes}
           disabled={!canWrite || save.isPending}
           idPrefix="applicability-settings"
         />
         <div className="rounded-lg border border-border p-4">
-          <ApplicabilityResult jurisdictionCodes={data.jurisdictionCodes} answers={answers} />
+          <ApplicabilityResult
+            jurisdictionCodes={data.jurisdictionCodes}
+            answers={answers}
+            asked={edits ? undefined : data.asked}
+          />
         </div>
         {canWrite && (
           <div className="flex justify-end">

@@ -10467,8 +10467,8 @@
         "hint": "If so, you are a processor for that data, bound by a written contract."
       },
       "largeVolume": {
-        "label": "Are you a large business by revenue or by the number of people whose data you handle?",
-        "hint": "For example the CCPA's thresholds: high annual revenue, or the data of 100,000+ consumers."
+        "label": "For the US state laws: do you meet a size threshold, by revenue or by the number of people whose data you handle?",
+        "hint": "For example the CCPA: annual gross revenue above US$26,625,000 (from 1 January 2025), buying, selling or sharing the personal information of 100,000 or more consumers or households a year, or half or more of revenue from selling or sharing it. Under the GDPR, size does not decide whether the law applies."
       },
       "sensitiveData": {
         "label": "Do you process special category data, such as health, race, religion or biometric data?",
@@ -10485,6 +10485,62 @@
       "publicAuthority": {
         "label": "Are you a public authority or body?",
         "hint": "Public authorities must appoint a data protection officer."
+      },
+      "establishedEu": {
+        "label": "Do you have an establishment in the EU or EEA, such as an office, branch or subsidiary?",
+        "hint": "The GDPR applies to processing in the context of an establishment in the Union, wherever the processing happens (Art. 3(1))."
+      },
+      "targetsEu": {
+        "label": "Do you offer goods or services to people in the EU or EEA, even free of charge?",
+        "hint": "For example a site or app in a local language or currency, or delivery to EU addresses (Art. 3(2)(a))."
+      },
+      "monitorsEu": {
+        "label": "Do you monitor the behavior of people while they are in the EU or EEA?",
+        "hint": "For example tracking or profiling them online, or location tracking (Art. 3(2)(b))."
+      },
+      "establishedUk": {
+        "label": "Do you have an establishment in the UK, such as an office, branch or subsidiary?",
+        "hint": "The UK GDPR applies to processing in the context of an establishment in the UK (Art. 3(1))."
+      },
+      "targetsUk": {
+        "label": "Do you offer goods or services to people in the UK, even free of charge?",
+        "hint": "For example a site in pounds sterling or delivery to UK addresses (UK GDPR Art. 3(2)(a))."
+      },
+      "monitorsUk": {
+        "label": "Do you monitor the behavior of people while they are in the UK?",
+        "hint": "For example tracking or profiling them online (UK GDPR Art. 3(2)(b))."
+      },
+      "largeScale": {
+        "label": "Do you process personal data on a large scale?",
+        "hint": "Think of the number of people, the amount of data, how long and how widely it is processed. Large scale is one of the criteria that call for an impact assessment."
+      },
+      "criminalData": {
+        "label": "Do you process data about criminal convictions or offences?",
+        "hint": "This data has its own rules (Art. 10), for example background checks."
+      },
+      "vulnerableSubjects": {
+        "label": "Do you process data of other vulnerable people, such as employees, patients, elderly people or asylum seekers?",
+        "hint": "People who cannot easily refuse or object raise the risk of the processing."
+      },
+      "scoring": {
+        "label": "Do you evaluate or score people, for example credit scoring, profiling or predicting behavior?",
+        "hint": "Evaluation or scoring, including profiling, is one of the criteria that call for an impact assessment."
+      },
+      "automatedDecisions": {
+        "label": "Do you take automated decisions about people with legal or similarly significant effects?",
+        "hint": "For example automatically refusing a loan, an insurance policy or a job application (Art. 22)."
+      },
+      "combiningDatasets": {
+        "label": "Do you match or combine datasets from different sources or purposes?",
+        "hint": "For example joining customer data with data bought from third parties, in ways people would not expect."
+      },
+      "innovativeTech": {
+        "label": "Do you use new technologies or new ways of processing, such as AI, biometrics or connected devices?",
+        "hint": "Innovative technology is one of the criteria that call for an impact assessment."
+      },
+      "blocksRights": {
+        "label": "Can the processing prevent people from using a service, entering a contract or exercising a right?",
+        "hint": "For example screening customers before granting them a service or credit."
       }
     },
     "appliesTitle": "These apply to you",
@@ -10505,7 +10561,7 @@
       "usStates": "US state privacy laws"
     },
     "reasons": {
-      "twoCriteria": "Under the EDPB guidelines a DPIA is usually required when two or more high-risk criteria are met, for example special category data on a large scale, profiling or vulnerable data subjects. Check the activity.",
+      "twoCriteria": "Under the EDPB guidelines (WP248) a DPIA is usually required when two or more high-risk criteria are met, for example large scale, sensitive data, scoring or vulnerable people. Check the activity.",
       "operatesEu": "You operate in the EU.",
       "operatesUk": "You operate in the UK.",
       "operatesCalifornia": "You operate in California.",
@@ -10519,7 +10575,36 @@
       "children": "You process children's data.",
       "largeVolume": "You meet a large-business threshold.",
       "thresholds": "The exact thresholds decide.",
-      "answerUnsure": "An answer is not settled yet."
+      "answerUnsure": "An answer is not settled yet.",
+      "establishedEu": "You have an establishment in the EU.",
+      "targetsEu": "You offer goods or services to people in the EU.",
+      "monitorsEu": "You monitor the behavior of people in the EU.",
+      "territoryNotMetEu": "You have declared the EU, but your answers say you have no establishment there and neither offer to nor monitor people there. Check Art. 3.",
+      "establishedUk": "You have an establishment in the UK.",
+      "targetsUk": "You offer goods or services to people in the UK.",
+      "monitorsUk": "You monitor the behavior of people in the UK.",
+      "territoryNotMetUk": "You have declared the UK, but your answers say you have no establishment there and neither offer to nor monitor people there. Check Art. 3.",
+      "criminalData": "You process criminal conviction or offence data.",
+      "vulnerableSubjects": "You process data of vulnerable people.",
+      "largeScale": "You process data on a large scale.",
+      "scoring": "You evaluate or score people.",
+      "automatedDecisions": "You take automated decisions with significant effects.",
+      "combiningDatasets": "You combine datasets.",
+      "innovativeTech": "You use innovative technology.",
+      "blocksRights": "The processing can prevent access to a service, contract or right."
+    },
+    "sections": {
+      "role": "Your role",
+      "eu": "European Union (GDPR)",
+      "uk": "United Kingdom (UK GDPR)",
+      "risk": "Data protection officer and impact assessments",
+      "us": "United States",
+      "general": "How you use personal data"
+    },
+    "sectionHints": {
+      "eu": "The GDPR reaches you through an establishment in the Union, or by offering goods or services to people there or monitoring their behavior. How many people you reach does not decide it.",
+      "uk": "The UK GDPR works the same way for the United Kingdom.",
+      "us": "Asked only because you have declared US state laws, whose thresholds decide."
     }
   },
   "errorPage": {

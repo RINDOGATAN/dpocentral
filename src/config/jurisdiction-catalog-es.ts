@@ -848,14 +848,16 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
 
 export const APPLICABILITY_QUESTIONS_ES: Record<string, { question: string; helpText: string }> = {
   eu_residents: {
-    question: "¿Tratas datos personales de residentes en la UE o el EEE?",
+    question:
+      "¿Tienes un establecimiento en la UE o el EEE, o ofreces bienes o servicios a personas que están allí, o controlas su comportamiento allí?",
     helpText:
-      "Incluye a clientes, usuarios, empleados o cualquier persona que se encuentre en un Estado miembro de la UE o del EEE, aunque tu organización no esté establecida en la UE.",
+      "Así se decide el alcance del RGPD (art. 3): por un establecimiento en la Unión, o, sin él, por ofrecer bienes o servicios a personas que están en la Unión o controlar su comportamiento allí. No depende de la nacionalidad ni de la residencia, ni del número de personas.",
   },
   uk_presence: {
-    question: "¿Tienes clientes, empleados o usuarios en el Reino Unido?",
+    question:
+      "¿Tienes un establecimiento en el Reino Unido, o ofreces bienes o servicios a personas que están allí, o controlas su comportamiento allí?",
     helpText:
-      "Desde el Brexit, el Reino Unido tiene su propio régimen de protección de datos. Se aplica si tratas datos de residentes en el Reino Unido o tienes un establecimiento allí.",
+      "Desde el Brexit, el Reino Unido tiene su propio régimen. El RGPD del Reino Unido sigue el mismo criterio que el art. 3 del RGPD: un establecimiento en el Reino Unido, o la oferta de bienes o servicios a personas que están allí o el control de su comportamiento.",
   },
   switzerland_presence: {
     question: "¿Tratas datos de personas que se encuentran en Suiza?",
