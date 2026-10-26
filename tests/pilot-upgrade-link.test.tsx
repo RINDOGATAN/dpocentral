@@ -120,21 +120,25 @@ describe("pilot banner: monthly and yearly", () => {
 });
 
 describe("pilot banner: a pilot shared with AI Sentinel", () => {
-  it("words the payment links as the one plan for both products, in both languages", () => {
+  it("keeps the same short links and adds no suite sentence, in both languages", () => {
     selected.org = pilotOrg("OWNER");
     selected.suite = true;
     try {
-      const en = render("en", true, true);
-      expect(en).toContain('data-testid="pilot-suite-line"');
-      expect(en).toContain("One plan for both, monthly");
-      expect(en).toContain("One plan for both, yearly");
-      expect(en).not.toContain("Pay monthly");
-      expect(render("en", true)).toContain("Move both to the Cloud Plan");
+      const shared = render("en", true, true);
+      selected.suite = false;
+      const alone = render("en", true, true);
+      selected.suite = true;
+      expect(shared).toBe(alone);
+      expect(shared).toContain("Pay monthly");
+      expect(shared).toContain("Pay yearly");
+      expect(shared).not.toContain("pilot-suite-line");
+      expect(shared).not.toContain("One plan");
+      expect(render("en", true)).toContain("Move to the paid plan");
       const es = render("es", true, true);
-      expect(es).toContain("Un plan para los dos, mensual");
-      expect(es).toContain("Un plan para los dos, anual");
-      expect(render("es", true)).toContain("Pasar los dos al plan de pago");
-      expect(en + es).not.toMatch(/[\u2013\u2014]/);
+      expect(es).toContain("Pago mensual");
+      expect(es).toContain("Pago anual");
+      expect(es).not.toContain("Un plan para los dos");
+      expect(render("es", true)).toContain("Pasar al plan de pago");
     } finally {
       selected.suite = false;
     }
