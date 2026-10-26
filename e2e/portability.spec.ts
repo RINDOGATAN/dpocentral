@@ -75,7 +75,7 @@ test("take the programme out, bring it into an empty organisation, add a registe
   // ── One register from a CSV file, through the column match ────────────
   await b.goto("/privacy/settings");
   const card = b.getByTestId("programme-import-card");
-  await card.getByRole("tab", { name: "One register (CSV)" }).click();
+  await card.getByRole("tab", { name: "One register (CSV or Excel)" }).click();
   await card.locator("#import-register").selectOption("vendors");
   await card.locator("#import-file-register").setInputFiles({
     name: "vendors.csv",
