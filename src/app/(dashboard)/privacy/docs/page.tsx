@@ -36,6 +36,7 @@ import { features, isDsarModuleEnabled } from "@/config/features";
 export default async function DocsGettingStartedPage() {
   const t = await getTranslations("docs.gettingStarted");
   const tg = await getTranslations("guided");
+  const tRole = await getTranslations("enums.role");
   const tv = await getTranslations("views");
   const td = await getTranslations("documentRegister");
   // Without the rights-request module (src/config/features.ts) the guide
@@ -305,7 +306,7 @@ export default async function DocsGettingStartedPage() {
               {roleRows.map((role, i) => (
                 <tr key={role} className={i % 2 ? "bg-muted/20" : ""}>
                   <td className="px-4 py-2">
-                    <Badge variant="outline" className="font-mono text-xs">{role}</Badge>
+                    <Badge variant="outline" className="text-xs">{tRole(role)}</Badge>
                   </td>
                   <td className="px-4 py-2 text-muted-foreground">{t(`roles.rows.${role}`)}</td>
                 </tr>

@@ -189,6 +189,13 @@ export default function TransferDetailPage() {
     (k) => supplementaryMeasuresObj[k]
   );
   const status = transfer.complianceStatus || "PENDING";
+  // A partial adequacy decision (the US under the DPF) only matters to a
+  // transfer that rests on it; one on standard clauses or another safeguard
+  // is not told about it.
+  const onAdequacy = transfer.mechanism === "ADEQUACY_DECISION";
+  // The transfer's own assessment exists and waits for approval: the rules'
+  // suggestion would only repeat that, so the card says it instead.
+  const tiaAwaitingApproval = !!transfer.tia && transfer.tia.status === "PENDING_APPROVAL" && !transfer.tiaCompleted;
   const StatusIcon = statusIcons[status] || Clock;
 
   const toggleMeasure = (measureId: string) => {
@@ -246,7 +253,7 @@ export default function TransferDetailPage() {
                 <Badge variant="outline" className="border-primary text-primary" data-testid="coverage-badge">
                   {t("adequateCountry")}
                 </Badge>
-              ) : adequacyCoverage === "PARTIAL_UNCONFIRMED" ? (
+              ) : adequacyCoverage === "PARTIAL_UNCONFIRMED" && onAdequacy ? (
                 <Badge variant="outline" className={`border-transparent ${toneChip("warning")}`} data-testid="coverage-badge">
                   {t("partialUnconfirmedBadge")}
                 </Badge>
@@ -323,7 +330,7 @@ export default function TransferDetailPage() {
       </div>
 
       {/* Partial adequacy not recorded as covering this recipient */}
-      {adequacyCoverage === "PARTIAL_UNCONFIRMED" && adequacyDecision && (
+      {adequacyCoverage === "PARTIAL_UNCONFIRMED" && onAdequacy && adequacyDecision && (
         <Card className={`${toneBorder("warning")} ${toneTint("warning")}`} data-testid="partial-adequacy-notice">
           <CardContent className="py-4 flex items-start gap-3">
             <AlertTriangle className={`w-5 h-5 shrink-0 mt-0.5 ${toneMark("warning")}`} />
@@ -384,7 +391,11 @@ export default function TransferDetailPage() {
         <CardHeader>
           <CardTitle>{t("complianceStatus")}</CardTitle>
           <CardDescription>
-            {status !== checklistData.transfer.suggestedStatus &&
+            {tiaAwaitingApproval ? (
+              <span className="text-foreground" data-testid="tia-awaiting-approval">
+                {t("tiaAwaitingApproval")}
+              </span>
+            ) : status !== checklistData.transfer.suggestedStatus &&
               checklistData.transfer.suggestedStatus && (
                 <span className="text-foreground">
                   {t.rich("suggestedFromData", {
@@ -592,13 +603,13 @@ export default function TransferDetailPage() {
             <div className="flex items-center gap-3 min-w-0">
               <ClipboardCheck className={`w-5 h-5 shrink-0 ${toneMark("warning")}`} />
               <div className="text-sm">
-                <p className="font-medium">{t("tiaPendingTitle")}</p>
-                <p className="text-muted-foreground">{t("tiaPendingBody")}</p>
+                <p className="font-medium">{transfer.tia ? t("tiaOpenTitle") : t("tiaPendingTitle")}</p>
+                <p className="text-muted-foreground">{transfer.tia ? t("tiaOpenBody") : t("tiaPendingBody")}</p>
               </div>
             </div>
             <Link href={tiaHref} className="shrink-0">
               <Button size="sm">
-                {t("startTia")} <ArrowRight className="w-4 h-4 ml-2" />
+                {transfer.tia ? t("openTia") : t("startTia")} <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
           </CardContent>

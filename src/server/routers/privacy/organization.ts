@@ -6,6 +6,7 @@ import { normEmail, pendingInvitesOf, settingsWithInvite, settingsWithoutInvite 
 import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
+import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { OrganizationRole, UserType, type Prisma } from "@prisma/client";
@@ -911,6 +912,7 @@ export const organizationRouter = createTRPCRouter({
         openIncidents,
         activeVendors,
         totalVendors,
+        ownActiveVendors,
       ] = await Promise.all([
         ctx.prisma.dataAsset.count({
           where: { organizationId: ctx.organization.id, ...deptWhere },
@@ -960,6 +962,17 @@ export const organizationRouter = createTRPCRouter({
         ctx.prisma.vendor.count({
           where: { organizationId: ctx.organization.id },
         }),
+        // Active vendors the organisation added itself: on the hosted service
+        // every organisation starts with TODO.LAW as a vendor, which does not
+        // make it a programme already under way (the first-run redirect to the
+        // quick start reads this figure).
+        ctx.prisma.vendor.count({
+          where: {
+            organizationId: ctx.organization.id,
+            status: "ACTIVE",
+            OR: [{ sourceRef: null }, { sourceRef: { not: TODOLAW_SOURCE_REF } }],
+          },
+        }),
       ]);
 
       return {
@@ -971,6 +984,7 @@ export const organizationRouter = createTRPCRouter({
         openIncidents,
         activeVendors,
         totalVendors,
+        ownActiveVendors,
       };
     }),
 });

@@ -416,7 +416,7 @@
       "affectedSubjectsAdd": "Añadir",
       "affectedSubjectsCustomPlaceholder": "Añadir otra categoría (p. ej., donantes)",
       "jurisdiction": "Jurisdicción principal",
-      "jurisdictionHint": "Determina el plazo de notificación a la autoridad (p. ej., 72 horas en el RGPD).",
+      "jurisdictionHint": "Determina el plazo de notificación a la autoridad (p. ej., 72 horas en el RGPD). En España, el RGPD se aplica junto con la LOPDGDD: elige el RGPD.",
       "jurisdictionPlaceholder": "Selecciona la jurisdicción",
       "errorPrefix": "Error: {message}",
       "reporting": "Notificando...",
@@ -735,6 +735,10 @@
         "sccExpiringSoon": "{count, plural, one {Solo queda # día: programa la renovación.} other {Solo quedan # días: programa la renovación.}}",
         "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
         "tiaPendingTitle": "Evaluación de impacto de la transferencia (EIT) pendiente",
+        "tiaOpenTitle": "Evaluación de impacto de la transferencia (EIT) por aprobar",
+        "tiaOpenBody": "La EIT de esta transferencia ya existe. Revísala y apruébala para cerrar este punto.",
+        "openTia": "Abrir la EIT",
+        "tiaAwaitingApproval": "La transferencia quedará conforme cuando se apruebe su EIT, que ya está preparada.",
         "tiaPendingBody": "Schrems II exige evaluar las leyes de vigilancia del país de destino y la eficacia de tus salvaguardas.",
         "startTia": "Iniciar EIT",
         "withinEea": "Dentro del EEE (no es una transferencia restringida)",
@@ -1511,6 +1515,7 @@
         "createDpa": "Crear notificación a la autoridad de control",
         "create": "Crear notificación",
         "voluntaryHint": "Este incidente no requiere notificación; aun así, puedes crear una de forma voluntaria.",
+        "undecidedHint": "Todavía no has decidido si hay que notificar este incidente. Si decides notificarlo, crea aquí la notificación.",
         "recipient": {
           "DPA": "Autoridad de control",
           "DATA_SUBJECT": "Interesados afectados",
@@ -1871,6 +1876,11 @@
           "favourable-portability": "Respuesta favorable: portabilidad",
           "repetitive": "Solicitud repetitiva (acceso en menos de seis meses)"
         }
+      },
+      "completeConfirm": {
+        "title": "¿Cerrar la solicitud con tareas pendientes?",
+        "description": "{count, plural, one {Queda # tarea pendiente.} other {Quedan # tareas pendientes.}} Si la cierras ahora, la solicitud constará como completada.",
+        "confirm": "Cerrar igualmente"
       }
     },
     "aiSystemDetail": {

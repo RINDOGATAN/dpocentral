@@ -19,6 +19,7 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
   const format = args.format ?? "pdf";
   const t = await getTranslations({ locale, namespace: "pdf.breachRegister" });
   const tp = await getTranslations({ locale, namespace: "pages.incidentDetail" });
+  const tIn = await getTranslations({ locale, namespace: "pages.newIncident" });
   const enumLabel = (kind: string, value: string) =>
     withPdfLocale(locale, () => pdfEnumLabel(kind, value));
   const recipientLabel = (type: string) =>
@@ -74,7 +75,11 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
     status: inc.status,
     discoveredAt: inc.discoveredAt,
     discoveredBy: inc.discoveredBy,
-    discoveryMethod: inc.discoveryMethod,
+    discoveryMethod: inc.discoveryMethod
+      ? (tIn.has(`discoveryMethodOption.${inc.discoveryMethod}` as never)
+          ? tIn(`discoveryMethodOption.${inc.discoveryMethod}` as never)
+          : inc.discoveryMethod.replace(/_/g, " "))
+      : null,
     affectedRecords: inc.affectedRecords,
     affectedSubjects: inc.affectedSubjects,
     dataCategories: inc.dataCategories,

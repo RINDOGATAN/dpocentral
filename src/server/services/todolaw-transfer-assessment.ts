@@ -12,15 +12,18 @@
  *     confirms TODO.LAW;
  *   - a transfer impact assessment (TIA, in Spanish EIT) on the system
  *     template, answered in the organisation's language, waiting for the
- *     organisation's approval (status PENDING_APPROVAL). It is never approved
- *     on the organisation's behalf: the organisation is the controller.
+ *     organisation's approval (status PENDING_APPROVAL), with an approval
+ *     request addressed to the organisation's owner (or, failing an owner, an
+ *     administrator or privacy officer), so the assessment page offers
+ *     Approve and Reject. It is never approved on the organisation's behalf:
+ *     the organisation is the controller.
  *
  * Idempotent: a transfer that already has an assessment, or that carries the
  * pre-fill marker, is left alone. Never on the self-hosted kit (no TODO.LAW
  * transfer exists there).
  */
 
-import { AssessmentStatus, AssessmentType, type Prisma } from "@prisma/client";
+import { ApprovalStatus, AssessmentStatus, AssessmentType, type Prisma } from "@prisma/client";
 import type { Db } from "@/lib/prisma";
 import type { PilotDpaLocale } from "@/config/pilot-dpa";
 import { ASSESSMENT_TEMPLATES_V2 } from "@/config/assessment-templates-v2";
@@ -36,6 +39,33 @@ import { withChecklistAnswer } from "@/lib/transfer-checklist";
 import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 
 export const TODOLAW_TIA_MARKER = "todolawTia";
+
+/** Who is asked to approve, in order: the first owner, else an administrator, else a privacy officer. */
+const APPROVER_ROLES = ["OWNER", "ADMIN", "PRIVACY_OFFICER"] as const;
+
+type ApproverDb = {
+  organizationMember: {
+    findMany(args: {
+      where: { organizationId: string; role: { in: (typeof APPROVER_ROLES)[number][] } };
+      select: { userId: true; role: true };
+      orderBy: { createdAt: "asc" };
+    }): Promise<{ userId: string; role: string }[]>;
+  };
+};
+
+/** The member asked to approve the ready-made assessment, or null when the organisation has none. */
+export async function todoLawTiaApprover(db: ApproverDb, organizationId: string): Promise<string | null> {
+  const members = await db.organizationMember.findMany({
+    where: { organizationId, role: { in: [...APPROVER_ROLES] } },
+    select: { userId: true, role: true },
+    orderBy: { createdAt: "asc" },
+  });
+  for (const role of APPROVER_ROLES) {
+    const m = members.find((x) => x.role === role);
+    if (m) return m.userId;
+  }
+  return null;
+}
 
 type TemplateQuestion = { id: string; type: string; options?: { en: string; es: string }[] };
 type TemplateSection = { id: string; questions: TemplateQuestion[] };
@@ -141,6 +171,12 @@ export async function prefillTodoLawTransfer(
     await tx.assessmentResponse.createMany({
       data: responses.map((r) => ({ assessmentId: assessment.id, ...r })),
     });
+    const approverId = await todoLawTiaApprover(tx as unknown as ApproverDb, organizationId);
+    if (approverId) {
+      await tx.assessmentApproval.create({
+        data: { assessmentId: assessment.id, approverId, level: 1, status: ApprovalStatus.PENDING },
+      });
+    }
     return assessment.id;
   });
   return { prefilled: true, transferId: transfer.id, assessmentId };
@@ -177,6 +213,55 @@ export async function backfillTodoLawTia(
     }
     const result = await prefillTodoLawTransfer(db, id, await opts.localeOf(id));
     rows.push({ organizationId: id, outcome: result.prefilled ? "prefilled" : result.reason });
+  }
+  return rows;
+}
+
+// ── Approval backfill (scripts/backfill-todolaw-tia-approval.ts) ───────
+
+export interface TodoLawTiaApprovalRow {
+  organizationId: string;
+  outcome: "request" | "requested" | "has-approval" | "not-pending" | "no-approver";
+}
+
+/**
+ * The ready-made assessments created before they carried an approval request:
+ * those still PENDING_APPROVAL with no approval row get one (execute) or are
+ * reported (dry run). Idempotent. Counts and ids only.
+ */
+export async function backfillTodoLawTiaApprovals(
+  db: Db,
+  opts: { execute: boolean },
+): Promise<TodoLawTiaApprovalRow[]> {
+  const assessments = await db.assessment.findMany({
+    where: { dataTransferId: { not: null }, metadata: { path: ["source"], equals: TODOLAW_SOURCE_REF } },
+    select: { id: true, organizationId: true, status: true, metadata: true, _count: { select: { approvals: true } } },
+    orderBy: { createdAt: "asc" },
+  });
+  const rows: TodoLawTiaApprovalRow[] = [];
+  for (const a of assessments) {
+    if (!((a.metadata ?? {}) as Record<string, unknown>)[TODOLAW_TIA_MARKER]) continue;
+    if (a.status !== AssessmentStatus.PENDING_APPROVAL) {
+      rows.push({ organizationId: a.organizationId, outcome: "not-pending" });
+      continue;
+    }
+    if (a._count.approvals > 0) {
+      rows.push({ organizationId: a.organizationId, outcome: "has-approval" });
+      continue;
+    }
+    const approverId = await todoLawTiaApprover(db as unknown as ApproverDb, a.organizationId);
+    if (!approverId) {
+      rows.push({ organizationId: a.organizationId, outcome: "no-approver" });
+      continue;
+    }
+    if (!opts.execute) {
+      rows.push({ organizationId: a.organizationId, outcome: "request" });
+      continue;
+    }
+    await db.assessmentApproval.create({
+      data: { assessmentId: a.id, approverId, level: 1, status: ApprovalStatus.PENDING },
+    });
+    rows.push({ organizationId: a.organizationId, outcome: "requested" });
   }
   return rows;
 }

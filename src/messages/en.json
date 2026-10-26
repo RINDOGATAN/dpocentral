@@ -416,7 +416,7 @@
       "affectedSubjectsAdd": "Add",
       "affectedSubjectsCustomPlaceholder": "Add another category (e.g. Donors)",
       "jurisdiction": "Primary jurisdiction",
-      "jurisdictionHint": "Determines the regulatory notification deadline (e.g. 72 hours for GDPR).",
+      "jurisdictionHint": "Determines the regulatory notification deadline (e.g. 72 hours for GDPR). In Spain, the GDPR applies together with the LOPDGDD: choose GDPR.",
       "jurisdictionPlaceholder": "Select jurisdiction",
       "errorPrefix": "Error: {message}",
       "reporting": "Reporting...",
@@ -735,6 +735,10 @@
         "sccExpiringSoon": "{count, plural, one {Only # day left: schedule a renewal.} other {Only # days left: schedule a renewal.}}",
         "sccRemaining": "{count, plural, one {# day remaining.} other {# days remaining.}}",
         "tiaPendingTitle": "Transfer Impact Assessment pending",
+        "tiaOpenTitle": "Transfer impact assessment (TIA) awaiting approval",
+        "tiaOpenBody": "This transfer's TIA already exists. Review and approve it to close this point.",
+        "openTia": "Open the TIA",
+        "tiaAwaitingApproval": "The transfer will be compliant once its TIA, which is ready, is approved.",
         "tiaPendingBody": "Schrems II requires an assessment of the destination country's surveillance laws and the effectiveness of your safeguards.",
         "startTia": "Start TIA",
         "withinEea": "Within the EEA (not a restricted transfer)",
@@ -1511,6 +1515,7 @@
         "createDpa": "Create DPA notification",
         "create": "Create notification",
         "voluntaryHint": "No notification is required for this incident. You can still create one voluntarily.",
+        "undecidedHint": "You have not yet decided whether this incident must be notified. If you decide to notify it, create the notification here.",
         "recipient": {
           "DPA": "DPA",
           "DATA_SUBJECT": "Data subjects",
@@ -1871,6 +1876,11 @@
           "favourable-portability": "Favorable reply: portability",
           "repetitive": "Repetitive request (access within six months)"
         }
+      },
+      "completeConfirm": {
+        "title": "Close the request with tasks still open?",
+        "description": "{count, plural, one {# task is still open.} other {# tasks are still open.}} If you close it now, the request is recorded as completed.",
+        "confirm": "Close anyway"
       }
     },
     "aiSystemDetail": {

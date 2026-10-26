@@ -99,6 +99,8 @@ export default function BillingPage() {
   );
 
   // Build rows from available plans (all premium add-ons)
+  // A module that is not available yet is not listed (no "coming soon" on
+  // customer screens).
   const addOnRows = (plans ?? []).map((pkg) => {
     const entitlement = entitlementsBySkill.get(pkg.skillId);
     const isActive = !!entitlement || pkg.isEntitled;
@@ -117,6 +119,7 @@ export default function BillingPage() {
     };
   });
 
+  const listedRows = addOnRows.filter((r) => !r.isComingSoon);
   const inactiveRows = addOnRows.filter((r) => !r.isActive && !r.isComingSoon);
   const activeCount = addOnRows.filter((r) => r.isActive).length;
   const monthlyTotal = activeCount * 9;
@@ -189,7 +192,7 @@ export default function BillingPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {addOnRows.map((row) => (
+              {listedRows.map((row) => (
                 <TableRow key={row.id} className={row.isComingSoon ? "opacity-60" : ""}>
                   {features.selfServiceUpgrade && inactiveRows.length > 0 && (
                     <TableCell>

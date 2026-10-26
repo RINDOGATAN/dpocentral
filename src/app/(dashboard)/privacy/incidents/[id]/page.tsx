@@ -104,6 +104,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const t = useTranslations("toasts");
   const locale = useLocale();
   const tp = useTranslations("pages.incidentDetail");
+  const tMethod = useTranslations("pages.newIncident.discoveryMethodOption");
   const tList = useTranslations("pages.incidents");
   const tCommon = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
@@ -465,7 +466,6 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <TabsTrigger value="notifications">
             {tp("tabs.notificationsWithCount", { count: incident.notifications?.length ?? 0 })}
           </TabsTrigger>
-          <TabsTrigger value="documents">{tp("tabs.documents")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="mt-4 space-y-4">
@@ -493,7 +493,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 <div>
                   <span className="text-sm text-muted-foreground">{tp("details.discoveryMethod")}</span>
                   <p className="font-medium">
-                    {incident.discoveryMethod?.replace("_", " ") || tp("details.notSpecified")}
+                    {incident.discoveryMethod
+                      ? tMethod.has(incident.discoveryMethod as never)
+                        ? tMethod(incident.discoveryMethod as never)
+                        : incident.discoveryMethod.replace(/_/g, " ")
+                      : tp("details.notSpecified")}
                   </p>
                 </div>
               </CardContent>
@@ -789,22 +793,17 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                     : tp("notifications.create")}
                 </Button>
                 {!incident.notificationRequired && (
-                  <p className="text-xs mt-3">{tp("notifications.voluntaryHint")}</p>
+                  <p className="text-xs mt-3">
+                    {authorityNotificationAssessment(incident) === "NOT_ASSESSED"
+                      ? tp("notifications.undecidedHint")
+                      : tp("notifications.voluntaryHint")}
+                  </p>
                 )}
               </CardContent>
             </Card>
           )}
         </TabsContent>
 
-        <TabsContent value="documents" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{tp("documents.title")}</p>
-              <p className="text-sm mt-1">{tp("documents.subtitle")}</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
 
       {/* Update Status Dialog */}
