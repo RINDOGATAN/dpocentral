@@ -24,7 +24,10 @@ import {
   type BusinessUnitScope,
 } from "@/server/services/business-units/scope";
 import type { Db } from "@/lib/prisma";
-import { CHECKLIST_STATES, checklistAnswersOf, withChecklistAnswer } from "@/lib/transfer-checklist";
+import { CHECKLIST_STATES, withChecklistAnswer } from "@/lib/transfer-checklist";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { pilotLocale } from "@/server/services/pilot/caps";
+import { localizePackTransfer, localizedChecklistAnswers } from "@/server/services/catalogue-transfer-pack-locale";
 import {
   generateFlowsForActivity,
   syncGeneratedFlows,
@@ -1427,9 +1430,11 @@ export const dataInventoryRouter = createTRPCRouter({
         },
         orderBy: { name: "asc" },
       });
-      // Risk level derived from the assessment's answers.
+      // Risk level derived from the assessment's answers; texts a catalogue
+      // transfer pack wrote in the reader's language.
+      const readerLocale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       return transfers.map((t) => ({
-        ...t,
+        ...localizePackTransfer(t, readerLocale),
         assessments: t.assessments.map(({ template, responses, ...a }) =>
           withDerivedRisk(a, template, responses)
         ),
@@ -1809,10 +1814,12 @@ export const dataInventoryRouter = createTRPCRouter({
       const checklist = isAdequate ? [] : SCHREMS_II_CHECKLIST;
       const supplementaryMeasuresList = isAdequate ? [] : SUPPLEMENTARY_MEASURES;
 
+      const readerLocale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
+      const shown = localizePackTransfer(transfer, readerLocale);
       return {
         transfer: {
           id: transfer.id,
-          name: transfer.name,
+          name: shown.name,
           destinationCountry: transfer.destinationCountry,
           destinationOrg: transfer.destinationOrg,
           mechanism: transfer.mechanism,
@@ -1823,7 +1830,7 @@ export const dataInventoryRouter = createTRPCRouter({
           sccExpiryDate: transfer.sccExpiryDate,
           tiaCompleted: transfer.tiaCompleted,
           supplementaryMeasures: transfer.supplementaryMeasures,
-          safeguards: transfer.safeguards,
+          safeguards: shown.safeguards,
           processingActivityId: transfer.processingActivityId,
           processingActivityName: transfer.processingActivity?.name ?? null,
           vendorId: transfer.vendorId,
@@ -1837,7 +1844,7 @@ export const dataInventoryRouter = createTRPCRouter({
         isAdequateCountry: isAdequate,
         adequacyDecision,
         checklist,
-        checklistAnswers: isAdequate ? {} : checklistAnswersOf(transfer.metadata),
+        checklistAnswers: isAdequate ? {} : localizedChecklistAnswers(transfer.metadata, readerLocale),
         supplementaryMeasures: supplementaryMeasuresList,
       };
     }),

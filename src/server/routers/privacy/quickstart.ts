@@ -38,6 +38,8 @@ import {
 } from "../../services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
+import { transferPackFor } from "@/config/catalogue-transfer-packs";
+import { applyCatalogueTransferPack } from "@/server/services/catalogue-transfer-pack";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { quickstartSettingsAfterRun } from "@/server/services/program/quickstart-settings";
 import { flowPairKey, newTemplateFlowCount } from "@/server/services/program/quickstart-flows";
@@ -672,6 +674,8 @@ export const quickstartRouter = createTRPCRouter({
       // AI systems are created after the main transaction to avoid poisoning
       // the transaction if the ai_systems table doesn't exist yet.
       const pendingAiSystems: { data: NonNullable<ReturnType<typeof buildAISystemFromCatalog>>; catalogSlug: string }[] = [];
+      // Vendors with a catalogue transfer pack, applied after the transaction.
+      const pendingTransferPacks: { vendorId: string; slug: string }[] = [];
 
       // Execute everything in a transaction (extended timeout for large imports)
       const result = await ctx.prisma.$transaction(async (tx) => {
@@ -766,6 +770,9 @@ export const quickstartRouter = createTRPCRouter({
           });
           counts.vendors++;
           created.vendors.push({ id: vendor.id, name: vendor.name });
+          if (transferPackFor(catalogVendor.slug)) {
+            pendingTransferPacks.push({ vendorId: vendor.id, slug: catalogVendor.slug });
+          }
           auditEntries.push({
             entityType: "Vendor",
             entityId: vendor.id,
@@ -1284,6 +1291,23 @@ export const quickstartRouter = createTRPCRouter({
 
         return { ...counts, created };
       }, { timeout: 30000 });
+
+      // Ready-made transfer packs (src/config/catalogue-transfer-packs.ts):
+      // the vendor's transfer, measures, checklist and a TIA for approval,
+      // in the screen's language. Best effort, after the import has committed.
+      for (const pending of pendingTransferPacks) {
+        try {
+          const applied = await applyCatalogueTransferPack(ctx.prisma, {
+            organizationId: orgId,
+            vendorId: pending.vendorId,
+            slug: pending.slug,
+            locale: templateLang,
+          });
+          if (applied.applied && applied.assessmentId) result.assessments++;
+        } catch (packErr) {
+          console.warn("[quickstart] Catalogue transfer pack failed:", packErr);
+        }
+      }
 
       // Create AI systems outside the transaction — gracefully skip if table missing
       if (pendingAiSystems.length > 0) {
