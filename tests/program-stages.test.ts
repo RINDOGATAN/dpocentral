@@ -53,6 +53,7 @@ describe("the programme figure in stages", () => {
       assessmentsApproved: 1,
       transfersComplete: 1,
       dsarIntakeConfigured: true,
+      dsarIntakeActive: true,
     });
     expect(programFigure(DPO_CENTRAL_PATH, all)).toMatchObject({ confirmed: 5, total: 5 });
     expect(currentPhase(DPO_CENTRAL_PATH, all)).toBeNull();

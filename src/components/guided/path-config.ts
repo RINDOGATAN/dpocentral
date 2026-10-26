@@ -137,6 +137,15 @@ export interface PathCounts {
    * The mere presence of the seeded form is no signal; see isIntakeConfigured.
    */
   dsarIntakeConfigured: boolean;
+  /** Whether the public intake form is switched on. Optional: absent reads as off. */
+  dsarIntakeActive?: boolean;
+  /**
+   * Whether the latest recorded switch of the public form, by a person, is an
+   * activation (src/server/services/dsar/intake-activation.ts). Optional.
+   */
+  dsarIntakeActivated?: boolean;
+  /** Whether any activation or deactivation of the form is on record. Optional. */
+  dsarIntakeTouched?: boolean;
 
   incidents: number;
 
@@ -388,17 +397,15 @@ const FULL_PATH: PathConfig<PathCounts> = {
           href: "/privacy/dsar",
           icon: FileText,
           // A request cannot be made to arrive, so readiness is the bar: the
-          // step is met ("ready when needed") once the intake is set up, and
-          // a logged request alone does not stand in for that set-up.
-          rule: "Ready when needed (met) once the org has set up its intake past the auto-seeded default; done when, in addition, a rights request has been received. Started when requests exist but the intake is still the default. Not started for a new org that has only the seeded form and no requests.",
-          status: (c) =>
-            c.dsarIntakeConfigured
-              ? c.dsarRequests > 0
-                ? "done"
-                : "ready"
-              : c.dsarRequests > 0
-                ? "started"
-                : "todo",
+          // step is met ("ready when needed") once a person has published the
+          // public form. Publishing is the deliberate act: new organisations
+          // get the form switched off, and switching it on is recorded.
+          rule: "Ready when needed (met) once the public form is switched on and either a person's activation is on record (the switch in the rights-request settings, or Confirm and publish for a form published before activation was asked) or the intake has been set up past the seeded default; done when, in addition, a rights request has been received. Started when the form has been set up or switched but is not published, or requests exist while it is not. Not started otherwise.",
+          status: (c) => {
+            const published = (c.dsarIntakeActive ?? false) && ((c.dsarIntakeActivated ?? false) || c.dsarIntakeConfigured);
+            if (published) return c.dsarRequests > 0 ? "done" : "ready";
+            return c.dsarIntakeConfigured || (c.dsarIntakeTouched ?? false) || c.dsarRequests > 0 ? "started" : "todo";
+          },
         },
         {
           id: "notices",

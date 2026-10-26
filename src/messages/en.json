@@ -3838,7 +3838,13 @@
       "description": "Share this link with data subjects to submit requests",
       "copyUrl": "Copy URL",
       "openInNewTab": "Open in new tab",
-      "activeLabel": "Portal is active and accepting requests"
+      "activeLabel": "Public form active",
+      "publishedHint": "The form is published and takes requests. Link this address from your privacy policy so people can exercise their rights.",
+      "unpublishedHint": "The form is not published yet. Anyone who opens the link sees your privacy contact instead. Switch it on when you are ready to take requests.",
+      "confirmHint": "This form was published before DPO Central asked you to confirm it. Confirm it to record that you have reviewed it.",
+      "confirmPublish": "Confirm and publish",
+      "publishedToast": "The public form is published",
+      "unpublishedToast": "The public form is switched off"
     },
     "formCard": {
       "title": "Form configuration",
@@ -6274,7 +6280,7 @@
       },
       "intakeConfig": {
         "title": "Intake form configuration",
-        "description": "Customize which fields appear on your public DSAR portal and configure auto-acknowledgment emails.",
+        "description": "Customize which fields appear on your public DSAR portal and configure auto-acknowledgment emails. The form starts switched off. Switch on \"Public form active\" when you are ready to take requests; while it is off, the link shows your privacy contact.",
         "settingsLabel": "Portal settings",
         "settingsDesc": "Configure from Privacy > DSAR > Settings tab",
         "items": {
@@ -7597,7 +7603,7 @@
       },
       "portal": {
         "title": "Public portal",
-        "intro": "Give data subjects a dedicated portal to submit requests. The portal is customizable with your organization's branding and generates a shareable link you can add to your privacy policy.",
+        "intro": "Give data subjects a dedicated portal to submit requests. The portal is customizable with your organization's branding and generates a shareable link you can add to your privacy policy. The portal starts switched off: it goes live when an owner or administrator switches on \"Public form active\" in the rights-request settings, and that switch is recorded in the activity log. Until then, anyone who opens the link sees your privacy contact.",
         "urlLabel": "Portal URL",
         "urlExplain": "Share this URL in your privacy policy so data subjects can submit requests directly. The portal includes a consent checkbox and privacy notice explaining how their data will be handled.",
         "configLabel": "Portal configuration",
@@ -10239,7 +10245,7 @@
       "dsar": {
         "label": "Rights requests",
         "why": "Receive and answer data-subject requests within the deadline.",
-        "do": "Set up the intake form and answer rights requests on time."
+        "do": "Set up the public intake form, switch it on in the settings and answer rights requests on time."
       },
       "notices": {
         "label": "Notices and consent",
@@ -10322,7 +10328,7 @@
       "assessmentsDpia": "Approve one DPIA: your answers indicate that one is required.",
       "assessmentsCheck": "Approve one risk assessment. Your answers suggest you consider a DPIA.",
       "transfers": "Record the compliance status of at least one international transfer.",
-      "dsar": "Review and save your rights-request form.",
+      "dsar": "Switch on and publish your rights-request form in the settings.",
       "incidents": "Complete one processing activity: the breach register is then ready for when it is needed."
     },
     "notYetGroup": "Not in DPO Central yet",
