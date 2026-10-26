@@ -10327,9 +10327,9 @@
       "dataInventory": "Confirm one system that records the personal data it holds.",
       "ropa": "Confirm one processing activity with its data subjects, data categories and retention period.",
       "vendors": "Confirm one vendor in use, with the personal data it processes and where.",
-      "assessments": "Approve one assessment. Any type counts, including a transfer impact assessment.",
-      "assessmentsDpia": "Approve one DPIA: your answers indicate that one is required, so no other assessment completes this step.",
-      "assessmentsCheck": "Approve one assessment. Any type counts, including a transfer impact assessment. Your answers suggest you consider a DPIA.",
+      "assessments": "Approve one assessment of any type, a transfer assessment included.",
+      "assessmentsDpia": "Approve one DPIA: your answers require one. Nothing else counts.",
+      "assessmentsCheck": "Approve one assessment of any type. Your answers suggest you consider a DPIA.",
       "transfers": "Record the compliance status of at least one international transfer.",
       "dsar": "Switch on and publish your rights-request form in the settings.",
       "incidents": "Confirm your breach readiness in the breach register: the deadlines of your laws, the internal contact and the authority."

@@ -116,10 +116,10 @@ describe("the assessments step and the DPIA", () => {
       return (bundle.guided as unknown as Record<string, Record<string, string>>)[group][id];
     };
     expect(stepFinishText(t(es), "assessments", "applies")).toBe(
-      "Aprueba una EIPD: tus respuestas indican que es obligatoria, así que ninguna otra evaluación completa este paso.",
+      "Aprueba una EIPD: tus respuestas la exigen. Ninguna otra cuenta.",
     );
     expect(stepFinishText(t(es), "assessments", null)).toBe(
-      "Aprueba una evaluación. Cuenta cualquier tipo, también una evaluación de impacto de transferencia.",
+      "Aprueba una evaluación de cualquier tipo, también una de transferencia.",
     );
     expect(stepFinishText(t(en), "assessments", "check")).toContain("consider a DPIA");
     expect(stepFinishText(t(es), "transfers", null)).toContain("transferencia internacional");

@@ -10327,9 +10327,9 @@
       "dataInventory": "Confirma un sistema que registre los datos personales que contiene.",
       "ropa": "Confirma una actividad de tratamiento con sus interesados, categorías de datos y plazo de conservación.",
       "vendors": "Confirma un proveedor en uso, con los datos personales que trata y dónde.",
-      "assessments": "Aprueba una evaluación. Cuenta cualquier tipo, también una evaluación de impacto de transferencia.",
-      "assessmentsDpia": "Aprueba una EIPD: tus respuestas indican que es obligatoria, así que ninguna otra evaluación completa este paso.",
-      "assessmentsCheck": "Aprueba una evaluación. Cuenta cualquier tipo, también una evaluación de impacto de transferencia. Tus respuestas indican que conviene valorar una EIPD.",
+      "assessments": "Aprueba una evaluación de cualquier tipo, también una de transferencia.",
+      "assessmentsDpia": "Aprueba una EIPD: tus respuestas la exigen. Ninguna otra cuenta.",
+      "assessmentsCheck": "Aprueba una evaluación de cualquier tipo. Tus respuestas indican que conviene valorar una EIPD.",
       "transfers": "Registra el estado de cumplimiento de al menos una transferencia internacional.",
       "dsar": "Activa y publica tu formulario de solicitudes de derechos en los ajustes.",
       "incidents": "Confirma tu preparación ante brechas en el registro de brechas: los plazos de tus leyes, el contacto interno y la autoridad."

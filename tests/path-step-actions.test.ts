@@ -30,7 +30,7 @@ describe("path step actions", () => {
         expect(text).not.toMatch(LONG_DASH);
       }
     }
-    expect(en.guided.finish.assessments).toMatch(/any type counts/i);
+    expect(en.guided.finish.assessments).toMatch(/any type/i);
     expect(es.guided.finish.assessments).toMatch(/cualquier tipo/);
     expect(es.guided.finish.assessmentsDpia).toContain("EIPD");
     expect(en.guided.finish.assessmentsDpia).toContain("DPIA");

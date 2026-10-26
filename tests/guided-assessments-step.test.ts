@@ -59,10 +59,10 @@ describe("what the step says while it is not done", () => {
   };
 
   it("names the approval it waits for, in both languages", () => {
-    expect(stepFinishText(t(en), "assessments", null)).toMatch(/^Approve one assessment\. Any type counts/);
-    expect(stepFinishText(t(es), "assessments", null)).toMatch(/^Aprueba una evaluación\. Cuenta cualquier tipo/);
-    expect(stepFinishText(t(en), "assessments", "applies")).toMatch(/^Approve one DPIA: .*no other assessment completes this step/);
-    expect(stepFinishText(t(es), "assessments", "applies")).toMatch(/^Aprueba una EIPD: .*ninguna otra evaluación completa este paso/);
+    expect(stepFinishText(t(en), "assessments", null)).toBe("Approve one assessment of any type, a transfer assessment included.");
+    expect(stepFinishText(t(es), "assessments", null)).toBe("Aprueba una evaluación de cualquier tipo, también una de transferencia.");
+    expect(stepFinishText(t(en), "assessments", "applies")).toBe("Approve one DPIA: your answers require one. Nothing else counts.");
+    expect(stepFinishText(t(es), "assessments", "applies")).toBe("Aprueba una EIPD: tus respuestas la exigen. Ninguna otra cuenta.");
     expect(en.guided.menuNote).toEqual({ assessments: "Approve one assessment", assessmentsDpia: "Needs an approved DPIA" });
     expect(es.guided.menuNote).toEqual({ assessments: "Aprueba una evaluación", assessmentsDpia: "Necesita una EIPD aprobada" });
   });
