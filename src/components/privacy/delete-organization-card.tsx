@@ -4,12 +4,17 @@
 "use client";
 
 /**
- * Settings: the owner deletes the organisation (DPA clause 13). Shown to the
- * owner only; the server checks the role, the plan and the typed name again
- * (src/server/routers/privacy/organizationDeletion.ts).
+ * Settings: the owner deletes the organisation open now (DPA clause 13), and
+ * only that one: the account and the person's other organisations stay.
+ * Shown to the owner only; the server checks the role, the plan and the typed
+ * name again (src/server/routers/privacy/organizationDeletion.ts). With more
+ * than one organisation, the card points to "All clients", where any client
+ * can be deleted from its row. After the deletion the saved choice is
+ * cleared and the app reloads on another remaining organisation.
  */
 
 import { useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,8 +22,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
+import { confirmsName } from "@/lib/confirm-name";
 
-export function DeleteOrganizationCard({ organizationId }: { organizationId: string }) {
+export function DeleteOrganizationCard({
+  organizationId,
+  showClientsLink = false,
+}: {
+  organizationId: string;
+  /** The person has other organisations: point to "All clients". */
+  showClientsLink?: boolean;
+}) {
   const t = useTranslations("pages.settings.deleteOrganization");
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
@@ -37,18 +50,29 @@ export function DeleteOrganizationCard({ organizationId }: { organizationId: str
   });
 
   if (!status) return null;
-  const matches = typed.trim() === status.name.trim() && status.name.trim().length > 0;
+  const matches = confirmsName(typed, status.name);
 
   return (
     <Card className="border-destructive/40" data-testid="delete-organization-card">
       <CardHeader>
         <CardTitle className="text-base">{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
+        <CardDescription>{t("description", { name: status.name })}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
+        {showClientsLink && (
+          <p className="text-sm" data-testid="delete-organization-clients-link">
+            {t.rich("otherClients", {
+              link: (chunks) => (
+                <Link href="/privacy/clients" className="text-primary underline underline-offset-4">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </p>
+        )}
         {!status.canDelete ? (
           <p className="text-sm text-muted-foreground" data-testid="delete-organization-paid">
-            {t("paidPlan")}
+            {status.reason === "dsar-module" ? t("dsarModule") : t("paidPlan")}
           </p>
         ) : !open ? (
           <Button variant="destructive" onClick={() => setOpen(true)}>
@@ -60,7 +84,9 @@ export function DeleteOrganizationCard({ organizationId }: { organizationId: str
               <li>{t("whatGoes")}</li>
               <li>{t("whatStays")}</li>
               <li>{t("accounts")}</li>
-              <li>{t("noUndo")}</li>
+              {status.planContinues && <li>{t("planContinues")}</li>}
+              <li className="font-medium">{t("noUndo")}</li>
+              {status.hosted && <li>{t("backups")}</li>}
             </ul>
             <p className="text-sm">{t("exportFirst")}</p>
             <div className="space-y-1">

@@ -13,7 +13,7 @@ import { locales } from "@/i18n/config";
  * than one (the settings page says the same before anything is sent).
  */
 export const BUSINESS_NEEDS_ONE_ORGANIZATION =
-  "To switch to a business account, first delete all your organizations but one.";
+  "To switch to a business account, first delete all your organizations but one. You can delete a client from the menu on its row in All clients.";
 
 export const userRouter = createTRPCRouter({
   getProfile: protectedProcedure.query(async ({ ctx }) => {
