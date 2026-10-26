@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { createContext, useContext, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useRef, useSyncExternalStore } from "react";
 import { X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSelectedOrganizationOrNull } from "@/lib/organization-context";
@@ -63,6 +63,62 @@ function dismissForSession(): void {
   dismissListeners.forEach((l) => l());
 }
 
+/**
+ * The CSS variable that carries how many pixels of the bar are on screen
+ * (0 once it has scrolled away). The bar sits above the sticky header and
+ * scrolls with the page, so the left menu (src/components/guided/guided-layout.tsx)
+ * subtracts this from its height to fit the viewport at every scroll position.
+ */
+export const PILOT_BAR_VISIBLE_VAR = "--pilot-bar-visible";
+
+/** Pixels of an element whose box ends at `bottom` (viewport coordinates) that are still on screen. */
+export function visibleTopBandHeight(bottom: number, height: number): number {
+  if (!Number.isFinite(bottom) || !Number.isFinite(height)) return 0;
+  return Math.round(Math.min(Math.max(bottom, 0), Math.max(height, 0)));
+}
+
+/**
+ * Keeps PILOT_BAR_VISIBLE_VAR on the root element in step with the bar: on
+ * resize (ResizeObserver: the text wraps differently by width and language)
+ * and on scroll. Resets it to 0 when the bar goes away.
+ */
+function useVisibleHeightVar(ref: React.RefObject<HTMLDivElement | null>, active: boolean): void {
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = ref.current;
+    if (!active || !el) {
+      root.style.setProperty(PILOT_BAR_VISIBLE_VAR, "0px");
+      return;
+    }
+    let last = -1;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const rect = el.getBoundingClientRect();
+      const visible = visibleTopBandHeight(rect.bottom, rect.height);
+      if (visible !== last) {
+        last = visible;
+        root.style.setProperty(PILOT_BAR_VISIBLE_VAR, `${visible}px`);
+      }
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(schedule);
+    observer?.observe(el);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      root.style.setProperty(PILOT_BAR_VISIBLE_VAR, "0px");
+    };
+  }, [ref, active]);
+}
+
 const UPGRADE_LINK =
   "ml-1 inline-block rounded-full border border-primary px-2.5 py-0.5 font-medium text-primary hover:bg-primary hover:text-primary-foreground";
 
@@ -96,9 +152,13 @@ export function PilotEndBar({
   const price = pilotEndBarPrice(useLocale(), useChargeCurrency());
   // The trial bar may be closed for the session; the ending and read-only bars stay.
   const dismissed = useSyncExternalStore(subscribeDismissed, readDismissed, () => false);
-  if (state === "hidden") return null;
-  if ((state === "trial" || state === "ending") && !endsOn) return null;
-  if (state === "trial" && dismissed) return null;
+  const shown =
+    state !== "hidden" &&
+    !((state === "trial" || state === "ending") && !endsOn) &&
+    !(state === "trial" && dismissed);
+  const barRef = useRef<HTMLDivElement>(null);
+  useVisibleHeightVar(barRef, shown);
+  if (!shown) return null;
   const text =
     state === "trial"
       ? t(transition ? "trialTransition" : "trial", { days: PILOT_DAYS, date: endsOn ?? "", price })
@@ -107,6 +167,7 @@ export function PilotEndBar({
         : t("readOnly");
   return (
     <div
+      ref={barRef}
       role="status"
       data-testid="pilot-end-bar"
       data-state={state}

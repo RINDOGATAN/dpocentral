@@ -273,7 +273,13 @@ export function GuidedLayout({
             collapsed ? "lg:w-[4.5rem]" : "lg:w-72",
           )}
         >
-          <div className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col">
+          {/* Fits the viewport at every scroll position: while the pilot bar
+              (above the header, scrolling with the page) is on screen, its
+              visible height is taken off (PILOT_BAR_VISIBLE_VAR, set by the bar). */}
+          <div
+            className="sticky top-14 flex flex-col"
+            style={{ height: "calc(100dvh - 3.5rem - var(--pilot-bar-visible, 0px))" }}
+          >
             <div
               className={cn(
                 "min-h-0 flex-1 overflow-y-auto overscroll-contain",
