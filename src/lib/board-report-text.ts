@@ -310,6 +310,18 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
         ...(incidents.toNotifyNow != null
           ? [{ label: board("incidents.toNotifyNow"), value: num(incidents.toNotifyNow) }]
           : []),
+        ...(incidents.breachReadiness !== undefined
+          ? [
+              {
+                label: board("incidents.readiness"),
+                value: !incidents.breachReadiness
+                  ? board("incidents.readinessNone")
+                  : incidents.breachReadiness.current
+                    ? board("incidents.readinessConfirmed", { date: date(incidents.breachReadiness.confirmedAt) })
+                    : board("incidents.readinessStale", { date: date(incidents.breachReadiness.confirmedAt) }),
+              },
+            ]
+          : []),
       ],
     },
     rights: rights

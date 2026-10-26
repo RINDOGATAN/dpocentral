@@ -160,6 +160,12 @@ export interface BoardIncidents {
    * reports assembled before it was counted.
    */
   toNotifyNow?: number;
+  /**
+   * The DPO's breach-readiness confirmation (step 5): when it was given and
+   * whether it still covers the laws declared now. Null when none is on
+   * record; absent for reports assembled before it existed.
+   */
+  breachReadiness?: { confirmedAt: string; current: boolean } | null;
 }
 
 export interface BoardRights {

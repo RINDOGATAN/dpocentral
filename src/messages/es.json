@@ -10254,8 +10254,8 @@
       },
       "incidents": {
         "label": "Registro de brechas",
-        "why": "Registra los incidentes y controla el plazo de 72 horas para notificar brechas.",
-        "do": "Registra los incidentes en el registro y vigila el plazo de 72 horas."
+        "why": "Prepárate para valorar y notificar las brechas en los plazos de tus leyes.",
+        "do": "Confirma tu preparación ante brechas (plazos, contacto y autoridad) y registra los incidentes cuando se produzcan."
       },
       "audits": {
         "label": "Informe ejecutivo",
@@ -11018,7 +11018,11 @@
       "notifiedLate": "Notificados a la autoridad después de 72 horas",
       "notNotifiedYet": "Marcados como notificables, aún sin notificar",
       "openNow": "Abiertos en la fecha de generación (de cualquier periodo)",
-      "toNotifyNow": "Abiertos y aún sin notificar en la fecha de generación (de cualquier periodo)"
+      "toNotifyNow": "Abiertos y aún sin notificar en la fecha de generación (de cualquier periodo)",
+      "readiness": "Preparación ante brechas",
+      "readinessNone": "Sin confirmar todavía",
+      "readinessConfirmed": "Confirmada el {date}",
+      "readinessStale": "Confirmada el {date}; hay que volver a confirmarla (han cambiado las leyes declaradas)"
     },
     "rights": {
       "title": "Solicitudes de derechos en el periodo",
@@ -11330,5 +11334,28 @@
     },
     "ctaText": "Abrir Ajustes",
     "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}."
+  },
+  "breachReadiness": {
+    "title": "Preparación ante brechas",
+    "intro": "Confirma una vez que tu equipo sabe qué hacer si se produce una brecha. Así se completa el paso 5 y consta en el informe a la dirección.",
+    "deadlinesTitle": "Plazos de notificación de tus leyes declaradas",
+    "toAuthority": "A la autoridad:",
+    "toIndividuals": "A las personas afectadas:",
+    "noLaws": "Todavía no has declarado ninguna ley.",
+    "noLawsLink": "Decláralas en Normativa aplicable.",
+    "assessFirst": "Entiendo que ante un incidente de seguridad primero hay que valorar si es una brecha de datos personales y solo después si se debe notificar, en los plazos indicados arriba.",
+    "contactLabel": "Persona de contacto interna que recibe los avisos de incidentes",
+    "contactPlaceholder": "Nombre y correo electrónico",
+    "authorityLabel": "Autoridad de control a la que se notifica",
+    "registerLabel": "Dónde se lleva el registro de brechas",
+    "registerDefault": "El registro de brechas de DPO Central",
+    "confirm": "Confirmar la preparación",
+    "reconfirm": "Volver a confirmar",
+    "review": "Revisar",
+    "cancel": "Cancelar",
+    "saved": "Has confirmado la preparación ante brechas",
+    "confirmedOn": "Confirmada el {date} por {name}.",
+    "stale": "Las leyes declaradas han cambiado desde la última confirmación ({date}). Vuelve a confirmarla.",
+    "officersOnly": "La puede confirmar el propietario, un administrador o el responsable de privacidad."
   }
 }

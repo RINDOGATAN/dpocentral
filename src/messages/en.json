@@ -10254,8 +10254,8 @@
       },
       "incidents": {
         "label": "Breach register",
-        "why": "Log incidents and track the 72-hour breach clock.",
-        "do": "Record incidents in the register and watch the 72-hour clock."
+        "why": "Be ready to assess and notify breaches within the deadlines of your laws.",
+        "do": "Confirm your breach readiness (deadlines, contact and authority), then record incidents in the register when they happen."
       },
       "audits": {
         "label": "Executive report",
@@ -11018,7 +11018,11 @@
       "notifiedLate": "Notified to the authority after 72 hours",
       "notNotifiedYet": "Marked as requiring notification, not notified yet",
       "openNow": "Open on the date generated (from any period)",
-      "toNotifyNow": "Open and still to notify on the date generated (from any period)"
+      "toNotifyNow": "Open and still to notify on the date generated (from any period)",
+      "readiness": "Breach readiness",
+      "readinessNone": "Not confirmed yet",
+      "readinessConfirmed": "Confirmed on {date}",
+      "readinessStale": "Confirmed on {date}; to confirm again (the declared laws have changed)"
     },
     "rights": {
       "title": "Rights requests in the period",
@@ -11330,5 +11334,28 @@
     },
     "ctaText": "Open Settings",
     "whyYou": "You receive this e-mail because you are an owner or administrator of {orgName}."
+  },
+  "breachReadiness": {
+    "title": "Breach readiness",
+    "intro": "Confirm once that your team knows what to do if a breach happens. This completes step 5 and appears in the board report.",
+    "deadlinesTitle": "Notification deadlines of your declared laws",
+    "toAuthority": "To the authority:",
+    "toIndividuals": "To the people affected:",
+    "noLaws": "You have not declared any law yet.",
+    "noLawsLink": "Declare them in Applicable laws.",
+    "assessFirst": "I understand that a security incident is first assessed to decide whether it is a personal data breach, and only then whether it must be notified, within the deadlines above.",
+    "contactLabel": "Internal contact who receives incident reports",
+    "contactPlaceholder": "Name and email",
+    "authorityLabel": "Supervisory authority to notify",
+    "registerLabel": "Where the breach register is kept",
+    "registerDefault": "DPO Central's breach register",
+    "confirm": "Confirm readiness",
+    "reconfirm": "Confirm again",
+    "review": "Review",
+    "cancel": "Cancel",
+    "saved": "Breach readiness confirmed",
+    "confirmedOn": "Confirmed on {date} by {name}.",
+    "stale": "The declared laws have changed since the last confirmation ({date}). Confirm it again.",
+    "officersOnly": "An owner, administrator or privacy officer can confirm it."
   }
 }

@@ -18,6 +18,7 @@ import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { DRAFT_PROVENANCES } from "@/lib/drafts";
 import { evaluateApplicability, readApplicabilityAnswers } from "@/config/applicability";
 import { TODOLAW_SOURCE_REF } from "@/server/services/todolaw-processor";
+import { isReadinessCurrent, readBreachReadiness } from "@/server/services/program/breach-readiness";
 import {
   closestMissing,
   missingMinimumFields,
@@ -236,6 +237,10 @@ export async function loadPathCounts(
     dsarIntakeTouched: intakeActivation !== null,
     incidents,
     aiSystems,
+    breachReadinessConfirmed: isReadinessCurrent(
+      readBreachReadiness(settings),
+      jurisdictions.map((j) => j.jurisdiction.code),
+    ),
     boardReportsSaved: Object.keys(settingsObject(settingsObject(settings.boardReport).reports)).length,
     missing,
     systemDrafts: systemVendorDrafts,
