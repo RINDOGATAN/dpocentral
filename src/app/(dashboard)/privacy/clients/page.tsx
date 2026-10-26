@@ -16,8 +16,9 @@
  * (`figureFor`), the areas and the next action from
  * src/lib/programme-overview.ts, the documents from the register, the
  * deadlines from the same server query, so a row never disagrees with the
- * client's dashboard. "Add a client" stays beside the title; "Start a new
- * client from this one" stays on each row's menu.
+ * client's dashboard. "Add a client" stays beside the title. Each row's
+ * menu offers "Create a new client from this one" (owner or admin) and
+ * "Delete this client" (owner only; only that organisation goes).
  */
 
 import { useState } from "react";
@@ -30,12 +31,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, Loader2, MoreVertical, Copy, Plus } from "lucide-react";
+import { Building2, Loader2, MoreHorizontal, Copy, Plus, Trash2 } from "lucide-react";
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc";
 import type { AppRouter } from "@/server/routers";
 import { useOrganization } from "@/lib/organization-context";
 import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
+import { DeleteClientDialog } from "@/components/privacy/delete-client-dialog";
 import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
 import { canUseForTemplate } from "@/config/client-template";
 import { useRouter } from "next/navigation";
@@ -121,13 +123,15 @@ export default function ClientsPage() {
   const locale = useLocale();
   const t = useTranslations("portfolio");
 
-  // "Start a new client from this one": the row's client is the source; the
+  // "Create a new client from this one": the row's client is the source; the
   // dialog creates the new client and copies into it. Owner/admin only.
   const [copyFrom, setCopyFrom] = useState<{ id: string; name: string } | null>(null);
   // "Add a client": a blank client with only a name (the left menu's client
   // switcher offers the same dialog). The new client becomes the current one
   // and opens on its own dashboard.
   const [addOpen, setAddOpen] = useState(false);
+  // "Delete this client": owner of that client only (checked again on the server).
+  const [toDelete, setToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const now = new Date();
   const rows = sortByNearestDeadline((clients ?? []).map((c) => toRow(c, now)), locale);
@@ -209,7 +213,7 @@ export default function ClientsPage() {
                           <td className="px-3 py-3 min-w-[8rem]"><ActionText row={row} onOpen={(href) => open(row.client, href)} /></td>
                         </>
                       )}
-                      <td className="w-10 px-2 py-2"><RowMenu row={row} onCopy={setCopyFrom} /></td>
+                      <td className="w-10 px-2 py-2"><RowMenu row={row} onCopy={setCopyFrom} onDelete={setToDelete} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -225,7 +229,7 @@ export default function ClientsPage() {
                   <CardContent className="p-4 flex flex-col gap-3">
                     <div className="flex items-start justify-between gap-2">
                       <ClientName row={row} onOpen={() => open(row.client)} />
-                      <RowMenu row={row} onCopy={setCopyFrom} />
+                      <RowMenu row={row} onCopy={setCopyFrom} onDelete={setToDelete} />
                     </div>
                     {row.limited ? (
                       <p className="text-sm text-muted-foreground">{t("limited")}</p>
@@ -265,6 +269,13 @@ export default function ClientsPage() {
         open={addOpen}
         onOpenChange={setAddOpen}
         onCreated={() => router.push("/privacy")}
+      />
+
+      <DeleteClientDialog
+        client={toDelete}
+        onOpenChange={(next) => {
+          if (!next) setToDelete(null);
+        }}
       />
 
       <CopyFromClientDialog
@@ -420,21 +431,51 @@ function ActionText({ row, onOpen }: { row: Row; onOpen: (href: string) => void 
   );
 }
 
-function RowMenu({ row, onCopy }: { row: Row; onCopy: (c: { id: string; name: string }) => void }) {
+function RowMenu({
+  row,
+  onCopy,
+  onDelete,
+}: {
+  row: Row;
+  onCopy: (c: { id: string; name: string }) => void;
+  onDelete: (c: { id: string; name: string }) => void;
+}) {
   const tct = useTranslations("clientTemplate");
-  if (!canUseForTemplate(row.client.role)) return null;
+  const t = useTranslations("portfolio.menu");
+  const canCopy = canUseForTemplate(row.client.role);
+  const canDelete = row.client.role === "OWNER";
+  if (!canCopy && !canDelete) return null;
+  const target = { id: row.client.organizationId, name: row.name };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label={`${tct("titleNew")}: ${row.name}`}>
-          <MoreVertical className="w-4 h-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0"
+          aria-label={t("label", { name: row.name })}
+          data-testid="client-menu"
+        >
+          <MoreHorizontal className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onSelect={() => onCopy({ id: row.client.organizationId, name: row.name })}>
-          <Copy className="w-4 h-4 mr-2" />
-          {tct("titleNew")}
-        </DropdownMenuItem>
+        {canCopy && (
+          <DropdownMenuItem onSelect={() => onCopy(target)}>
+            <Copy className="w-4 h-4 mr-2" />
+            {tct("titleNew")}
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
+          <DropdownMenuItem
+            onSelect={() => onDelete(target)}
+            className="text-destructive focus:text-destructive"
+            data-testid="client-delete"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            {t("delete")}
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
