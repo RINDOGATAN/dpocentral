@@ -367,6 +367,13 @@ export const VENDOR_QUICKSTART_TEXT = {
     internalSystemsDescription:
       "Primary internal systems that process and share data with third-party services",
     internalSystemsHosting: "On-premise / Cloud",
+    publicPropertiesName: "Public website and apps",
+    publicPropertiesDescription:
+      "The organisation's public digital properties (websites and mobile apps). Visitors' browsers and apps send data directly to the tools that run on them. Add the domains and app names when you know them.",
+    publicPropertiesHosting: "Public internet",
+    flowFromProperties: (vendor: string) => `Data collected for ${vendor} on the public website and apps`,
+    flowFromPropertiesDescription: (vendor: string) =>
+      `Visitors' browsers and apps send this data directly to ${vendor}; it does not come from internal systems.`,
     flowTo: (vendor: string) => `Data flow to ${vendor}`,
     flowFrom: (vendor: string) => `Data flow from ${vendor}`,
     flowToDescription: (vendor: string) => `Automated data sharing with ${vendor}`,
@@ -383,6 +390,13 @@ export const VENDOR_QUICKSTART_TEXT = {
     internalSystemsDescription:
       "Sistemas internos principales que tratan datos y los comparten con servicios de terceros",
     internalSystemsHosting: "Local / nube",
+    publicPropertiesName: "Sitio web y aplicaciones públicas",
+    publicPropertiesDescription:
+      "Las propiedades digitales públicas de la organización (sitios web y aplicaciones móviles). Los navegadores y las aplicaciones de los visitantes envían los datos directamente a las herramientas que funcionan en ellas. Añade los dominios y los nombres de las aplicaciones cuando los conozcas.",
+    publicPropertiesHosting: "Internet pública",
+    flowFromProperties: (vendor: string) => `Datos recogidos para ${vendor} en el sitio web y las aplicaciones públicas`,
+    flowFromPropertiesDescription: (vendor: string) =>
+      `Los navegadores y las aplicaciones de los visitantes envían estos datos directamente a ${vendor}; no salen de los sistemas internos.`,
     flowTo: (vendor: string) => `Flujo de datos hacia ${vendor}`,
     flowFrom: (vendor: string) => `Flujo de datos desde ${vendor}`,
     flowToDescription: (vendor: string) => `Intercambio automatizado de datos con ${vendor}`,
