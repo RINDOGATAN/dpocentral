@@ -842,6 +842,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     );
   }
 
+  // The pending approval, if any: its approver acts from the header; anyone
+  // else sees who it is waiting for (the Approvals tab keeps the full list).
+  const pendingApproval = (assessment.approvals ?? []).find((a) => a.status === "PENDING");
+  const myPendingApproval =
+    pendingApproval && currentUserId && pendingApproval.approver?.id === currentUserId ? pendingApproval : null;
+  const othersPendingApproval = pendingApproval && !myPendingApproval ? pendingApproval : null;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -874,6 +881,41 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          {myPendingApproval && (
+            <>
+              <Button
+                onClick={() =>
+                  processApproval.mutate({
+                    organizationId: organization?.id ?? "",
+                    approvalId: myPendingApproval.id,
+                    decision: "APPROVED",
+                  })
+                }
+                disabled={processApproval.isPending}
+                data-testid="header-approve"
+              >
+                {processApproval.isPending ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                )}
+                {tp("approvals.approve")}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setRejectApprovalId(myPendingApproval.id);
+                  setRejectComments("");
+                  setRejectDialogOpen(true);
+                }}
+                disabled={processApproval.isPending}
+                data-testid="header-reject"
+              >
+                <XCircle className="w-4 h-4 mr-2" />
+                {tp("approvals.reject")}
+              </Button>
+            </>
+          )}
           <Button
             variant="outline"
             onClick={() => window.open(`/api/export/assessment/${id}`, "_blank")}
@@ -957,6 +999,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5" data-testid="frozen-notice">
               <Clock className="w-3.5 h-3.5 mt-0.5 shrink-0" />
               {tp(`frozenNotice.${assessment.status}` as "frozenNotice.APPROVED")}
+            </p>
+          )}
+          {othersPendingApproval && (
+            <p className="mt-2 text-xs text-muted-foreground flex items-start gap-1.5" data-testid="waiting-for-approver">
+              <UserCheck className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              {tp("approvals.waitingFor", {
+                name: othersPendingApproval.approver?.name || othersPendingApproval.approver?.email || "",
+              })}
             </p>
           )}
         </CardContent>

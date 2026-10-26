@@ -1198,7 +1198,8 @@
         "approve": "Aprobar",
         "reject": "Rechazar",
         "request": "Solicitar aprobación",
-        "empty": "No se han solicitado aprobaciones"
+        "empty": "No se han solicitado aprobaciones",
+        "waitingFor": "Pendiente de aprobación por {name}."
       },
       "history": {
         "notes": {

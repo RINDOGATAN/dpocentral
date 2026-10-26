@@ -1198,7 +1198,8 @@
         "approve": "Approve",
         "reject": "Reject",
         "request": "Request approval",
-        "empty": "No approvals requested"
+        "empty": "No approvals requested",
+        "waitingFor": "Waiting for approval by {name}."
       },
       "history": {
         "notes": {
