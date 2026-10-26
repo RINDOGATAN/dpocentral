@@ -57,7 +57,7 @@ import { GlobalSearch } from "./global-search";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
 import { ProgressBar } from "./progress-ring";
-import { useProgramPath, useProgramPathRefresh } from "./use-program-path";
+import { useProgramPathQuery, useProgramPath, useProgramPathRefresh } from "./use-program-path";
 import { useProgrammeOverview } from "./use-programme-overview";
 import { documentBadge, recordCountsText, stepNoteText } from "./document-words";
 import { isStandby } from "@/config/document-register";
@@ -91,7 +91,7 @@ export function GuidedLayout({
   const t = useTranslations("guided");
   const tn = useTranslations("nav");
   const td = useTranslations("documentRegister");
-  const statuses = useProgramPath();
+  const { steps: statuses, dpiaDuty } = useProgramPathQuery();
   // The document register's states and what needs action: the same answer
   // the dashboard panel reads.
   const { overview } = useProgrammeOverview();
@@ -164,6 +164,13 @@ export function GuidedLayout({
     ? recordCountsText(td, "dataInventory", overview.recordCounts.dataInventory, { onlyIfDrafts: true })
     : null;
   if (inventoryNote) stepNotes.dataInventory = inventoryNote;
+  // The assessments step, while not done, says in the menu what completes it:
+  // an approved DPIA where the answers require one, otherwise any approved
+  // assessment (path-config.ts, assessmentsStatus).
+  const assessmentsState = menuProps.statuses?.assessments;
+  if (assessmentsState === "todo" || assessmentsState === "started") {
+    stepNotes.assessments = t(dpiaDuty === "applies" ? "menuNote.assessmentsDpia" : "menuNote.assessments");
+  }
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which
   // therefore never asks (src/lib/menu-locks.ts).

@@ -88,7 +88,8 @@ export function StepBand({
 }) {
   const t = useTranslations("guided");
   const { organization } = useOrganization();
-  const { missing, dpiaDuty } = useProgramPathQuery();
+  const ta = useTranslations("applicability");
+  const { missing, dpiaDuty, dpiaReasons } = useProgramPathQuery();
   const place = stepAndFollowing(DPO_CENTRAL_PATH, stepId, statuses);
   const orgId = organization?.id;
   const storageKey = orgId ? `${SEEN_KEY}:${orgId}` : null;
@@ -170,17 +171,22 @@ export function StepBand({
             </span>
           )}
           {/* The assessments step says what finishes it: an approved DPIA where
-              the organisation's answers require one, otherwise any risk assessment. */}
+              the organisation's answers require one, otherwise any approved
+              assessment. Where a DPIA is required, it also says which answers
+              call for it, with the way to those answers. */}
           {current.step.id === "assessments" && currentStatus !== undefined && currentStatus !== "done" && (
             <>
               <span className="mt-0.5 block text-muted-foreground" data-testid="band-finish">
                 {stepFinishText(t, current.step.id, dpiaDuty)}
               </span>
-              {/* Transfer, vendor and legitimate-interest assessments are
-                  approved here too but do not count for this step: say so. */}
-              <span className="mt-0.5 block text-muted-foreground" data-testid="band-assessments-counts">
-                {t("band.assessmentsCounts")}
-              </span>
+              {dpiaDuty === "applies" && dpiaReasons.length > 0 && (
+                <span className="mt-0.5 block text-muted-foreground" data-testid="band-dpia-why">
+                  {t("band.dpiaWhy", { reasons: dpiaReasons.map((r) => ta(`reasons.${r}`)).join(" ") })}{" "}
+                  <Link href="/privacy/settings#applicability" className="font-medium text-primary underline-offset-2 hover:underline">
+                    {t("band.dpiaAnswersLink")}
+                  </Link>
+                </span>
+              )}
             </>
           )}
           {/* Every other step with a finishing sentence says what completes it,

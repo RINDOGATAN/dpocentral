@@ -411,27 +411,23 @@ describe("creating a premium assessment", () => {
   });
 
   // Stripe on outside the hosted pilot, no licence: the organisation is on the
-  // pilot tier for DPIAs (two free for a limited time). The premium gate stays for the other types.
-  it("a DPIA is allowed where Stripe is on and no licence exists, up to two", async () => {
+  // pilot tier for DPIAs, which are not capped. The premium gate stays for the other types.
+  it("a DPIA is allowed where Stripe is on and no licence exists", async () => {
     kit();
     mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);
     mocks.prisma.auditLog.count.mockResolvedValue(1);
     await expect(create()).resolves.toMatchObject({ id: "a-1" });
   });
 
-  it("the third DPIA is refused there, on the server, pointing to the plans page", async () => {
+  it("a third DPIA is allowed there too: DPIAs are not capped", async () => {
     kit();
     mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);
     mocks.prisma.auditLog.count.mockResolvedValue(2);
-    await expect(create()).rejects.toMatchObject({
-      code: "FORBIDDEN",
-      message: expect.stringContaining("https://www.todo.law/pricing"),
-    });
-    expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
+    await expect(create()).resolves.toMatchObject({ id: "a-1" });
     mocks.prisma.auditLog.count.mockResolvedValue(0);
   });
 
-  it("a licensed organisation is not capped", async () => {
+  it("a licensed organisation creates one too", async () => {
     kit();
     mocks.prisma.skillPackage.findFirst.mockResolvedValue({ id: "pkg-dpia" });
     mocks.prisma.customerOrganization.findFirst.mockResolvedValue({

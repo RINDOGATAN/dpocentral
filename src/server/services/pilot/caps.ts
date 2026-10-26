@@ -8,13 +8,11 @@ import {
   isHostedDeployment,
   PILOT_EXPORT_PATH,
   managedUrl,
-  PLANS_URL,
   plansUrl,
 } from "@/lib/hosted";
 import {
   PILOT_DAYS,
   PILOT_DAYS_BEFORE_SHORTENING,
-  PILOT_DPIA_LIMIT,
   PILOT_LIMITS,
   RESOURCE_LABELS,
   PILOT_WINDOW_SHORTENED_AT,
@@ -27,7 +25,6 @@ import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
 export {
   PILOT_DAYS,
   PILOT_DAYS_BEFORE_SHORTENING,
-  PILOT_DPIA_LIMIT,
   PILOT_LIMITS,
   PILOT_WINDOW_SHORTENED_AT,
   RESOURCE_LABELS,
@@ -45,15 +42,15 @@ export {
  *     pilot went live, then read-only (exports stay available: they are GET
  *     routes under /api/export);
  *   - a ceiling on the records an organisation can hold (PILOT_LIMITS).
- * The window, the ceilings and the free DPIAs belong to the paying customer,
+ * The window and the ceilings belong to the paying customer,
  * not to each organisation: every organisation with the same billing owner
  * shares one window and counts towards the same ceilings (umbrella.ts).
  * The self-hosted kit is never capped: every function here is a no-op unless
  * isHostedDeployment() is true.
  *
  * An organisation on the paid EU cloud plan (Organization.plan = EU_CLOUD,
- * set by scripts/set-org-plan.ts) is not on the pilot: none of the caps, the
- * editing window or the free-DPIA rule applies to it. The pilot clock is
+ * set by scripts/set-org-plan.ts) is not on the pilot: neither the caps nor
+ * the editing window apply to it. The pilot clock is
  * still recorded, so an organisation returned to PILOT finds its window where
  * it was.
  */
@@ -282,90 +279,6 @@ export function pilotMessage(
     : `You have reached the pilot limit of ${limit} ${label}, counted across all the organizations of the same account. To continue, move to the paid plan (${plans}) or export your records (${exp}).`;
 }
 
-// ── Impact assessments on the pilot tier ─────────────────────────────────
-
-/**
- * The count is of impact assessments CREATED, not of the ones still there:
- * deleting one does not free a place. Two sources, and the larger wins:
- *
- *  - the audit log, which records every creation and survives a deletion;
- *  - the assessments the organisation holds now, which covers anything
- *    created before the audit entry carried the template type.
- */
-export type DpiaCountDb = {
-  auditLog: { count: (args: { where: object }) => Promise<number> };
-  assessment: { count: (args: { where: object }) => Promise<number> };
-} & PlanLookupDb;
-
-/**
- * The DPIAs created by the whole group of `organization` (the two free DPIAs
- * are the paying customer's, not each organisation's).
- */
-export async function countDpiaCreated(
-  db: DpiaCountDb,
-  organization: string
-): Promise<number> {
-  const organizationId = scopeOf(await groupOrganizationIds(db, organization));
-  const [logged, held] = await Promise.all([
-    db.auditLog.count({
-      where: {
-        organizationId,
-        entityType: "Assessment",
-        // AUTO_CREATE: a draft made from a processing activity or a vendor
-        // import (services/assessment-auto-create.ts).
-        action: { in: ["CREATE", "AUTO_CREATE"] },
-        changes: { path: ["templateType"], equals: "DPIA" },
-      },
-    }),
-    db.assessment.count({
-      where: { organizationId, template: { type: "DPIA" } },
-    }),
-  ]);
-  return Math.max(logged, held);
-}
-
-export type DpiaQuota =
-  | { capped: false }
-  | { capped: true; limit: number; used: number; remaining: number };
-
-/**
- * What the screens show (the type card, the quick action, the form).
- * Uncapped off the pilot tier: the self-hosted kit, or a licensed organisation.
- */
-export async function pilotDpiaQuota(
-  db: DpiaCountDb,
-  organizationId: string,
-  pilotTier: boolean
-): Promise<DpiaQuota> {
-  if (!pilotTier) return { capped: false };
-  const used = await countDpiaCreated(db, organizationId);
-  return {
-    capped: true,
-    limit: PILOT_DPIA_LIMIT,
-    used,
-    remaining: Math.max(0, PILOT_DPIA_LIMIT - used),
-  };
-}
-
-/** The one link in the limit message, in the reader's language. */
-export const SEE_PLANS_LABEL: Record<Locale, string> = {
-  en: "See the plans",
-  es: "Consulta los planes",
-};
-
-/**
- * What a firm is told when the two free DPIAs are used up: that the pilot
- * tier includes two for a limited time, that deleting does not free a place,
- * and one link, to the plans page. No price, and nothing already created is
- * touched: editing, submitting, approving and exporting stay open.
- */
-export function dpiaCapMessage(locale: Locale): string {
-  const plans = `${SEE_PLANS_LABEL[locale]}: ${PLANS_URL[locale]}`;
-  return locale === "es"
-    ? `Ya se han creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, contadas entre todas las organizaciones de la misma cuenta, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
-    : `The ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time have already been created, counted across all the organizations of the same account, so another cannot be created. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
-}
-
 // ── A pilot limit reached: one audit row, read as a count ───────────────
 
 /**
@@ -414,25 +327,6 @@ export async function recordPilotLimitReached(
   } catch {
     // Already recorded today (primary key), or the write failed: either way
     // the refusal goes ahead unchanged.
-  }
-}
-
-/**
- * Throws FORBIDDEN on the pilot tier once the two free DPIAs are used up,
- * after recording that the organisation reached the limit. The count is read
- * on the server at each creation; the screens only repeat it.
- */
-export async function assertPilotDpiaQuota(
-  db: DpiaCountDb & PilotLimitAuditDb,
-  organizationId: string,
-  pilotTier: boolean,
-  locale: Locale = "en"
-): Promise<void> {
-  if (!pilotTier) return;
-  const used = await countDpiaCreated(db, organizationId);
-  if (used >= PILOT_DPIA_LIMIT) {
-    await recordPilotLimitReached(db, organizationId, "impact_assessments");
-    throw new TRPCError({ code: "FORBIDDEN", message: dpiaCapMessage(locale) });
   }
 }
 

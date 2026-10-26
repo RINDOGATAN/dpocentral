@@ -352,13 +352,6 @@
       "recordNameWithVendor": "DPIA: {activity} ({vendor})",
       "recordDescription": "Auto-filled from processing activity data"
     },
-    "trialAssessments": {
-      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per account on the pilot tier, shared by all its organizations",
-      "freeBadge": "Free for a limited time",
-      "remaining": "{remaining} of the {limit} free DPIAs are left, counted across all the organizations of the same account.",
-      "usedUp": "The {limit} free DPIAs have been created, counted across all the organizations of the same account. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan.",
-      "seePlans": "See the plans"
-    },
     "assessmentTemplates": {
       "title": "Assessment templates",
       "subtitle": "The templates an assessment can be started from",
@@ -7258,7 +7251,6 @@
         "title": "Hosted pilot",
         "intro": "Hosted pilot: free, within the limits set out below. You can start free and use it with real client data: all our sub-processors have the necessary safeguards and certifications.",
         "window": "Editing lasts {days} days from the first sign-in to any of your organizations, and the count never starts before the day the service went live. The period is the same for every organization you create, whenever you create it: a new organization does not start or extend it. After that your organizations become read-only: nothing is removed, and everything can still be exported.",
-        "assessments": "For a limited time, an account may create {assessments} DPIAs free of charge, across all its organizations. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "Your organizations together can hold up to:",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
@@ -10310,7 +10302,8 @@
         "countries": "where it processes data",
         "complianceStatus": "a recorded compliance status"
       },
-      "assessmentsCounts": "Transfer, vendor and legitimate-interest assessments do not count for this step. If the quick start has drafted DPIAs, start with one of them.",
+      "dpiaWhy": "Why: {reasons}",
+      "dpiaAnswersLink": "See your answers",
       "optional": {
         "aiSystems": "Optional: this step never counts toward the program figure. Your AI systems are governed in AI Sentinel.",
         "lia": "Optional: this step never counts toward the program figure. Do it only where legitimate interest is the legal basis of an activity."
@@ -10334,12 +10327,16 @@
       "dataInventory": "Confirm one system that records the personal data it holds.",
       "ropa": "Confirm one processing activity with its data subjects, data categories and retention period.",
       "vendors": "Confirm one vendor in use, with the personal data it processes and where.",
-      "assessments": "Approve one risk assessment: a DPIA or a general assessment.",
-      "assessmentsDpia": "Approve one DPIA: your answers indicate that one is required.",
-      "assessmentsCheck": "Approve one risk assessment. Your answers suggest you consider a DPIA.",
+      "assessments": "Approve one assessment of any type, a transfer assessment included.",
+      "assessmentsDpia": "Approve one DPIA: your answers require one. Nothing else counts.",
+      "assessmentsCheck": "Approve one assessment of any type. Your answers suggest you consider a DPIA.",
       "transfers": "Record the compliance status of at least one international transfer.",
       "dsar": "Switch on and publish your rights-request form in the settings.",
       "incidents": "Confirm your breach readiness in the breach register: the deadlines of your laws, the internal contact and the authority."
+    },
+    "menuNote": {
+      "assessments": "Approve one assessment",
+      "assessmentsDpia": "Needs an approved DPIA"
     },
     "notYetGroup": "Not in DPO Central yet",
     "stepDocsLabel": "Documents",
@@ -10964,7 +10961,6 @@
       "assessment": "an assessment",
       "dpiaStart": "a DPIA to be started",
       "dpiaModule": "the DPIA module",
-      "dpiaModuleHosted": "a plan to create another DPIA",
       "dpaFacts": "contract facts for a vendor",
       "incident": "an incident logged",
       "aiAssist": "AI assistance switched on",
@@ -10976,7 +10972,6 @@
     "inputAction": {
       "default": "Add",
       "dpiaModule": "See how to get it",
-      "dpiaModuleHosted": "See how to get it",
       "aiAssist": "Open settings",
       "dpaFacts": "Start",
       "dpiaStart": "Start",

@@ -13,9 +13,8 @@ import type { Db } from "@/lib/prisma";
 import type { DocumentFacts } from "@/config/document-register";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 import { isHostedDeployment } from "@/lib/hosted";
-import { getEntitledAssessmentTypes, isDpiaPilotTier } from "@/server/services/licensing/entitlement";
+import { getEntitledAssessmentTypes } from "@/server/services/licensing/entitlement";
 import { ensureHostedTemplates } from "@/server/services/pilot/hosted-templates";
-import { pilotDpiaQuota } from "@/server/services/pilot/caps";
 import { isAIConfigured } from "@/server/services/ai/llm-door";
 import { isAiBlockedForUsJurisdiction, postureLane } from "@/server/services/ai/posture";
 import { collectIncompleteRecords } from "@/server/services/views/queries";
@@ -23,13 +22,11 @@ import { features } from "@/config/features";
 import { loadPathCounts } from "./path-counts";
 
 /** Whether a new DPIA can be started here; the same rules as the type grid. */
-async function loadDpiaAccess(prisma: Db, organizationId: string): Promise<DocumentFacts["dpiaAccess"]> {
+async function loadDpiaAccess(organizationId: string): Promise<DocumentFacts["dpiaAccess"]> {
   const hosted = isHostedDeployment();
   await ensureHostedTemplates();
   const entitledTypes = await getEntitledAssessmentTypes(organizationId);
   if (isAssessmentTypeLocked({ type: "DPIA", entitledTypes, hosted })) return "module";
-  const quota = await pilotDpiaQuota(prisma, organizationId, await isDpiaPilotTier(organizationId));
-  if (quota.capped && quota.remaining === 0) return "quotaUsed";
   return "available";
 }
 
@@ -52,7 +49,7 @@ export async function loadDocumentFacts(prisma: Db, organizationId: string): Pro
     collectIncompleteRecords(prisma, organizationId, { all: true }),
     prisma.assessment.count({ where: { ...org, template: { type: "DPIA" } } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "DPIA" } } }),
-    loadDpiaAccess(prisma, organizationId),
+    loadDpiaAccess(organizationId),
     prisma.vendorContract.count({ where: { type: "DPA", vendor: org } }),
     // Read, not counted in SQL: an incident logged with no detail holds NULL
     // in its list column, which an "is empty" filter does not match.

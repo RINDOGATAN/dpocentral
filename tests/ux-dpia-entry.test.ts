@@ -28,10 +28,11 @@ import { frameworkSectionId, preselectDpiaFrameworks } from "@/server/services/a
 const read = (p: string) => readFileSync(path.resolve(__dirname, "..", p), "utf8");
 
 describe("U3: the auto-fill wizard can be reached", () => {
-  it("is linked from New Assessment for a DPIA, unless the free DPIAs are used up", () => {
+  it("is linked from New Assessment for a DPIA", () => {
     const page = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
     expect(page).toContain('href="/privacy/assessments/auto-fill"');
-    expect(page).toMatch(/selectedType === "DPIA" && !\(dpiaQuota && dpiaQuota\.remaining <= 0\)/);
+    expect(page).toMatch(/selectedType === "DPIA" && \(/);
+    expect(page).not.toContain("dpiaQuota");
     // Offered before the template step, not only on the final form.
     expect(page.indexOf('data-testid="dpia-auto-fill-link"')).toBeLessThan(page.indexOf("Step 2: Template picker"));
   });
@@ -42,14 +43,14 @@ describe("U3: the auto-fill wizard can be reached", () => {
     expect(page).toContain("canWrite &&");
   });
 
-  it("states the free DPIAs and stops at the first step when they are used up", () => {
+  it("needs only an activity to go on: DPIAs are not capped", () => {
     const page = read("src/app/(dashboard)/privacy/assessments/auto-fill/page.tsx");
-    expect(page).toContain("<DpiaFreeNote detail");
-    expect(page).toContain("disabled={!selectedActivityId || dpiaQuotaUsedUp}");
-    // It creates through assessment.create, where assertPilotDpiaQuota runs.
+    expect(page).not.toContain("DpiaFreeNote");
+    expect(page).toContain("disabled={!selectedActivityId}");
+    // It creates through assessment.create, which applies no DPIA count.
     expect(page).toContain("trpc.assessment.create.useMutation()");
     const router = read("src/server/routers/privacy/assessment.ts");
-    expect(router).toMatch(/template\.type === AssessmentType\.DPIA\) \{\s*await assertPilotDpiaQuota/);
+    expect(router).not.toContain("assertPilotDpiaQuota");
   });
 });
 

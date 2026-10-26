@@ -98,7 +98,7 @@ describe("the line under the figure", () => {
 });
 
 describe("the assessments step and the DPIA", () => {
-  it("any approved risk assessment finishes it when the answers do not require a DPIA", () => {
+  it("an approved assessment finishes it when the answers do not require a DPIA", () => {
     expect(statuses({ assessments: 1, assessmentsApproved: 1, dpiaApproved: 0 }).assessments).toBe("done");
     expect(statuses({ assessments: 1, assessmentsApproved: 1, dpiaApproved: 0, dpiaDuty: "check" }).assessments).toBe("done");
   });
@@ -115,8 +115,12 @@ describe("the assessments step and the DPIA", () => {
       const [group, id] = key.split(".");
       return (bundle.guided as unknown as Record<string, Record<string, string>>)[group][id];
     };
-    expect(stepFinishText(t(es), "assessments", "applies")).toBe("Aprueba una EIPD: tus respuestas indican que es obligatoria.");
-    expect(stepFinishText(t(es), "assessments", null)).toBe("Aprueba una evaluación de riesgos: una EIPD o una evaluación general.");
+    expect(stepFinishText(t(es), "assessments", "applies")).toBe(
+      "Aprueba una EIPD: tus respuestas la exigen. Ninguna otra cuenta.",
+    );
+    expect(stepFinishText(t(es), "assessments", null)).toBe(
+      "Aprueba una evaluación de cualquier tipo, también una de transferencia.",
+    );
     expect(stepFinishText(t(en), "assessments", "check")).toContain("consider a DPIA");
     expect(stepFinishText(t(es), "transfers", null)).toContain("transferencia internacional");
     for (const bundle of [en, es]) {

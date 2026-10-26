@@ -51,7 +51,7 @@ that product's error page. The rules are in `src/lib/suite-logout.ts`.
 
 **Pilot limits.** 15 days of editing
 from the first sign-in, then read-only with export, and a records ceiling.
-The window, the ceilings and the free DPIAs belong to the account that
+The window and the ceilings belong to the account that
 created the organisations (the billing owner) and are shared by all of them;
 one paid plan covers them all (`src/server/services/pilot/caps.ts`,
 `src/server/services/pilot/umbrella.ts`). These limits

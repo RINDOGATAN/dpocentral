@@ -274,28 +274,27 @@ describe("d4: the states", () => {
       state: "needsInput",
       input: "dpiaModule",
     });
-    // Hosted: every module is included. After the quick start has drafted the
-    // free DPIAs, the line reads the DPIAs held, never "needs the module".
-    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 0 })).toEqual({
+    // Hosted: every module is included and DPIAs are not capped. The line
+    // reads the DPIAs held, never "needs the module" and never a plan.
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "available", dpiaAssessments: 2, dpiaApproved: 0 })).toEqual({
       state: "draft",
       gaps: [{ key: "dpiaDraftsToReview", count: 2 }],
     });
-    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 1 })).toEqual({
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "available", dpiaAssessments: 2, dpiaApproved: 1 })).toEqual({
       state: "ready",
     });
-    // Only with no DPIA held and the free ones used is a plan named.
-    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 0, dpiaApproved: 0 })).toEqual({
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "available", dpiaAssessments: 0, dpiaApproved: 0 })).toEqual({
       state: "needsInput",
-      input: "dpiaModuleHosted",
+      input: "dpiaStart",
     });
-    expect(en.documentRegister.inputs.dpiaModuleHosted).toBe("a plan to create another DPIA");
-    expect(es.documentRegister.inputs.dpiaModuleHosted).toBe("un plan para crear otra EIPD");
+    expect(en.documentRegister.inputs).not.toHaveProperty("dpiaModuleHosted");
+    expect(es.documentRegister.inputs).not.toHaveProperty("dpiaModuleHosted");
     expect(INPUTS.dpiaModule.href).toBe("/privacy/skills");
-    expect(INPUTS.dpiaModuleHosted).toEqual({ href: "plans", external: true });
+    expect(INPUTS).not.toHaveProperty("dpiaModuleHosted");
     // The server reads access by the same rule as the assessment type grid.
     const facts = read("src/server/services/program/document-facts.ts");
     expect(facts).toContain('isAssessmentTypeLocked({ type: "DPIA", entitledTypes, hosted })');
-    expect(facts).toContain('quota.capped && quota.remaining === 0) return "quotaUsed"');
+    expect(facts).not.toContain("quotaUsed");
   });
 
   it("respects the rights-request module switch", () => {

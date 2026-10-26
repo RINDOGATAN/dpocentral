@@ -15,7 +15,6 @@ import {
   isDpiaPilotTier,
   isPremiumAssessmentType,
 } from "../services/licensing/entitlement";
-import { countDpiaCreated, PILOT_DPIA_LIMIT } from "./pilot/caps";
 import { recordName, legacyRecordName } from "@/lib/record-name";
 
 interface AutoCreateParams {
@@ -45,7 +44,6 @@ function autoAssessmentTypeName(type: AssessmentType, locale: "en" | "es"): stri
 
 /** Why a required DPIA was not created (AutoCreateResult.skippedReason). */
 export const DPIA_NOT_CREATED = {
-  quota: "DPIA_REQUIRED_QUOTA_USED",
   licence: "DPIA_REQUIRED_NO_LICENCE",
 } as const;
 
@@ -75,17 +73,13 @@ export async function createAssessmentFromActivity(
     locale = "en",
   } = params;
 
-  // The DPIA needs no licence on the pilot tier, but it counts against the
-  // two free ones there. With none left, or without a licence, no DPIA is
-  // created, and nothing else is created in its place: a legitimate-interest
-  // assessment is not a substitute for a required DPIA (GDPR Art. 35). The
-  // caller is told why, so it can say "DPIA required, not created".
-  if (assessmentType === "DPIA" && (await isDpiaPilotTier(organizationId))) {
-    const used = await countDpiaCreated(tx, organizationId);
-    if (used >= PILOT_DPIA_LIMIT) {
-      return { created: false, skippedReason: DPIA_NOT_CREATED.quota };
-    }
-  } else if (isPremiumAssessmentType(assessmentType)) {
+  // The DPIA needs no licence on the pilot tier. Without a licence elsewhere,
+  // no DPIA is created, and nothing else is created in its place: a
+  // legitimate-interest assessment is not a substitute for a required DPIA
+  // (GDPR Art. 35). The caller is told why, so it can say "DPIA required,
+  // not created".
+  const dpiaWithoutLicence = assessmentType === "DPIA" && (await isDpiaPilotTier(organizationId));
+  if (!dpiaWithoutLicence && isPremiumAssessmentType(assessmentType)) {
     const entitlement = await checkAssessmentEntitlement(
       organizationId,
       assessmentType
@@ -175,7 +169,7 @@ export async function createAssessmentFromActivity(
       action: "AUTO_CREATE",
       changes: {
         type: assessmentType,
-        // Read by the pilot tier's DPIA count (services/pilot/caps.ts).
+        // The same field a manual creation records (assessment.create).
         templateType: assessmentType,
         vendorId,
         processingActivityId,

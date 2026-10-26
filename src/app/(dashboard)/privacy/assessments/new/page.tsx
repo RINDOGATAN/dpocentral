@@ -41,7 +41,6 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { useFormatPrice } from "@/components/region-provider";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { DpiaFreeNote, useDpiaQuota } from "@/components/pilot/dpia-free-note";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
@@ -70,7 +69,6 @@ export default function NewAssessmentPage() {
   const templateMeta = useTemplateMeta();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newAssessment");
-  const tTrial = useTranslations("pages.trialAssessments");
   const tCommon = useTranslations("common");
   const tg = useTranslations("guided");
   const typeName = (type: string | null | undefined) =>
@@ -110,9 +108,6 @@ export default function NewAssessmentPage() {
   // click opened the "Activate" dialog for a module that is already active:
   // the cards wait for them.
   const entitlementsLoaded = !!entitledData || entitledFetched;
-
-  // The pilot tier's two free DPIAs (null off the pilot tier: nothing shown).
-  const dpiaQuota = useDpiaQuota();
 
   // Load templates filtered by selected type
   const { data: templates, isLoading: templatesLoading } = trpc.assessment.listTemplates.useQuery(
@@ -272,10 +267,10 @@ export default function NewAssessmentPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {offeredTypes.map((at) => {
                 const Icon = at.icon;
-                // On the hosted pilot no card carries a premium mark, and on
-                // the pilot tier the DPIA carries its own free mark instead.
-                const pilotDpia = at.type === "DPIA" && !!dpiaQuota;
-                const isPremium = isPremiumTypeKey(at.type) && !hosted && !pilotDpia;
+                // On the hosted pilot no card carries a premium mark. The DPIA
+                // never needs a licence to be created (assessment.create), so
+                // it reads as included everywhere.
+                const isPremium = isPremiumTypeKey(at.type) && !hosted && at.type !== "DPIA";
                 const isEntitled = isTypeEntitled(at.type);
                 const isLocked = isTypeLocked(at.type);
 
@@ -316,14 +311,7 @@ export default function NewAssessmentPage() {
                           )}
                         </div>
                         <div className="flex gap-1.5">
-                          {pilotDpia ? (
-                            <Badge
-                              variant="secondary"
-                              className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
-                            >
-                              {tTrial("freeBadge")}
-                            </Badge>
-                          ) : isPremium ? (
+                          {isPremium ? (
                             isEntitled ? (
                               <Badge
                                 variant="secondary"
@@ -358,7 +346,6 @@ export default function NewAssessmentPage() {
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                         {tp(`type.${at.type}_desc` as `type.LIA_desc` | `type.CUSTOM_desc` | `type.DPIA_desc` | `type.PIA_desc` | `type.TIA_desc` | `type.VENDOR_desc`)}
                       </p>
-                      {pilotDpia && <DpiaFreeNote detail withLink={false} className="mt-2" />}
                       {isLocked && (
                         <p className="text-xs text-muted-foreground mt-2 font-medium">
                           {!features.stripeEnabled
@@ -379,8 +366,8 @@ export default function NewAssessmentPage() {
 
       {/* The other way to start a DPIA: drafted from a recorded processing
           activity (the auto-fill wizard), offered as soon as DPIA is the
-          type. Not offered once the pilot's free DPIAs are used up. */}
-      {selectedType === "DPIA" && !(dpiaQuota && dpiaQuota.remaining <= 0) && (
+          type. */}
+      {selectedType === "DPIA" && (
         <Link
           href="/privacy/assessments/auto-fill"
           className="flex items-start gap-2 rounded-md border border-border bg-card px-4 py-3 text-sm hover:border-primary/50 hover:bg-muted/50 transition-colors min-h-[44px]"
@@ -504,11 +491,6 @@ export default function NewAssessmentPage() {
               {entitledData && isTypeLocked(selectedType) && (
                 <StatusNote tone="warning" title={tp("premiumSkill")} data-testid="assessment-type-gated">
                   <p>{tp("typeGatedNotice", { name: typeName(selectedType) })}</p>
-                </StatusNote>
-              )}
-              {selectedType === "DPIA" && dpiaQuota && (
-                <StatusNote tone="info" data-testid="dpia-form-free-note">
-                  <DpiaFreeNote detail className="text-sm text-foreground" />
                 </StatusNote>
               )}
               <div className="space-y-2">

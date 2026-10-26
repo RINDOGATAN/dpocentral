@@ -18,15 +18,22 @@ const menu = readFileSync("src/components/guided/path-menu.tsx", "utf8");
 const LONG_DASH = /[–—]/;
 
 describe("path step actions", () => {
-  it("the band names which assessments do not count, in both languages", () => {
-    expect(band).toContain('t("band.assessmentsCounts")');
+  it("the band says what finishes the assessments step, and why a DPIA is required, in both languages", () => {
+    expect(band).not.toContain("band.assessmentsCounts");
+    expect(band).toContain('t("band.dpiaWhy"');
+    expect(band).toContain('t("band.dpiaAnswersLink")');
+    expect(band).toContain('href="/privacy/settings#applicability"');
     for (const m of [en, es]) {
-      const text = m.guided.band.assessmentsCounts;
-      expect(text.length).toBeGreaterThan(20);
-      expect(text).not.toMatch(LONG_DASH);
+      expect(m.guided.band).not.toHaveProperty("assessmentsCounts");
+      for (const text of [m.guided.band.dpiaWhy, m.guided.band.dpiaAnswersLink, m.guided.finish.assessments, m.guided.finish.assessmentsDpia]) {
+        expect(text.length).toBeGreaterThan(5);
+        expect(text).not.toMatch(LONG_DASH);
+      }
     }
-    expect(es.guided.band.assessmentsCounts).toContain("EIPD");
-    expect(en.guided.band.assessmentsCounts).toContain("DPIA");
+    expect(en.guided.finish.assessments).toMatch(/any type/i);
+    expect(es.guided.finish.assessments).toMatch(/cualquier tipo/);
+    expect(es.guided.finish.assessmentsDpia).toContain("EIPD");
+    expect(en.guided.finish.assessmentsDpia).toContain("DPIA");
   });
 
   it("every optional step shown in the band has its sentence in both languages", () => {

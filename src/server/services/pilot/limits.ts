@@ -3,7 +3,7 @@
 
 /**
  * The hosted pilot's limits as plain values: the editing window, the records
- * ceiling, the free DPIAs and their labels. A leaf module (no tRPC, no
+ * ceiling and their labels. A leaf module (no tRPC, no
  * Prisma), so the public landing's pricing section can state the same limits
  * the service enforces; caps.ts enforces them and re-exports these names.
  */
@@ -80,21 +80,10 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
 };
 
 /**
- * Impact assessments (type DPIA) an organisation on the pilot tier may create:
- * free for a limited time, two per paying customer, shared by all the
- * organisations of the same billing owner (which replaced the earlier three per organisation). The pilot tier is the
- * hosted service, and, on a build that sells licences, any organisation with
- * no DPIA licence (isDpiaPilotTier in services/licensing/entitlement.ts). The
- * overall records ceiling (PILOT_LIMITS.assessments) still applies on the
- * hosted service; this narrower rule bites first.
- */
-export const PILOT_DPIA_LIMIT = 2;
-
-/**
  * Organisations one account may belong to on the hosted service (it was one).
  * Five, so that a consultant acting as external DPO can keep each client
  * apart. One customer pays once: the organisations an account creates share
- * one plan, one editing window, the records ceilings above and the free DPIAs
+ * one plan, one editing window and the records ceilings above
  * (services/pilot/umbrella.ts).
  */
 export const ORGANIZATIONS_PER_ACCOUNT = 5;
