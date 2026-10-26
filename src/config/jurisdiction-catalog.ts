@@ -1363,17 +1363,18 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
 export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
   {
     id: "eu_residents",
-    question: "Do you process personal data of EU/EEA residents?",
+    question:
+      "Are you established in the EU/EEA, or do you offer goods or services to people there, or monitor their behavior there?",
     helpText:
-      "This includes customers, users, employees, or any individuals located in EU/EEA member states, even if your organization is not based in the EU.",
+      "This is how GDPR scope is decided (Art. 3): an establishment in the Union, or, without one, offering goods or services to people in the Union or monitoring their behavior there. It does not depend on nationality or residence, nor on how many people you reach.",
     relevantJurisdictions: ["GDPR"],
   },
   {
     id: "uk_presence",
     question:
-      "Do you have customers, employees, or users in the United Kingdom?",
+      "Are you established in the UK, or do you offer goods or services to people there, or monitor their behavior there?",
     helpText:
-      "Since Brexit, the UK has its own data protection regime. This applies if you process data of UK residents or have a UK establishment.",
+      "Since Brexit, the UK has its own regime. The UK GDPR follows the same test as GDPR Art. 3: a UK establishment, or offering goods or services to people in the UK or monitoring their behavior there.",
     relevantJurisdictions: ["UK-GDPR"],
   },
   {

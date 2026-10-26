@@ -593,12 +593,14 @@ export default function QuickstartPage() {
               <ApplicabilityQuestions
                 answers={applicabilityValue}
                 onChange={setApplicabilityAnswers}
+                jurisdictionCodes={resultCodes}
                 idPrefix="quickstart-applicability"
               />
               <div className="rounded-lg border border-border p-4">
                 <ApplicabilityResult
                   jurisdictionCodes={resultCodes}
                   answers={applicabilityValue}
+                  asked={applicabilityAnswers ? undefined : applicabilityData?.asked}
                   placesAbove
                 />
               </div>
