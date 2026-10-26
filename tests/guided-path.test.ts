@@ -73,6 +73,7 @@ const COMPLETE: PathCounts = {
   transfersComplete: 1,
   dsarRequests: 1,
   dsarIntakeConfigured: true,
+  dsarIntakeActive: true,
   incidents: 1,
   aiSystems: 0,
 };
@@ -288,12 +289,25 @@ describe("the done rules", () => {
     expect(vendorDueDiligenceStatus(c({}))).toBe("todo");
   });
 
-  it("rights: ready when needed once the intake is set up; a logged request alone does not finish it", () => {
-    // A brand-new org (only the seeded default intake, no requests) stays "todo".
+  it("rights: ready when needed once the intake is published; a logged request alone does not finish it", () => {
+    // A brand-new org (only the seeded default intake, switched off, no requests) stays "todo".
     expect(statusOf("dsar", {})).toBe("todo");
-    expect(statusOf("dsar", { dsarIntakeConfigured: true })).toBe("ready");
+    // Published: switched on with a recorded activation, or set up past the default.
+    expect(statusOf("dsar", { dsarIntakeActive: true, dsarIntakeActivated: true })).toBe("ready");
+    expect(statusOf("dsar", { dsarIntakeConfigured: true, dsarIntakeActive: true })).toBe("ready");
     expect(statusOf("dsar", { dsarRequests: 1 })).toBe("started");
-    expect(statusOf("dsar", { dsarRequests: 1, dsarIntakeConfigured: true })).toBe("done");
+    expect(statusOf("dsar", { dsarRequests: 1, dsarIntakeActive: true, dsarIntakeActivated: true })).toBe("done");
+    expect(statusOf("dsar", { dsarRequests: 1, dsarIntakeConfigured: true, dsarIntakeActive: true })).toBe("done");
+  });
+
+  it("rights: set up or switched but not published reads as started, never met", () => {
+    // Set up, but switched off.
+    expect(statusOf("dsar", { dsarIntakeConfigured: true })).toBe("started");
+    // Switched on and then off again by a person.
+    expect(statusOf("dsar", { dsarIntakeTouched: true })).toBe("started");
+    // An older organisation's form, published before activation was asked and
+    // still the default: not met until "Confirm and publish" records it.
+    expect(statusOf("dsar", { dsarIntakeActive: true })).toBe("todo");
   });
 
   it("incidents: ready when needed once the record of processing is usable, done on an incident", () => {

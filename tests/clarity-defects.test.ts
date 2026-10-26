@@ -123,6 +123,7 @@ describe("F2: 'Every stage is done' only when every stage is", () => {
       vendorsComplete: 1,
       dsarRequests: 1,
       dsarIntakeConfigured: true,
+      dsarIntakeActive: true,
       incidents: 1,
     });
     const respond = PATH.stages.findIndex((st) => st.id === "respond");
@@ -150,6 +151,7 @@ describe("F2: 'Every stage is done' only when every stage is", () => {
       transfersComplete: 1,
       dsarRequests: 1,
       dsarIntakeConfigured: true,
+      dsarIntakeActive: true,
       incidents: 1,
     });
     expect(stageAfterCelebration(PATH, s)).toBeNull();
