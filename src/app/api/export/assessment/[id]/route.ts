@@ -8,9 +8,9 @@ import {
   ASSESSMENT_EXPORT_INCLUDE,
   buildAssessmentExport,
 } from "@/server/services/export/documents/assessment";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(
+async function handleGET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -82,3 +82,5 @@ export async function GET(
     return pdfErrorResponse(err, "assessment");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

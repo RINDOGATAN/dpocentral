@@ -4,7 +4,7 @@
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-import { fileTitle, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileTitle, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
 /** The roles that may take the organisation's rights-request records away. */
 const RIGHTS_REQUEST_EXPORT_ROLES = ["OWNER", "ADMIN"] as const;
@@ -25,7 +25,7 @@ const RIGHTS_REQUEST_EXPORT_ROLES = ["OWNER", "ADMIN"] as const;
  * they are deleted (scripts/purge-dsar-data.ts). A GET route, so it also works
  * for a hosted pilot organisation that has become read-only.
  */
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
 
@@ -113,3 +113,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "rights-requests");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

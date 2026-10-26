@@ -15,9 +15,9 @@ import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { resolvePeriod } from "@/lib/board-report";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { buildBoardReportExport } from "@/server/services/export/documents/board-report";
-import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { fileResponse, resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
   if (!organizationId) {
@@ -60,3 +60,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "board-report");
   }
 }
+
+export const GET = withExportLanguage(handleGET);
