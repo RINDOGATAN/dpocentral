@@ -16,12 +16,12 @@ import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { buildDocumentPack } from "@/server/services/export/document-pack";
-import { resolveExportLocale } from "@/server/services/export/documents/context";
+import { resolveExportLocale, withExportLanguage } from "@/server/services/export/documents/context";
 
 // Several PDFs are rendered one after the other.
 export const maxDuration = 60;
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
   if (!organizationId) {
@@ -70,3 +70,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "document-pack");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

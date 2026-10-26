@@ -9,21 +9,9 @@
 
 import { getRequestConfig } from "next-intl/server";
 import { headers } from "next/headers";
-import { defaultLocale, isValidLocale, locales, type Locale } from "./config";
+import { defaultLocale, isValidLocale, pickFromAcceptLanguage } from "./config";
 import { getCookieLocale } from "./server-locale";
 
-function pickFromAcceptLanguage(header: string | null): Locale | null {
-  if (!header) return null;
-  for (const part of header.split(",")) {
-    const tag = part.split(";")[0]?.trim().toLowerCase();
-    if (!tag) continue;
-    const base = tag.split("-")[0];
-    if (base && (locales as readonly string[]).includes(base)) {
-      return base as Locale;
-    }
-  }
-  return null;
-}
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // 1. Try the locale from middleware/[locale] segment

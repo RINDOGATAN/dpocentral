@@ -13,6 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
+import { RolePermissions } from "@/components/docs/role-permissions";
 import {
   PILOT_DAYS,
   PILOT_DPIA_LIMIT,
@@ -60,7 +61,6 @@ export default async function DocsOverviewPage() {
     { key: "vendors", href: "/docs/vendors", icon: Building2 },
   ].filter((m) => dsarOn || m.key !== "dsar");
 
-  const roleKeys = ["Owner", "Admin", "PrivacyOfficer", "Member", "Viewer"] as const;
   const reportKeys = [
     "assessmentExport",
     "portfolio",
@@ -192,15 +192,7 @@ export default async function DocsOverviewPage() {
       {/* User Roles */}
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-4">{t("roles.title")}</h2>
-        <p className="text-sm text-muted-foreground mb-4">{t("roles.intro")}</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {roleKeys.map((key) => (
-            <div key={key} className="p-3 rounded-lg border border-border bg-card">
-              <p className="text-sm font-semibold text-primary">{t(`roles.items.${key}.role`)}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t(`roles.items.${key}.desc`)}</p>
-            </div>
-          ))}
-        </div>
+        <RolePermissions />
       </div>
 
       {/* Modules */}

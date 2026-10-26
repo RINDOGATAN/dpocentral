@@ -244,7 +244,7 @@ describe("exports", () => {
     expect(routes.length).toBeGreaterThanOrEqual(10);
     for (const file of routes) {
       const src = readFileSync(file, "utf-8");
-      expect(src, file).toMatch(/export async function GET/);
+      expect(src, file).toMatch(/export async function GET|export const GET = withExportLanguage\(/);
       expect(src, file).not.toMatch(/export async function (POST|PUT|PATCH|DELETE)/);
       expect(src, file).not.toMatch(/assertPilotWritable|isPilotReadOnly|assertPilotCapacity|pilot\/caps/);
     }

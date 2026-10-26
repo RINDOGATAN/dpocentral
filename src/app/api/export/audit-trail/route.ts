@@ -20,7 +20,7 @@ import { canReadAuditTrail } from "@/lib/audit-access";
 import { AUDIT_ROW_SELECT, auditWhere, toAuditViews, type AuditFilters } from "@/server/services/audit/trail";
 import { AUDIT_CSV_MAX_ROWS, auditTrailCsv } from "@/server/services/audit/csv";
 import { exportStamp } from "@/server/services/export/integrity";
-import { CSV, fileResponse, nameForFile, resolveExportLocale, today } from "@/server/services/export/documents/context";
+import { CSV, fileResponse, nameForFile, resolveExportLocale, today, withExportLanguage } from "@/server/services/export/documents/context";
 
 function dateParam(raw: string | null): Date | undefined | null {
   if (!raw) return undefined;
@@ -28,7 +28,7 @@ function dateParam(raw: string | null): Date | undefined | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
   if (!organizationId) {
@@ -115,3 +115,5 @@ export async function GET(request: Request) {
     return pdfErrorResponse(err, "audit-trail");
   }
 }
+
+export const GET = withExportLanguage(handleGET);

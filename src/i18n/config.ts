@@ -29,3 +29,17 @@ export const localeShortNames: Record<Locale, string> = {
 export function isValidLocale(locale: string): locale is Locale {
   return locales.includes(locale as Locale);
 }
+
+/** The first supported language in an Accept-Language header, or null. */
+export function pickFromAcceptLanguage(header: string | null | undefined): Locale | null {
+  if (!header) return null;
+  for (const part of header.split(",")) {
+    const tag = part.split(";")[0]?.trim().toLowerCase();
+    if (!tag) continue;
+    const base = tag.split("-")[0];
+    if (base && (locales as readonly string[]).includes(base)) {
+      return base as Locale;
+    }
+  }
+  return null;
+}

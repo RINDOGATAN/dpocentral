@@ -147,7 +147,7 @@ describe("words, not codes, on customer screens", () => {
     expect(incident).toContain('useTranslations("pages.newIncident.discoveryMethodOption")');
     expect(incident).not.toContain('discoveryMethod?.replace("_", " ")');
     expect(read("src/server/services/export/documents/breach-register.ts")).toContain("discoveryMethodOption.");
-    expect(read("src/app/(dashboard)/privacy/docs/page.tsx")).toContain("tRole(role)");
+    expect(read("src/components/docs/role-permissions.tsx")).toContain("tRole(role)");
   });
 
   it("names the breach form's laws in Spanish on Spanish screens", () => {

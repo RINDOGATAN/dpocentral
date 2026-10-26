@@ -16,6 +16,8 @@ import { invalidInputMessage, newErrorReference, sessionEndedMessage, unexpected
 import { logger } from "@/lib/logger";
 import { localizeServerMessage } from "@/lib/server-error-messages";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { defaultLocale, pickFromAcceptLanguage } from "@/i18n/config";
+import { withReaderLanguage } from "@/lib/system-content/runtime";
 import { BLOCKED_EMAIL_MESSAGE_KEY, BLOCKED_EMAIL_MESSAGES } from "@/lib/email-policy";
 import {
   assertPilotCapacity,
@@ -42,6 +44,8 @@ interface CreateContextOptions {
    * from the EU (src/server/services/org-region.ts).
    */
   country?: string | null;
+  /** The browser's Accept-Language header, for the reader's language when no cookie says it. */
+  acceptLanguage?: string | null;
 }
 
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
@@ -51,6 +55,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     getCookie: opts.getCookie,
     clientIp: opts.clientIp ?? null,
     country: opts.country ?? null,
+    acceptLanguage: opts.acceptLanguage ?? null,
   };
 };
 
@@ -72,6 +77,7 @@ export const createTRPCContext = async (opts: { req: Request }) => {
     getCookie: (name: string) => cookieStore.get(name)?.value,
     clientIp: clientIpOf(opts.req),
     country: opts.req.headers.get(COUNTRY_HEADER)?.trim() || null,
+    acceptLanguage: opts.req.headers.get("accept-language"),
   });
 };
 
@@ -160,11 +166,14 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user || !ctx.session.user.id) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
-  return next({
-    ctx: {
-      session: { ...ctx.session, user: ctx.session.user },
-    },
-  });
+  // The records the app writes itself (the TODO.LAW processor, its transfer
+  // and its TIA) are read back in the language this person is using, the
+  // same way the interface picks it: the cookie, else the browser's
+  // language, else English (src/i18n/request.ts).
+  const readerLocale =
+    localeFromCookieGetter(ctx.getCookie) ?? pickFromAcceptLanguage(ctx.acceptLanguage) ?? defaultLocale;
+  const session = { ...ctx.session, user: ctx.session.user };
+  return withReaderLanguage(readerLocale, () => next({ ctx: { session } }));
 });
 
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
