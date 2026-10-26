@@ -74,6 +74,7 @@ export function PilotEndBar({
   transition = false,
   upgradeHref = null,
   upgradeMonthlyHref = null,
+  suite = false,
 }: {
   state: PilotEndBarState;
   /** The end date, already written out in the reader's language. */
@@ -89,6 +90,8 @@ export function PilotEndBar({
    * "Move to the paid plan"; `upgradeHref` is then the yearly one.
    */
   upgradeMonthlyHref?: string | null;
+  /** The billing owner also has AI Sentinel: one sentence says one plan covers the suite. */
+  suite?: boolean;
 }) {
   const t = useTranslations("pilot.endBar");
   // The currency the customer will be charged, the same decision as the
@@ -114,6 +117,11 @@ export function PilotEndBar({
     >
       <p className={`mx-auto max-w-7xl py-1.5 text-center break-words ${state === "trial" ? "px-10" : "px-4"}`}>
         {text}{" "}
+        {suite && (
+          <>
+            <span data-testid="pilot-suite-line">{t("suite")}</span>{" "}
+          </>
+        )}
         <a
           href={pricingUrl}
           target="_blank"
@@ -199,6 +207,7 @@ export function HostedPilotEndBar({
           ? `/api/plan/checkout?org=${encodeURIComponent(organization.id)}&interval=month`
           : null
       }
+      suite={!!(status && (status as { suite?: boolean }).suite)}
     />
   );
 }

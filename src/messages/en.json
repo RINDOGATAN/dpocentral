@@ -10076,7 +10076,8 @@
       "upgradeMonthly": "Pay monthly",
       "upgradeYearly": "Pay yearly",
       "pricing": "See pricing",
-      "dismiss": "Close"
+      "dismiss": "Close",
+      "suite": "Your Cloud Plan covers DPO Central, AI Sentinel and VendorWatch. One plan, one payment."
     },
     "settings": {
       "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",
