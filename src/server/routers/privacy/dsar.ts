@@ -31,6 +31,13 @@ import { volumeUpgradeLinks } from "@/lib/dsar-addon";
 import { volumeUpgradeCheckoutUrl } from "@/server/services/dsar/volume-sync";
 import { autoUpgradeEnabled, planSyncSecret } from "@/lib/plan-upgrade";
 import { sendDSARExtensionEmail } from "@/server/services/dsar/sendExtensionEmail";
+import { ensureDefaultIntakeForm, isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
+import {
+  activationToRecord,
+  DSAR_INTAKE_ACTIVATED,
+  DSAR_INTAKE_DEACTIVATED,
+  latestIntakeActivation,
+} from "@/server/services/dsar/intake-activation";
 import { countRecentAccessRequests } from "@/server/services/dsar/repeat-access";
 import { generatedTaskText } from "@/server/services/dsar/generated-tasks";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
@@ -753,16 +760,59 @@ export const dsarRouter = createTRPCRouter({
   // PUBLIC INTAKE FORMS
   // ============================================================
 
-  // Get intake form configuration
+  // Get intake form configuration, switched on or off (the settings page
+  // shows both). With it: whether a person's activation is on record and
+  // whether the form has been set up past the seeded default (step 4.1).
   getIntakeForm: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
-      return ctx.prisma.dSARIntakeForm.findFirst({
-        where: {
-          organizationId: ctx.organization.id,
-          isActive: true,
-        },
+      const form = await ctx.prisma.dSARIntakeForm.findFirst({
+        where: { organizationId: ctx.organization.id },
+        orderBy: [{ isActive: "desc" }, { createdAt: "asc" }],
       });
+      if (!form) return null;
+      const latest = await latestIntakeActivation(ctx.prisma, ctx.organization.id);
+      return {
+        ...form,
+        activationRecorded: latest === "activated",
+        configured: isIntakeConfigured(form),
+      };
+    }),
+
+  // Switch the public form on or off, saved at once and recorded in the audit
+  // trail. Switching on a form already on records the activation once
+  // ("Confirm and publish" for forms published before activation was asked).
+  setIntakeActive: dsarAdminOrgProcedure
+    .input(z.object({ organizationId: z.string(), active: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const orgId = ctx.organization.id;
+      let form = await ctx.prisma.dSARIntakeForm.findFirst({
+        where: { organizationId: orgId },
+        orderBy: [{ isActive: "desc" }, { createdAt: "asc" }],
+        select: { id: true, isActive: true },
+      });
+      if (!form) {
+        const seeded = await ensureDefaultIntakeForm(ctx.prisma, orgId);
+        form = { id: seeded.id, isActive: false };
+      }
+      const latest = await latestIntakeActivation(ctx.prisma, orgId);
+      const action = activationToRecord(form.isActive, input.active, latest);
+      if (form.isActive !== input.active) {
+        await ctx.prisma.dSARIntakeForm.update({ where: { id: form.id }, data: { isActive: input.active } });
+      }
+      if (action) {
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId: orgId,
+            userId: ctx.session.user.id,
+            entityType: "DSARIntakeForm",
+            entityId: form.id,
+            action,
+            changes: { isActive: input.active },
+          },
+        });
+      }
+      return { active: input.active, recorded: action !== null };
     }),
 
   // Create/update intake form
@@ -783,7 +833,9 @@ export const dsarRouter = createTRPCRouter({
         privacyContactEmail: z.string().email().max(320).optional().or(z.literal("")),
         // The kit's setting; the hosted service keeps 30 days whatever is stored.
         retentionDays: z.number().int().min(1).max(3650).optional(),
-        isActive: z.boolean().default(true),
+        // Optional: the settings page switches the form on and off through
+        // setIntakeActive. A change sent here is applied and recorded too.
+        isActive: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -804,19 +856,36 @@ export const dsarRouter = createTRPCRouter({
         where: { organizationId: ctx.organization.id },
       });
 
-      if (existing) {
-        return ctx.prisma.dSARIntakeForm.update({
-          where: { id: existing.id },
-          data: formData,
+      const wasActive = existing?.isActive ?? false;
+      const active = formData.isActive ?? wasActive;
+      const saved = existing
+        ? await ctx.prisma.dSARIntakeForm.update({
+            where: { id: existing.id },
+            data: { ...formData, isActive: active },
+          })
+        : await ctx.prisma.dSARIntakeForm.create({
+            data: {
+              organizationId: ctx.organization.id,
+              ...formData,
+              isActive: active,
+            },
+          });
+
+      // A change of the active flag sent with the form is recorded as the
+      // switch records it (never a mere re-save of an unchanged flag).
+      if (active !== wasActive) {
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId: ctx.organization.id,
+            userId: ctx.session.user.id,
+            entityType: "DSARIntakeForm",
+            entityId: saved.id,
+            action: active ? DSAR_INTAKE_ACTIVATED : DSAR_INTAKE_DEACTIVATED,
+            changes: { isActive: active },
+          },
         });
       }
-
-      return ctx.prisma.dSARIntakeForm.create({
-        data: {
-          organizationId: ctx.organization.id,
-          ...formData,
-        },
-      });
+      return saved;
     }),
 
   // Deadline reminder e-mails (7, 3 and 1 day before, and once overdue):
@@ -885,10 +954,11 @@ export const dsarRouter = createTRPCRouter({
       const org = await ctx.prisma.organization.findUnique({
         where: { slug: input.orgSlug },
         include: {
-          dsarIntakeForms: { where: { isActive: true }, take: 1 },
+          dsarIntakeForms: { orderBy: [{ isActive: "desc" }, { createdAt: "asc" }], take: 1 },
         },
       });
-      // No organisation or no active form: not found.
+      // No organisation or no form at all: not found. A form switched off is
+      // found, and shown closed with the organisation's privacy contact.
       if (!org || org.dsarIntakeForms.length === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -901,7 +971,9 @@ export const dsarRouter = createTRPCRouter({
       // privacy contact instead (submitPublic refuses anyway). A person
       // exercising their rights never sees a note about our plans.
       const accepting =
-        !publicIntakeReadOnly(org) && acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
+        form.isActive &&
+        !publicIntakeReadOnly(org) &&
+        acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
       return {
         orgName: org.name,
         title: form.title,
@@ -956,7 +1028,7 @@ export const dsarRouter = createTRPCRouter({
         where: { slug: input.orgSlug },
         include: {
           dsarIntakeForms: {
-            where: { isActive: true },
+            orderBy: [{ isActive: "desc" }, { createdAt: "asc" }],
             take: 1,
           },
           jurisdictions: DSAR_RULE_JURISDICTIONS,
@@ -976,7 +1048,12 @@ export const dsarRouter = createTRPCRouter({
       // the monthly ceiling below is their only limit.
       // The monthly ceiling (hosted): 100 public-form requests per calendar
       // month (Madrid), 1,000 with the volume upgrade.
-      if (publicIntakeReadOnly(org) || !acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))) {
+      // A form switched off takes no request either, with the same message.
+      if (
+        !org.dsarIntakeForms[0]!.isActive ||
+        publicIntakeReadOnly(org) ||
+        !acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))
+      ) {
         throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.formClosed });
       }
 

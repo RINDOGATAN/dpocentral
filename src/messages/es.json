@@ -1198,7 +1198,8 @@
         "approve": "Aprobar",
         "reject": "Rechazar",
         "request": "Solicitar aprobación",
-        "empty": "No se han solicitado aprobaciones"
+        "empty": "No se han solicitado aprobaciones",
+        "waitingFor": "Pendiente de aprobación por {name}."
       },
       "history": {
         "notes": {
@@ -2020,8 +2021,8 @@
         "verified": "Verificado",
         "gdpr": "RGPD",
         "previewTitle": "Vista previa de importación",
-        "previewSummary": "{vendors, plural, one {# proveedor} other {# proveedores}}, {assets, plural, one {# sistema} other {# sistemas}}{internal, select, yes { (incluidos tus sistemas internos)} other {}}, {elements, plural, one {# elemento} other {# elementos}}, {activities, plural, one {# actividad} other {# actividades}}",
-        "previewSummaryWithTransfers": "{vendors, plural, one {# proveedor} other {# proveedores}}, {assets, plural, one {# sistema} other {# sistemas}}{internal, select, yes { (incluidos tus sistemas internos)} other {}}, {elements, plural, one {# elemento} other {# elementos}}, {activities, plural, one {# actividad} other {# actividades}}, {transfers, plural, one {# transferencia de datos} other {# transferencias de datos}}",
+        "previewSummary": "{vendors, plural, one {# proveedor} other {# proveedores}}, {assets, plural, one {# sistema} other {# sistemas}}{internal, select, yes { (incluidos tus sistemas internos)} public { (incluidos tu sitio web y tus aplicaciones públicas)} both { (incluidos tus sistemas internos, tu sitio web y tus aplicaciones públicas)} other {}}, {elements, plural, one {# elemento} other {# elementos}}, {activities, plural, one {# actividad} other {# actividades}}",
+        "previewSummaryWithTransfers": "{vendors, plural, one {# proveedor} other {# proveedores}}, {assets, plural, one {# sistema} other {# sistemas}}{internal, select, yes { (incluidos tus sistemas internos)} public { (incluidos tu sitio web y tus aplicaciones públicas)} both { (incluidos tus sistemas internos, tu sitio web y tus aplicaciones públicas)} other {}}, {elements, plural, one {# elemento} other {# elementos}}, {activities, plural, one {# actividad} other {# actividades}}, {transfers, plural, one {# transferencia de datos} other {# transferencias de datos}}",
         "alreadyExists": "Ya existe",
         "highRisk": "Riesgo alto",
         "willCreate": "Se creará:",
@@ -3837,7 +3838,13 @@
       "description": "Comparte este enlace con los interesados para que envíen solicitudes",
       "copyUrl": "Copiar URL",
       "openInNewTab": "Abrir en una nueva pestaña",
-      "activeLabel": "El portal está activo y acepta solicitudes"
+      "activeLabel": "Formulario público activo",
+      "publishedHint": "El formulario está publicado y acepta solicitudes. Enlaza esta dirección desde tu política de privacidad para que las personas puedan ejercer sus derechos.",
+      "unpublishedHint": "El formulario aún no está publicado. Quien abra el enlace verá tu contacto de privacidad. Actívalo cuando quieras empezar a recibir solicitudes.",
+      "confirmHint": "Este formulario se ha publicado antes de que DPO Central pidiera confirmarlo. Confírmalo para que conste que lo has revisado.",
+      "confirmPublish": "Confirmar y publicar",
+      "publishedToast": "El formulario público está publicado",
+      "unpublishedToast": "El formulario público está desactivado"
     },
     "formCard": {
       "title": "Configuración del formulario",
@@ -6273,7 +6280,7 @@
       },
       "intakeConfig": {
         "title": "Configuración del formulario de recepción",
-        "description": "Personaliza los campos que aparecen en tu portal público de ejercicio de derechos y configura los correos de acuse de recibo automáticos.",
+        "description": "Personaliza los campos que aparecen en tu portal público de ejercicio de derechos y configura los correos de acuse de recibo automáticos. El formulario empieza desactivado. Activa «Formulario público activo» cuando quieras empezar a recibir solicitudes; mientras está desactivado, el enlace muestra tu contacto de privacidad.",
         "settingsLabel": "Ajustes del portal",
         "settingsDesc": "Configúralo desde Privacidad > Ejercicio de derechos > pestaña Configuración",
         "items": {
@@ -7596,7 +7603,7 @@
       },
       "portal": {
         "title": "Portal público",
-        "intro": "Ofrece a los interesados un portal dedicado para enviar solicitudes. El portal se puede personalizar con la marca de tu organización y genera un enlace compartible que puedes añadir a tu política de privacidad.",
+        "intro": "Ofrece a los interesados un portal dedicado para enviar solicitudes. El portal se puede personalizar con la marca de tu organización y genera un enlace compartible que puedes añadir a tu política de privacidad. El portal empieza desactivado: se publica cuando el propietario o un administrador activa «Formulario público activo» en los ajustes de solicitudes de derechos, y ese cambio queda en el registro de actividad. Hasta entonces, quien abra el enlace ve tu contacto de privacidad.",
         "urlLabel": "URL del portal",
         "urlExplain": "Comparte esta URL en tu política de privacidad para que los interesados puedan enviar solicitudes directamente. El portal incluye una casilla de consentimiento y un aviso de privacidad que explica cómo se tratarán sus datos.",
         "configLabel": "Configuración del portal",
@@ -10238,7 +10245,7 @@
       "dsar": {
         "label": "Solicitudes de derechos",
         "why": "Recibe y responde las solicitudes de los interesados dentro del plazo.",
-        "do": "Configura el formulario de recepción y responde las solicitudes a tiempo."
+        "do": "Configura el formulario público, actívalo en los ajustes y responde a tiempo las solicitudes de derechos."
       },
       "notices": {
         "label": "Avisos y consentimiento",
@@ -10321,7 +10328,7 @@
       "assessmentsDpia": "Aprueba una EIPD: tus respuestas indican que es obligatoria.",
       "assessmentsCheck": "Aprueba una evaluación de riesgos. Tus respuestas indican que conviene valorar una EIPD.",
       "transfers": "Registra el estado de cumplimiento de al menos una transferencia internacional.",
-      "dsar": "Revisa y guarda tu formulario de solicitudes de derechos.",
+      "dsar": "Activa y publica tu formulario de solicitudes de derechos en los ajustes.",
       "incidents": "Completa una actividad de tratamiento: el registro de brechas queda listo para cuando haga falta."
     },
     "notYetGroup": "Aún no en DPO Central",

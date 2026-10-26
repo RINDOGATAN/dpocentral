@@ -54,13 +54,13 @@ export default function DSARSettingsPage() {
     slug: "request",
     title: defaults.title,
     description: defaults.description ?? "",
-    enabledTypes: ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"] as string[],
+    enabledTypes: ["ACCESS", "RECTIFICATION", "ERASURE", "RESTRICTION", "PORTABILITY", "OBJECTION"] as string[],
     customCss: "",
     thankYouMessage: defaults.thankYouMessage ?? "",
     privacyNoticeUrl: "",
     privacyContactEmail: "",
     retentionDays: 90,
-    isActive: true,
+    isActive: false,
   });
   const [preservedFields, setPreservedFields] = useState<unknown[]>([]);
 
@@ -86,6 +86,28 @@ export default function DSARSettingsPage() {
   const remindersOn = setReminders.isPending
     ? (setReminders.variables?.enabled ?? reminderSettings?.enabled ?? true)
     : (reminderSettings?.enabled ?? true);
+
+  // The public form's switch is saved at once and recorded in the audit
+  // trail (src/server/services/dsar/intake-activation.ts).
+  const setActive = trpc.dsar.setIntakeActive.useMutation({
+    onSuccess: (data) => {
+      setFormData((prev) => ({ ...prev, isActive: data.active }));
+      toast.success(data.active ? t("portalCard.publishedToast") : t("portalCard.unpublishedToast"));
+      void utils.dsar.getIntakeForm.invalidate();
+      void utils.programPath.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const switchActive = (active: boolean) => {
+    if (!organization?.id) return;
+    setActive.mutate({ organizationId: organization.id, active });
+  };
+  // A form published before activation was asked, still the seeded default:
+  // "Confirm and publish" records the activation without changing anything.
+  const needsConfirmation =
+    !!existingForm && existingForm.isActive && !existingForm.activationRecorded && !existingForm.configured;
 
   const saveSettings = trpc.dsar.upsertIntakeForm.useMutation({
     onSuccess: () => {
@@ -117,13 +139,20 @@ export default function DSARSettingsPage() {
         slug: existingForm.slug || "request",
         title: shown.title,
         description: shown.description ?? "",
-        enabledTypes: (existingForm.enabledTypes as string[]) || ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"],
+        enabledTypes: (existingForm.enabledTypes as string[]) || [
+          "ACCESS",
+          "RECTIFICATION",
+          "ERASURE",
+          "RESTRICTION",
+          "PORTABILITY",
+          "OBJECTION",
+        ],
         customCss: existingForm.customCss || "",
         thankYouMessage: shown.thankYouMessage ?? "",
         privacyNoticeUrl: existingForm.privacyNoticeUrl || "",
         privacyContactEmail: existingForm.privacyContactEmail || "",
         retentionDays: existingForm.retentionDays ?? 90,
-        isActive: existingForm.isActive ?? true,
+        isActive: existingForm.isActive ?? false,
       });
       if (Array.isArray(existingForm.fields)) {
         setPreservedFields(existingForm.fields as unknown[]);
@@ -222,11 +251,25 @@ export default function DSARSettingsPage() {
           <div className="flex items-center space-x-2">
             <Switch
               id="isActive"
+              data-testid="dsar-intake-active-switch"
               checked={formData.isActive}
-              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+              disabled={setActive.isPending || !organization?.id}
+              onCheckedChange={switchActive}
             />
             <Label htmlFor="isActive">{t("portalCard.activeLabel")}</Label>
           </div>
+          <p className="text-sm text-muted-foreground" data-testid="dsar-intake-state">
+            {formData.isActive ? t("portalCard.publishedHint") : t("portalCard.unpublishedHint")}
+          </p>
+          {needsConfirmation && (
+            <div className="flex flex-wrap items-center gap-3" data-testid="dsar-intake-confirm">
+              <p className="text-sm text-muted-foreground">{t("portalCard.confirmHint")}</p>
+              <Button type="button" size="sm" disabled={setActive.isPending} onClick={() => switchActive(true)}>
+                {setActive.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                {t("portalCard.confirmPublish")}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

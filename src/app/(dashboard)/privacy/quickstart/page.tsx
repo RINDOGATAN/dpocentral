@@ -108,6 +108,13 @@ const VENDOR_SEARCH_EXAMPLES = [
   { name: "Zoom", slug: "zoom" },
 ] as const;
 
+/** Which records the vendor build adds around the vendors, for the summary. */
+function recordsAround(totals: { internalSystems: number; publicProperties?: number }): "yes" | "public" | "both" | "no" {
+  const internal = totals.internalSystems > 0;
+  const pub = (totals.publicProperties ?? 0) > 0;
+  return internal && pub ? "both" : internal ? "yes" : pub ? "public" : "no";
+}
+
 export default function QuickstartPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -1094,14 +1101,14 @@ export default function QuickstartPage() {
                         elements: vendorPreview.totals.elements,
                         activities: vendorPreview.totals.activities,
                         transfers: vendorPreview.totals.transfers,
-                        internal: vendorPreview.totals.internalSystems > 0 ? "yes" : "no",
+                        internal: recordsAround(vendorPreview.totals),
                       })
                     : tp("vendors.previewSummary", {
                         vendors: vendorPreview.totals.vendors,
                         assets: vendorPreview.totals.assets,
                         elements: vendorPreview.totals.elements,
                         activities: vendorPreview.totals.activities,
-                        internal: vendorPreview.totals.internalSystems > 0 ? "yes" : "no",
+                        internal: recordsAround(vendorPreview.totals),
                       })}
                 </CardDescription>
               </CardHeader>

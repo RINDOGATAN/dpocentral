@@ -21,6 +21,8 @@ import {
   type VendorDataMapping,
 } from "../../../config/vendor-data-mappings";
 import { VENDOR_QUICKSTART_TEXT } from "../../../config/vendor-data-mappings-es";
+import { isClientSideCollection, PUBLIC_PROPERTIES_KIND } from "@/config/client-side-collection";
+import { findOrCreatePublicProperties } from "@/server/services/data-flows/public-properties";
 import {
   defaultReturnFlowFrequency,
   getLocalizedTemplateById,
@@ -82,6 +84,12 @@ interface VendorPreviewItem {
   aiCapabilities: string[];
   /** The build also draws a flow back from this vendor (vendor-data-mappings). */
   hasReturnFlow: boolean;
+  /**
+   * The tool collects on the public website and apps
+   * (src/config/client-side-collection.ts): its flow starts there, and the
+   * build draws no flow back.
+   */
+  clientSide: boolean;
 }
 
 function buildVendorPreview(
@@ -148,7 +156,8 @@ function buildVendorPreview(
     privacyTechnologies: catalogVendor.privacyTechnologies || [],
     isAiCapable: isAiCapableVendor(aiFields),
     aiCapabilities: catalogVendor.aiCapabilities ?? [],
-    hasReturnFlow: !!mapping.returnFlow,
+    hasReturnFlow: !isClientSideCollection(catalogVendor.category, catalogVendor.subcategory) && !!mapping.returnFlow,
+    clientSide: isClientSideCollection(catalogVendor.category, catalogVendor.subcategory),
   };
 }
 
@@ -369,8 +378,10 @@ export const quickstartRouter = createTRPCRouter({
       // and a flow to each new vendor plus a return flow where its mapping has
       // one.
       const orgName = ctx.organization.name;
+      const newServerSide = newPreviews.filter((p) => !p.clientSide);
+      const newClientSide = newPreviews.filter((p) => p.clientSide);
       const internalAsset =
-        newPreviews.length > 0
+        newServerSide.length > 0
           ? await ctx.prisma.dataAsset.findFirst({
               where: {
                 organizationId: ctx.organization.id,
@@ -384,7 +395,20 @@ export const quickstartRouter = createTRPCRouter({
               select: { id: true },
             })
           : null;
-      const internalAssetToCreate = newPreviews.length > 0 && !internalAsset ? 1 : 0;
+      const internalAssetToCreate = newServerSide.length > 0 && !internalAsset ? 1 : 0;
+      const publicAsset =
+        newClientSide.length > 0
+          ? await ctx.prisma.dataAsset.findFirst({
+              where: {
+                organizationId: ctx.organization.id,
+                name: {
+                  in: [VENDOR_QUICKSTART_TEXT.en.publicPropertiesName, VENDOR_QUICKSTART_TEXT.es.publicPropertiesName],
+                },
+              },
+              select: { id: true },
+            })
+          : null;
+      const publicAssetToCreate = newClientSide.length > 0 && !publicAsset ? 1 : 0;
       const flows = newPreviews.reduce((sum, p) => sum + (p.hasReturnFlow ? 2 : 1), 0);
 
       return {
@@ -392,9 +416,11 @@ export const quickstartRouter = createTRPCRouter({
         existingVendorNames: Array.from(existingVendorNames),
         totals: {
           vendors: newPreviews.length,
-          assets: newPreviews.length + internalAssetToCreate,
+          assets: newPreviews.length + internalAssetToCreate + publicAssetToCreate,
           // 1 when the internal-systems record is among `assets` (the summary names it).
           internalSystems: internalAssetToCreate,
+          // 1 when the "Public website and apps" record is among `assets`.
+          publicProperties: publicAssetToCreate,
           elements: newPreviews.reduce((sum, p) => sum + p.elementCount, 0),
           activities: newPreviews.length,
           flows,
@@ -945,12 +971,16 @@ export const quickstartRouter = createTRPCRouter({
           }
         }
 
-        // ─── AUTO-GENERATE DATA FLOWS (internal ↔ vendor) ───
-        // Collect all vendor asset IDs with their data categories and return-flow config
+        // ─── AUTO-GENERATE DATA FLOWS ───
+        // Server-side tools: internal systems → vendor (and back where the
+        // mapping says so). Client-side tools (src/config/client-side-collection.ts):
+        // the public website and apps → vendor, and nothing onwards, which is
+        // the customer's to declare.
         const vendorAssetFlows: {
           assetId: string;
           vendorName: string;
           categories: DataCategory[];
+          clientSide: boolean;
           returnFlow?: {
             description: string;
             categories?: DataCategory[];
@@ -967,16 +997,21 @@ export const quickstartRouter = createTRPCRouter({
           const assetName = `${catalogVendor.name} (${mapping.label})`;
           const assetId = assetNameToId.get(assetName);
           if (assetId) {
+            const clientSide = isClientSideCollection(catalogVendor.category, catalogVendor.subcategory);
             vendorAssetFlows.push({
               assetId,
               vendorName: catalogVendor.name,
               categories: [...new Set(mapping.elements.map((e) => e.category))] as DataCategory[],
-              returnFlow: mapping.returnFlow,
+              clientSide,
+              returnFlow: clientSide ? undefined : mapping.returnFlow,
             });
           }
         }
 
-        if (vendorAssetFlows.length > 0) {
+        const serverSideFlows = vendorAssetFlows.filter((v) => !v.clientSide);
+        const clientSideFlows = vendorAssetFlows.filter((v) => v.clientSide);
+
+        if (serverSideFlows.length > 0) {
           // Find or create the internal systems asset
           // One internal-systems record per organisation, whichever language
           // an earlier run wrote it in.
@@ -1024,7 +1059,7 @@ export const quickstartRouter = createTRPCRouter({
           // The internal systems take part in each vendor activity they send
           // data to: link them. Each of these activities was created in this
           // run, so the link cannot exist yet.
-          for (const vaf of vendorAssetFlows) {
+          for (const vaf of serverSideFlows) {
             const activityId = vendorActivityIdByAsset.get(vaf.assetId);
             if (!activityId) continue;
             await tx.processingActivityAsset.create({
@@ -1033,7 +1068,7 @@ export const quickstartRouter = createTRPCRouter({
           }
 
           // Create outbound (internal → vendor) and, where applicable, return (vendor → internal) flows
-          for (const vaf of vendorAssetFlows) {
+          for (const vaf of serverSideFlows) {
             const outbound = await tx.dataFlow.create({
               data: {
                 organizationId: orgId,
@@ -1065,6 +1100,47 @@ export const quickstartRouter = createTRPCRouter({
               counts.flows++;
               created.flows.push({ id: inbound.id, name: inbound.name, sourceAssetId: inbound.sourceAssetId });
             }
+          }
+        }
+
+        if (clientSideFlows.length > 0) {
+          // One "Public website and apps" record per organisation, whichever
+          // language an earlier run wrote it in (or the backfill script).
+          const publicAsset = await findOrCreatePublicProperties(tx, orgId, templateLang);
+          if (publicAsset.created) {
+            counts.assets++;
+            created.assets.push({ id: publicAsset.id, name: publicAsset.name });
+            assetNameToId.set(publicAsset.name, publicAsset.id);
+            auditEntries.push({
+              entityType: "DataAsset",
+              entityId: publicAsset.id,
+              action: "CREATE",
+              changes: { source: "quickstart", type: PUBLIC_PROPERTIES_KIND },
+            });
+          }
+
+          for (const vaf of clientSideFlows) {
+            const activityId = vendorActivityIdByAsset.get(vaf.assetId);
+            if (activityId) {
+              await tx.processingActivityAsset.create({
+                data: { processingActivityId: activityId, dataAssetId: publicAsset.id },
+              });
+            }
+            const collected = await tx.dataFlow.create({
+              data: {
+                organizationId: orgId,
+                name: vendorText.flowFromProperties(vaf.vendorName),
+                description: vendorText.flowFromPropertiesDescription(vaf.vendorName),
+                sourceAssetId: publicAsset.id,
+                destinationAssetId: vaf.assetId,
+                dataCategories: vaf.categories,
+                isAutomated: true,
+                frequency: "Continuous",
+                metadata: { source: "quickstart", collectedOn: PUBLIC_PROPERTIES_KIND },
+              },
+            });
+            counts.flows++;
+            created.flows.push({ id: collected.id, name: collected.name, sourceAssetId: collected.sourceAssetId });
           }
         }
 
