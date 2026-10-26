@@ -37,6 +37,24 @@ import {
 
 const SEEN_KEY = "dpc_stages_done";
 
+/**
+ * Steps whose band also says, in one sentence, what completes them (the same
+ * sentence as the dashboard's next actions, src/components/guided/step-finish.ts).
+ * The assessments step has its own lines; the breach register is left to its own panel.
+ */
+const BAND_FINISH_STEPS: ReadonlySet<string> = new Set([
+  "quickstart",
+  "applies",
+  "dataInventory",
+  "ropa",
+  "vendors",
+  "transfers",
+  "dsar",
+]);
+
+/** Optional steps whose band says they are optional (keys under `guided.band.optional`). */
+const BAND_OPTIONAL_STEPS: ReadonlySet<string> = new Set(["aiSystems", "lia"]);
+
 /** Where "See what is missing" leads for a step whose records lack fields. */
 const MISSING_HREF: Partial<Record<string, string>> = {
   ropa: "/privacy/incomplete",
@@ -154,8 +172,30 @@ export function StepBand({
           {/* The assessments step says what finishes it: an approved DPIA where
               the organisation's answers require one, otherwise any risk assessment. */}
           {current.step.id === "assessments" && currentStatus !== undefined && currentStatus !== "done" && (
-            <span className="mt-0.5 block text-muted-foreground" data-testid="band-finish">
-              {stepFinishText(t, current.step.id, dpiaDuty)}
+            <>
+              <span className="mt-0.5 block text-muted-foreground" data-testid="band-finish">
+                {stepFinishText(t, current.step.id, dpiaDuty)}
+              </span>
+              {/* Transfer, vendor and legitimate-interest assessments are
+                  approved here too but do not count for this step: say so. */}
+              <span className="mt-0.5 block text-muted-foreground" data-testid="band-assessments-counts">
+                {t("band.assessmentsCounts")}
+              </span>
+            </>
+          )}
+          {/* Every other step with a finishing sentence says what completes it,
+              unless the band already lists the fields one record lacks. */}
+          {BAND_FINISH_STEPS.has(current.step.id) &&
+            (currentStatus === "todo" || currentStatus === "started") &&
+            missingFields.length === 0 && (
+              <span className="mt-0.5 block text-muted-foreground" data-testid="band-finish">
+                {stepFinishText(t, current.step.id, dpiaDuty)}
+              </span>
+            )}
+          {/* An optional step says so, and that it never counts toward progress. */}
+          {current.step.optional && BAND_OPTIONAL_STEPS.has(current.step.id) && currentStatus !== "done" && (
+            <span className="mt-0.5 block text-muted-foreground" data-testid="band-optional">
+              {t(`band.optional.${current.step.id}`)}
             </span>
           )}
           {currentStatus === "ready" && (
