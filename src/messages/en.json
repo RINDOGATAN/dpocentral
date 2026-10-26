@@ -4288,7 +4288,8 @@
       "audit": "Audit trail",
       "minimization": "Data minimization",
       "payment": "Payment security",
-      "hosting": "Hosting & environment"
+      "hosting": "Hosting & environment",
+      "backups": "Backups and recovery"
     },
     "badges": {
       "noPasswords": "Passwordless",
@@ -4341,7 +4342,11 @@
       "infra1": "Hosted on Vercel with automatic TLS and global edge network",
       "infra2": "PostgreSQL database with encrypted connections",
       "infra3": "Environment secrets excluded from client bundles",
-      "infra4": "Development-only endpoints gated by runtime environment checks"
+      "infra4": "Development-only endpoints gated by runtime environment checks",
+      "backup1": "On our cloud, each product's database is kept in Frankfurt (EU) and encrypted at rest with AES-256. We keep a continuous history of changes for 7 days, so we can recover the database as it was at any moment in that week, and a daily copy of the whole database kept for 30 days, in the same region. Only our named staff can reach these copies, with two-factor authentication.",
+      "backup2": "If something goes wrong, we aim to restore the service within one business day. If you ask, we recover your organization's records as they were at an earlier moment within those periods, without affecting other customers, at no charge and within two business days. We test a recovery every quarter and record the date.",
+      "backup3": "Deleted data leaves every copy within 30 days. You can export everything at any time.",
+      "backup4": "On your own hardware, DPO Central includes a script that makes encrypted database backups; you set the schedule and keep the copies."
     },
     "disclosure": {
       "title": "Responsible disclosure",
@@ -6084,8 +6089,8 @@
           "ExpiringSoon": "Expiring soon",
           "Expired": "Expired"
         },
-        "calloutTitle": "Contract expiry alerts",
-        "calloutBody": "The system sends email notifications 90, 60, and 30 days before a contract expires, giving you time to renew or renegotiate terms.",
+        "calloutTitle": "Contract expiry tracking",
+        "calloutBody": "Contracts that expire within 30 days are counted in the compliance report's risk indicators, so you have time to renew or renegotiate terms.",
         "types": {
           "DPA": "DPA",
           "DPA_SCC": "DPA + SCC"
@@ -6700,7 +6705,7 @@
         "remaining": "{count}d remaining",
         "expiredLabel": "Expired",
         "tipTitle": "Set expiry dates when creating transfers",
-        "tipBody": "Always enter the SCC expiry date when registering a cross-border transfer. The system sends automatic email notifications at 30 days and 7 days before expiry, giving you time to renew or renegotiate with the data importer."
+        "tipBody": "Always enter the SCC expiry date when registering a cross-border transfer. Transfers whose SCCs expire within 30 days are counted on the transfers page, so you have time to renew or renegotiate with the data importer."
       },
       "nav": {
         "previous": "DPIA auto-Fill",
@@ -10739,6 +10744,7 @@
     "volumeUsage": "This month the public form has received {used} of its {limit} requests (the count starts again on {date}).",
     "volumeUpgrade": "The volume upgrade raises the limit to {upgraded, number} requests a month for {price} a month.",
     "volumeUpgradeAskAdmin": "Your organization's owner or an administrator can buy it",
+    "volumeUpgradeWithPlan": "It is available with the paid plan",
     "volumeUpgradeLink": "Buy the upgrade",
     "volumeUpgradeWrite": "Write to {email} to add it",
     "volumeMore": "For a higher volume, write to us."

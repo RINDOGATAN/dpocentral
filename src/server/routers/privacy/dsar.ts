@@ -11,7 +11,7 @@ import { calculateDSARDueDate, orgDsarRule } from "@/server/services/privacy/sla
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
-import { assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
+import { isPaidPlan, pilotLocale, publicIntakeReadOnly } from "@/server/services/pilot/caps";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
@@ -836,9 +836,12 @@ export const dsarRouter = createTRPCRouter({
       const email = ctx.session.user.email;
       const link = (base: string | null) =>
         base && secret ? volumeUpgradeCheckoutUrl(base, ctx.organization.id, email, secret) : null;
+      // Offered only with the paid plan: the upgrade ends when the Plan ends
+      // (terms, clause 11), so a pilot organisation cannot buy it.
+      const onPlan = isPaidPlan(ctx.organization);
       const upgrade =
-        access.gate === "standard" && canBuy ? { EUR: link(links.EUR), USD: link(links.USD) } : null;
-      return { ...access, canBuy, upgrade };
+        access.gate === "standard" && canBuy && onPlan ? { EUR: link(links.EUR), USD: link(links.USD) } : null;
+      return { ...access, canBuy, onPlan, upgrade };
     }),
 
   getReminderSettings: dsarOrganizationProcedure
@@ -893,10 +896,12 @@ export const dsarRouter = createTRPCRouter({
         });
       }
       const form = org.dsarIntakeForms[0]!;
-      // At the month's ceiling (hosted) the form exists but takes no
-      // request: the page shows the organisation's privacy contact instead
-      // (submitPublic refuses anyway).
-      const accepting = acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
+      // At the month's ceiling, or once a hosted pilot is read-only, the
+      // form exists but takes no request: the page shows the organisation's
+      // privacy contact instead (submitPublic refuses anyway). A person
+      // exercising their rights never sees a note about our plans.
+      const accepting =
+        !publicIntakeReadOnly(org) && acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
       return {
         orgName: org.name,
         title: form.title,
@@ -965,15 +970,13 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      // A read-only pilot also closes the public intake (no-op on the kit).
-      // Rights requests are outside the pilot's records ceiling: the monthly
-      // ceiling below is their only limit.
-      const pilotLang = pilotLocale(input.locale);
-      assertPilotWritable(org, pilotLang);
-
+      // A read-only pilot also closes the public intake (no-op on the kit),
+      // with the same neutral message as a full month: never the pilot's
+      // own note. Rights requests are outside the pilot's records ceiling:
+      // the monthly ceiling below is their only limit.
       // The monthly ceiling (hosted): 100 public-form requests per calendar
       // month (Madrid), 1,000 with the volume upgrade.
-      if (!acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))) {
+      if (publicIntakeReadOnly(org) || !acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))) {
         throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.formClosed });
       }
 

@@ -9,7 +9,8 @@
  *    works fully. One ceiling guards our costs against floods: at most
  *    STANDARD_PUBLIC_REQUESTS_PER_MONTH requests through the public form per
  *    calendar month (Europe/Madrid), or UPGRADED_PUBLIC_REQUESTS_PER_MONTH
- *    with the volume upgrade (`dsarModuleStatus` ACTIVE, set by its payment
+ *    with the volume upgrade (`dsarModuleStatus` ACTIVE on an organisation
+ *    on the paid plan: the upgrade ends when the Plan ends; set by its payment
  *    through src/server/services/dsar/volume-sync.ts, or by the operator's
  *    script scripts/set-dsar-module.ts for a correction).
  *
@@ -34,6 +35,7 @@
  */
 
 import { isHostedDeployment } from "@/lib/hosted";
+import { isPaidPlan } from "@/server/services/pilot/caps";
 
 import { STANDARD_PUBLIC_REQUESTS_PER_MONTH, UPGRADED_PUBLIC_REQUESTS_PER_MONTH } from "@/lib/dsar-addon";
 
@@ -53,7 +55,7 @@ export const DSAR_PUBLIC_SUBMISSION = "DSAR_PUBLIC_SUBMISSION";
 export const DSAR_MODULE_STATUSES = ["NONE", "ACTIVE", "CANCELLED"] as const;
 export type DsarModuleStatusValue = (typeof DSAR_MODULE_STATUSES)[number];
 
-export type DsarModuleOrg = { dsarModuleStatus?: string | null };
+export type DsarModuleOrg = { dsarModuleStatus?: string | null; plan?: string | null };
 
 /**
  *  - "open":     the kit; no limit.
@@ -67,7 +69,10 @@ export function dsarModuleGate(
   hosted: boolean = isHostedDeployment()
 ): DsarModuleGate {
   if (!hosted) return "open";
-  return org.dsarModuleStatus === "ACTIVE" ? "upgraded" : "standard";
+  // The upgrade belongs to the Plan and ends when the Plan ends (terms,
+  // clause 11): without the paid plan it no longer raises the ceiling, even
+  // while its own subscription is still running.
+  return org.dsarModuleStatus === "ACTIVE" && isPaidPlan(org) ? "upgraded" : "standard";
 }
 
 /** The month's ceiling of a limited gate. */
