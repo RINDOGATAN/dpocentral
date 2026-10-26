@@ -2575,7 +2575,8 @@
         "businessOwnerDesc": "Privacy compliance for your organization",
         "privacyProfessional": "Privacy professional",
         "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
-        "privacyProfessionalDescHosted": "A law firm, a consultancy, or another adviser managing privacy for up to five organizations"
+        "privacyProfessionalDescHosted": "A law firm, a consultancy, or another adviser managing privacy for up to five organizations",
+        "businessNeedsOneOrganization": "A business account works with one organization. To switch to it, first delete all your organizations but one."
       },
       "language": {
         "title": "Language",
@@ -10719,6 +10720,7 @@
   },
   "serverErrors": {
     "exact": {
+      "businessNeedsOneOrganization": "To switch to a business account, first delete all your organizations but one.",
       "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
       "dsarReadRestricted": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
       "aCustomerWithThisEmailAlreadyExists": "A customer with this email already exists",

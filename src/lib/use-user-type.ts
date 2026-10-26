@@ -6,7 +6,10 @@ import { useSession } from "next-auth/react";
 
 export function useUserType() {
   const { data: session, status, update } = useSession();
-  const isLoading = status === "loading";
+  // Loading only until the first session arrives: reading it again
+  // (refreshSession, after a change of account type) keeps the last one on
+  // screen instead of replacing the page with the loading state.
+  const isLoading = status === "loading" && !session;
   return {
     userType: session?.user?.userType ?? null,
     isBusinessOwner: session?.user?.userType === "BUSINESS_OWNER",

@@ -249,6 +249,16 @@ export default function QuickstartPage() {
     }
   }, [fromVendorWatch, portfolioLoading, portfolio]);
 
+  // The build is started from the foot of a long step, so the page would stay
+  // scrolled down past the result. Once it is done, go back to the top, where
+  // the result is, and move focus to its heading so a screen reader reads it.
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (step !== "success") return;
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    successHeadingRef.current?.focus({ preventScroll: true });
+  }, [step]);
+
   // The stored posture answers and the jurisdictions the organisation already
   // declares, for the "What applies" step. The step also asks where the
   // organisation operates (as AI Sentinel's quick start
@@ -1589,10 +1599,17 @@ export default function QuickstartPage() {
         const nothingCreated = totalCreated === 0;
         return (
         <div className="space-y-6">
-          <Card className={nothingCreated ? "border-primary/30 bg-primary/5" : `${toneBorder("success")} ${toneTint("success")}`}>
+          <Card
+            data-testid="quickstart-success"
+            className={nothingCreated ? "border-primary/30 bg-primary/5" : `${toneBorder("success")} ${toneTint("success")}`}
+          >
             <CardContent className="p-8 text-center">
               <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${nothingCreated ? "text-primary" : toneMark("success")}`} />
-              <h2 className="text-xl font-semibold mb-2">
+              <h2
+                ref={successHeadingRef}
+                tabIndex={-1}
+                className="text-xl font-semibold mb-2 outline-none"
+              >
                 {nothingCreated ? tp("success.alreadySetTitle") : tp("success.createdTitle")}
               </h2>
               {programName.trim() && (
