@@ -234,6 +234,9 @@ export const READ_ONLY_ALLOWED_PATHS = new Set<string>([
   // Accepting the data processing agreement changes no programme record; an
   // organisation whose editing window has ended may still accept it.
   "organization.acceptDpa",
+  // Deleting the organisation (DPA clause 13): an organisation whose editing
+  // window has ended may still be deleted by its owner.
+  "organizationDeletion.delete",
 ]);
 
 type Locale = "en" | "es";
