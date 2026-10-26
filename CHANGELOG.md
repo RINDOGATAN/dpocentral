@@ -29,6 +29,17 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
+- **Register import reads Excel workbooks and offers templates**. The one-register import in
+  Settings reads `.xlsx` files (the first sheet) as well as CSV, through `read-excel-file`; the
+  workbook's unpacked size is checked against `MAX_XLSX_UNPACKED_BYTES` (100 MB) before it is
+  read, and the 20,000-row cap and the upload limit are unchanged. Each register has an empty
+  template (CSV, and Excel) with the headers in the reader's language, from
+  `GET /api/portability/register/template`. Vendor names are matched by exact normalised name
+  against the vendor catalogue: the vendors register links a match through
+  `metadata.catalogSlug`, a system's provider through `metadata.vendorCatalogSlug`, and the new
+  "Vendors or systems" column of processing activities is kept in `metadata.vendors` with each
+  name's catalogue slug. A name with no match, or with more than one, is kept as written with a
+  row note.
 - **Model replies to rights requests**: the six approved
   letters (acknowledgement, identity, extension, refusal, one favourable reply per right,
   repetitive access), in English and Castilian Spanish, offered in the request's "Send message"

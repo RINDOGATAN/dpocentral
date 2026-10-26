@@ -2626,9 +2626,12 @@
           "title": "Importar un programa",
           "lead": "Trae un programa exportado de DPO Central o un registro desde una hoja de cálculo. Todo llega como borrador para que lo revises y lo confirmes. No se cambia nada de lo que ya hay aquí, y volver a importar el mismo archivo no añade nada nuevo.",
           "tabProgramme": "Un programa completo",
-          "tabRegister": "Un registro (CSV)",
+          "tabRegister": "Un registro (CSV o Excel)",
           "programmeHint": "El ZIP que genera \"Llévate tu programa\" o su programme.json. Un programa completo se importa en una organización nueva o vacía.",
-          "registerHint": "Un archivo CSV (separado por comas o por punto y coma), por ejemplo guardado desde una hoja de cálculo o exportado de otra plataforma. Otros formatos, como XML, aún no se leen.",
+          "registerHint": "Un archivo CSV (separado por comas o por punto y coma) o un libro de Excel (.xlsx, la primera hoja), por ejemplo exportado de otra plataforma. Otros formatos, como XML, aún no se leen.",
+          "template": "Descarga una plantilla vacía para este registro:",
+          "templateCsv": "CSV",
+          "templateXlsx": "Excel",
           "file": "Archivo",
           "register": "Registro",
           "registers": {
@@ -2666,6 +2669,8 @@
           "skip": "No importar",
           "required": "obligatorio",
           "rowProblems": "{count, plural, one {# nota sobre las filas} other {# notas sobre las filas}}",
+          "catalogueLinked": "{count, plural, one {# nombre de proveedor coincide con el catálogo de proveedores y queda vinculado.} other {# nombres de proveedor coinciden con el catálogo de proveedores y quedan vinculados.}}",
+          "catalogueNotes": "{count, plural, one {# nombre de proveedor no está en el catálogo y se guarda tal como está escrito} other {# nombres de proveedor no están en el catálogo y se guardan tal como están escritos}}",
           "row": "Fila {row}",
           "failed": "No se ha podido leer el archivo.",
           "kinds": {
@@ -7369,7 +7374,7 @@
       "portability": {
         "title": "Llévate tu programa",
         "export": "Los propietarios y administradores pueden descargar el programa completo en cualquier momento, desde Ajustes, en «Llévate tu programa». El ZIP contiene programme.json (el programa completo, con su esquema JSON), una tabla CSV por registro para hojas de cálculo y la explicación de cada campo en inglés y en español. Las solicitudes de derechos quedan fuera salvo que las marques, porque contienen datos personales.",
-        "import": "El mismo archivo se puede importar en una organización nueva o vacía, en el servicio alojado o en tu propia instancia. También se puede importar un registro desde una hoja de cálculo (CSV). Todo llega como borrador para que lo revises y lo confirmes.",
+        "import": "El mismo archivo se puede importar en una organización nueva o vacía, en el servicio alojado o en tu propia instancia. También se puede importar un registro desde una hoja de cálculo (CSV o Excel), con una plantilla vacía por registro en Ajustes. Los nombres de proveedor que coinciden con el catálogo de proveedores quedan vinculados a él. Todo llega como borrador para que lo revises y lo confirmes.",
         "migrate": "Si DPO Central se te queda pequeño y pasas a una plataforma de privacidad para grandes empresas, te ayudamos a trasladar tu programa desde el mismo formato abierto."
       },
       "ai": {

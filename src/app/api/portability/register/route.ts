@@ -2,18 +2,21 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * POST /api/portability/register (multipart form): one register from a CSV file,
- * the bridge for exports from other platforms.
+ * POST /api/portability/register (multipart form): one register from a CSV or
+ * Excel file, the bridge for exports from other platforms.
  *
  *   organizationId   the organisation
  *   register         "processingActivities", "dataAssets" or "vendors"
- *   file             the CSV file (comma, semicolon or tab separated)
+ *   file             a CSV file (comma, semicolon or tab separated) or an
+ *                    Excel workbook (.xlsx, first sheet)
  *   mapping          optional: JSON array, one field key (or null) per column;
  *                    without it the suggested match is used
  *   step             "check" (columns, match, dry run; writes nothing) or "import"
  *
  * Owners and admins only. Rows arrive as drafts; nothing is overwritten; the
- * same file twice creates nothing new. Recorded in the audit trail
+ * same file twice creates nothing new. Vendor names are matched against the
+ * vendor catalogue (linked when matched, kept as written with a note when
+ * not). Recorded in the audit trail
  * (IMPORT_REGISTER). See src/server/services/portability/csv-import.ts.
  */
 
@@ -24,12 +27,16 @@ import {
   CSV_REGISTERS,
   importerFor,
   importFields,
+  loadCatalogueIndex,
   MAX_CSV_ROWS,
+  needsCatalogue,
   REQUIRED_FIELDS,
   suggestMapping,
   tableToProgramme,
+  UnreadableFileError,
   type ColumnMapping,
   type CsvRegister,
+  type TextTable,
 } from "@/server/services/portability/csv-import";
 import { applyImport, ImportRefusedError, planImport, type ImportOptions } from "@/server/services/portability/import";
 import { importLimitChecker } from "@/server/services/portability/limits";
@@ -74,13 +81,28 @@ export async function POST(request: Request) {
   if (file.bytes.length > MAX_UPLOAD_BYTES) return Response.json({ error: "The file is too large." }, { status: 413 });
   const importer = importerFor(file.name, file.bytes);
   if (!importer) {
-    return Response.json({ error: "unsupported_file", message: "Only CSV files can be read for now." }, { status: 415 });
+    return Response.json(
+      {
+        error: "unsupported_file",
+        message: locale === "es" ? "Solo se leen archivos CSV y de Excel (.xlsx)." : "Only CSV and Excel (.xlsx) files can be read.",
+      },
+      { status: 415 },
+    );
   }
 
-  const table = importer.read(file.bytes);
+  let table: TextTable;
+  try {
+    table = await importer.read(file.bytes);
+  } catch (err) {
+    if (err instanceof UnreadableFileError) {
+      return Response.json({ error: locale === "es" ? err.es : err.en }, { status: 422 });
+    }
+    throw err;
+  }
   if (table.headers.length === 0) return Response.json({ error: "The file is empty." }, { status: 422 });
   const mapping = parseMapping(form.get("mapping"), table.headers.length, register) ?? suggestMapping(register, table.headers);
-  const conversion = tableToProgramme(register, table, mapping);
+  const catalogue = needsCatalogue(register, mapping) ? await loadCatalogueIndex(prisma) : undefined;
+  const conversion = tableToProgramme(register, table, mapping, new Date(), catalogue);
 
   const options: ImportOptions = {
     organizationId: access.organizationId,
@@ -103,6 +125,9 @@ export async function POST(request: Request) {
     leftOut: conversion.leftOut,
     rowProblems: conversion.problems.slice(0, 200),
     rowProblemCount: conversion.problems.length,
+    rowNotes: conversion.notes.slice(0, 200),
+    rowNoteCount: conversion.notes.length,
+    catalogueLinks: conversion.catalogueLinks,
   };
 
   try {

@@ -54,6 +54,8 @@ vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: 
 import { GET as exportProgramme } from "@/app/api/export/programme/route";
 import { POST as importProgramme } from "@/app/api/portability/programme/route";
 import { POST as importRegister } from "@/app/api/portability/register/route";
+import { GET as registerTemplate } from "@/app/api/portability/register/template/route";
+import { xlsxTemplate } from "@/server/services/portability/register-template";
 
 let n = 0;
 function as(role: string | null, org = SOURCE_ORG): string {
@@ -211,5 +213,62 @@ describe("POST /api/portability/register", () => {
     as("OWNER", TARGET_ORG);
     const res = await importRegister(form({ organizationId: TARGET_ORG, register: "vendors", step: "check" }, { name: "v.xml", data: "<x/>" }));
     expect(res.status).toBe(415);
+    const old = await importRegister(form({ organizationId: TARGET_ORG, register: "vendors", step: "check", locale: "es" }, { name: "v.xls", data: "x" }));
+    expect(old.status).toBe(415);
+    expect((await old.json()).message).toMatch(/Excel \(\.xlsx\)/);
+  });
+
+  it("reads an Excel workbook and links vendor names found in the catalogue", async () => {
+    as("OWNER", TARGET_ORG);
+    state.db.insert("vendorCatalog", { id: "cat-1", slug: "slack", name: "Slack" });
+    const xlsx = new Uint8Array(xlsxTemplate("vendors", "en"));
+    // The template's header row, plus two rows written into the sheet.
+    const zip = new AdmZip(Buffer.from(xlsx));
+    const sheet = zip.getEntry("xl/worksheets/sheet1.xml")!.getData().toString("utf8");
+    const rows =
+      '<row r="2"><c r="A2" t="inlineStr"><is><t>Slack</t></is></c></row>' +
+      '<row r="3"><c r="A3" t="inlineStr"><is><t>Local printer</t></is></c></row>';
+    zip.updateFile("xl/worksheets/sheet1.xml", Buffer.from(sheet.replace("</row></sheetData>", `</row>${rows}</sheetData>`)));
+    const file = { name: "vendors.xlsx", data: new Uint8Array(zip.toBuffer()) };
+
+    const check = await importRegister(form({ organizationId: TARGET_ORG, register: "vendors", step: "check" }, file));
+    expect(check.status).toBe(200);
+    const body = await check.json();
+    expect(body.columns.importer).toBe("xlsx");
+    expect(body.columns.catalogueLinks).toBe(1);
+    expect(body.columns.rowNoteCount).toBe(1);
+    expect(body.summary.registers.vendor.toCreate).toBe(2);
+    expect(state.db.table("vendor").filter((v) => v.organizationId === TARGET_ORG)).toHaveLength(0);
+
+    const done = await importRegister(form({ organizationId: TARGET_ORG, register: "vendors", step: "import" }, file));
+    expect(done.status).toBe(200);
+    const slack = state.db.table("vendor").find((v) => v.organizationId === TARGET_ORG && v.name === "Slack")!;
+    expect(slack.metadata).toMatchObject({ catalogSlug: "slack" });
+    const local = state.db.table("vendor").find((v) => v.organizationId === TARGET_ORG && v.name === "Local printer")!;
+    expect(local.metadata).not.toHaveProperty("catalogSlug");
+    expect(local.provenance).toBe("IMPORTED");
+  });
+});
+
+describe("GET /api/portability/register/template", () => {
+  const get = (q: string) => registerTemplate(new Request(`http://localhost/api/portability/register/template?${q}`));
+
+  it("needs a signed-in person, and refuses an unknown register", async () => {
+    state.email = null;
+    expect((await get("register=vendors")).status).toBe(401);
+    as(null);
+    expect((await get("register=people")).status).toBe(400);
+  });
+
+  it("serves the headers in the reader's language, as CSV or Excel", async () => {
+    as(null);
+    const csv = await get("register=processingActivities&format=csv&locale=es");
+    expect(csv.headers.get("Content-Type")).toMatch(/text\/csv/);
+    expect(csv.headers.get("Content-Disposition")).toContain("plantilla-actividades-de-tratamiento.csv");
+    expect(await csv.text()).toContain("Base jurídica");
+    const xlsx = await get("register=vendors&format=xlsx&locale=en");
+    expect(xlsx.headers.get("Content-Type")).toMatch(/spreadsheetml/);
+    const zip = new AdmZip(Buffer.from(await xlsx.arrayBuffer()));
+    expect(zip.getEntry("xl/worksheets/sheet1.xml")!.getData().toString("utf8")).toContain("<t>Contact e-mail</t>");
   });
 });

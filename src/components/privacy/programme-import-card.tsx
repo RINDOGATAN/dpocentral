@@ -7,8 +7,9 @@
  * is written:
  *   - a whole programme (the export ZIP or programme.json) into a new or empty
  *     organisation: POST /api/portability/programme;
- *   - one register from a CSV file, with a column-matching step:
- *     POST /api/portability/register.
+ *   - one register from a CSV or Excel file, with a column-matching step:
+ *     POST /api/portability/register (empty templates per register:
+ *     GET /api/portability/register/template).
  * The check shows the counts per register and every problem found; the
  * import then brings everything in as drafts to confirm. Owners and admins only.
  */
@@ -42,12 +43,16 @@ type Columns = {
   preview: string[][];
   rowProblems: Array<{ row: number; field: string; en: string; es: string }>;
   rowProblemCount: number;
+  rowNotes?: Array<{ row: number; field: string; en: string; es: string }>;
+  rowNoteCount?: number;
+  catalogueLinks?: number;
 };
 type Reply = {
   summary?: Summary;
   columns?: Columns;
   created?: number;
   error?: string;
+  message?: string;
   problems?: Array<{ path: string; message: string; es?: string }>;
 };
 
@@ -101,7 +106,7 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
       setReply(data);
       if (data.columns) setMapping(data.columns.mapping);
       if (!res.ok && !data.summary) {
-        toast.error(data.problems?.[0] ? (es ? (data.problems[0].es ?? data.problems[0].message) : data.problems[0].message) : (data.error ?? t("failed")));
+        toast.error(data.problems?.[0] ? (es ? (data.problems[0].es ?? data.problems[0].message) : data.problems[0].message) : (data.message ?? data.error ?? t("failed")));
         return;
       }
       if (step === "import" && res.ok) {
@@ -119,6 +124,8 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
   const columns = reply?.columns;
   const imported = reply?.created !== undefined;
   const text = (p: { en: string; es: string }) => (es ? p.es : p.en);
+  const templateHref = (r: CsvRegister, format: "csv" | "xlsx") =>
+    `/api/portability/register/template?register=${r}&format=${format}&locale=${es ? "es" : "en"}`;
 
   const fileInput = (accept: string) => (
     <div className="space-y-1">
@@ -201,7 +208,17 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
                 ))}
               </select>
             </div>
-            {fileInput(".csv,.txt,.tsv,text/csv")}
+            <p className="text-xs text-muted-foreground" data-testid="import-templates">
+              {t("template")}{" "}
+              <a className="underline" href={templateHref(register, "csv")} download>
+                {t("templateCsv")}
+              </a>
+              {" · "}
+              <a className="underline" href={templateHref(register, "xlsx")} download>
+                {t("templateXlsx")}
+              </a>
+            </p>
+            {fileInput(".csv,.txt,.tsv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
           </TabsContent>
         </Tabs>
 
@@ -258,6 +275,21 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
                 <summary className="cursor-pointer">{t("rowProblems", { count: columns.rowProblemCount })}</summary>
                 <ul className="mt-1 space-y-0.5 text-muted-foreground">
                   {columns.rowProblems.slice(0, 50).map((p, i) => (
+                    <li key={i}>
+                      {t("row", { row: p.row })}: {text(p)}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {(columns.catalogueLinks ?? 0) > 0 && (
+              <p className="text-xs text-muted-foreground">{t("catalogueLinked", { count: columns.catalogueLinks ?? 0 })}</p>
+            )}
+            {(columns.rowNoteCount ?? 0) > 0 && (
+              <details className="text-xs" data-testid="import-catalogue-notes">
+                <summary className="cursor-pointer">{t("catalogueNotes", { count: columns.rowNoteCount ?? 0 })}</summary>
+                <ul className="mt-1 space-y-0.5 text-muted-foreground">
+                  {(columns.rowNotes ?? []).slice(0, 50).map((p, i) => (
                     <li key={i}>
                       {t("row", { row: p.row })}: {text(p)}
                     </li>

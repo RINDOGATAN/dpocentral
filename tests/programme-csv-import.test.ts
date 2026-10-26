@@ -55,10 +55,12 @@ describe("CSV import: reading the file", () => {
     expect(decodeText(new Uint8Array([0x4e, 0xf3, 0x6d, 0x69, 0x6e, 0x61, 0x73]))).toBe("Nóminas");
   });
 
-  it("has CSV as its one importer for now (the extension point for other formats)", () => {
-    expect(IMPORTERS.map((i) => i.id)).toEqual(["csv"]);
+  it("has CSV and Excel as its importers (the extension point for other formats)", () => {
+    expect(IMPORTERS.map((i) => i.id)).toEqual(["csv", "xlsx"]);
     expect(importerFor("ropa.csv", enc(""))?.id).toBe("csv");
     expect(importerFor("export.xml", enc("<xml/>"))).toBeNull();
+    // An .xlsx name without a ZIP inside is not taken for a workbook.
+    expect(importerFor("ropa.xlsx", enc("not a zip"))).toBeNull();
   });
 });
 
