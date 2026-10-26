@@ -14,7 +14,7 @@
  * No new table, no migration.
  */
 
-import type { OrganizationRole, Prisma } from "@prisma/client";
+import { OrganizationRole, type Prisma } from "@prisma/client";
 import { isHostedDeployment } from "@/lib/hosted";
 import { isPaidPlan, ORGANIZATIONS_PER_ACCOUNT } from "@/server/services/pilot/caps";
 import { logger } from "@/lib/logger";
@@ -68,6 +68,24 @@ export function settingsWithoutInvite(settings: unknown, email: string): Record<
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Db = any;
 
+const ROLES = new Set<string>(Object.values(OrganizationRole));
+
+/**
+ * The stored role is granted only if it is a known role and, for OWNER, the
+ * person who issued the invitation is still an owner of the organisation
+ * (the same rule addMember applies when the invitation is made).
+ */
+export async function inviteRoleIsValid(db: Db, organizationId: string, invite: PendingInvite): Promise<boolean> {
+  if (!ROLES.has(invite.role)) return false;
+  if (invite.role !== OrganizationRole.OWNER) return true;
+  if (typeof invite.invitedById !== "string" || !invite.invitedById) return false;
+  const inviter = await db.organizationMember.findUnique({
+    where: { organizationId_userId: { organizationId, userId: invite.invitedById } },
+    select: { role: true },
+  });
+  return inviter?.role === OrganizationRole.OWNER;
+}
+
 /**
  * At sign-in: every organisation holding an invitation for this address
  * gets a membership with the invited role, and the invitation is removed.
@@ -89,6 +107,17 @@ export async function acceptPendingInvitations(db: Db, userId: string, email: st
     for (const org of orgs) {
       const invite = pendingInvitesOf(org.settings).find((i) => normEmail(i.email) === address);
       if (!invite) continue;
+      if (!(await inviteRoleIsValid(db, org.id, invite))) {
+        logger.warn("Pending invitation refused at sign-in: role not grantable", {
+          organizationId: org.id,
+          role: String(invite.role),
+        });
+        await db.organization.update({
+          where: { id: org.id },
+          data: { settings: settingsWithoutInvite(org.settings, address) as Prisma.InputJsonValue },
+        });
+        continue;
+      }
       const existing = await db.organizationMember.findUnique({
         where: { organizationId_userId: { organizationId: org.id, userId } },
       });

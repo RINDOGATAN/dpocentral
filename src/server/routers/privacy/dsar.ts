@@ -316,7 +316,9 @@ export const dsarRouter = createTRPCRouter({
           entityType: "DSARRequest",
           entityId: request.id,
           action: "CREATE",
-          changes: input,
+          // Type and reference only: the requester's details stay on the
+          // request, where access is limited to privacy staff.
+          changes: { type: input.type, requestId: request.publicId },
         },
       });
 

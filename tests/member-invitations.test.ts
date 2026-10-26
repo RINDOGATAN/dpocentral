@@ -80,6 +80,44 @@ describe("acceptPendingInvitations", () => {
     expect(db.organization.update).not.toHaveBeenCalled();
   });
 
+  it("an OWNER invitation issued by a current owner is accepted", async () => {
+    const settings = settingsWithInvite({}, inv("ana@example.test", "OWNER"));
+    db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
+    db.organizationMember.findUnique
+      .mockResolvedValueOnce({ role: "OWNER" }) // the inviter
+      .mockResolvedValueOnce(null); // no existing membership
+    expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(1);
+    expect(db.organizationMember.findUnique.mock.calls[0][0].where).toEqual({
+      organizationId_userId: { organizationId: "org-1", userId: "u-owner" },
+    });
+    expect(db.organizationMember.create.mock.calls[0][0].data.role).toBe("OWNER");
+  });
+
+  it("an OWNER invitation not issued by an owner is refused and removed", async () => {
+    const settings = settingsWithInvite({}, inv("ana@example.test", "OWNER"));
+    db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
+    db.organizationMember.findUnique.mockResolvedValueOnce({ role: "ADMIN" });
+    expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(0);
+    expect(db.organizationMember.create).not.toHaveBeenCalled();
+    expect(pendingInvitesOf(db.organization.update.mock.calls[0][0].data.settings)).toEqual([]);
+  });
+
+  it("an OWNER invitation whose inviter is no longer a member is refused", async () => {
+    const settings = settingsWithInvite({}, inv("ana@example.test", "OWNER"));
+    db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
+    db.organizationMember.findUnique.mockResolvedValueOnce(null);
+    expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(0);
+    expect(db.organizationMember.create).not.toHaveBeenCalled();
+  });
+
+  it("an unknown role is refused and removed", async () => {
+    const settings = settingsWithInvite({}, inv("ana@example.test", "SUPERUSER"));
+    db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
+    expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(0);
+    expect(db.organizationMember.create).not.toHaveBeenCalled();
+    expect(pendingInvitesOf(db.organization.update.mock.calls[0][0].data.settings)).toEqual([]);
+  });
+
   it("never throws", async () => {
     db.organization.findMany.mockRejectedValue(new Error("db down"));
     await expect(acceptPendingInvitations(db, "u", "a@example.test")).resolves.toBe(0);
