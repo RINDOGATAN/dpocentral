@@ -102,7 +102,9 @@ export const VERIFIED_BREACH_DEADLINES: Readonly<Record<string, VerifiedDeadline
     source: "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/page-3.html (read 26 Oct 2026)",
   },
   // PDPA (Singapore) s. 26C and 26D, as set out by the PDPC's guide on managing
-  // and notifying data breaches.
+  // and notifying data breaches (pp. 22 and 25: assess within 30 calendar days;
+  // notify the PDPC no later than 3 calendar days from the determination that
+  // the breach is notifiable; individuals at the same time or after).
   // https://www.pdpc.gov.sg/-/media/files/pdpc/pdf-files/other-guides/guide-on-managing-and-notifying-data-breaches-under-the-pdpa-15-mar-2021.pdf
   // (read 26 Oct 2026).
   "PDPA-SG": {

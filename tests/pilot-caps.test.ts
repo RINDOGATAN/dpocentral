@@ -221,7 +221,7 @@ describe("the data processing agreement is accepted when a pilot organisation is
   });
 
   it("names the current agreement at the storefront's addresses", () => {
-    expect(PILOT_DPA.version).toBe("1.7");
+    expect(PILOT_DPA.version).toBe("1.8");
     expect(PILOT_DPA.href.en).toBe("https://www.todo.law/legal/eu-cloud-plan-dpa");
     expect(PILOT_DPA.href.es).toBe("https://www.todo.law/es/legal/encargo-tratamiento-plan-nube-ue");
   });
@@ -294,7 +294,7 @@ describe("an organisation with no acceptance on record is asked once", () => {
     hosted();
     mocks.prisma.auditLog.findMany.mockResolvedValue([]);
     await callerWithRole("OWNER").acceptDpa({ organizationId: "org-1", accept: true });
-    expect((dpaEntries()[0] as unknown as { changes: { dpaVersion: string } }).changes.dpaVersion).toBe("1.7");
+    expect((dpaEntries()[0] as unknown as { changes: { dpaVersion: string } }).changes.dpaVersion).toBe("1.8");
     expect(todoLaw.ensure).toHaveBeenCalledWith(mocks.prisma, "org-1");
   });
 

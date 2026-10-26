@@ -42,7 +42,7 @@ function writtenRecords(lang: Lang) {
       metadata: { dpaUrl: TODOLAW_LINKS.dpa[lang], subprocessorsUrl: TODOLAW_LINKS.subprocessors[lang] },
       contracts: [
         {
-          name: t.contractName("1.7"),
+          name: t.contractName("1.8"),
           description: t.contractDescription(TODOLAW_LINKS.subprocessors[lang]),
           documentUrl: TODOLAW_LINKS.dpa[lang],
           startDate: now,

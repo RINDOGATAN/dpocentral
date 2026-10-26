@@ -416,8 +416,13 @@ export function evaluateApplicability(
   }
 
   // ─── A DPIA is likely (Art. 35) ────────────────────
-  // Large-scale systematic monitoring of a public area is an Art. 35(3)(c)
-  // case on its own. Otherwise the nine WP248 criteria count (see the table
+  // A yes to regular and systematic monitoring on a large scale (the Art.
+  // 37(1)(b) test, which includes online tracking) meets two WP248 rev.01
+  // criteria on its own (3, systematic monitoring, and 5, large scale), and
+  // WP248 says two criteria call for a DPIA "in most cases". Art. 35(3)(c)
+  // covers only publicly accessible areas, so it is not the basis here.
+  // https://ec.europa.eu/newsroom/just/document.cfm?doc_id=47711 (read 26 Oct 2026).
+  // Otherwise the nine WP248 criteria count (see the table
   // above): two or more met apply, one is a check. Criteria 4 and 7 each
   // count once, whichever of their questions is a yes.
   if (has(EU_GDPR_CODES) || has(UK_GDPR_CODES)) {

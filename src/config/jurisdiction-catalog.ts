@@ -942,7 +942,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "SG",
     effectiveDate: "2014-07-02",
     dsarDeadlineDays: 30,
-    breachNotificationHours: 72,
+    breachNotificationHours: 0, // No fixed hour count from discovery: 3 calendar days run from the assessment (see jurisdiction-data.ts, PDPC guide)
     description:
       "Singapore's data protection law governing the collection, use, disclosure, and care of personal data by private organizations.",
     keyRequirements: [

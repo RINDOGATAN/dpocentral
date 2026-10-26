@@ -125,7 +125,7 @@ export const JURISDICTION_CORE_DATA: JurisdictionCoreData[] = [
     region: "SG",
     dsarDeadlineDays: 30,
     dsarExtensionDays: 30,
-    breachNotificationHours: 72,
+    breachNotificationHours: 0, // No fixed hour count from discovery: assess whether the breach is notifiable in a reasonable and expeditious manner (PDPC: within 30 calendar days), then notify the PDPC as soon as practicable and no later than 3 calendar days after that assessment (PDPA ss. 26C, 26D(2)). https://www.pdpc.gov.sg/-/media/files/pdpc/pdf-files/other-guides/guide-on-managing-and-notifying-data-breaches-under-the-pdpa-15-mar-2021.pdf (read 26 Oct 2026)
     dpaName: "Personal Data Protection Commission (PDPC)",
   },
   {
