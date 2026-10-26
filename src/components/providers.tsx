@@ -35,7 +35,15 @@ export function Providers({ children, session }: { children: React.ReactNode; se
 
   return (
     <ThemeProvider>
-      <SessionProvider session={session}>
+      {/* No session refetch when the tab becomes visible again: next-auth
+          replaces the session with null when that request fails (a tablet
+          resuming a backgrounded tab often fails its first request), and
+          never asks again while it is null, so the signed-in person lost
+          every session-based menu entry until a full reload. The session
+          comes from the server on every load, sign-out in another tab still
+          arrives through next-auth's storage broadcast, and the server checks
+          the session on every request either way. */}
+      <SessionProvider session={session} refetchOnWindowFocus={false}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <OrganizationProvider>
