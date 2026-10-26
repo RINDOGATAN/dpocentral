@@ -15,7 +15,8 @@ import { DSAR_VOLUME_UPGRADE_MONTHLY_PRICE, UPGRADED_PUBLIC_REQUESTS_PER_MONTH }
  * (src/server/services/dsar/module.ts): one quiet line with the month's count,
  * what happens at the limit and, below the 1,000 ceiling, the volume upgrade
  * (its price in the currency the customer is charged in, and its payment link
- * when one is set; otherwise our address). Nothing below half the ceiling,
+ * when one is set; otherwise our address). The upgrade comes with the paid
+ * plan only, so a pilot organisation is told that instead of a link. Nothing below half the ceiling,
  * and nothing on the self-hosted kit.
  */
 export function DsarModuleAccessNote() {
@@ -48,7 +49,9 @@ export function DsarModuleAccessNote() {
             upgraded: UPGRADED_PUBLIC_REQUESTS_PER_MONTH,
             price: price(DSAR_VOLUME_UPGRADE_MONTHLY_PRICE),
           })}{" "}
-          {!access.canBuy ? (
+          {!access.onPlan ? (
+            t("volumeUpgradeWithPlan")
+          ) : !access.canBuy ? (
             t("volumeUpgradeAskAdmin")
           ) : link ? (
             <a className="underline underline-offset-4 text-primary" href={link}>

@@ -4288,7 +4288,8 @@
       "audit": "Registro de auditoría",
       "minimization": "Minimización de datos",
       "payment": "Seguridad de pagos",
-      "hosting": "Alojamiento y entorno"
+      "hosting": "Alojamiento y entorno",
+      "backups": "Copias de seguridad y recuperación"
     },
     "badges": {
       "noPasswords": "Sin contraseñas",
@@ -4341,7 +4342,11 @@
       "infra1": "Alojado en Vercel con TLS automático y red perimetral global",
       "infra2": "Base de datos PostgreSQL con conexiones cifradas",
       "infra3": "Los secretos del entorno se excluyen de los paquetes del cliente",
-      "infra4": "Los endpoints exclusivos de desarrollo están protegidos por comprobaciones del entorno de ejecución"
+      "infra4": "Los endpoints exclusivos de desarrollo están protegidos por comprobaciones del entorno de ejecución",
+      "backup1": "En nuestra nube, la base de datos de cada producto se guarda en Fráncfort (UE) y se cifra en reposo con AES-256. Mantenemos un historial continuo de cambios durante 7 días, para poder recuperar la base de datos tal como estaba en cualquier momento de esa semana, y una copia diaria de toda la base de datos que conservamos 30 días, en la misma región. Solo puede acceder a estas copias nuestro personal designado, con verificación en dos pasos.",
+      "backup2": "Si algo falla, procuramos restablecer el servicio en un día hábil. Si nos lo pides, recuperamos los registros de tu organización tal como estaban en un momento anterior dentro de esos plazos, sin afectar a otros clientes, sin coste y en dos días hábiles. Probamos una recuperación cada trimestre y anotamos la fecha.",
+      "backup3": "Los datos suprimidos salen de todas las copias en un máximo de 30 días. Puedes exportarlo todo cuando quieras.",
+      "backup4": "En tu propio equipo, DPO Central incluye un script que hace copias cifradas de la base de datos; tú decides cuándo se hacen y guardas las copias."
     },
     "disclosure": {
       "title": "Divulgación responsable",
@@ -6084,8 +6089,8 @@
           "ExpiringSoon": "Próximo a vencer",
           "Expired": "Vencido"
         },
-        "calloutTitle": "Alertas de vencimiento de contrato",
-        "calloutBody": "El sistema envía notificaciones por correo electrónico 90, 60 y 30 días antes del vencimiento de un contrato, para que tengas tiempo de renovar o renegociar las condiciones.",
+        "calloutTitle": "Seguimiento del vencimiento de los contratos",
+        "calloutBody": "Los contratos que vencen en los próximos 30 días aparecen entre los indicadores de riesgo del informe de cumplimiento, para que tengas tiempo de renovar o renegociar las condiciones.",
         "types": {
           "DPA": "Contrato de encargo",
           "DPA_SCC": "Contrato de encargo + SCC"
@@ -6700,7 +6705,7 @@
         "remaining": "{count} d restantes",
         "expiredLabel": "Vencido",
         "tipTitle": "Indica fechas de vencimiento al crear transferencias",
-        "tipBody": "Introduce siempre la fecha de vencimiento de las SCC al registrar una transferencia internacional. El sistema envía avisos automáticos por correo electrónico 30 y 7 días antes del vencimiento, para que tengas tiempo de renovar o renegociar con el importador de datos."
+        "tipBody": "Introduce siempre la fecha de vencimiento de las SCC al registrar una transferencia internacional. Las transferencias cuyas SCC vencen en los próximos 30 días aparecen contadas en la página de transferencias, para que tengas tiempo de renovar o renegociar con el importador de datos."
       },
       "nav": {
         "previous": "Autocompletado de EIPD",
@@ -10739,6 +10744,7 @@
     "volumeUsage": "Este mes el formulario público ha recibido {used} de sus {limit} solicitudes (el recuento vuelve a empezar el {date}).",
     "volumeUpgrade": "La ampliación de volumen sube el límite a {upgraded, number} solicitudes al mes por {price} al mes.",
     "volumeUpgradeAskAdmin": "Puede contratarla el propietario o un administrador de tu organización",
+    "volumeUpgradeWithPlan": "Está disponible con el plan de pago",
     "volumeUpgradeLink": "Contratar la ampliación",
     "volumeUpgradeWrite": "Escribe a {email} para añadirla",
     "volumeMore": "Si necesitas más volumen, escríbenos."

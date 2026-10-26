@@ -25,6 +25,7 @@ type Org = {
   planStripeSubscriptionId: string | null;
   pilotStartedAt: Date | null;
   billingOwnerId?: string | null;
+  dsarModuleStatus?: string | null;
 };
 type Member = { organizationId: string; email: string; role: string; userId?: string };
 
@@ -46,6 +47,7 @@ const fakeDb = vi.hoisted(() => {
     planNote: o.planNote,
     planStripeSubscriptionId: o.planStripeSubscriptionId,
     billingOwnerId: o.billingOwnerId ?? null,
+    dsarModuleStatus: o.dsarModuleStatus ?? null,
   });
   const tx = {
     organization: {
@@ -392,6 +394,17 @@ describe("POST /api/plan/stripe-sync: the end of the subscription", () => {
     // Again: nothing more to do.
     await post(notice({ kind: "ended", eventType: "customer.subscription.deleted", periodEnd: null }));
     expect(state.audits).toHaveLength(1);
+  });
+
+  it("flags a rights-request upgrade still active when the Plan ends, for the operator to cancel", async () => {
+    org("cmorg1", { plan: "EU_CLOUD", planStripeSubscriptionId: "sub_A", planStartedAt: new Date(), dsarModuleStatus: "ACTIVE" });
+    const { logger } = await import("@/lib/logger");
+    vi.mocked(logger.warn).mockClear();
+    await post(notice({ kind: "ended", eventType: "customer.subscription.deleted", periodEnd: null }));
+    expect(vi.mocked(logger.warn)).toHaveBeenCalledWith(
+      expect.stringContaining("rights-request upgrade is active"),
+      expect.objectContaining({ organizationId: "cmorg1" })
+    );
   });
 
   it("never downgrades a plan an operator set without a subscription", async () => {

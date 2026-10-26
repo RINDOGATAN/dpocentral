@@ -529,6 +529,15 @@ export async function recordPilotFirstSignIn(
   org.pilotStartedAt = start;
 }
 
+/**
+ * True on the hosted service once a pilot organisation is read-only: its
+ * public rights-request form then takes no request and shows the
+ * organisation's privacy contact (terms, clause 11). Always false on the kit.
+ */
+export function publicIntakeReadOnly(org: PilotClockOrg, now: Date = new Date()): boolean {
+  return isHostedDeployment() && isPilotReadOnly(org, now);
+}
+
 /** Throws FORBIDDEN on the hosted pilot once the organisation is read-only. */
 export function assertPilotWritable(
   org: PilotClockOrg,
