@@ -232,6 +232,9 @@ function NewVendorPageContent() {
     setIsSubmitting(true);
 
     const metadata: Record<string, unknown> = {};
+    // The catalogue record it came from: lets the server add a ready-made
+    // transfer pack where one exists (src/config/catalogue-transfer-packs.ts).
+    if (selectedCatalogVendor?.slug) metadata.catalogSlug = selectedCatalogVendor.slug;
     if (selectedCatalogVendor?.privacyTechnologies?.length) {
       metadata.privacyTechnologies = selectedCatalogVendor.privacyTechnologies;
     }
