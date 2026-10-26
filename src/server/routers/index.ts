@@ -36,6 +36,7 @@ import { auditRouter } from "./privacy/audit";
 import { safeguardsRouter } from "./privacy/safeguards";
 import { searchRouter } from "./privacy/search";
 import { recordOfProcessingRouter } from "./privacy/recordOfProcessing";
+import { suiteRouter } from "./privacy/suite";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -64,6 +65,7 @@ export const appRouter = createTRPCRouter({
   reports: reportsRouter,
   regulations: regulationsRouter,
   aiGovernance: aiGovernanceRouter,
+  suite: suiteRouter,
   ai: aiRouter,
   businessUnit: businessUnitRouter,
   savedView: savedViewRouter,

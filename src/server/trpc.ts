@@ -28,6 +28,7 @@ import {
   READ_ONLY_ALLOWED_PATHS,
   recordPilotFirstSignIn,
 } from "@/server/services/pilot/caps";
+import { suiteForRequest, type ApplyDb, type SuiteOrg } from "@/server/services/suite/plan-state";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -253,7 +254,14 @@ const enforcePilotCaps = t.middleware(async ({ ctx, next, path, type }) => {
   const org = (ctx as { organization?: { id: string; pilotStartedAt: Date | null; plan?: string | null } })
     .organization;
   if (!org) return next();
-  await recordPilotFirstSignIn(ctx.prisma, org);
+  // The suite (src/server/services/suite/plan-state.ts): a paid plan or a
+  // pilot the billing owner already holds on AI Sentinel. Never throws.
+  const suite = await suiteForRequest(
+    ctx.prisma as unknown as ApplyDb,
+    org as unknown as SuiteOrg,
+    (ctx as { session?: { user?: { id?: string | null; email?: string | null } } | null }).session?.user
+  );
+  await recordPilotFirstSignIn(ctx.prisma, org, new Date(), suite.preferredPilotStart);
   // The paid EU cloud plan is not the pilot: no window, no ceilings.
   if (type !== "mutation" || isPaidPlan(org)) return next();
   const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));

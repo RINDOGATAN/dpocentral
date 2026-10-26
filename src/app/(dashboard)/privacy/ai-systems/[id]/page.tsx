@@ -26,6 +26,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import { AiSentinelNote } from "@/components/suite/ai-sentinel-note";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
@@ -102,6 +103,8 @@ export default function AISystemDetailPage({
 
   return (
     <div className="space-y-6">
+      {/* Came from AI Sentinel through the suite link: to confirm, and any note */}
+      <AiSentinelNote metadata={(system as { metadata?: unknown }).metadata} />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3 min-w-0">
