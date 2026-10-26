@@ -134,10 +134,10 @@ export function PilotEndBar({
           <>
             {" "}
             <a href={upgradeMonthlyHref} data-testid="pilot-upgrade-monthly-link" className={UPGRADE_LINK}>
-              {t("upgradeMonthly")}
+              {t(suite ? "suiteUpgradeMonthly" : "upgradeMonthly")}
             </a>{" "}
             <a href={upgradeHref} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
-              {t("upgradeYearly")}
+              {t(suite ? "suiteUpgradeYearly" : "upgradeYearly")}
             </a>
           </>
         )}
@@ -145,7 +145,7 @@ export function PilotEndBar({
           <>
             {" "}
             <a href={upgradeHref} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
-              {t("upgrade")}
+              {t(suite ? "suiteUpgrade" : "upgrade")}
             </a>
           </>
         )}

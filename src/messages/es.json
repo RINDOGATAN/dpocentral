@@ -10078,7 +10078,10 @@
       "upgradeYearly": "Pago anual",
       "pricing": "Ver precios",
       "dismiss": "Cerrar",
-      "suite": "Tu Plan nube incluye DPO Central, AI Sentinel y VendorWatch. Un solo plan y un solo pago."
+      "suite": "Tu Plan nube incluye DPO Central, AI Sentinel y VendorWatch. Un solo plan y un solo pago.",
+      "suiteUpgrade": "Pasar los dos al plan de pago",
+      "suiteUpgradeMonthly": "Un plan para los dos, mensual",
+      "suiteUpgradeYearly": "Un plan para los dos, anual"
     },
     "settings": {
       "summary": "Piloto: {days, plural, one {queda # día} other {quedan # días}}, {used} de {limit} sistemas",
