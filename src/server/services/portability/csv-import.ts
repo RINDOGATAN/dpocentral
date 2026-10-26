@@ -13,11 +13,16 @@
  *   4. hand those records to the programme importer (./import.ts), which does
  *      the dry run and the import as drafts, never overwriting anything.
  *
- * EXTENSION POINT. A source that is not CSV (for example one vendor's XML
- * export) is supported by adding an Importer to IMPORTERS: it turns the file
- * into headers and rows of text, and everything after that (matching, dry
- * run, drafts, idempotency) is shared. No XML importer exists yet: the format
+ * EXTENSION POINT. A source format is supported by adding an Importer to
+ * IMPORTERS: it turns the file into headers and rows of text, and everything
+ * after that (matching, dry run, drafts, idempotency) is shared. CSV and
+ * Excel (.xlsx, first sheet) are read. No XML importer exists yet: the format
  * of a given platform's XML is to be built from a real sample, not guessed.
+ *
+ * Vendor names (the vendors register, the provider of a system, and the
+ * vendors or systems named on a processing activity) are matched by exact
+ * normalised name against the vendor catalogue: a match is linked through
+ * metadata.catalogSlug, a name with no match is kept as written with a note.
  *
  * Idempotent: a row's source id is its value in the column matched to "Id",
  * else a digest of the row's mapped cells, so uploading the same file twice
@@ -25,6 +30,10 @@
  */
 
 import { createHash } from "crypto";
+import AdmZip from "adm-zip";
+import { readSheet } from "read-excel-file/node";
+import type { Db } from "@/lib/prisma";
+import { canonicalCountryCode, isIsoCountryCode } from "@/lib/country-code";
 import { Programme, PROGRAMME_FORMAT, type ProgrammeDoc } from "./format";
 import { enumWords, mainTable, normalizeHeader, type CsvColumn, type EnumName } from "./registers";
 
@@ -41,10 +50,26 @@ export interface Importer {
   id: string;
   /** Whether this importer reads the file (by name and first bytes). */
   accepts(fileName: string, bytes: Uint8Array): boolean;
-  read(bytes: Uint8Array): TextTable;
+  read(bytes: Uint8Array): TextTable | Promise<TextTable>;
+}
+
+/** The import's thrown error for a file it cannot read, with a message in both languages. */
+export class UnreadableFileError extends Error {
+  constructor(
+    public readonly en: string,
+    public readonly es: string,
+  ) {
+    super(en);
+  }
 }
 
 export const MAX_CSV_ROWS = 20_000;
+/**
+ * Largest unpacked size of an Excel workbook (the sum of its parts, as their
+ * headers declare it), checked before anything is unpacked, so a small file
+ * that expands enormously is refused rather than read.
+ */
+export const MAX_XLSX_UNPACKED_BYTES = 100 * 1024 * 1024;
 
 /** Text of the file: UTF-8 (with or without a byte-order mark), else Windows-1252 as older spreadsheets save it. */
 export function decodeText(bytes: Uint8Array): string {
@@ -106,22 +131,75 @@ export function parseCsv(text: string, separator = detectSeparator(text)): strin
   return rows.filter((r) => r.some((c) => c.trim() !== ""));
 }
 
-export const csvImporter: Importer = {
+/** Header and rows of a table of cells, skipping empty and comment ("#") lines before the header. */
+function toTable(lines: string[][]): TextTable {
+  let start = 0;
+  while (start < lines.length && lines[start]![0]?.startsWith("#")) start++;
+  const [headers = [], ...rows] = lines.slice(start);
+  return { headers: headers.map((h) => h.trim()), rows };
+}
+
+export const csvImporter = {
   id: "csv",
-  accepts: (fileName) => /\.(csv|txt|tsv)$/i.test(fileName),
-  read(bytes) {
-    const text = decodeText(bytes);
+  accepts: (fileName: string) => /\.(csv|txt|tsv)$/i.test(fileName),
+  read(bytes: Uint8Array): TextTable {
     // Comment lines before the header (a "#" line, as some exports write) are skipped.
-    const lines = parseCsv(text);
-    let start = 0;
-    while (start < lines.length && lines[start]![0]?.startsWith("#")) start++;
-    const [headers = [], ...rows] = lines.slice(start);
-    return { headers: headers.map((h) => h.trim()), rows };
+    return toTable(parseCsv(decodeText(bytes)));
+  },
+} satisfies Importer;
+
+const isZip = (bytes: Uint8Array) =>
+  bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && bytes[2] === 0x03 && bytes[3] === 0x04;
+
+/** A date cell as a calendar date (the time of day, if any, as well). */
+function dateText(d: Date): string {
+  const iso = d.toISOString();
+  return iso.endsWith("T00:00:00.000Z") ? iso.slice(0, 10) : iso.replace(".000Z", "Z");
+}
+
+/** One spreadsheet cell as text, as a CSV of the same sheet would hold it. */
+function xlsxCellText(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  if (value instanceof Date) return dateText(value);
+  if (typeof value === "boolean") return value ? "yes" : "no";
+  return String(value);
+}
+
+/** Excel workbooks (.xlsx): the first sheet, read as text. */
+export const xlsxImporter: Importer = {
+  id: "xlsx",
+  accepts: (fileName, bytes) => /\.xlsx$/i.test(fileName) && isZip(bytes),
+  async read(bytes) {
+    const buffer = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.length);
+    let unpacked = 0;
+    try {
+      for (const entry of new AdmZip(buffer).getEntries()) unpacked += entry.header.size;
+    } catch {
+      throw new UnreadableFileError("The Excel file cannot be read.", "No se puede leer el archivo de Excel.");
+    }
+    if (unpacked > MAX_XLSX_UNPACKED_BYTES) {
+      const mb = MAX_XLSX_UNPACKED_BYTES / 1024 / 1024;
+      throw new UnreadableFileError(
+        `The Excel file is larger than ${mb} MB once unpacked. Save the sheet as CSV and upload that.`,
+        `El archivo de Excel pesa más de ${mb} MB una vez descomprimido. Guarda la hoja como CSV y sube ese archivo.`,
+      );
+    }
+    let data: unknown[][];
+    try {
+      // Always a Buffer: given a string, the library would read a path from disk.
+      data = (await readSheet(buffer, 1)) as unknown[][];
+    } catch {
+      throw new UnreadableFileError("The Excel file cannot be read.", "No se puede leer el archivo de Excel.");
+    }
+    const lines = data
+      .map((row) => row.map(xlsxCellText))
+      .filter((row) => row.some((c) => c.trim() !== ""));
+    return toTable(lines);
   },
 };
 
 /** Every importer this build has. Add new source formats here. */
-export const IMPORTERS: Importer[] = [csvImporter];
+export const IMPORTERS: Importer[] = [csvImporter, xlsxImporter];
 
 export function importerFor(fileName: string, bytes: Uint8Array): Importer | null {
   return IMPORTERS.find((i) => i.accepts(fileName, bytes)) ?? null;
@@ -135,9 +213,103 @@ export type CsvRegister = (typeof CSV_REGISTERS)[number];
 /** Columns of our own views that are not fields one imports (derived or internal). */
 const NOT_IMPORTED = new Set(["confirmationState", "createdAt", "updatedAt", "systems", "contracts", "businessUnitId"]);
 
+/**
+ * Fields one imports that the register's own CSV view does not carry, kept
+ * in the record's metadata: the vendors or systems named on a processing
+ * activity (matched against the vendor catalogue) and the countries its data
+ * goes to (ISO codes where the cell gives one, else as written).
+ */
+const IMPORT_ONLY: Partial<Record<CsvRegister, CsvColumn[]>> = {
+  processingActivities: [
+    {
+      key: "vendorNames",
+      en: "Vendors or systems",
+      es: "Proveedores o sistemas",
+      kind: "list",
+      synonyms: [
+        "vendors",
+        "vendor",
+        "proveedores",
+        "proveedor",
+        "processors",
+        "encargados",
+        "encargados del tratamiento",
+        "systems",
+        "sistemas",
+        "applications",
+        "aplicaciones",
+        "tools",
+        "herramientas",
+        "service providers",
+        "prestadores de servicios",
+      ],
+    },
+    {
+      key: "transferCountries",
+      en: "Countries the data goes to",
+      es: "Países a los que van los datos",
+      kind: "list",
+      synonyms: [
+        "transfers",
+        "transferencias",
+        "international transfers",
+        "transferencias internacionales",
+        "destination countries",
+        "paises de destino",
+        "third countries",
+        "terceros paises",
+      ],
+    },
+  ],
+};
+
 /** The fields a column of an uploaded file can be matched to. */
 export function importFields(register: CsvRegister): CsvColumn[] {
-  return (mainTable(register)?.columns ?? []).filter((c) => !NOT_IMPORTED.has(c.key));
+  return [...(mainTable(register)?.columns ?? []).filter((c) => !NOT_IMPORTED.has(c.key)), ...(IMPORT_ONLY[register] ?? [])];
+}
+
+// ── The vendor catalogue ────────────────────────────────────────────────────
+
+export interface CatalogueEntry {
+  slug: string;
+  name: string;
+}
+
+/** Normalised name (or slug) → the one catalogue entry it names, or null when it names more than one. */
+export type CatalogueIndex = Map<string, CatalogueEntry | null>;
+
+export function catalogueIndex(entries: CatalogueEntry[]): CatalogueIndex {
+  const index: CatalogueIndex = new Map();
+  for (const entry of entries) {
+    for (const key of new Set([normalizeHeader(entry.name), normalizeHeader(entry.slug)])) {
+      if (!key) continue;
+      const seen = index.get(key);
+      if (seen === undefined) index.set(key, entry);
+      else if (seen && seen.slug !== entry.slug) index.set(key, null);
+    }
+  }
+  return index;
+}
+
+export type CatalogueMatch = { status: "matched"; entry: CatalogueEntry } | { status: "none" | "ambiguous" };
+
+/** Exact match of a name, compared without case, accents or punctuation. */
+export function matchCatalogue(index: CatalogueIndex, name: string): CatalogueMatch {
+  const hit = index.get(normalizeHeader(name));
+  if (hit) return { status: "matched", entry: hit };
+  return { status: hit === null ? "ambiguous" : "none" };
+}
+
+/** The whole catalogue, by name and slug (a few hundred rows). */
+export async function loadCatalogueIndex(db: Pick<Db, "vendorCatalog">): Promise<CatalogueIndex> {
+  return catalogueIndex(await db.vendorCatalog.findMany({ select: { slug: true, name: true } }));
+}
+
+/** Whether a conversion of this register with this mapping uses the catalogue. */
+export function needsCatalogue(register: CsvRegister, mapping: ColumnMapping): boolean {
+  if (register === "vendors") return mapping.includes("name");
+  if (register === "dataAssets") return mapping.includes("vendor");
+  return mapping.includes("vendorNames");
 }
 
 /** Fields without which a row cannot become a record. */
@@ -274,21 +446,65 @@ export interface CsvConversion {
   /** Rows left out (missing a required field). */
   leftOut: number;
   problems: RowProblem[];
+  /** Notes that leave the row in: a vendor name with no match in the catalogue. */
+  notes: RowProblem[];
+  /** Vendor names linked to the catalogue. */
+  catalogueLinks: number;
+}
+
+/** A vendor name with no single match in the catalogue: kept as written, with a note. */
+function catalogueNote(row: number, field: string, name: string, match: CatalogueMatch): RowProblem {
+  return match.status === "ambiguous"
+    ? {
+        row,
+        field,
+        en: `"${name}" matches more than one vendor in the catalogue: kept as written, not linked.`,
+        es: `"${name}" coincide con más de un proveedor del catálogo: se guarda tal como está escrito, sin vincular.`,
+      }
+    : {
+        row,
+        field,
+        en: `"${name}" is not in the vendor catalogue: kept as written.`,
+        es: `"${name}" no está en el catálogo de proveedores: se guarda tal como está escrito.`,
+      };
 }
 
 /**
+ * Values a person accepted for one row (the AI-assisted import,
+ * ./ai-import.ts): `fields` replace what the cells gave, `meta` is added to
+ * the record's metadata (`vendorLinks` maps a vendor name of the row to a
+ * catalogue slug), and `resolves` names the fields whose row notes and
+ * problems the accepted values answer.
+ */
+export interface RowOverride {
+  fields?: Record<string, unknown>;
+  meta?: Record<string, unknown> & { vendorLinks?: Record<string, string> };
+  resolves?: string[];
+}
+
+/** Spreadsheet row number (the header is row 1) to what was accepted for it. */
+export type RowOverrides = Map<number, RowOverride>;
+
+/**
  * Turn the table into a programme holding one register. `row` numbers in
- * problems count the header as row 1, as a spreadsheet does.
+ * problems count the header as row 1, as a spreadsheet does. With a
+ * catalogue index, vendor names are matched against it (see the header).
+ * With overrides, accepted values replace what the cells gave.
  */
 export function tableToProgramme(
   register: CsvRegister,
   table: TextTable,
   mapping: ColumnMapping,
   now: Date = new Date(),
+  catalogue?: CatalogueIndex,
+  overrides?: RowOverrides,
 ): CsvConversion {
   const fields = new Map(importFields(register).map((f) => [f.key, f]));
   const problems: RowProblem[] = [];
+  const notes: RowProblem[] = [];
+  let catalogueLinks = 0;
   const records: Record<string, unknown>[] = [];
+  const extraMeta: Record<string, unknown>[] = [];
   const rowOf: number[] = [];
   let leftOut = 0;
   const required = REQUIRED_FIELDS[register];
@@ -304,6 +520,8 @@ export function tableToProgramme(
       if (!field) return;
       rec[key] = readCell(field, cells[col] ?? "", rowNo, problems);
     });
+    const override = overrides?.get(rowNo);
+    if (override?.fields) Object.assign(rec, override.fields);
     const missing = required.filter((k) => rec[k] === null || rec[k] === undefined || rec[k] === "");
     if (missing.length) {
       leftOut++;
@@ -321,7 +539,48 @@ export function tableToProgramme(
       .digest("hex")
       .slice(0, 32);
     const id = hasIdColumn && typeof rec.id === "string" && rec.id ? rec.id.slice(0, 200) : `row-${digest}`;
+
+    // Vendor names against the catalogue: linked when one entry matches.
+    const meta: Record<string, unknown> = {};
+    const link = (field: string, name: string): string | null => {
+      if (!catalogue) return null;
+      const match = matchCatalogue(catalogue, name);
+      if (match.status === "matched") {
+        catalogueLinks++;
+        return match.entry.slug;
+      }
+      notes.push(catalogueNote(rowNo, field, name, match));
+      return null;
+    };
+    if (register === "processingActivities" && "transferCountries" in rec) {
+      const places = (rec.transferCountries as string[] | null) ?? [];
+      delete rec.transferCountries;
+      if (places.length) meta.transferCountries = places.map((p) => (isIsoCountryCode(p) ? canonicalCountryCode(p) : p));
+    }
+    if (register === "processingActivities" && "vendorNames" in rec) {
+      const names = (rec.vendorNames as string[] | null) ?? [];
+      delete rec.vendorNames;
+      if (names.length) meta.vendors = names.map((name) => ({ name, catalogSlug: link("vendorNames", name) }));
+    } else if (register === "vendors" && typeof rec.name === "string") {
+      const slug = link("name", rec.name);
+      if (slug) meta.catalogSlug = slug;
+    } else if (register === "dataAssets" && typeof rec.vendor === "string" && rec.vendor) {
+      const slug = link("vendor", rec.vendor);
+      if (slug) meta.vendorCatalogSlug = slug;
+    }
+
+    if (override?.meta) {
+      const { vendorLinks, ...rest } = override.meta;
+      if (vendorLinks && Array.isArray(meta.vendors)) {
+        meta.vendors = (meta.vendors as Array<{ name: string; catalogSlug: string | null }>).map((v) =>
+          v.catalogSlug || !vendorLinks[v.name] ? v : { ...v, catalogSlug: vendorLinks[v.name]! },
+        );
+      }
+      Object.assign(meta, rest);
+    }
+
     records.push({ ...rec, id });
+    extraMeta.push(meta);
     rowOf.push(rowNo);
   });
 
@@ -331,20 +590,26 @@ export function tableToProgramme(
     vendors: [] as unknown[],
   };
   if (register === "dataAssets") {
-    base.dataAssets = records.map((r) => ({
+    base.dataAssets = records.map((r, i) => ({
       ...r,
       type: r.type ?? "OTHER",
-      metadata: { csvImport: true },
+      metadata: { csvImport: true, ...extraMeta[i] },
     }));
   } else if (register === "processingActivities") {
-    base.processingActivities = records.map((r) => ({
+    base.processingActivities = records.map((r, i) => ({
       ...r,
       purpose: r.purpose ?? "",
       assets: [],
-      metadata: { csvImport: true },
+      metadata: { csvImport: true, ...extraMeta[i] },
     }));
   } else {
-    base.vendors = records.map((r) => ({ ...r, contracts: [], reviews: [], questionnaireResponses: [], metadata: { csvImport: true } }));
+    base.vendors = records.map((r, i) => ({
+      ...r,
+      contracts: [],
+      reviews: [],
+      questionnaireResponses: [],
+      metadata: { csvImport: true, ...extraMeta[i] },
+    }));
   }
 
   const draft = {
@@ -392,5 +657,14 @@ export function tableToProgramme(
   }
   const programme: ProgrammeDoc = Programme.parse(draft);
 
-  return { programme, rows: rows.length, leftOut, problems };
+  // Notes and problems that an accepted value answers are no longer shown.
+  const answered = (p: RowProblem) => overrides?.get(p.row)?.resolves?.includes(p.field) ?? false;
+  return {
+    programme,
+    rows: rows.length,
+    leftOut,
+    problems: problems.filter((p) => !answered(p)),
+    notes: notes.filter((p) => !answered(p)),
+    catalogueLinks,
+  };
 }

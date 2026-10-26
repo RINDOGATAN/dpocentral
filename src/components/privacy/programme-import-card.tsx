@@ -7,17 +7,24 @@
  * is written:
  *   - a whole programme (the export ZIP or programme.json) into a new or empty
  *     organisation: POST /api/portability/programme;
- *   - one register from a CSV file, with a column-matching step:
- *     POST /api/portability/register.
+ *   - one register from a CSV or Excel file, with a column-matching step:
+ *     POST /api/portability/register (empty templates per register:
+ *     GET /api/portability/register/template).
  * The check shows the counts per register and every problem found; the
  * import then brings everything in as drafts to confirm. Owners and admins only.
+ *
+ * Where the organisation may use AI, "Suggest with AI" asks for column
+ * matches and values from closed lists for free-text cells. Suggestions are
+ * shown apart, marked as AI-suggested, and are used only when the person
+ * accepts them (per column); accepted ones go back with every later check
+ * and with the import, where the server checks them again.
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { FileUp, Loader2, AlertTriangle, Info, CircleX } from "lucide-react";
+import { FileUp, Loader2, AlertTriangle, Info, CircleX, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,12 +49,30 @@ type Columns = {
   preview: string[][];
   rowProblems: Array<{ row: number; field: string; en: string; es: string }>;
   rowProblemCount: number;
+  rowNotes?: Array<{ row: number; field: string; en: string; es: string }>;
+  rowNoteCount?: number;
+  catalogueLinks?: number;
+  aiApplied?: number;
 };
+type CellSuggestion = { row: number; field: string; text: string; value: string | string[] | number; en: string; es: string };
+type AiResult = {
+  mapping: Array<{ column: number; field: string }>;
+  cells: CellSuggestion[];
+  rowsSent: number;
+  rowsNotSent: number;
+  rowsCap: number;
+  failed: number;
+  rateLimited: boolean;
+  model: string | null;
+};
+type AiInfo = { available: boolean; code: string | null; keyRequired: boolean; settingsPath: string; maxRows: number; result?: AiResult };
 type Reply = {
   summary?: Summary;
   columns?: Columns;
+  ai?: AiInfo;
   created?: number;
   error?: string;
+  message?: string;
   problems?: Array<{ path: string; message: string; es?: string }>;
 };
 
@@ -69,16 +94,27 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
   const [withRequests, setWithRequests] = useState(false);
   const [mapping, setMapping] = useState<Array<string | null> | null>(null);
   const [reply, setReply] = useState<Reply | null>(null);
-  const [busy, setBusy] = useState<"check" | "import" | null>(null);
+  const [busy, setBusy] = useState<"check" | "import" | "ai" | null>(null);
+  const [aiResult, setAiResult] = useState<AiResult | null>(null);
+  const [aiFields, setAiFields] = useState<Set<string>>(new Set());
+  const [aiColumnsDone, setAiColumnsDone] = useState<Set<number>>(new Set());
 
   const reset = () => {
     setReply(null);
     setMapping(null);
+    setAiResult(null);
+    setAiFields(new Set());
+    setAiColumnsDone(new Set());
   };
 
-  async function send(step: "check" | "import") {
+  const acceptedCells = useMemo(
+    () => (aiResult?.cells ?? []).filter((c) => aiFields.has(c.field)).map(({ row, field, value }) => ({ row, field, value })),
+    [aiResult, aiFields],
+  );
+
+  async function send(step: "check" | "import", withAi = false) {
     if (!file) return;
-    setBusy(step);
+    setBusy(withAi ? "ai" : step);
     try {
       const body = new FormData();
       body.set("organizationId", organizationId);
@@ -92,16 +128,24 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
       if (mode === "register") {
         body.set("register", register);
         if (mapping) body.set("mapping", JSON.stringify(mapping));
+        if (withAi) body.set("ai", "1");
+        if (acceptedCells.length) body.set("aiAccepted", JSON.stringify(acceptedCells));
       }
       const res = await fetch(mode === "programme" ? "/api/portability/programme" : "/api/portability/register", {
         method: "POST",
         body,
       });
       const data = (await res.json().catch(() => ({}))) as Reply;
-      setReply(data);
+      // A plain re-check keeps the suggestions already shown.
+      setReply((prev) => (data.ai || !prev?.ai ? data : { ...data, ai: prev.ai }));
       if (data.columns) setMapping(data.columns.mapping);
+      if (data.ai?.result) {
+        setAiResult(data.ai.result);
+        setAiFields(new Set());
+        setAiColumnsDone(new Set());
+      }
       if (!res.ok && !data.summary) {
-        toast.error(data.problems?.[0] ? (es ? (data.problems[0].es ?? data.problems[0].message) : data.problems[0].message) : (data.error ?? t("failed")));
+        toast.error(data.problems?.[0] ? (es ? (data.problems[0].es ?? data.problems[0].message) : data.problems[0].message) : (data.message ?? data.error ?? t("failed")));
         return;
       }
       if (step === "import" && res.ok) {
@@ -119,6 +163,20 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
   const columns = reply?.columns;
   const imported = reply?.created !== undefined;
   const text = (p: { en: string; es: string }) => (es ? p.es : p.en);
+  const ai = reply?.ai;
+  const fieldName = (key: string) => {
+    const f = columns?.fields.find((x) => x.key === key);
+    if (["name", "vendor", "vendorNames"].includes(key)) return `${t("aiFields.catalogue")} (${f ? text(f) : key})`;
+    if (key === "purposeCategory") return t("aiFields.purposeCategory");
+    return f ? text(f) : key;
+  };
+  const aiGroups = useMemo(() => {
+    const groups = new Map<string, CellSuggestion[]>();
+    for (const c of aiResult?.cells ?? []) groups.set(c.field, [...(groups.get(c.field) ?? []), c]);
+    return [...groups.entries()];
+  }, [aiResult]);
+  const templateHref = (r: CsvRegister, format: "csv" | "xlsx") =>
+    `/api/portability/register/template?register=${r}&format=${format}&locale=${es ? "es" : "en"}`;
 
   const fileInput = (accept: string) => (
     <div className="space-y-1">
@@ -201,7 +259,17 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
                 ))}
               </select>
             </div>
-            {fileInput(".csv,.txt,.tsv,text/csv")}
+            <p className="text-xs text-muted-foreground" data-testid="import-templates">
+              {t("template")}{" "}
+              <a className="underline" href={templateHref(register, "csv")} download>
+                {t("templateCsv")}
+              </a>
+              {" · "}
+              <a className="underline" href={templateHref(register, "xlsx")} download>
+                {t("templateXlsx")}
+              </a>
+            </p>
+            {fileInput(".csv,.txt,.tsv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
           </TabsContent>
         </Tabs>
 
@@ -247,6 +315,42 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
                             </option>
                           ))}
                         </select>
+                        {(() => {
+                          const suggestion = aiResult?.mapping.find((m) => m.column === i);
+                          if (!suggestion || aiColumnsDone.has(i)) return null;
+                          return (
+                            <div className="mt-1 flex flex-wrap items-center gap-2 text-xs" data-testid="ai-column-suggestion">
+                              <span className="inline-flex items-center gap-1 text-muted-foreground">
+                                <Sparkles className="w-3 h-3" aria-hidden="true" />
+                                {t("aiColumnSuggested", { field: fieldName(suggestion.field) })}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-6 px-2 text-xs"
+                                onClick={() => {
+                                  const next = [...mapping];
+                                  for (let j = 0; j < next.length; j++) if (next[j] === suggestion.field) next[j] = null;
+                                  next[i] = suggestion.field;
+                                  setMapping(next);
+                                  setAiColumnsDone(new Set([...aiColumnsDone, i]));
+                                }}
+                              >
+                                {t("aiAccept")}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xs"
+                                onClick={() => setAiColumnsDone(new Set([...aiColumnsDone, i]))}
+                              >
+                                {t("aiReject")}
+                              </Button>
+                            </div>
+                          );
+                        })()}
                       </td>
                     </tr>
                   ))}
@@ -264,6 +368,114 @@ export function ProgrammeImportCard({ organizationId }: { organizationId: string
                   ))}
                 </ul>
               </details>
+            )}
+            {(columns.catalogueLinks ?? 0) > 0 && (
+              <p className="text-xs text-muted-foreground">{t("catalogueLinked", { count: columns.catalogueLinks ?? 0 })}</p>
+            )}
+            {(columns.rowNoteCount ?? 0) > 0 && (
+              <details className="text-xs" data-testid="import-catalogue-notes">
+                <summary className="cursor-pointer">{t("catalogueNotes", { count: columns.rowNoteCount ?? 0 })}</summary>
+                <ul className="mt-1 space-y-0.5 text-muted-foreground">
+                  {(columns.rowNotes ?? []).slice(0, 50).map((p, i) => (
+                    <li key={i}>
+                      {t("row", { row: p.row })}: {text(p)}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+
+            {ai && !ai.available && (ai.code === "ai_not_configured" || ai.code === "ai_off") && (
+              <p className="text-xs text-muted-foreground" data-testid="ai-import-hint">
+                <Sparkles className="inline w-3 h-3 mr-1" aria-hidden="true" />
+                {ai.code === "ai_not_configured" ? t("aiHintKey") : t("aiHintOff")}{" "}
+                <a className="underline" href={ai.settingsPath}>
+                  {t("aiHintLink")}
+                </a>
+              </p>
+            )}
+            {ai?.available && (
+              <div className="space-y-2 rounded-md border p-3" data-testid="ai-import">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button type="button" variant="outline" size="sm" disabled={busy !== null} onClick={() => send("check", true)}>
+                    {busy === "ai" ? (
+                      <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
+                    )}
+                    {busy === "ai" ? t("aiSuggesting") : t("aiSuggest")}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">{t("aiLead", { max: ai.maxRows })}</p>
+                {aiResult && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">
+                      {t("aiTitle")} <span className="text-xs font-normal text-muted-foreground">({t("aiProvenance")})</span>
+                    </p>
+                    {aiGroups.length === 0 && aiResult.mapping.length === 0 && <p className="text-xs text-muted-foreground">{t("aiNone")}</p>}
+                    {aiGroups.map(([field, cells]) => {
+                      const on = aiFields.has(field);
+                      return (
+                        <div key={field} className="text-xs" data-testid="ai-field-suggestions">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-medium">{fieldName(field)}</span>
+                            <span className="text-muted-foreground">{t("aiChanges", { count: cells.length })}</span>
+                            <Button
+                              type="button"
+                              variant={on ? "default" : "outline"}
+                              size="sm"
+                              className="h-6 px-2 text-xs"
+                              aria-pressed={on}
+                              onClick={() => {
+                                const next = new Set(aiFields);
+                                if (on) next.delete(field);
+                                else next.add(field);
+                                setAiFields(next);
+                              }}
+                            >
+                              {on ? t("aiAccepted") : t("aiAccept")}
+                            </Button>
+                            {on && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xs"
+                                onClick={() => {
+                                  const next = new Set(aiFields);
+                                  next.delete(field);
+                                  setAiFields(next);
+                                }}
+                              >
+                                {t("aiReject")}
+                              </Button>
+                            )}
+                          </div>
+                          <details className="mt-1">
+                            <summary className="cursor-pointer text-muted-foreground">{t("aiShowRows")}</summary>
+                            <ul className="mt-1 space-y-0.5 text-muted-foreground">
+                              {cells.slice(0, 100).map((c) => (
+                                <li key={`${c.row}-${c.field}`}>
+                                  {t("row", { row: c.row })}: &ldquo;{c.text}&rdquo; → {text(c)}
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        </div>
+                      );
+                    })}
+                    {aiResult.rowsNotSent > 0 && (
+                      <p className="text-xs text-muted-foreground">{t("aiNotSent", { count: aiResult.rowsNotSent, max: aiResult.rowsCap })}</p>
+                    )}
+                    {aiResult.rateLimited && <p className="text-xs text-muted-foreground">{t("aiRateLimited")}</p>}
+                    {aiResult.failed > 0 && <p className="text-xs text-muted-foreground">{t("aiFailed", { count: aiResult.failed })}</p>}
+                    {acceptedCells.length > 0 && <p className="text-xs text-muted-foreground">{t("aiRecheck")}</p>}
+                    {(columns.aiApplied ?? 0) > 0 && (
+                      <p className="text-xs text-muted-foreground">{t("aiApplied", { count: columns.aiApplied ?? 0 })}</p>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

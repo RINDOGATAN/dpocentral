@@ -19,7 +19,11 @@ Posture differences from cloud, all env-driven:
   functions fully with empty `STRIPE_*` vars.
 - **AI:** one door only — `LLM_GATEWAY_URL` / `LLM_GATEWAY_KEY` /
   `LLM_MODEL_ALIAS` (any OpenAI-compatible endpoint, e.g. LQ.AI's gateway).
-  Empty = AI narrative generation is a clean no-op.
+  Empty = AI narrative generation is a clean no-op. An organisation can
+  also save its own API inference key in Settings (Anthropic, OpenAI, Groq,
+  Mistral, Together AI or any OpenAI-compatible endpoint); it is stored
+  encrypted and takes precedence for that organisation. `AI_REQUIRE_ORG_KEY`
+  (empty here) decides whether only organisation keys are used.
 - **Brand:** `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_ACCENT`,
   `NEXT_PUBLIC_BRAND_LOGO_URL` (plus the fine-grained `NEXT_PUBLIC_COLOR_*`
   set in `src/config/brand.ts`). Same UI, your name on it — no clones.

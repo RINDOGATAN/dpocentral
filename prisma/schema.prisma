@@ -2007,6 +2007,19 @@ model OrganizationAiSettings {
   posture          AiPosture @default(off)
   acknowledgedById String?
   acknowledgedAt   DateTime?
+  // The organisation's own API inference key (services/ai/org-key.ts).
+  // Provider id, optional base address and model; the key itself is stored
+  // only encrypted (AES-256-GCM, iv apart, the organisation id as associated
+  // data) and is never sent back to a browser: the last four characters are
+  // kept for display.
+  keyProvider      String?
+  keyBaseUrl       String?
+  keyModel         String?
+  keyCiphertext    String?   @db.Text
+  keyIv            String?
+  keyLast4         String?
+  keySetById       String?
+  keySetAt         DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
@@ -2023,7 +2036,7 @@ model AiGeneration {
   id               String    @id @default(cuid())
   organizationId   String
   userId           String?
-  feature          String // "dpia_narrative" | "breach_notification"
+  feature          String // "dpia_narrative" | "breach_notification" | "import_classification"
   entityType       String? // "Assessment" | "IncidentNotification" | ...
   entityId         String?
   model            String?

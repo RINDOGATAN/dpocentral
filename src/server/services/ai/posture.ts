@@ -12,6 +12,13 @@
  *   posture on, no engine configured   -> PRECONDITION_FAILED "ai_not_configured"
  *   posture on, engine configured      -> returns the settings row
  *
+ * "Engine configured": the organisation's own API inference key when one is
+ * saved and readable (services/ai/org-key.ts); otherwise the deployment's
+ * engine for the posture's lane, unless the deployment requires an
+ * organisation key (AI_REQUIRE_ORG_KEY, services/ai/deployment.ts), in which
+ * case a missing key is "ai_not_configured" and the UI points to Settings
+ * (ORG_KEY_SETTINGS_PATH).
+ *
  * requireAi MUST run before any prompt building or door call — posture off
  * (or a missing row) means zero AI network calls, which keeps the "no AI
  * calls by default" promise true. The TRPCError message is a machine code
@@ -26,7 +33,9 @@
 import { TRPCError } from "@trpc/server";
 import type { OrganizationAiSettings, AiGeneration, AiPosture } from "@prisma/client";
 import type { Db } from "@/lib/prisma";
-import { isAIConfigured, type AiLane } from "./llm-door";
+import { isAIConfigured, type AiLane, type DirectEngine } from "./llm-door";
+import { orgKeyRequired } from "./deployment";
+import { resolveOrgEngine } from "./org-key";
 
 /** Hosted metered-key cap: generations per organization per hour. */
 export const AI_RATE_LIMIT_PER_ORG_PER_HOUR = 30;
@@ -103,6 +112,19 @@ export async function requireAi(
   prisma: PrismaLike,
   organizationId: string
 ): Promise<OrganizationAiSettings> {
+  return (await requireAiEngine(prisma, organizationId)).settings;
+}
+
+/**
+ * requireAi, plus the engine to call: the organisation's own key when one is
+ * saved (null means the deployment's engine for the posture's lane). Pass
+ * `engine` to chatComplete. The engine holds the decrypted key: keep it in
+ * memory, never return it to a client or log it.
+ */
+export async function requireAiEngine(
+  prisma: PrismaLike,
+  organizationId: string
+): Promise<{ settings: OrganizationAiSettings; engine: DirectEngine | null }> {
   // Checked first and regardless of the stored posture: a posture saved
   // before the organization declared a US state does not reopen AI.
   if (await isAiBlockedForUsJurisdiction(prisma, organizationId)) {
@@ -117,14 +139,16 @@ export async function requireAi(
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_off" });
   }
 
-  // Engine availability is checked for the POSTURE'S lane (suffixed env
-  // triple, else the base one) — a single-engine install behaves as before,
-  // and a lane-only install correctly gates postures without an engine.
-  if (!isAIConfigured(postureLane(settings.posture))) {
+  // The organisation's own key first. Without one: where the deployment
+  // requires it, nothing else may answer; elsewhere the deployment engine for
+  // the POSTURE'S lane (suffixed env triple, else the base one).
+  const { engine } = resolveOrgEngine(settings);
+  if (engine) return { settings, engine };
+  if (orgKeyRequired() || !isAIConfigured(postureLane(settings.posture))) {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_not_configured" });
   }
 
-  return settings;
+  return { settings, engine: null };
 }
 
 /**
@@ -151,7 +175,7 @@ export async function assertAiRateLimit(
 export interface RecordGenerationInput {
   organizationId: string;
   userId?: string | null;
-  feature: "dpia_narrative" | "breach_notification";
+  feature: "dpia_narrative" | "breach_notification" | "import_classification";
   entityType?: string | null;
   entityId?: string | null;
   model?: string | null;

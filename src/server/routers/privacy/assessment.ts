@@ -15,7 +15,7 @@ import { brand } from "@/config/brand";
 import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappings";
 import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
 import { dpiaAutoFillText } from "../../services/privacy/dpia-auto-fill-text";
-import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
+import { requireAiEngine, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
@@ -1818,7 +1818,7 @@ export const assessmentRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Posture gate FIRST — posture off/missing means zero AI calls and
       // no prompt building at all.
-      const settings = await requireAi(ctx.prisma, ctx.organization.id);
+      const { settings, engine } = await requireAiEngine(ctx.prisma, ctx.organization.id);
       await assertAiRateLimit(ctx.prisma, ctx.organization.id);
 
       // The assessment the draft is logged against must be the caller's own (F2)
@@ -1840,7 +1840,8 @@ export const assessmentRouter = createTRPCRouter({
       const locale = localeFromCookieGetter(ctx.getCookie) ?? "en";
 
       // Route through the lane the organization acknowledged.
-      const result = await generateRiskNarrative(context, locale, postureLane(settings.posture));
+      // The organisation's own key, when it has one, answers instead.
+      const result = await generateRiskNarrative(context, locale, postureLane(settings.posture), engine);
 
       const generation = await recordGeneration(ctx.prisma, {
         organizationId: ctx.organization.id,

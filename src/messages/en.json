@@ -2626,9 +2626,12 @@
           "title": "Import a program",
           "lead": "Bring in a program exported from DPO Central, or one register from a spreadsheet. Everything arrives as drafts for you to review and confirm. Nothing already here is changed, and importing the same file again adds nothing new.",
           "tabProgramme": "A whole program",
-          "tabRegister": "One register (CSV)",
+          "tabRegister": "One register (CSV or Excel)",
           "programmeHint": "The ZIP made by \"Take your program with you\", or its programme.json. A whole program goes into a new or empty organization.",
-          "registerHint": "A CSV file (separated by commas or semicolons), for example saved from a spreadsheet or exported from another platform. Other formats, such as XML, are not read yet.",
+          "registerHint": "A CSV file (separated by commas or semicolons) or an Excel workbook (.xlsx, first sheet), for example exported from another platform. Other formats, such as XML, are not read yet.",
+          "template": "Download an empty template for this register:",
+          "templateCsv": "CSV",
+          "templateXlsx": "Excel",
           "file": "File",
           "register": "Register",
           "registers": {
@@ -2666,6 +2669,8 @@
           "skip": "Do not import",
           "required": "required",
           "rowProblems": "{count, plural, one {# note on the rows} other {# notes on the rows}}",
+          "catalogueLinked": "{count, plural, one {# vendor name matched the vendor catalogue and is linked to it.} other {# vendor names matched the vendor catalogue and are linked to it.}}",
+          "catalogueNotes": "{count, plural, one {# vendor name is not in the catalogue and is kept as written} other {# vendor names are not in the catalogue and are kept as written}}",
           "row": "Row {row}",
           "failed": "The file could not be read.",
           "kinds": {
@@ -2682,6 +2687,30 @@
             "aiSystem": "AI systems",
             "rightsRequestForm": "Rights request forms",
             "rightsRequest": "Rights requests"
+          },
+          "aiSuggest": "Suggest with AI",
+          "aiSuggesting": "Asking the AI provider...",
+          "aiLead": "Reads at most the first {max} rows that need it, and sends only those cells (and the headers of unmatched columns with three sample values) to the AI provider. Nothing changes until you accept a suggestion and import.",
+          "aiTitle": "AI suggestions",
+          "aiProvenance": "AI-suggested, review before use",
+          "aiAccept": "Use",
+          "aiAccepted": "In use",
+          "aiReject": "Do not use",
+          "aiShowRows": "See the rows",
+          "aiColumnSuggested": "AI-suggested: {field}",
+          "aiNone": "No suggestions: the AI found no values from the lists for these cells.",
+          "aiNotSent": "{count, plural, one {# more row needed it and stays as written (limit: {max} rows).} other {# more rows needed it and stay as written (limit: {max} rows).}}",
+          "aiRateLimited": "The hourly AI limit stopped the suggestions before the end. Try again later.",
+          "aiFailed": "{count, plural, one {# request to the AI provider failed.} other {# requests to the AI provider failed.}}",
+          "aiRecheck": "The suggestions in use apply when you import. Check again to see them in the counts.",
+          "aiApplied": "{count, plural, one {Suggestions in use change # row.} other {Suggestions in use change # rows.}}",
+          "aiHintKey": "AI classification of the columns is available with an API inference key.",
+          "aiHintOff": "AI classification of the columns is available once AI assistance is turned on.",
+          "aiHintLink": "AI assistance settings",
+          "aiChanges": "{count, plural, one {# row} other {# rows}}",
+          "aiFields": {
+            "purposeCategory": "Purpose category",
+            "catalogue": "Vendor catalogue match"
           }
         }
       },
@@ -7373,12 +7402,12 @@
       "portability": {
         "title": "Take your program with you",
         "export": "Owners and Admins can download the whole program at any time, from Settings, under \"Take your program with you\". The ZIP holds programme.json (the whole program, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Rights requests are left out unless you tick them, because they hold personal data.",
-        "import": "The same file can be imported into a new or empty organization, on the hosted service or on your own instance. One register can also be imported from a spreadsheet (CSV). Everything arrives as drafts for you to review and confirm.",
+        "import": "The same file can be imported into a new or empty organization, on the hosted service or on your own instance. One register can also be imported from a spreadsheet (CSV or Excel), with an empty template per register in Settings. Vendor names that match the vendor catalogue are linked to it. Everything arrives as drafts for you to review and confirm.",
         "migrate": "If you outgrow DPO Central and move to an enterprise privacy platform, we help you move your program across from the same open format."
       },
       "ai": {
         "title": "AI features",
-        "body": "AI features are off until an Owner or Admin turns them on in the organization's settings and confirms how they work. Until then, the product makes no call to an AI service."
+        "body": "AI features are off until an Owner or Admin turns them on in the organization's settings and confirms how they work. Until then, the product makes no call to an AI service. On the TODO.LAW cloud, AI features use only your organization's own API inference key, saved in Settings: your provider processes the content sent, under your agreement with it. On a managed instance or your own hardware, AI can also use a model set up for that instance."
       },
       "hosting": {
         "title": "Where it runs",
@@ -9955,7 +9984,8 @@
       "linkActivityHint": "Link a processing activity to draft with AI.",
       "waitHint": "This can take a few minutes on a local model.",
       "cancelWait": "Cancel",
-      "cancelNote": "Stopped waiting. The server may still finish this draft, and it counts against the hourly AI limit."
+      "cancelNote": "Stopped waiting. The server may still finish this draft, and it counts against the hourly AI limit.",
+      "needsKeyHint": "AI assistance is on, but it needs your organization's API inference key. An owner or administrator can add it in Settings, under AI assistance."
     },
     "posture": {
       "off": "Off: no AI calls",
@@ -9976,7 +10006,8 @@
       "ackBullets": {
         "data": "The selected data is sent to the AI engine of the chosen posture.",
         "review": "AI output is a draft: a qualified professional must review it before use.",
-        "off": "While the posture is Off, no AI calls are ever made."
+        "off": "While the posture is Off, no AI calls are ever made.",
+        "provider": "When you use your own API inference key, your provider processes the content sent to it, under your agreement with that provider."
       },
       "ackRequiredHint": "Tick the acknowledgment to continue.",
       "save": "Save posture",
@@ -9996,7 +10027,38 @@
       "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example: LLM_GATEWAY_URL).",
       "ai_rate_limited": "This organization has reached its hourly AI limit. Try again later.",
       "ai_failed": "The AI engine did not return a draft. Try again.",
-      "ai_us_jurisdiction": "AI features are not yet available to organizations that declare a US state."
+      "ai_us_jurisdiction": "AI features are not yet available to organizations that declare a US state.",
+      "ai_key_required": "AI features need your organization's API inference key. An owner or administrator can add it in Settings, under AI assistance.",
+      "ai_key_key_format": "The key does not look right: check that it was copied whole, without spaces.",
+      "ai_key_key_prefix": "This key does not belong to the provider chosen.",
+      "ai_key_base_url_required": "Enter the base address of the endpoint.",
+      "ai_key_base_url_invalid": "The base address is not a valid web address.",
+      "ai_key_base_url_not_allowed": "On this service the base address must be a public HTTPS address.",
+      "ai_key_model_required": "Enter the model for this endpoint.",
+      "ai_key_model_invalid": "The model name is not valid.",
+      "ai_key_no_secret": "This server cannot store keys: its session secret is not set."
+    },
+    "keyCard": {
+      "title": "API inference key",
+      "leadRequired": "On this service, AI features use only your organization's own API inference key. The content sent goes to your provider, under your agreement with that provider.",
+      "leadOptional": "Optional. With your own API inference key, AI features use your provider instead of the engine set up on this server.",
+      "provider": "Provider",
+      "baseUrl": "Base address",
+      "baseUrlHint": "The address up to and including /v1, for example https://api.example.com/v1.",
+      "model": "Model",
+      "modelHint": "Leave empty to use {model}.",
+      "modelRequired": "Required for this provider.",
+      "key": "Key",
+      "keyHint": "Saved encrypted. It is never shown again: only its last four characters.",
+      "save": "Save key",
+      "remove": "Remove key",
+      "saved": "API inference key saved",
+      "removed": "API inference key removed",
+      "current": "Saved key: {provider}, ending in {last4}, added on {date}.",
+      "currentModel": "Model: {model}.",
+      "unreadable": "The saved key can no longer be read on this server. Save it again.",
+      "none": "No key saved.",
+      "adminOnly": "Only organization owners and admins can add or remove the key."
     }
   },
   "safeguards": {
@@ -11328,7 +11390,9 @@
       "EXPORT_ORGANIZATION_DATA": "Full data file exported",
       "EXPORT_RIGHTS_REQUESTS": "Rights requests exported",
       "SUITE_LINK_CREATED": "Linked with AI Sentinel",
-      "SUITE_LINK_REMOVED": "Unlinked from AI Sentinel"
+      "SUITE_LINK_REMOVED": "Unlinked from AI Sentinel",
+      "AI_KEY_SET": "API inference key added",
+      "AI_KEY_REMOVED": "API inference key removed"
     }
   },
   "dsarGeneratedTask": {

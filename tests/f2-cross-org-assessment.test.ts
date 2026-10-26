@@ -28,7 +28,7 @@ const mocks = vi.hoisted(() => ({
     organization: { updateMany: vi.fn() },
   },
   ai: {
-    requireAi: vi.fn(),
+    requireAiEngine: vi.fn(),
     assertAiRateLimit: vi.fn(),
     recordGeneration: vi.fn(),
     markAccepted: vi.fn(),
@@ -44,7 +44,7 @@ vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined })
 vi.mock("@/lib/security", () => ({ getSecurityModule: () => null }));
 vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() } }));
 vi.mock("@/server/services/ai/posture", () => ({
-  requireAi: mocks.ai.requireAi,
+  requireAiEngine: mocks.ai.requireAiEngine,
   assertAiRateLimit: mocks.ai.assertAiRateLimit,
   recordGeneration: mocks.ai.recordGeneration,
   markAccepted: mocks.ai.markAccepted,
@@ -116,7 +116,7 @@ beforeEach(() => {
   });
   mocks.prisma.vendor.findFirst.mockResolvedValue(null);
 
-  mocks.ai.requireAi.mockResolvedValue({ posture: "cloud_us" });
+  mocks.ai.requireAiEngine.mockResolvedValue({ settings: { posture: "cloud_us" }, engine: null });
   mocks.ai.assertAiRateLimit.mockResolvedValue(undefined);
   mocks.ai.postureLane.mockReturnValue("cloud_us");
   mocks.ai.generateRiskNarrative.mockResolvedValue({

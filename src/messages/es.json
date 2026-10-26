@@ -2626,9 +2626,12 @@
           "title": "Importar un programa",
           "lead": "Trae un programa exportado de DPO Central o un registro desde una hoja de cálculo. Todo llega como borrador para que lo revises y lo confirmes. No se cambia nada de lo que ya hay aquí, y volver a importar el mismo archivo no añade nada nuevo.",
           "tabProgramme": "Un programa completo",
-          "tabRegister": "Un registro (CSV)",
+          "tabRegister": "Un registro (CSV o Excel)",
           "programmeHint": "El ZIP que genera \"Llévate tu programa\" o su programme.json. Un programa completo se importa en una organización nueva o vacía.",
-          "registerHint": "Un archivo CSV (separado por comas o por punto y coma), por ejemplo guardado desde una hoja de cálculo o exportado de otra plataforma. Otros formatos, como XML, aún no se leen.",
+          "registerHint": "Un archivo CSV (separado por comas o por punto y coma) o un libro de Excel (.xlsx, la primera hoja), por ejemplo exportado de otra plataforma. Otros formatos, como XML, aún no se leen.",
+          "template": "Descarga una plantilla vacía para este registro:",
+          "templateCsv": "CSV",
+          "templateXlsx": "Excel",
           "file": "Archivo",
           "register": "Registro",
           "registers": {
@@ -2666,6 +2669,8 @@
           "skip": "No importar",
           "required": "obligatorio",
           "rowProblems": "{count, plural, one {# nota sobre las filas} other {# notas sobre las filas}}",
+          "catalogueLinked": "{count, plural, one {# nombre de proveedor coincide con el catálogo de proveedores y queda vinculado.} other {# nombres de proveedor coinciden con el catálogo de proveedores y quedan vinculados.}}",
+          "catalogueNotes": "{count, plural, one {# nombre de proveedor no está en el catálogo y se guarda tal como está escrito} other {# nombres de proveedor no están en el catálogo y se guardan tal como están escritos}}",
           "row": "Fila {row}",
           "failed": "No se ha podido leer el archivo.",
           "kinds": {
@@ -2682,6 +2687,30 @@
             "aiSystem": "Sistemas de IA",
             "rightsRequestForm": "Formularios de solicitud de derechos",
             "rightsRequest": "Solicitudes de derechos"
+          },
+          "aiSuggest": "Sugerir con IA",
+          "aiSuggesting": "Consultando al proveedor de IA...",
+          "aiLead": "Lee como máximo las primeras {max} filas que lo necesitan y envía al proveedor de IA solo esas celdas (y las cabeceras de las columnas sin asignar, con tres valores de muestra). No cambia nada hasta que aceptas una sugerencia e importas.",
+          "aiTitle": "Sugerencias de la IA",
+          "aiProvenance": "sugerido por IA: revísalo antes de usarlo",
+          "aiAccept": "Usar",
+          "aiAccepted": "En uso",
+          "aiReject": "No usar",
+          "aiShowRows": "Ver las filas",
+          "aiColumnSuggested": "Sugerido por IA: {field}",
+          "aiNone": "Sin sugerencias: la IA no ha encontrado valores de las listas para estas celdas.",
+          "aiNotSent": "{count, plural, one {# fila más lo necesitaba y se queda tal como está escrita (límite: {max} filas).} other {# filas más lo necesitaban y se quedan tal como están escritas (límite: {max} filas).}}",
+          "aiRateLimited": "El límite horario de IA ha detenido las sugerencias antes del final. Inténtalo de nuevo más tarde.",
+          "aiFailed": "{count, plural, one {# petición al proveedor de IA ha fallado.} other {# peticiones al proveedor de IA han fallado.}}",
+          "aiRecheck": "Las sugerencias en uso se aplican al importar. Vuelve a comprobar el archivo para verlas en los recuentos.",
+          "aiApplied": "{count, plural, one {Las sugerencias en uso cambian # fila.} other {Las sugerencias en uso cambian # filas.}}",
+          "aiHintKey": "La clasificación de las columnas con IA está disponible con una clave de API de inferencia.",
+          "aiHintOff": "La clasificación de las columnas con IA está disponible cuando se activa la asistencia de IA.",
+          "aiHintLink": "Ajustes de asistencia de IA",
+          "aiChanges": "{count, plural, one {# fila} other {# filas}}",
+          "aiFields": {
+            "purposeCategory": "Categoría de la finalidad",
+            "catalogue": "Coincidencia en el catálogo de proveedores"
           }
         }
       },
@@ -7373,12 +7402,12 @@
       "portability": {
         "title": "Llévate tu programa",
         "export": "Los propietarios y administradores pueden descargar el programa completo en cualquier momento, desde Ajustes, en «Llévate tu programa». El ZIP contiene programme.json (el programa completo, con su esquema JSON), una tabla CSV por registro para hojas de cálculo y la explicación de cada campo en inglés y en español. Las solicitudes de derechos quedan fuera salvo que las marques, porque contienen datos personales.",
-        "import": "El mismo archivo se puede importar en una organización nueva o vacía, en el servicio alojado o en tu propia instancia. También se puede importar un registro desde una hoja de cálculo (CSV). Todo llega como borrador para que lo revises y lo confirmes.",
+        "import": "El mismo archivo se puede importar en una organización nueva o vacía, en el servicio alojado o en tu propia instancia. También se puede importar un registro desde una hoja de cálculo (CSV o Excel), con una plantilla vacía por registro en Ajustes. Los nombres de proveedor que coinciden con el catálogo de proveedores quedan vinculados a él. Todo llega como borrador para que lo revises y lo confirmes.",
         "migrate": "Si DPO Central se te queda pequeño y pasas a una plataforma de privacidad para grandes empresas, te ayudamos a trasladar tu programa desde el mismo formato abierto."
       },
       "ai": {
         "title": "Funciones de IA",
-        "body": "Las funciones de IA están desactivadas hasta que un propietario o un administrador las activa en los ajustes de la organización y confirma cómo funcionan. Hasta entonces, el producto no hace ninguna llamada a un servicio de IA."
+        "body": "Las funciones de IA están desactivadas hasta que un propietario o un administrador las activa en los ajustes de la organización y confirma cómo funcionan. Hasta entonces, el producto no hace ninguna llamada a un servicio de IA. En la nube de TODO.LAW, las funciones de IA usan solo la clave de API de inferencia de tu organización, que se guarda en Ajustes: tu proveedor trata el contenido enviado, según tu contrato con él. En una instancia gestionada o en tu propio equipo, la IA también puede usar un modelo configurado para esa instancia."
       },
       "hosting": {
         "title": "Dónde se aloja",
@@ -9955,7 +9984,8 @@
       "linkActivityHint": "Vincula una actividad de tratamiento para redactar con IA.",
       "waitHint": "Esto puede tardar unos minutos con un modelo local.",
       "cancelWait": "Cancelar",
-      "cancelNote": "Se ha dejado de esperar. Puede que el servidor termine igualmente el borrador, y cuenta para el límite horario de IA."
+      "cancelNote": "Se ha dejado de esperar. Puede que el servidor termine igualmente el borrador, y cuenta para el límite horario de IA.",
+      "needsKeyHint": "La asistencia de IA está activada, pero necesita la clave de API de inferencia de tu organización. Un propietario o administrador puede añadirla en Ajustes, en Asistencia de IA."
     },
     "posture": {
       "off": "Desactivado: sin llamadas a IA",
@@ -9976,7 +10006,8 @@
       "ackBullets": {
         "data": "Los datos seleccionados se envían al motor de IA de la postura elegida.",
         "review": "El resultado de la IA es un borrador: un profesional cualificado debe revisarlo antes de usarlo.",
-        "off": "Mientras la postura esté desactivada, no se realiza nunca ninguna llamada a IA."
+        "off": "Mientras la postura esté desactivada, no se realiza nunca ninguna llamada a IA.",
+        "provider": "Cuando usas tu propia clave de API de inferencia, tu proveedor trata el contenido que se le envía, según tu contrato con él."
       },
       "ackRequiredHint": "Marca la confirmación para continuar.",
       "save": "Guardar postura",
@@ -9996,7 +10027,38 @@
       "ai_not_configured": "Todavía no hay ningún motor de IA disponible. Pide al administrador del servidor que configure uno (consulta el .env.example de la suite: LLM_GATEWAY_URL).",
       "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
       "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo.",
-      "ai_us_jurisdiction": "Las funciones de IA aún no están disponibles para las organizaciones que declaran un estado de EE. UU."
+      "ai_us_jurisdiction": "Las funciones de IA aún no están disponibles para las organizaciones que declaran un estado de EE. UU.",
+      "ai_key_required": "Las funciones de IA necesitan la clave de API de inferencia de tu organización. Un propietario o administrador puede añadirla en Ajustes, en Asistencia de IA.",
+      "ai_key_key_format": "La clave no parece correcta: comprueba que la has copiado entera y sin espacios.",
+      "ai_key_key_prefix": "Esta clave no corresponde al proveedor elegido.",
+      "ai_key_base_url_required": "Escribe la dirección base del punto de conexión.",
+      "ai_key_base_url_invalid": "La dirección base no es una dirección web válida.",
+      "ai_key_base_url_not_allowed": "En este servicio, la dirección base debe ser una dirección HTTPS pública.",
+      "ai_key_model_required": "Escribe el modelo de este punto de conexión.",
+      "ai_key_model_invalid": "El nombre del modelo no es válido.",
+      "ai_key_no_secret": "Este servidor no puede guardar claves: no tiene configurado su secreto de sesión."
+    },
+    "keyCard": {
+      "title": "Clave de API de inferencia",
+      "leadRequired": "En este servicio, las funciones de IA usan solo la clave de API de inferencia de tu organización. El contenido enviado va a tu proveedor, según tu contrato con él.",
+      "leadOptional": "Opcional. Con tu propia clave de API de inferencia, las funciones de IA usan tu proveedor en lugar del motor configurado en este servidor.",
+      "provider": "Proveedor",
+      "baseUrl": "Dirección base",
+      "baseUrlHint": "La dirección hasta /v1 incluido, por ejemplo https://api.example.com/v1.",
+      "model": "Modelo",
+      "modelHint": "Déjalo vacío para usar {model}.",
+      "modelRequired": "Obligatorio para este proveedor.",
+      "key": "Clave",
+      "keyHint": "Se guarda cifrada. No vuelve a mostrarse: solo sus cuatro últimos caracteres.",
+      "save": "Guardar la clave",
+      "remove": "Quitar la clave",
+      "saved": "Se ha guardado la clave de API de inferencia",
+      "removed": "Se ha quitado la clave de API de inferencia",
+      "current": "Clave guardada: {provider}, terminada en {last4}, añadida el {date}.",
+      "currentModel": "Modelo: {model}.",
+      "unreadable": "La clave guardada ya no se puede leer en este servidor. Vuelve a guardarla.",
+      "none": "No hay ninguna clave guardada.",
+      "adminOnly": "Solo los propietarios y administradores de la organización pueden añadir o quitar la clave."
     }
   },
   "safeguards": {
@@ -11328,7 +11390,9 @@
       "EXPORT_ORGANIZATION_DATA": "Archivo completo de datos exportado",
       "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas",
       "SUITE_LINK_CREATED": "Vinculada con AI Sentinel",
-      "SUITE_LINK_REMOVED": "Desvinculada de AI Sentinel"
+      "SUITE_LINK_REMOVED": "Desvinculada de AI Sentinel",
+      "AI_KEY_SET": "Clave de API de inferencia añadida",
+      "AI_KEY_REMOVED": "Clave de API de inferencia quitada"
     }
   },
   "dsarGeneratedTask": {

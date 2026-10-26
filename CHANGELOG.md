@@ -29,6 +29,44 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
+- **Organisation API inference keys**. An owner or admin can save the organisation's own key
+  (Anthropic, OpenAI, Groq, Mistral, Together AI, or any OpenAI-compatible base address with a
+  model) in Settings, AI assistance. Stored in `organization_ai_settings` (migration
+  `20261026120000_org_ai_inference_key`, additive) encrypted with AES-256-GCM: the key is
+  derived with HKDF-SHA256 from `NEXTAUTH_SECRET` (else `AUTH_SECRET`) under its own label, the
+  organisation id is bound as associated data, and only the last four characters are kept in
+  clear. Never returned after saving; `ai.setPosture` no longer returns the whole settings row.
+  Set and removal are audited (`AI_KEY_SET`, `AI_KEY_REMOVED`) without the key. The LLM door
+  takes the organisation's engine first. `AI_REQUIRE_ORG_KEY` (`src/server/services/ai/
+  deployment.ts`) decides whether the deployment engines may answer at all: unset, it is on for
+  the shared hosted service (`isHostedDeployment()`) and off elsewhere; on, an organisation
+  without a key gets `ai_not_configured` and the UI points to the key form. On that service a
+  custom endpoint must be public HTTPS. Both existing AI features (DPIA narrative, breach
+  notification draft) go through the same gate.
+- **AI-assisted register import** (`src/server/services/portability/ai-import.ts`). On a check,
+  an organisation that may use AI can ask for a field for each unmatched column and for values
+  from closed lists for free-text cells: data subject, recipient and purpose categories
+  (`src/config/import-taxonomy.ts`), data categories including special categories, the legal
+  basis, ISO country codes, the keeping period in days, and vendor names that match the
+  catalogue. Requests use structured output (Anthropic forced tool; OpenAI-compatible
+  `response_format`, retried without it when refused) and every value is checked again against
+  the lists. Only the mapped cells that need it are sent, at most 100 rows per check in batches
+  of 25, each batch rate-limited and recorded as `import_classification`. Suggestions are shown
+  apart as AI-suggested; the person accepts or rejects them per column, and only accepted ones
+  (checked again on the server) change the rows, at import, as drafts marked
+  `metadata.aiSuggested`. New import-only column "Countries the data goes to" on processing
+  activities (`metadata.transferCountries`).
+- **Register import reads Excel workbooks and offers templates**. The one-register import in
+  Settings reads `.xlsx` files (the first sheet) as well as CSV, through `read-excel-file`; the
+  workbook's unpacked size is checked against `MAX_XLSX_UNPACKED_BYTES` (100 MB) before it is
+  read, and the 20,000-row cap and the upload limit are unchanged. Each register has an empty
+  template (CSV, and Excel) with the headers in the reader's language, from
+  `GET /api/portability/register/template`. Vendor names are matched by exact normalised name
+  against the vendor catalogue: the vendors register links a match through
+  `metadata.catalogSlug`, a system's provider through `metadata.vendorCatalogSlug`, and the new
+  "Vendors or systems" column of processing activities is kept in `metadata.vendors` with each
+  name's catalogue slug. A name with no match, or with more than one, is kept as written with a
+  row note.
 - **Model replies to rights requests**: the six approved
   letters (acknowledgement, identity, extension, refusal, one favourable reply per right,
   repetitive access), in English and Castilian Spanish, offered in the request's "Send message"
