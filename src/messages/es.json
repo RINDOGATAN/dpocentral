@@ -10461,8 +10461,8 @@
         "hint": "Si es así, eres encargado del tratamiento de esos datos, vinculado por un contrato escrito."
       },
       "largeVolume": {
-        "label": "¿Eres una empresa grande por facturación o por el número de personas cuyos datos tratas?",
-        "hint": "Por ejemplo, los umbrales de la CCPA: facturación anual alta o los datos de más de 100.000 consumidores."
+        "label": "Para las leyes de estados de EE. UU.: ¿alcanzas un umbral de tamaño, por facturación o por el número de personas cuyos datos tratas?",
+        "hint": "Por ejemplo, en la CCPA: una facturación anual superior a 26.625.000 US$ (desde el 1 de enero de 2025), comprar, vender o compartir la información personal de 100.000 o más consumidores u hogares al año, o la mitad o más de los ingresos por venderla o compartirla. En el RGPD, el tamaño no decide si la ley se aplica."
       },
       "sensitiveData": {
         "label": "¿Tratas categorías especiales de datos, como salud, origen racial o étnico, religión o datos biométricos?",
@@ -10479,6 +10479,62 @@
       "publicAuthority": {
         "label": "¿Eres una autoridad u organismo público?",
         "hint": "Las autoridades públicas deben designar un delegado de protección de datos."
+      },
+      "establishedEu": {
+        "label": "¿Tienes un establecimiento en la UE o el EEE, como una oficina, una sucursal o una filial?",
+        "hint": "El RGPD se aplica al tratamiento en el contexto de las actividades de un establecimiento en la Unión, con independencia de dónde se trate (art. 3.1)."
+      },
+      "targetsEu": {
+        "label": "¿Ofreces bienes o servicios a personas que están en la UE o el EEE, aunque sea gratis?",
+        "hint": "Por ejemplo, una web o una aplicación en un idioma o una moneda locales, o envíos a direcciones de la UE (art. 3.2.a)."
+      },
+      "monitorsEu": {
+        "label": "¿Controlas el comportamiento de personas mientras están en la UE o el EEE?",
+        "hint": "Por ejemplo, seguimiento o elaboración de perfiles en línea, o seguimiento de la ubicación (art. 3.2.b)."
+      },
+      "establishedUk": {
+        "label": "¿Tienes un establecimiento en el Reino Unido, como una oficina, una sucursal o una filial?",
+        "hint": "El RGPD del Reino Unido se aplica al tratamiento en el contexto de un establecimiento en el Reino Unido (art. 3.1)."
+      },
+      "targetsUk": {
+        "label": "¿Ofreces bienes o servicios a personas que están en el Reino Unido, aunque sea gratis?",
+        "hint": "Por ejemplo, una web en libras esterlinas o envíos a direcciones del Reino Unido (art. 3.2.a del RGPD del Reino Unido)."
+      },
+      "monitorsUk": {
+        "label": "¿Controlas el comportamiento de personas mientras están en el Reino Unido?",
+        "hint": "Por ejemplo, seguimiento o elaboración de perfiles en línea (art. 3.2.b del RGPD del Reino Unido)."
+      },
+      "largeScale": {
+        "label": "¿Tratas datos personales a gran escala?",
+        "hint": "Piensa en el número de personas, el volumen de datos, la duración y el alcance del tratamiento. La gran escala es uno de los criterios que piden una evaluación de impacto."
+      },
+      "criminalData": {
+        "label": "¿Tratas datos sobre condenas e infracciones penales?",
+        "hint": "Estos datos tienen sus propias reglas (art. 10), por ejemplo en la comprobación de antecedentes."
+      },
+      "vulnerableSubjects": {
+        "label": "¿Tratas datos de otras personas vulnerables, como empleados, pacientes, personas mayores o solicitantes de asilo?",
+        "hint": "Las personas que no pueden negarse u oponerse con facilidad aumentan el riesgo del tratamiento."
+      },
+      "scoring": {
+        "label": "¿Evalúas o puntúas a las personas, por ejemplo con calificación crediticia, elaboración de perfiles o predicción de comportamientos?",
+        "hint": "La evaluación o puntuación, incluida la elaboración de perfiles, es uno de los criterios que piden una evaluación de impacto."
+      },
+      "automatedDecisions": {
+        "label": "¿Tomas decisiones automatizadas sobre las personas con efectos jurídicos o igualmente significativos?",
+        "hint": "Por ejemplo, denegar de forma automática un préstamo, una póliza de seguro o una candidatura (art. 22)."
+      },
+      "combiningDatasets": {
+        "label": "¿Cruzas o combinas conjuntos de datos de distintas fuentes o finalidades?",
+        "hint": "Por ejemplo, unir los datos de clientes con datos comprados a terceros, de un modo que las personas no esperarían."
+      },
+      "innovativeTech": {
+        "label": "¿Usas tecnologías nuevas o formas nuevas de tratar los datos, como IA, biometría o dispositivos conectados?",
+        "hint": "El uso de tecnología innovadora es uno de los criterios que piden una evaluación de impacto."
+      },
+      "blocksRights": {
+        "label": "¿Puede el tratamiento impedir que las personas usen un servicio, firmen un contrato o ejerzan un derecho?",
+        "hint": "Por ejemplo, filtrar a los clientes antes de concederles un servicio o un crédito."
       }
     },
     "appliesTitle": "Normativa aplicable",
@@ -10499,7 +10555,7 @@
       "usStates": "Leyes de privacidad de estados de EE. UU."
     },
     "reasons": {
-      "twoCriteria": "Según las directrices del CEPD, suele exigirse una EIPD cuando se cumplen dos o más criterios de alto riesgo, por ejemplo categorías especiales de datos a gran escala, elaboración de perfiles o interesados vulnerables. Revisa la actividad.",
+      "twoCriteria": "Según las directrices del CEPD (WP248), suele exigirse una EIPD cuando se cumplen dos o más criterios de alto riesgo, por ejemplo gran escala, datos sensibles, puntuación o personas vulnerables. Revisa la actividad.",
       "operatesEu": "Operas en la UE.",
       "operatesUk": "Operas en el Reino Unido.",
       "operatesCalifornia": "Operas en California.",
@@ -10513,7 +10569,36 @@
       "children": "Tratas datos de menores.",
       "largeVolume": "Alcanzas un umbral de empresa grande.",
       "thresholds": "Lo deciden los umbrales concretos.",
-      "answerUnsure": "Una respuesta aún no está definida."
+      "answerUnsure": "Una respuesta aún no está definida.",
+      "establishedEu": "Tienes un establecimiento en la UE.",
+      "targetsEu": "Ofreces bienes o servicios a personas que están en la UE.",
+      "monitorsEu": "Controlas el comportamiento de personas que están en la UE.",
+      "territoryNotMetEu": "Has declarado la UE, pero según tus respuestas no tienes establecimiento allí ni ofreces bienes o servicios ni controlas a personas que estén allí. Revisa el art. 3.",
+      "establishedUk": "Tienes un establecimiento en el Reino Unido.",
+      "targetsUk": "Ofreces bienes o servicios a personas que están en el Reino Unido.",
+      "monitorsUk": "Controlas el comportamiento de personas que están en el Reino Unido.",
+      "territoryNotMetUk": "Has declarado el Reino Unido, pero según tus respuestas no tienes establecimiento allí ni ofreces bienes o servicios ni controlas a personas que estén allí. Revisa el art. 3.",
+      "criminalData": "Tratas datos de condenas o infracciones penales.",
+      "vulnerableSubjects": "Tratas datos de personas vulnerables.",
+      "largeScale": "Tratas datos a gran escala.",
+      "scoring": "Evalúas o puntúas a las personas.",
+      "automatedDecisions": "Tomas decisiones automatizadas con efectos significativos.",
+      "combiningDatasets": "Combinas conjuntos de datos.",
+      "innovativeTech": "Usas tecnología innovadora.",
+      "blocksRights": "El tratamiento puede impedir el acceso a un servicio, un contrato o un derecho."
+    },
+    "sections": {
+      "role": "Tu papel",
+      "eu": "Unión Europea (RGPD)",
+      "uk": "Reino Unido (RGPD del Reino Unido)",
+      "risk": "Delegado de protección de datos y evaluaciones de impacto",
+      "us": "Estados Unidos",
+      "general": "Cómo usas los datos personales"
+    },
+    "sectionHints": {
+      "eu": "El RGPD te alcanza por tener un establecimiento en la Unión, o por ofrecer bienes o servicios a personas que están en ella o controlar su comportamiento. El número de personas al que llegas no lo decide.",
+      "uk": "El RGPD del Reino Unido funciona del mismo modo para el Reino Unido.",
+      "us": "Se pregunta solo porque has declarado leyes de estados de EE. UU., cuyos umbrales son los que deciden."
     }
   },
   "errorPage": {

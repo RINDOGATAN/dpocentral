@@ -95,7 +95,7 @@ export const regulationsRouter = createTRPCRouter({
   getApplicability: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
-      const { readApplicabilityAnswers } = await import("@/config/applicability");
+      const { readApplicabilityAnswers, readAskedQuestions } = await import("@/config/applicability");
       const [organization, orgJurisdictions] = await Promise.all([
         ctx.prisma.organization.findUnique({
           where: { id: ctx.organization.id },
@@ -112,6 +112,7 @@ export const regulationsRouter = createTRPCRouter({
           : {};
       return {
         answers: readApplicabilityAnswers(settings.applicability),
+        asked: readAskedQuestions(settings.applicability),
         jurisdictionCodes: orgJurisdictions.map((oj) => oj.jurisdiction.code),
       };
     }),
