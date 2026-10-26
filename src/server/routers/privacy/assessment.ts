@@ -19,7 +19,6 @@ import { dpiaAutoFillText } from "../../services/privacy/dpia-auto-fill-text";
 import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
-import { localizePackAssessment } from "@/server/services/catalogue-transfer-pack-locale";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
 import {
   assertPilotDpiaQuota,
@@ -515,10 +514,8 @@ export const assessmentRouter = createTRPCRouter({
           ? await reviewDueAssessments(ctx.prisma, ctx.organization.id, assessment.id)
           : [];
 
-      // Texts and answers a catalogue transfer pack wrote, in the reader's language.
-      const shown = localizePackAssessment(assessment, pilotLocale(requestLocale(ctx)));
       return {
-        ...withDerivedRisk(shown, template, shown.responses),
+        ...withDerivedRisk(assessment, template, assessment.responses),
         completionPercentage,
         totalQuestions,
         /** Why the approved assessment should be reviewed, empty when it need not be. */

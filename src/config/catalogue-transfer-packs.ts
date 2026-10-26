@@ -20,9 +20,10 @@
  * severity, whether the transfer may proceed) are never answered: the
  * customer is the controller and approves the assessment itself.
  *
- * Every text exists in English and Spanish, so a record can be shown in the
- * language of whoever reads it (`packText`). This applies on the hosted
- * service and on the self-hosted kit alike: the vendor is the customer's own.
+ * Every text exists in English and Spanish, so a record is shown in the
+ * language of whoever reads it (./catalogue-transfer-content-pack.ts, through
+ * src/lib/system-content/). This applies on the hosted service and on the
+ * self-hosted kit alike: the vendor is the customer's own.
  *
  * Select answers are the template's English option labels; the writer stores
  * them in the language of the screen that added the vendor, through the
@@ -263,22 +264,4 @@ export const CATALOGUE_TRANSFER_PACKS: Readonly<Record<string, CatalogueTransfer
 export function transferPackFor(slug: string | null | undefined): CatalogueTransferPack | null {
   if (!slug) return null;
   return CATALOGUE_TRANSFER_PACKS[slug] ?? null;
-}
-
-/** The pack whose records carry this metadata.source, if any. */
-export function transferPackBySource(source: unknown): CatalogueTransferPack | null {
-  if (typeof source !== "string") return null;
-  return Object.values(CATALOGUE_TRANSFER_PACKS).find((p) => p.sourceRef === source) ?? null;
-}
-
-/**
- * A pack-written text in the reader's language. A stored value the customer
- * has not edited (equal to the pack's text in either language) is shown in
- * `locale`; an edited value is shown as typed.
- */
-export function packText(stored: string | null | undefined, text: Bilingual, locale: PackLocale): string | null {
-  if (stored == null) return null;
-  const s = stored.trim();
-  if (s === text.en.trim() || s === text.es.trim()) return text[locale];
-  return stored;
 }

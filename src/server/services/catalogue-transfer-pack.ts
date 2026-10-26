@@ -21,7 +21,8 @@
  * is left alone, so adding the vendor again never duplicates the work.
  * Applies on the hosted service and on the self-hosted kit: the vendor is
  * the customer's own. Every record carries metadata.source = the pack's
- * sourceRef, so screens can show the pack's texts in the reader's language.
+ * sourceRef; its texts are shown in the reader's language by
+ * src/lib/system-content/ (./catalogue-transfer-content-pack.ts).
  */
 
 import { ApprovalStatus, AssessmentStatus, AssessmentType, type Prisma } from "@prisma/client";

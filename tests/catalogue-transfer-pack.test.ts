@@ -2,18 +2,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { describe, expect, it } from "vitest";
-import {
-  CATALOGUE_TRANSFER_PACKS,
-  packText,
-  transferPackBySource,
-  transferPackFor,
-} from "@/config/catalogue-transfer-packs";
+import { CATALOGUE_TRANSFER_PACKS, transferPackFor } from "@/config/catalogue-transfer-packs";
 import { applyCatalogueTransferPack, packTiaResponses, PACK_MARKER } from "@/server/services/catalogue-transfer-pack";
-import {
-  localizePackAssessment,
-  localizePackTransfer,
-  localizedChecklistAnswers,
-} from "@/server/services/catalogue-transfer-pack-locale";
+import { localizeSystemContent, SYSTEM_CONTENT_PACKS } from "@/lib/system-content/runtime";
 import { SCHREMS_II_CHECKLIST, SUPPLEMENTARY_MEASURES } from "@/config/transfer-compliance-rules";
 import { ASSESSMENT_TEMPLATES_V2 } from "@/config/assessment-templates-v2";
 import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
@@ -26,9 +17,8 @@ const questions = new Map(tia.sections.flatMap((s) => s.questions.map((q) => [q.
 const pack = transferPackFor("onetrust")!;
 
 describe("the consent-platform transfer pack (content)", () => {
-  it("is found by its catalogue slug and by its source, and TODO.LAW has none", () => {
+  it("is found by its catalogue slug, and TODO.LAW has none", () => {
     expect(pack).not.toBeNull();
-    expect(transferPackBySource(pack.sourceRef)).toBe(pack);
     expect(transferPackFor(TODOLAW_SOURCE_REF)).toBeNull();
     expect(transferPackFor("unknown-vendor")).toBeNull();
   });
@@ -221,42 +211,31 @@ describe("applying the pack when the vendor is added", () => {
 });
 
 describe("showing the pack's records in the reader's language", () => {
-  const meta = { source: pack.sourceRef };
+  it("is registered with the system content packs, next to TODO.LAW's", () => {
+    const ids = SYSTEM_CONTENT_PACKS.map((p) => p.id);
+    expect(ids).toContain("todo-law");
+    expect(ids).toContain(pack.sourceRef);
+  });
 
   it("shows an unedited transfer in the reader's language and an edited one as typed", () => {
-    const stored = { metadata: meta, name: pack.transfer.name.es, description: pack.transfer.description.es, safeguards: "Mi texto" };
-    const shown = localizePackTransfer(stored, "en");
+    const stored = { name: pack.transfer.name.es, description: pack.transfer.description.es, safeguards: "Mi texto" };
+    const shown = localizeSystemContent(stored, "en");
     expect(shown.name).toBe(pack.transfer.name.en);
     expect(shown.description).toBe(pack.transfer.description.en);
     expect(shown.safeguards).toBe("Mi texto");
-    const other = { metadata: { source: TODOLAW_SOURCE_REF }, name: "x", safeguards: "y" };
-    expect(localizePackTransfer(other, "en")).toBe(other);
   });
 
   it("shows the checklist notes in the reader's language", () => {
-    const metadata = {
-      ...meta,
-      schremsChecklist: { s2_3_assess_laws: { state: "DONE", note: pack.checklist.s2_3_assess_laws!.note.en } },
-    };
-    expect(localizedChecklistAnswers(metadata, "es").s2_3_assess_laws?.note).toBe("Consulta la EIT, paso 2.");
+    const metadata = { schremsChecklist: { s2_3_assess_laws: { state: "DONE", note: pack.checklist.s2_3_assess_laws!.note.en } } };
+    expect(localizeSystemContent(metadata, "es").schremsChecklist.s2_3_assess_laws.note).toBe("Consulta la EIT, paso 2.");
   });
 
   it("shows the assessment's title, options and texts in the reader's language", () => {
     const responses = packTiaResponses(pack, "es");
-    const shown = localizePackAssessment(
-      { metadata: meta, name: pack.tia.title.name.es, description: pack.tia.title.description.es, responses },
-      "en",
-    );
+    const shown = localizeSystemContent({ name: pack.tia.title.name.es, responses }, "en");
     expect(shown.name).toBe(pack.tia.title.name.en);
-    expect(shown.responses!.find((r) => r.questionId === "tiav2_1_1")?.response).toBe("Adequacy decision (Art. 45)");
-    expect(shown.responses!.find((r) => r.questionId === "tiav2_3_2")?.response).toEqual(pack.tia.choices.tiav2_3_2);
-    expect(shown.responses!.find((r) => r.questionId === "tiav2_1_4")?.response).toBe(pack.tia.text.en.tiav2_1_4);
-  });
-
-  it("packText keeps empty and edited values", () => {
-    const b = { en: "Hello", es: "Hola" };
-    expect(packText(null, b, "en")).toBeNull();
-    expect(packText("Hola", b, "en")).toBe("Hello");
-    expect(packText("Hola, editado", b, "en")).toBe("Hola, editado");
+    expect(shown.responses.find((r) => r.questionId === "tiav2_1_1")?.response).toBe("Adequacy decision (Art. 45)");
+    expect(shown.responses.find((r) => r.questionId === "tiav2_3_2")?.response).toEqual(pack.tia.choices.tiav2_3_2);
+    expect(shown.responses.find((r) => r.questionId === "tiav2_1_4")?.response).toBe(pack.tia.text.en.tiav2_1_4);
   });
 });
