@@ -15,6 +15,7 @@
  */
 
 import { logger } from "@/lib/logger";
+import { isHostedDeployment } from "@/lib/hosted";
 import { IMPORT_IDENTITY_HEADER, signImportIdentity } from "@/lib/import-identity";
 import type {
   DPCSystemPayload,
@@ -23,8 +24,25 @@ import type {
   AiSentinelSystemStatus,
 } from "./types";
 
-const AI_SENTINEL_API_URL = process.env.AI_SENTINEL_API_URL;
-const AI_SENTINEL_API_KEY = process.env.AI_SENTINEL_API_KEY;
+/** The import key, read at call time so a changed setting applies without a restart of the module. */
+function aiSentinelApiKey(): string | undefined {
+  return process.env.AI_SENTINEL_API_KEY;
+}
+
+/** The hosted AI Sentinel, used when the key is set and no URL is given. */
+export const HOSTED_AI_SENTINEL_URL = "https://aisentinel.todo.law";
+
+/**
+ * Where AI Sentinel's import API lives: AI_SENTINEL_API_URL, or the hosted
+ * service when only the key is set on a hosted deployment. A kit with no key
+ * stays unconnected.
+ */
+export function aiSentinelApiUrl(env: Record<string, string | undefined> = process.env): string | null {
+  const explicit = env.AI_SENTINEL_API_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+  if (env.AI_SENTINEL_API_KEY?.trim() && isHostedDeployment(env)) return HOSTED_AI_SENTINEL_URL;
+  return null;
+}
 
 /** Issuer and audience of the identity statement sent to AI Sentinel. */
 const IDENTITY_ISSUER = "dpocentral";
@@ -38,7 +56,7 @@ const IDENTITY_AUDIENCE = "aisentinel-import";
  */
 export function aiSentinelHeaders(userEmail: string): Record<string, string> {
   const headers: Record<string, string> = {
-    "x-api-key": AI_SENTINEL_API_KEY ?? "",
+    "x-api-key": aiSentinelApiKey() ?? "",
     "Content-Type": "application/json",
   };
   const secret = process.env.AI_SENTINEL_IDENTITY_SECRET?.trim();
@@ -57,7 +75,7 @@ export function aiSentinelHeaders(userEmail: string): Record<string, string> {
  * Whether the AI Sentinel integration is configured (env vars present).
  */
 export function isAiSentinelConfigured(): boolean {
-  return !!(AI_SENTINEL_API_URL && AI_SENTINEL_API_KEY);
+  return !!(aiSentinelApiUrl() && aiSentinelApiKey());
 }
 
 /**
@@ -71,7 +89,7 @@ export async function checkAiSentinelAccount(
   }
 
   try {
-    const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/check-account`, {
+    const res = await fetch(`${aiSentinelApiUrl()}/api/import/check-account`, {
       method: "POST",
       headers: aiSentinelHeaders(email),
       // AI Sentinel's import routes all take the account as `userEmail`.
@@ -103,7 +121,7 @@ export async function exportAISystems(
   }
 
   try {
-    const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/dpc-ai-systems`, {
+    const res = await fetch(`${aiSentinelApiUrl()}/api/import/dpc-ai-systems`, {
       method: "POST",
       headers: aiSentinelHeaders(userEmail),
       body: JSON.stringify({ userEmail, systems }),
@@ -136,7 +154,7 @@ export async function getAiSentinelSystemStatus(
   }
 
   try {
-    const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/ai-system-status`, {
+    const res = await fetch(`${aiSentinelApiUrl()}/api/import/ai-system-status`, {
       method: "POST",
       headers: aiSentinelHeaders(userEmail),
       body: JSON.stringify({ userEmail, aisSystemId }),

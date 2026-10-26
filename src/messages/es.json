@@ -11297,7 +11297,9 @@
       "RESPONSE_LINK_SET": "Enlace de respuesta añadido",
       "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado",
       "EXPORT_ORGANIZATION_DATA": "Archivo completo de datos exportado",
-      "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas"
+      "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas",
+      "SUITE_LINK_CREATED": "Vinculada con AI Sentinel",
+      "SUITE_LINK_REMOVED": "Desvinculada de AI Sentinel"
     }
   },
   "dsarGeneratedTask": {
@@ -11421,5 +11423,46 @@
     },
     "ctaText": "Abrir Ajustes",
     "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}."
+  },
+  "suite": {
+    "pageTitle": "Empieza AI Sentinel desde DPO Central",
+    "pageLead": "Elige la organización de DPO Central desde la que empezar. Sus proveedores de IA, sus sistemas de IA y los tratamientos que los usan pasan a AI Sentinel como borradores, para que los confirmes allí.",
+    "loading": "Buscando tus organizaciones…",
+    "notConnected": "Este DPO Central no está conectado con AI Sentinel.",
+    "aisError": "AI Sentinel no ha respondido como se esperaba ({error}). Vuelve a intentarlo dentro de un momento; si sigue igual, escríbenos.",
+    "chooseDpc": "Tu organización de DPO Central",
+    "chooseDpcHelp": "Solo aparecen las organizaciones de las que eres propietario o administrador.",
+    "noDpcOrgs": "No eres propietario ni administrador de ninguna organización de DPO Central.",
+    "chooseAis": "La organización de AI Sentinel que se va a completar",
+    "noAisOrgs": "Todavía no eres propietario ni administrador de ninguna organización de AI Sentinel. Créala primero en AI Sentinel y vuelve.",
+    "alreadyLinked": "(ya vinculada)",
+    "takenElsewhere": "Esa organización de AI Sentinel ya está vinculada con otra organización de DPO Central.",
+    "whatTitle": "Qué recibe AI Sentinel",
+    "what1": "Los datos de la organización, su país y las leyes declaradas",
+    "what2": "Los proveedores de IA, con su ficha del catálogo",
+    "what3": "Los sistemas de IA registrados aquí",
+    "what4": "Para cada uno, las categorías de datos, los interesados y las bases jurídicas de los tratamientos que lo usan",
+    "what5": "Si hay una EIPD para ese tratamiento o hace falta, como enlace a DPO Central",
+    "whatNote": "Tras vincularlas, los nuevos sistemas y proveedores de IA de cualquiera de los dos productos aparecen en el otro como borradores. Nada se borra en uno porque se haya borrado en el otro. Puedes desvincularlas cuando quieras.",
+    "linkButton": "Vincular y traer los registros",
+    "doneTitle": "Las organizaciones se han vinculado",
+    "doneBody": "AI Sentinel ha recibido {systems} sistemas de IA y {vendors} proveedores nuevos como borradores.",
+    "doneBack": "{count} sistemas de IA que ya estaban en AI Sentinel han llegado aquí como borradores.",
+    "backToAis": "Volver a AI Sentinel",
+    "cardTitle": "AI Sentinel",
+    "cardLinked": "Vinculada con {name} en AI Sentinel desde el {date}. Los nuevos sistemas y proveedores de IA de cualquiera de los dos lados llegan al otro como borradores.",
+    "cardLastSync": "Última sincronización: {date}",
+    "cardSyncError": "La última sincronización ha fallado: {error}",
+    "cardFromAis": "Desde AI Sentinel: {count} sistemas de IA.",
+    "cardNotLinked": "No está vinculada con AI Sentinel. Vincúlala para empezar el programa de gobierno de la IA con los registros de esta organización.",
+    "cardLink": "Vincular con AI Sentinel",
+    "syncNow": "Sincronizar ahora",
+    "synced": "Se ha sincronizado.",
+    "unlink": "Desvincular",
+    "unlinkTitle": "¿Desvincular de AI Sentinel?",
+    "unlinkBody": "Lo importado se queda en los dos lados; los productos dejan de sincronizarse.",
+    "unlinked": "Se ha desvinculado de AI Sentinel.",
+    "noteRemovedInAis": "Este sistema ya no está en AI Sentinel (anotado el {date}). Aquí no se ha borrado nada.",
+    "fromAisBadge": "Desde AI Sentinel, por confirmar"
   }
 }

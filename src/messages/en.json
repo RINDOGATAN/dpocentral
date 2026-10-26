@@ -11297,7 +11297,9 @@
       "RESPONSE_LINK_SET": "Response link set",
       "RESPONSE_LINK_CLEARED": "Response link removed",
       "EXPORT_ORGANIZATION_DATA": "Full data file exported",
-      "EXPORT_RIGHTS_REQUESTS": "Rights requests exported"
+      "EXPORT_RIGHTS_REQUESTS": "Rights requests exported",
+      "SUITE_LINK_CREATED": "Linked with AI Sentinel",
+      "SUITE_LINK_REMOVED": "Unlinked from AI Sentinel"
     }
   },
   "dsarGeneratedTask": {
@@ -11421,5 +11423,46 @@
     },
     "ctaText": "Open Settings",
     "whyYou": "You receive this e-mail because you are an owner or administrator of {orgName}."
+  },
+  "suite": {
+    "pageTitle": "Start AI Sentinel from DPO Central",
+    "pageLead": "Choose the DPO Central organisation to start from. Its AI vendors, its AI systems and the processing behind them go to AI Sentinel as drafts for you to confirm there.",
+    "loading": "Looking up your organisations…",
+    "notConnected": "This DPO Central is not connected to AI Sentinel.",
+    "aisError": "AI Sentinel has not answered as expected ({error}). Try again in a moment; if it persists, write to us.",
+    "chooseDpc": "Your DPO Central organisation",
+    "chooseDpcHelp": "Only organisations where you are owner or administrator are listed.",
+    "noDpcOrgs": "You are not owner or administrator of any DPO Central organisation.",
+    "chooseAis": "The AI Sentinel organisation to fill",
+    "noAisOrgs": "You are not owner or administrator of any AI Sentinel organisation yet. Create one in AI Sentinel first, then come back.",
+    "alreadyLinked": "(already linked)",
+    "takenElsewhere": "That AI Sentinel organisation is already linked to another DPO Central organisation.",
+    "whatTitle": "What AI Sentinel receives",
+    "what1": "The organisation's details, country and declared laws",
+    "what2": "The AI vendors, with their catalogue record",
+    "what3": "The AI systems recorded here",
+    "what4": "For each, the data categories, data subjects and legal bases of the processing that uses it",
+    "what5": "Whether a DPIA exists or is due for that processing, as a link back here",
+    "whatNote": "After linking, new AI systems and AI vendors in either product appear in the other as drafts. Nothing is deleted on one side because it was deleted on the other. You can unlink at any time.",
+    "linkButton": "Link and bring the records",
+    "doneTitle": "The organisations are linked",
+    "doneBody": "AI Sentinel has received {systems} new AI systems and {vendors} new vendors as drafts.",
+    "doneBack": "{count} AI systems already in AI Sentinel have come here as drafts.",
+    "backToAis": "Back to AI Sentinel",
+    "cardTitle": "AI Sentinel",
+    "cardLinked": "Linked to {name} in AI Sentinel since {date}. New AI systems and vendors on either side arrive on the other as drafts.",
+    "cardLastSync": "Last synchronised: {date}",
+    "cardSyncError": "The last synchronisation failed: {error}",
+    "cardFromAis": "From AI Sentinel: {count} AI systems.",
+    "cardNotLinked": "Not linked to AI Sentinel. Link it to start the AI governance programme from this organisation's records.",
+    "cardLink": "Link with AI Sentinel",
+    "syncNow": "Synchronise now",
+    "synced": "Synchronised.",
+    "unlink": "Unlink",
+    "unlinkTitle": "Unlink from AI Sentinel?",
+    "unlinkBody": "What has been imported stays on both sides; the two stop keeping in step.",
+    "unlinked": "Unlinked from AI Sentinel.",
+    "noteRemovedInAis": "This system is no longer in AI Sentinel (noted on {date}). Nothing has been deleted here.",
+    "fromAisBadge": "From AI Sentinel, to confirm"
   }
 }
