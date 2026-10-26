@@ -16,7 +16,7 @@ import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
 import { latestIntakeActivation } from "@/server/services/dsar/intake-activation";
 import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { DRAFT_PROVENANCES } from "@/lib/drafts";
-import { evaluateApplicability, readApplicabilityAnswers } from "@/config/applicability";
+import { evaluateApplicability, readApplicabilityAnswers, readAskedQuestions } from "@/config/applicability";
 import { TODOLAW_SOURCE_REF } from "@/server/services/todolaw-processor";
 import { isReadinessCurrent, readBreachReadiness } from "@/server/services/program/breach-readiness";
 import {
@@ -204,6 +204,7 @@ export async function loadPathCounts(
   const dpiaItem = evaluateApplicability(
     jurisdictions.map((j) => j.jurisdiction.code),
     readApplicabilityAnswers(settings.applicability),
+    readAskedQuestions(settings.applicability),
   ).find((item) => item.id === "dpiaLikely");
 
   return {
