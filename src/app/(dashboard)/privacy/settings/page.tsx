@@ -68,8 +68,8 @@ export default function SettingsPage() {
   const tOrg = useTranslations("pages.settings.organization");
   const tMembers = useTranslations("pages.settings.members");
   const { label: enumLabel } = useEnumLabels();
-  const { userType } = useUserType();
-  const { organization } = useOrganization();
+  const { userType: sessionUserType, refreshSession } = useUserType();
+  const { organization, organizations } = useOrganization();
   const orgId = organization?.id ?? "";
   const locale = useLocale() as Locale;
   const utils = trpc.useUtils();
@@ -102,10 +102,20 @@ export default function SettingsPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  // The account type lives in the session token, which the menu reads ("All
+  // clients" for a professional only). After saving, the session is read
+  // again, so the menu and this selector change at once; until it arrives the
+  // selector shows the saved value.
+  const [savedUserType, setSavedUserType] = useState<UserType | null>(null);
+  const userType = savedUserType ?? sessionUserType;
+  // A business account works with one organisation (src/server/routers/privacy/user.ts).
+  const businessBlocked = organizations.length > 1;
   const setUserType = trpc.user.setUserType.useMutation({
-    onSuccess: () => {
+    onSuccess: async (saved) => {
+      setSavedUserType(saved.userType);
+      await refreshSession();
       toast.success(tAccountType("updated"));
-      utils.user.getProfile.invalidate();
+      void utils.user.getProfile.invalidate();
     },
     onError: (e) => toast.error(e.message),
   });
@@ -265,6 +275,7 @@ export default function SettingsPage() {
             {(["BUSINESS_OWNER", "PRIVACY_PROFESSIONAL"] as const).map((type) => {
               const Icon = personaIcons[type];
               const isCurrent = userType === type;
+              const blocked = !isCurrent && type === "BUSINESS_OWNER" && businessBlocked;
               const label =
                 type === "BUSINESS_OWNER"
                   ? tAccountType("businessOwner")
@@ -280,15 +291,18 @@ export default function SettingsPage() {
                   key={type}
                   type="button"
                   onClick={() => {
-                    if (!isCurrent && !setUserType.isPending) {
+                    if (!isCurrent && !blocked && !setUserType.isPending) {
                       setUserType.mutate({ userType: type as UserType });
                     }
                   }}
-                  disabled={isCurrent || setUserType.isPending}
+                  disabled={isCurrent || blocked || setUserType.isPending}
+                  data-testid={`account-type-${type}`}
                   className={`w-full flex items-center gap-4 p-3 rounded-lg border text-left transition-colors ${
                     isCurrent
                       ? "border-primary bg-primary/5 cursor-default"
-                      : "hover:border-primary/40 cursor-pointer"
+                      : blocked
+                        ? "cursor-not-allowed"
+                        : "hover:border-primary/40 cursor-pointer"
                   }`}
                 >
                   <div
@@ -301,6 +315,11 @@ export default function SettingsPage() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{label}</p>
                     <p className="text-xs text-muted-foreground">{description}</p>
+                    {blocked && (
+                      <p className="mt-1 text-xs text-foreground" data-testid="account-type-business-blocked">
+                        {tAccountType("businessNeedsOneOrganization")}
+                      </p>
+                    )}
                   </div>
                   {isCurrent && (
                     <Badge variant="outline" className="border-primary text-primary text-xs">

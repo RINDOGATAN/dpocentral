@@ -167,6 +167,19 @@ export function evaluatePath<C>(config: PathConfig<C>, counts: C): PathStatuses 
   return out;
 }
 
+/**
+ * The statuses with one step marked done, for a save that by the step's own
+ * rule completes it (the breach-readiness confirmation completes "incidents").
+ * Written into the path's cache at once, so the menu and the figure do not
+ * wait for the refetch that follows; that refetch remains the answer. A step
+ * that is not listed, hidden or still to come is left as it is.
+ */
+export function withStepDone(statuses: PathStatuses, stepId: string): PathStatuses {
+  const current = statuses[stepId];
+  if (current === undefined || current === "hidden" || current === "coming" || current === "done") return statuses;
+  return { ...statuses, [stepId]: "done" };
+}
+
 /** A step that counts towards progress: it has a page and is not situational. */
 export function isCounted<C>(step: PathStep<C>): boolean {
   return !step.coming && !step.optional;
