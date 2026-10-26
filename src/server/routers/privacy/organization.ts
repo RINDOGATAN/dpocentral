@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { suiteForRequest, type ApplyDb, type SuiteOrg } from "@/server/services/suite/plan-state";
 import { signupRegionSettings } from "@/server/services/org-region";
 import { normEmail, pendingInvitesOf, settingsWithInvite, settingsWithoutInvite } from "@/server/services/members/invitations";
 import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
@@ -199,7 +200,15 @@ export const organizationRouter = createTRPCRouter({
   getPilotStatus: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
-      return getPilotStatus(ctx.prisma, ctx.organization);
+      const status = await getPilotStatus(ctx.prisma, ctx.organization);
+      // Whether the billing owner also has AI Sentinel: the pilot bar then
+      // says one plan covers the suite (src/server/services/suite/plan-state.ts).
+      const suite = await suiteForRequest(
+        ctx.prisma as unknown as ApplyDb,
+        ctx.organization as unknown as SuiteOrg,
+        ctx.session.user
+      );
+      return suite.suite ? { ...status, suite: true } : status;
     }),
 
   // Hosted: whether this organisation still has to accept the current data

@@ -507,20 +507,32 @@ export async function recordPilotFirstSignIn(
     };
   },
   org: { id: string; billingOwnerId?: string | null } & PilotClockOrg,
-  now: Date = new Date()
+  now: Date = new Date(),
+  /**
+   * The pilot start the same person already has on the other product of the
+   * suite (src/server/services/suite/plan-state.ts): used, when earlier than
+   * now, so the suite has one pilot window. Only read while this group has
+   * no start; a recorded start is never moved.
+   */
+  preferredStart: Date | null = null
 ): Promise<void> {
   if (!isHostedDeployment()) return;
   if (org.pilotStartedAt) return;
   if (now.getTime() < PILOT_CLOCK_START.getTime()) return;
   const group = groupWhere(org);
-  let start = now;
+  let start =
+    preferredStart && preferredStart.getTime() < now.getTime() && preferredStart.getTime() >= PILOT_CLOCK_START.getTime()
+      ? new Date(preferredStart)
+      : now;
   if (org.billingOwnerId && typeof db.organization.findFirst === "function") {
     const earlier = await db.organization.findFirst({
       where: { ...group, pilotStartedAt: { not: null } },
       orderBy: { pilotStartedAt: "asc" },
       select: { pilotStartedAt: true },
     });
-    if (earlier?.pilotStartedAt) start = new Date(earlier.pilotStartedAt);
+    if (earlier?.pilotStartedAt && new Date(earlier.pilotStartedAt).getTime() < start.getTime()) {
+      start = new Date(earlier.pilotStartedAt);
+    }
   }
   await db.organization.updateMany({
     where: { ...group, pilotStartedAt: null },
