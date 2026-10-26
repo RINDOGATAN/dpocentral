@@ -48,7 +48,7 @@ type ApproverDb = {
     findMany(args: {
       where: { organizationId: string; role: { in: (typeof APPROVER_ROLES)[number][] } };
       select: { userId: true; role: true };
-      orderBy: { createdAt: "asc" };
+      orderBy: { joinedAt: "asc" };
     }): Promise<{ userId: string; role: string }[]>;
   };
 };
@@ -58,7 +58,7 @@ export async function todoLawTiaApprover(db: ApproverDb, organizationId: string)
   const members = await db.organizationMember.findMany({
     where: { organizationId, role: { in: [...APPROVER_ROLES] } },
     select: { userId: true, role: true },
-    orderBy: { createdAt: "asc" },
+    orderBy: { joinedAt: "asc" },
   });
   for (const role of APPROVER_ROLES) {
     const m = members.find((x) => x.role === role);

@@ -28,7 +28,7 @@ import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 
 const read = (rel: string) => readFileSync(path.join(process.cwd(), rel), "utf8");
 
-type Member = { organizationId: string; userId: string; role: string; createdAt: number };
+type Member = { organizationId: string; userId: string; role: string; joinedAt: number };
 
 function memberDb(members: Member[]) {
   return {
@@ -36,7 +36,7 @@ function memberDb(members: Member[]) {
       findMany: vi.fn(async ({ where }: { where: { organizationId: string; role: { in: string[] } } }) =>
         members
           .filter((m) => m.organizationId === where.organizationId && where.role.in.includes(m.role))
-          .sort((a, b) => a.createdAt - b.createdAt)
+          .sort((a, b) => a.joinedAt - b.joinedAt)
           .map(({ userId, role }) => ({ userId, role })),
       ),
     },
@@ -46,10 +46,10 @@ function memberDb(members: Member[]) {
 describe("the ready-made transfer assessment can be approved", () => {
   it("asks the owner first, then an administrator, then a privacy officer", async () => {
     const db = memberDb([
-      { organizationId: "o1", userId: "admin", role: "ADMIN", createdAt: 1 },
-      { organizationId: "o1", userId: "owner", role: "OWNER", createdAt: 2 },
-      { organizationId: "o2", userId: "officer", role: "PRIVACY_OFFICER", createdAt: 1 },
-      { organizationId: "o2", userId: "member", role: "MEMBER", createdAt: 0 },
+      { organizationId: "o1", userId: "admin", role: "ADMIN", joinedAt: 1 },
+      { organizationId: "o1", userId: "owner", role: "OWNER", joinedAt: 2 },
+      { organizationId: "o2", userId: "officer", role: "PRIVACY_OFFICER", joinedAt: 1 },
+      { organizationId: "o2", userId: "member", role: "MEMBER", joinedAt: 0 },
     ]);
     expect(await todoLawTiaApprover(db as never, "o1")).toBe("owner");
     expect(await todoLawTiaApprover(db as never, "o2")).toBe("officer");
@@ -76,8 +76,8 @@ describe("the ready-made transfer assessment can be approved", () => {
       { id: "a5", organizationId: "o1", status: "PENDING_APPROVAL", metadata: { source: "todo-law" }, _count: { approvals: 0 } },
     ];
     const members: Member[] = [
-      { organizationId: "o1", userId: "owner-1", role: "OWNER", createdAt: 1 },
-      { organizationId: "o2", userId: "owner-2", role: "OWNER", createdAt: 1 },
+      { organizationId: "o1", userId: "owner-1", role: "OWNER", joinedAt: 1 },
+      { organizationId: "o2", userId: "owner-2", role: "OWNER", joinedAt: 1 },
     ];
     const dbFor = () => {
       const create = vi.fn(async () => ({}));
