@@ -10241,7 +10241,7 @@
       "lia": {
         "label": "Evaluaciones del interés legítimo",
         "why": "Pondera tus intereses frente a los derechos de las personas cuando te apoyes en ellos.",
-        "do": "Realiza una evaluación de interés legítimo cuando esa sea tu base jurídica."
+        "do": "Realiza una evaluación del interés legítimo cuando esa sea tu base jurídica."
       },
       "dsar": {
         "label": "Solicitudes de derechos",
@@ -10305,6 +10305,11 @@
         "dataProcessed": "los datos personales que trata",
         "countries": "dónde trata los datos",
         "complianceStatus": "un estado de cumplimiento registrado"
+      },
+      "assessmentsCounts": "Las evaluaciones de transferencias, de proveedores y del interés legítimo no cuentan para este paso. Si el inicio rápido ha creado borradores de EIPD, empieza por uno de ellos.",
+      "optional": {
+        "aiSystems": "Opcional: este paso nunca cuenta en la cifra del programa. Tus sistemas de IA se gobiernan en AI Sentinel.",
+        "lia": "Opcional: este paso nunca cuenta en la cifra del programa. Hazlo solo cuando el interés legítimo sea la base jurídica de alguna actividad."
       }
     },
     "figure": {

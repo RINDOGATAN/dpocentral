@@ -18,6 +18,7 @@
 
 import { AsyncLocalStorage } from "node:async_hooks";
 import { TODOLAW_CONTENT_PACK } from "@/config/todolaw-content-pack";
+import { CATALOGUE_TRANSFER_CONTENT_PACKS } from "@/config/catalogue-transfer-content-pack";
 import { PUBLIC_PROPERTIES_CONTENT_PACK } from "@/config/public-properties-content-pack";
 import {
   createSystemContentLocalizer,
@@ -26,7 +27,11 @@ import {
   type SystemContentPack,
 } from "./localize";
 
-export const SYSTEM_CONTENT_PACKS: readonly SystemContentPack[] = [TODOLAW_CONTENT_PACK, PUBLIC_PROPERTIES_CONTENT_PACK];
+export const SYSTEM_CONTENT_PACKS: readonly SystemContentPack[] = [
+  TODOLAW_CONTENT_PACK,
+  PUBLIC_PROPERTIES_CONTENT_PACK,
+  ...CATALOGUE_TRANSFER_CONTENT_PACKS,
+];
 
 let localizer: SystemContentLocalizer | null = null;
 function getLocalizer(): SystemContentLocalizer {

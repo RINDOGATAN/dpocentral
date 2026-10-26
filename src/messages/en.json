@@ -10305,6 +10305,11 @@
         "dataProcessed": "the personal data it processes",
         "countries": "where it processes data",
         "complianceStatus": "a recorded compliance status"
+      },
+      "assessmentsCounts": "Transfer, vendor and legitimate-interest assessments do not count for this step. If the quick start has drafted DPIAs, start with one of them.",
+      "optional": {
+        "aiSystems": "Optional: this step never counts toward the program figure. Your AI systems are governed in AI Sentinel.",
+        "lia": "Optional: this step never counts toward the program figure. Do it only where legitimate interest is the legal basis of an activity."
       }
     },
     "figure": {
