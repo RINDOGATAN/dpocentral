@@ -508,6 +508,12 @@ function StepRow<C>({
             </span>
           )}
         </span>
+        {/* Optional steps say so in the menu, not only in a tooltip. */}
+        {showProgress && step.optional && status !== "done" && (
+          <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground" data-testid={`step-optional-${step.id}`}>
+            {t("stepStatus.optional")}
+          </span>
+        )}
         {note && (
           <span
             className="mt-0.5 block text-[11px] leading-snug text-muted-foreground"
