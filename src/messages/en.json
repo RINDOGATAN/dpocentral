@@ -5771,18 +5771,7 @@
       },
       "roles": {
         "title": "User roles",
-        "description": "DPO Central uses a hierarchical role system. Higher roles inherit all permissions of lower roles.",
-        "columnRole": "Role",
-        "columnPermissions": "Permissions",
-        "rows": {
-          "OWNER": "Full access including organization settings, billing, and member management",
-          "ADMIN": "Manage all modules, users, and settings. Cannot delete the organization",
-          "PRIVACY_OFFICER": "Full CRUD on all privacy modules. Cannot manage organization settings",
-          "MEMBER": "Create and edit records, submit assessments for review",
-          "VIEWER": "Read-only access to all privacy data"
-        },
-        "inheritanceTitle": "Role inheritance",
-        "inheritanceBody": "Each role inherits all permissions from the roles below it. For example, an ADMIN has all PRIVACY_OFFICER, MEMBER, and VIEWER permissions."
+        "description": "What each role can do, departments and approvals."
       },
       "nav": {
         "next": "Quickstart"
@@ -5929,7 +5918,7 @@
         "description": "Assessments follow a structured approval workflow before they are finalized.",
         "mockupTitle": "Assessment status flow",
         "rejectionTitle": "Rejection",
-        "rejectionBody": "If an assessment is rejected, it returns to DRAFT status with reviewer comments. The assessor can address the feedback and resubmit for review."
+        "rejectionBody": "If the approver rejects it, the assessment is marked Rejected, with their comments. Its author can change it and submit it for review again. Who can approve is explained under User roles."
       },
       "nav": {
         "previous": "DSAR management",
@@ -7295,29 +7284,7 @@
       },
       "roles": {
         "title": "User roles",
-        "intro": "DPO Central uses role-based access control. Each role inherits permissions from the roles below it.",
-        "items": {
-          "Owner": {
-            "role": "Owner",
-            "desc": "Full control including billing, team management, and organization settings"
-          },
-          "Admin": {
-            "role": "Admin",
-            "desc": "Manage users, configure modules, and access all privacy features"
-          },
-          "PrivacyOfficer": {
-            "role": "Privacy officer",
-            "desc": "Full access to all privacy modules, run assessments, manage incidents"
-          },
-          "Member": {
-            "role": "Member",
-            "desc": "Create and edit records, submit DSARs, report incidents"
-          },
-          "Viewer": {
-            "role": "Viewer",
-            "desc": "Read-only access to dashboards, reports, and records"
-          }
-        }
+        "intro": "Each member of an organization has one role, and each role can do everything the roles below it can. The table shows what each role can do. Below it: departments, approvals and the few things only some roles can do."
       },
       "modulesTitle": "Modules",
       "modules": {
@@ -7846,7 +7813,7 @@
       },
       "approvals": {
         "title": "Approval workflow",
-        "intro": "Assessments move through a structured approval workflow. Each stage has clear ownership and the system tracks who approved what and when.",
+        "intro": "Assessments move through an approval workflow. An owner, administrator or privacy officer sends each one to a named approver, and the system records who approved what and when.",
         "steps": {
           "draft": {
             "label": "Draft",
@@ -8281,6 +8248,78 @@
     },
     "mockup": {
       "uiPreview": "UI preview"
+    },
+    "roleAccess": {
+      "intro": "Each member of an organization has one role, and each role can do everything the roles below it can. The table shows what each role can do. Below it: departments, approvals and the few things only some roles can do.",
+      "columns": {
+        "role": "Role",
+        "sees": "Sees",
+        "edits": "Creates and edits",
+        "approves": "Approves",
+        "exports": "Exports",
+        "manages": "Members and settings",
+        "deletesOrg": "Deletes the organization"
+      },
+      "rows": {
+        "OWNER": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Everything, and deletes records",
+          "approves": "Assessments sent to them for approval",
+          "exports": "Everything, including the full program and the list of rights requests",
+          "manages": "Invites and removes members, including owners; changes roles; settings, departments and the plan",
+          "deletesOrg": "Yes"
+        },
+        "ADMIN": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Everything, and deletes records",
+          "approves": "Assessments sent to them for approval",
+          "exports": "Everything, including the full program and the list of rights requests",
+          "manages": "Invites and removes members other than owners; settings, departments and the plan",
+          "deletesOrg": "No"
+        },
+        "PRIVACY_OFFICER": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Every privacy module; handles rights requests, opens and manages breaches, sends assessments for approval",
+          "approves": "Assessments sent to them for approval",
+          "exports": "Reports, registers and the activity log",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "MEMBER": {
+          "sees": "Records, systems, vendors, transfers, assessments and breaches; a rights request only when they have a task on it",
+          "edits": "Records, systems, vendors, transfers and assessments; tasks and timeline entries on breaches; submits assessments for review",
+          "approves": "No",
+          "exports": "Reports and registers",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "VIEWER": {
+          "sees": "The same as a member",
+          "edits": "Nothing",
+          "approves": "No",
+          "exports": "Reports and registers",
+          "manages": "No",
+          "deletesOrg": "No"
+        }
+      },
+      "departments": {
+        "title": "Departments",
+        "body": "An owner or administrator can limit any member, whatever their role, to one or more departments. A member limited this way sees and edits only the processing records and systems of those departments, and what depends on them. They do not see the organization's overall figures on the dashboard, cannot run the quick start (which sets up the whole organization) and cannot export the full program. A department limit never widens what the role allows."
+      },
+      "approvals": {
+        "title": "Approvals",
+        "body": "Anyone who can edit can submit an assessment for review. An owner, administrator or privacy officer then sends it to a named approver, who must also be an owner, administrator or privacy officer. Only that person can approve or reject it. A rejected assessment keeps the approver's comments and can be changed and submitted again. An owner, administrator or privacy officer can reopen an approved assessment. In an organization with a single member, that member can submit and approve in one step. Each decision is recorded in the activity log."
+      },
+      "limits": {
+        "title": "Reserved to some roles",
+        "items": {
+          "auditLog": "The activity log, and its export, are for owners, administrators and privacy officers.",
+          "fullExport": "The export of the full program and the export of the list of rights requests are for owners and administrators.",
+          "owners": "Only an owner can make someone an owner, change a member's role or remove an owner. The last owner cannot be removed or given another role.",
+          "deleteOrg": "Only an owner can delete the organization, by typing its name to confirm. On the hosted service, a pilot organization can be deleted at any time and an organization on the paid plan once the plan has ended.",
+          "viewers": "A viewer cannot create, change or delete anything."
+        }
+      }
     }
   },
   "healthAdtechReport": {

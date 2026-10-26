@@ -5771,18 +5771,7 @@
       },
       "roles": {
         "title": "Roles de usuario",
-        "description": "DPO Central usa un sistema de roles jerárquico. Los roles superiores heredan todos los permisos de los inferiores.",
-        "columnRole": "Rol",
-        "columnPermissions": "Permisos",
-        "rows": {
-          "OWNER": "Acceso total, incluidos la configuración de la organización, la facturación y la gestión de miembros",
-          "ADMIN": "Gestiona todos los módulos, usuarios y ajustes. No puede eliminar la organización.",
-          "PRIVACY_OFFICER": "Puede crear, consultar, editar y eliminar en todos los módulos de privacidad. No puede gestionar la configuración de la organización.",
-          "MEMBER": "Crea y edita registros y envía evaluaciones a revisión",
-          "VIEWER": "Acceso de solo lectura a todos los datos de privacidad"
-        },
-        "inheritanceTitle": "Herencia de roles",
-        "inheritanceBody": "Cada rol hereda todos los permisos de los roles inferiores. Por ejemplo, un Administrador tiene todos los permisos de Responsable de privacidad, Miembro y Lector."
+        "description": "Qué puede hacer cada rol, los departamentos y las aprobaciones."
       },
       "nav": {
         "next": "Inicio rápido"
@@ -5929,7 +5918,7 @@
         "description": "Las evaluaciones siguen un flujo de aprobación estructurado antes de finalizarse.",
         "mockupTitle": "Flujo de estados de la evaluación",
         "rejectionTitle": "Rechazo",
-        "rejectionBody": "Si se rechaza una evaluación, vuelve al estado «Borrador» con los comentarios del revisor. El evaluador puede atender las observaciones y volver a enviarla a revisión."
+        "rejectionBody": "Si el aprobador la rechaza, la evaluación queda como «Rechazada», con sus comentarios. Quien la ha preparado puede cambiarla y volver a enviarla a revisión. Quién puede aprobar se explica en «Roles de usuario»."
       },
       "nav": {
         "previous": "Ejercicio de derechos",
@@ -7295,29 +7284,7 @@
       },
       "roles": {
         "title": "Roles de usuario",
-        "intro": "DPO Central usa control de acceso basado en roles. Cada rol hereda los permisos de los roles inferiores.",
-        "items": {
-          "Owner": {
-            "role": "Propietario",
-            "desc": "Control total incluyendo facturación, gestión del equipo y ajustes de la organización"
-          },
-          "Admin": {
-            "role": "Administrador",
-            "desc": "Gestionar usuarios, configurar módulos y acceder a todas las funciones de privacidad"
-          },
-          "PrivacyOfficer": {
-            "role": "Responsable de privacidad",
-            "desc": "Acceso completo a todos los módulos de privacidad, realizar evaluaciones, gestionar incidentes"
-          },
-          "Member": {
-            "role": "Miembro",
-            "desc": "Crear y editar registros, enviar solicitudes de derechos, registrar incidentes"
-          },
-          "Viewer": {
-            "role": "Lector",
-            "desc": "Acceso de solo lectura a paneles, informes y registros"
-          }
-        }
+        "intro": "Cada miembro de una organización tiene un rol, y cada rol puede hacer todo lo que pueden los roles inferiores. La tabla muestra qué puede hacer cada rol. Debajo se explican los departamentos, las aprobaciones y lo que solo pueden hacer algunos roles."
       },
       "modulesTitle": "Módulos",
       "modules": {
@@ -7846,7 +7813,7 @@
       },
       "approvals": {
         "title": "Flujo de aprobación",
-        "intro": "Las evaluaciones recorren un flujo de aprobación estructurado. Cada etapa tiene un responsable claro y el sistema lleva el seguimiento de quién aprobó qué y cuándo.",
+        "intro": "Las evaluaciones recorren un flujo de aprobación. Un propietario, un administrador o un responsable de privacidad las envía a un aprobador concreto, y el sistema guarda quién ha aprobado qué y cuándo.",
         "steps": {
           "draft": {
             "label": "Borrador",
@@ -8281,6 +8248,78 @@
     },
     "mockup": {
       "uiPreview": "Vista previa de la interfaz"
+    },
+    "roleAccess": {
+      "intro": "Cada miembro de una organización tiene un rol, y cada rol puede hacer todo lo que pueden los roles inferiores. La tabla muestra qué puede hacer cada rol. Debajo se explican los departamentos, las aprobaciones y lo que solo pueden hacer algunos roles.",
+      "columns": {
+        "role": "Rol",
+        "sees": "Ve",
+        "edits": "Crea y edita",
+        "approves": "Aprueba",
+        "exports": "Exporta",
+        "manages": "Miembros y ajustes",
+        "deletesOrg": "Elimina la organización"
+      },
+      "rows": {
+        "OWNER": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todo, y elimina registros",
+          "approves": "Las evaluaciones que se le envían para aprobar",
+          "exports": "Todo, incluidos el programa completo y la lista de solicitudes de derechos",
+          "manages": "Invita y retira miembros, también propietarios; cambia roles; ajustes, departamentos y plan",
+          "deletesOrg": "Sí"
+        },
+        "ADMIN": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todo, y elimina registros",
+          "approves": "Las evaluaciones que se le envían para aprobar",
+          "exports": "Todo, incluidos el programa completo y la lista de solicitudes de derechos",
+          "manages": "Invita y retira miembros que no son propietarios; ajustes, departamentos y plan",
+          "deletesOrg": "No"
+        },
+        "PRIVACY_OFFICER": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todos los módulos de privacidad; gestiona las solicitudes de derechos, abre y gestiona las brechas y envía evaluaciones a aprobación",
+          "approves": "Las evaluaciones que se le envían para aprobar",
+          "exports": "Informes, registros y el registro de actividad",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "MEMBER": {
+          "sees": "Actividades de tratamiento, sistemas, proveedores, transferencias, evaluaciones y brechas; una solicitud de derechos solo si tiene una tarea en ella",
+          "edits": "Actividades de tratamiento, sistemas, proveedores, transferencias y evaluaciones; tareas y entradas de la cronología de las brechas; envía evaluaciones a revisión",
+          "approves": "No",
+          "exports": "Informes y registros",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "VIEWER": {
+          "sees": "Lo mismo que un miembro",
+          "edits": "Nada",
+          "approves": "No",
+          "exports": "Informes y registros",
+          "manages": "No",
+          "deletesOrg": "No"
+        }
+      },
+      "departments": {
+        "title": "Departamentos",
+        "body": "Un propietario o un administrador puede limitar a cualquier miembro, sea cual sea su rol, a uno o varios departamentos. Quien queda limitado así solo ve y edita las actividades de tratamiento y los sistemas de esos departamentos, y lo que depende de ellos. No ve las cifras generales de la organización en el panel, no puede ejecutar el inicio rápido (que configura toda la organización) y no puede exportar el programa completo. Un límite por departamento nunca amplía lo que permite el rol."
+      },
+      "approvals": {
+        "title": "Aprobaciones",
+        "body": "Cualquiera que pueda editar puede enviar una evaluación a revisión. Después, un propietario, un administrador o un responsable de privacidad la envía a un aprobador concreto, que también debe ser propietario, administrador o responsable de privacidad. Solo esa persona puede aprobarla o rechazarla. Una evaluación rechazada conserva los comentarios del aprobador y se puede cambiar y volver a enviar. Un propietario, un administrador o un responsable de privacidad puede reabrir una evaluación aprobada. En una organización con un solo miembro, esa persona puede enviarla y aprobarla en un único paso. Cada decisión queda en el registro de actividad."
+      },
+      "limits": {
+        "title": "Reservado a algunos roles",
+        "items": {
+          "auditLog": "El registro de actividad, y su exportación, son para propietarios, administradores y responsables de privacidad.",
+          "fullExport": "La exportación del programa completo y la de la lista de solicitudes de derechos son para propietarios y administradores.",
+          "owners": "Solo un propietario puede nombrar a otro propietario, cambiar el rol de un miembro o retirar a un propietario. Al último propietario no se le puede retirar ni cambiar el rol.",
+          "deleteOrg": "Solo un propietario puede eliminar la organización, escribiendo su nombre para confirmarlo. En el servicio alojado, una organización piloto se puede eliminar en cualquier momento, y una organización con el plan de pago, cuando el plan ha terminado.",
+          "viewers": "Un lector no puede crear, cambiar ni eliminar nada."
+        }
+      }
     }
   },
   "healthAdtechReport": {
