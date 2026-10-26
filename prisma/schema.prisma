@@ -28,6 +28,11 @@ model User {
   // Language the person last used in the app ("en" or "es"); the language of
   // e-mails sent to them when no request is in progress (reminders).
   locale        String?
+  // Hosted service: the last time the person signed in to this product
+  // (src/lib/auth.ts), recorded since 25 October 2026. The retention job reads
+  // it to tell when nobody has used a pilot organisation for twelve months
+  // (src/server/services/organization/retention.ts).
+  lastSignInAt  DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { deleteOrganizationCompletely, type DeleteOrgDb } from "@/server/services/organization/delete";
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure, protectedProcedure, isPlatformAdmin } from "../trpc";
 import { TRPCError } from "@trpc/server";
@@ -501,7 +502,13 @@ export const platformAdminRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Organization not found" });
       }
 
-      await ctx.prisma.organization.delete({ where: { id: input.id } });
+      // The one deletion path (src/server/services/organization/delete.ts):
+      // the same records go as when the owner deletes it, the trail too, and
+      // the deletion is recorded outside the organisation.
+      await deleteOrganizationCompletely(ctx.prisma as unknown as DeleteOrgDb, input.id, {
+        by: "platform-admin",
+        userId: ctx.session.user.id,
+      });
 
       return { deleted: true, name: org.name };
     }),

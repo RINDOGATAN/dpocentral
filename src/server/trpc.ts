@@ -335,6 +335,12 @@ export const officerProcedure = t.procedure
   .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER"))
   .use(enforcePilotCaps);
 
+// Owner only: deleting the organisation itself
+export const ownerOrgProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(withOrganizationAndRole("OWNER"))
+  .use(enforcePilotCaps);
+
 // Admin org: delete operations, org settings
 export const adminOrgProcedure = t.procedure
   .use(enforceUserIsAuthed)

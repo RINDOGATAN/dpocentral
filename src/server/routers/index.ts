@@ -3,6 +3,7 @@
 
 import { createTRPCRouter } from "../trpc";
 import { organizationRouter } from "./privacy/organization";
+import { organizationDeletionRouter } from "./privacy/organizationDeletion";
 import { dataInventoryRouter } from "./privacy/dataInventory";
 import { dsarRouter } from "./privacy/dsar";
 import { assessmentRouter } from "./privacy/assessment";
@@ -37,6 +38,7 @@ import { recordOfProcessingRouter } from "./privacy/recordOfProcessing";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
+  organizationDeletion: organizationDeletionRouter,
   dataInventory: dataInventoryRouter,
   recordOfProcessing: recordOfProcessingRouter,
   dsar: dsarRouter,
