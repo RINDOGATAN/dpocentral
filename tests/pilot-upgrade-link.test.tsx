@@ -16,6 +16,7 @@ import es from "@/messages/es.json";
 
 const selected = vi.hoisted(() => ({
   org: null as null | { id: string; name: string; slug: string; plan?: string; role?: string },
+  suite: false,
 }));
 vi.mock("@/lib/organization-context", () => ({
   useSelectedOrganizationOrNull: () => selected.org,
@@ -33,6 +34,7 @@ vi.mock("@/lib/trpc", () => ({
                 endsAt: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
                 readOnly: false,
                 transition: false,
+                suite: selected.suite,
               }
             : undefined,
         }),
@@ -114,5 +116,27 @@ describe("pilot banner: monthly and yearly", () => {
     expect(html).not.toContain("pilot-upgrade-monthly-link");
     selected.org = pilotOrg("MEMBER");
     expect(render("en", true, true)).not.toContain("pilot-upgrade");
+  });
+});
+
+describe("pilot banner: a pilot shared with AI Sentinel", () => {
+  it("words the payment links as the one plan for both products, in both languages", () => {
+    selected.org = pilotOrg("OWNER");
+    selected.suite = true;
+    try {
+      const en = render("en", true, true);
+      expect(en).toContain('data-testid="pilot-suite-line"');
+      expect(en).toContain("One plan for both, monthly");
+      expect(en).toContain("One plan for both, yearly");
+      expect(en).not.toContain("Pay monthly");
+      expect(render("en", true)).toContain("Move both to the Cloud Plan");
+      const es = render("es", true, true);
+      expect(es).toContain("Un plan para los dos, mensual");
+      expect(es).toContain("Un plan para los dos, anual");
+      expect(render("es", true)).toContain("Pasar los dos al plan de pago");
+      expect(en + es).not.toMatch(/[\u2013\u2014]/);
+    } finally {
+      selected.suite = false;
+    }
   });
 });
