@@ -46,6 +46,7 @@ import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
 import { displayAiSystemDescription, displayAiSystemName } from "@/lib/record-name";
 import { PageHeader } from "@/components/privacy/page-header";
+import { AiSentinelLinkCard } from "@/components/suite/ai-sentinel-link-card";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
@@ -235,6 +236,9 @@ export default function AISystemsPage() {
           </>
         }
       />
+
+      {/* The link to AI Sentinel: its state, sync on demand, or the way to make one */}
+      {organization?.id && <AiSentinelLinkCard organizationId={organization.id} />}
 
       {/* AI governance is done in AI Sentinel, not here. This register keeps the
           privacy record complete and links across to govern a system. */}
