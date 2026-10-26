@@ -247,6 +247,20 @@ describe("the public form on the hosted service", () => {
     await expect(anon().submitPublic(submission())).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
+  it("a form switched off is shown closed with the privacy contact, and takes no request", async () => {
+    mocks.prisma.organization.findUnique.mockResolvedValue(org({ dsarIntakeForms: [{ ...FORM, isActive: false }] }));
+    await expect(anon().getPublicForm({ orgSlug: "acme" })).resolves.toMatchObject({
+      accepting: false,
+      contactEmail: "privacy@acme.example",
+    });
+    mocks.prisma.dSARRequest.create.mockClear();
+    await expect(anon().submitPublic(submission())).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      message: expect.stringContaining("not taking requests"),
+    });
+    expect(mocks.prisma.dSARRequest.create).not.toHaveBeenCalled();
+  });
+
   it("at the limit, the form shows the privacy contact e-mail instead of accepting", async () => {
     mocks.prisma.organization.findUnique.mockResolvedValue(org());
     mocks.prisma.auditLog.count.mockResolvedValue(100);

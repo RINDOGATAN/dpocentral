@@ -81,7 +81,7 @@ describe("honest progress", () => {
   });
 
   it("rights requests and breaches read 'ready when needed', never as unfinished work", () => {
-    const s = statuses({ dsarIntakeConfigured: true, processingActivitiesComplete: 1 });
+    const s = statuses({ dsarIntakeConfigured: true, dsarIntakeActive: true, processingActivitiesComplete: 1 });
     expect(s.dsar).toBe("ready");
     expect(s.incidents).toBe("ready");
     expect(isStepMet(s.dsar)).toBe(true);

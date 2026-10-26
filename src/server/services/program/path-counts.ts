@@ -13,6 +13,7 @@
 import type { Db } from "@/lib/prisma";
 import type { PathCounts } from "@/components/guided/path-config";
 import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
+import { latestIntakeActivation } from "@/server/services/dsar/intake-activation";
 import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 import { DRAFT_PROVENANCES } from "@/lib/drafts";
 import { evaluateApplicability, readApplicabilityAnswers } from "@/config/applicability";
@@ -102,6 +103,7 @@ export async function loadPathCounts(
     transfersDrafts,
     dsarRequests,
     intakeForm,
+    intakeActivation,
     incidents,
     aiSystems,
     dataAssetsComplete,
@@ -132,13 +134,16 @@ export async function loadPathCounts(
     prisma.dataTransfer.count({ where: org }),
     prisma.dataTransfer.count({ where: { ...org, ...TRANSFER_ON_DRAFT } }),
     prisma.dSARRequest.count({ where: org }),
-    // The active intake form's shape, not just its presence: every org is
-    // auto-seeded a default form so the public portal works out of the box, so
-    // the mere existence of a form is no signal. We read its fields and decide
-    // whether the org has actually set up its intake (isIntakeConfigured).
+    // The intake form's shape and switch, not just its presence: every org is
+    // auto-seeded a default form (switched off for organisations opened from
+    // 26 October 2026), so the mere existence of a form is no signal. We read
+    // its fields (isIntakeConfigured), whether it is on, and below whether a
+    // person's activation is on record (intake-activation.ts).
     prisma.dSARIntakeForm.findFirst({
-      where: { ...org, isActive: true },
+      where: org,
+      orderBy: [{ isActive: "desc" }, { createdAt: "asc" }],
       select: {
+        isActive: true,
         slug: true,
         title: true,
         description: true,
@@ -148,6 +153,8 @@ export async function loadPathCounts(
         fields: true,
       },
     }),
+    // Progress only: an unreadable audit trail reads as no activation recorded.
+    latestIntakeActivation(prisma, organizationId).catch(() => null),
     prisma.incident.count({ where: { ...org, recordedInErrorAt: null } }),
     // The AI systems table is optional on some deployments (the quick start
     // guards its creation the same way); an unreadable table counts as none.
@@ -224,6 +231,9 @@ export async function loadPathCounts(
     transfersComplete,
     dsarRequests,
     dsarIntakeConfigured: intakeForm ? isIntakeConfigured(intakeForm) : false,
+    dsarIntakeActive: intakeForm?.isActive ?? false,
+    dsarIntakeActivated: intakeActivation === "activated",
+    dsarIntakeTouched: intakeActivation !== null,
     incidents,
     aiSystems,
     boardReportsSaved: Object.keys(settingsObject(settingsObject(settings.boardReport).reports)).length,
