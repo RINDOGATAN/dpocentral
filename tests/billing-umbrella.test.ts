@@ -13,7 +13,6 @@ vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: 
 
 import {
   assertPilotCapacity,
-  countDpiaCreated,
   getPilotStatus,
   hasPilotRoom,
   isPilotReadOnly,
@@ -264,14 +263,6 @@ describe("shared allowances", () => {
       (u) => u.resource === "members"
     );
     expect(people?.used).toBe(2);
-  });
-
-  it("counts the two free DPIAs over the whole group", async () => {
-    await createFor("consultant", "org-1");
-    await createFor("consultant", "org-2");
-    records.assessment = { "org-1": 1 };
-    records.dpiaLogged = { "org-1": 1, "org-2": 1 };
-    expect(await countDpiaCreated(db as never, "org-2")).toBe(2);
   });
 
   it("shows the same shared counts from every organisation of the group", async () => {

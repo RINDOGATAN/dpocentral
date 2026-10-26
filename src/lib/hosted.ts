@@ -40,9 +40,8 @@ export function managedUrl(locale: string | undefined): string {
 }
 
 /**
- * The storefront's plans page, in the reader's language. Where a firm that
- * has used the pilot tier's free DPIAs is sent; the page states the prices,
- * the app never does.
+ * The storefront's plans page, in the reader's language. The page states the
+ * prices, the app never does.
  */
 export const PLANS_URL = {
   en: "https://www.todo.law/pricing",

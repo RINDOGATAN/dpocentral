@@ -3,16 +3,15 @@
 
 /**
  * A DPIA drafted automatically (from a processing activity, a vendor import or
- * an AI system) counts against the pilot tier's two free DPIAs like one
- * created by hand. With none left it falls back to an LIA, so the automatic
- * path cannot go around the server count.
+ * an AI system) on the hosted pilot: drafted whatever the number of DPIAs
+ * created before (there is no DPIA cap), and its type recorded.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 vi.mock("@/lib/prisma", () => ({ default: {}, prisma: {} }));
 
-import { createAssessmentFromActivity, DPIA_NOT_CREATED } from "@/server/services/assessment-auto-create";
+import { createAssessmentFromActivity } from "@/server/services/assessment-auto-create";
 
 function tx(createdDpias: number) {
   return {
@@ -47,7 +46,7 @@ beforeEach(() => vi.stubEnv("VERCEL_ENV", "production"));
 afterEach(() => vi.unstubAllEnvs());
 
 describe("automatic DPIA drafts on the hosted pilot tier", () => {
-  it("drafts a DPIA while one of the two is left, and records its type", async () => {
+  it("drafts a DPIA and records its type", async () => {
     const db = tx(1);
     const result = await createAssessmentFromActivity(params(db));
     expect(result.created).toBe(true);
@@ -55,12 +54,11 @@ describe("automatic DPIA drafts on the hosted pilot tier", () => {
     expect(db.auditLog.create.mock.calls[0][0].data.changes.templateType).toBe("DPIA");
   });
 
-  it("creates nothing in place of the DPIA once both are used, and says why", async () => {
-    const db = tx(2);
+  it("drafts a DPIA however many have been created before", async () => {
+    const db = tx(12);
     const result = await createAssessmentFromActivity(params(db));
-    expect(result.created).toBe(false);
-    expect(result.skippedReason).toBe(DPIA_NOT_CREATED.quota);
-    expect(db.assessment.create).not.toHaveBeenCalled();
+    expect(result.created).toBe(true);
+    expect(db.assessment.create.mock.calls[0][0].data.templateId).toBe("tpl-DPIA");
   });
 
   it("is not capped on the kit", async () => {

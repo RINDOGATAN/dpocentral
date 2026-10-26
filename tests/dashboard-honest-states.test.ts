@@ -98,7 +98,6 @@ describe("what a waiting document needs", () => {
 
   it("a module or a setting is not called missing data", () => {
     expect(documentBadge(needs("dpiaModule"))).toBe("needsModule");
-    expect(documentBadge(needs("dpiaModuleHosted"))).toBe("needsModule");
     expect(documentBadge(needs("aiAssist"))).toBe("needsSetting");
     expect(documentBadge(needs("incident"))).toBe("needsInput");
   });

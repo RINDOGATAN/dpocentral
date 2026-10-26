@@ -37,6 +37,8 @@ export function useProgramPathQuery(): {
    * approved DPIA the bar for the assessments step, "check" only suggests one.
    */
   dpiaDuty: "applies" | "check" | null;
+  /** Which answers call for a DPIA (keys under `applicability.reasons`). */
+  dpiaReasons: string[];
   /** Records drafted and not yet confirmed; null while loading. */
   drafts: number | null;
   /** Per step not yet done: the fields that would finish it (field keys only). */
@@ -51,6 +53,7 @@ export function useProgramPathQuery(): {
   return {
     steps: data?.steps ?? null,
     dpiaDuty: data?.dpiaDuty ?? null,
+    dpiaReasons: data?.dpiaReasons ?? [],
     drafts: data?.drafts ?? null,
     missing: data?.missing ?? {},
     refreshing: isFetching,

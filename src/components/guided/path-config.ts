@@ -105,6 +105,19 @@ export interface PathCounts {
   assessments: number;
   /** Risk assessments (DPIA and PIA) approved. */
   assessmentsApproved: number;
+  /**
+   * Assessments of any type (DPIA, PIA, transfer, legitimate interest,
+   * vendor, custom), leaving out untouched automatic drafts and the
+   * service's own transfer assessment while it waits for approval.
+   * Optional: absent reads as `assessments`.
+   */
+  assessmentsAny?: number;
+  /**
+   * Assessments of any type approved (an approved transfer impact assessment
+   * counts, including the one prepared for the service's own transfer).
+   * Optional: absent reads as `assessmentsApproved`.
+   */
+  assessmentsAnyApproved?: number;
   /** DPIAs approved. Optional: absent reads as none. */
   dpiaApproved?: number;
   /**
@@ -114,6 +127,12 @@ export interface PathCounts {
    * Optional: absent reads as neither.
    */
   dpiaDuty?: "applies" | "check" | null;
+  /**
+   * Why the answers make a DPIA required or worth checking: the reasons of
+   * that applicability item (keys under `applicability.reasons`), so the step
+   * can say which answers call for it. Optional: absent reads as none.
+   */
+  dpiaReasons?: string[];
   /** Legitimate-interest assessments (an LIA template) in any state. */
   liaAssessments: number;
   /** Legitimate-interest assessments approved. */
@@ -345,13 +364,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // assessments here need no licence. Where the DPIA is not licensed,
           // the lock sits on the DPIA option inside the assessments page and
           // the type picker instead (src/components/premium/licence-lock.tsx).
-          rule: "Where the organisation's applicability answers say a DPIA applies (dpiaLikely: large-scale monitoring, or two of the EDPB criteria asked), done when at least one DPIA is approved. Otherwise done when at least one risk assessment (DPIA or PIA) is approved; where the answers say a DPIA is worth checking, the step suggests one without requiring it. A vendor review or a legitimate-interest assessment does not count. Started when a risk assessment exists, leaving out drafts the quick start made on its own that nobody has answered yet.",
-          status: (c) =>
-            (c.dpiaDuty === "applies" ? (c.dpiaApproved ?? 0) > 0 : c.assessmentsApproved > 0)
-              ? "done"
-              : c.assessments > 0
-                ? "started"
-                : "todo",
+          rule: "Where the organisation's applicability answers say a DPIA applies (dpiaLikely: large-scale monitoring, or two of the EDPB criteria asked), done when at least one DPIA is approved, and no other assessment finishes the step. Otherwise done when at least one assessment of any type is approved (a transfer impact assessment counts, including the one prepared for the service's own transfer); where the answers say a DPIA is worth checking, the step suggests one without requiring it. Started when an assessment exists, leaving out drafts the quick start made on its own that nobody has answered yet and the service's own transfer assessment while it waits for approval.",
+          status: assessmentsStatus,
         },
         {
           id: "transfers",
@@ -494,6 +508,20 @@ const FULL_PATH: PathConfig<PathCounts> = {
 export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = isDsarModuleEnabled()
   ? FULL_PATH
   : withoutSteps(FULL_PATH, ["dsar"]);
+
+/**
+ * The assessments step. Where the organisation's own answers make a DPIA
+ * required (applicability item "dpiaLikely" in state "applies", the signal
+ * the "What applies" page shows), only an approved DPIA finishes it;
+ * otherwise any approved assessment does.
+ */
+export function assessmentsStatus(c: PathCounts): "done" | "started" | "todo" {
+  const anyApproved = Math.max(c.assessmentsApproved, c.assessmentsAnyApproved ?? 0);
+  const any = Math.max(c.assessments, c.assessmentsAny ?? 0);
+  const done = c.dpiaDuty === "applies" ? (c.dpiaApproved ?? 0) > 0 : anyApproved > 0;
+  if (done) return "done";
+  return any > 0 ? "started" : "todo";
+}
 
 /**
  * Vendor due diligence, once the vendor risk assessment module is available:

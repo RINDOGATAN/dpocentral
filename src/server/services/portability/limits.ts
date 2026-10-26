@@ -3,21 +3,17 @@
 
 /**
  * The ceilings an import must respect: on the hosted pilot, the records
- * ceiling (PILOT_LIMITS) and the two free impact assessments; nothing on the
- * self-hosted kit. An import is a way in, never a way around a ceiling.
+ * ceiling (PILOT_LIMITS); nothing on the self-hosted kit. An import is a way in, never a way around a ceiling.
  */
 
 import type { Db } from "@/lib/prisma";
 import {
   assertPilotCapacity,
-  pilotDpiaQuota,
   pilotMessage,
-  dpiaCapMessage,
   type PilotDb,
   type PilotResource,
 } from "@/server/services/pilot/caps";
 import { isHostedDeployment } from "@/lib/hosted";
-import { isDpiaPilotTier } from "@/server/services/licensing/entitlement";
 import type { AddingCounts } from "./import";
 
 const RESOURCES: Array<[PilotResource, keyof AddingCounts]> = [
@@ -49,12 +45,6 @@ export function importLimitChecker(db: Db, organizationId: string) {
             es: pilotMessage("ceiling", "es", resource),
           });
         }
-      }
-    }
-    if (adding.dpiaAssessments > 0) {
-      const quota = await pilotDpiaQuota(db, organizationId, await isDpiaPilotTier(organizationId));
-      if (quota.capped && adding.dpiaAssessments > quota.remaining) {
-        out.push({ en: dpiaCapMessage("en"), es: dpiaCapMessage("es") });
       }
     }
     return out;

@@ -24,7 +24,7 @@ export function documentName(t: Translate, id: string): string {
  */
 export type DocumentBadge = "ready" | "standby" | "draft" | "needsInput" | "needsModule" | "needsSetting" | "notYet";
 
-const MODULE_INPUTS: ReadonlySet<string> = new Set(["dpiaModule", "dpiaModuleHosted"]);
+const MODULE_INPUTS: ReadonlySet<string> = new Set(["dpiaModule"]);
 const SETTING_INPUTS: ReadonlySet<string> = new Set(["aiAssist"]);
 
 export function documentBadge(status: DocumentStatus): DocumentBadge {

@@ -28,7 +28,10 @@ import {
 /** How many confirmed records are read to find the minimum fields (rows read, never returned). */
 const COMPLETENESS_SCAN = 500;
 
-/** The risk assessments the "Assessments" step counts. */
+/**
+ * Risk assessments (DPIA and PIA), counted on their own for the documents and
+ * the board report. The assessments step also reads every type (assessmentsAny).
+ */
 const RISK_TYPES = ["DPIA", "PIA"] as const;
 
 /**
@@ -49,6 +52,13 @@ const TRANSFER_ON_DRAFT = {
  * confirmed (draftTotal). Once confirmed it counts like any other record.
  */
 const SYSTEM_VENDOR_DRAFT = { sourceRef: TODOLAW_SOURCE_REF, ...DRAFT_WHERE };
+
+/**
+ * An assessment the service prepared on its own: the transfer impact
+ * assessment for the transfer to TODO.LAW (todolaw-transfer-assessment.ts),
+ * which waits for the organisation's approval.
+ */
+const SYSTEM_ASSESSMENT = { metadata: { path: ["source"], equals: TODOLAW_SOURCE_REF } };
 
 /** Recorded compliance statuses ("PENDING" is not a recorded assessment). */
 const RECORDED_TRANSFER_STATUS = ["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT"];
@@ -117,6 +127,10 @@ export async function loadPathCounts(
     dpiaApproved,
     systemVendorDrafts,
     systemTransferDrafts,
+    assessmentsAll,
+    assessmentsAllApproved,
+    allAutoDrafts,
+    systemAssessmentsWaiting,
   ] = await Promise.all([
     prisma.organization.findFirst({ where: { id: organizationId }, select: { settings: true } }),
     prisma.dataAsset.count({ where: org }),
@@ -184,6 +198,14 @@ export async function loadPathCounts(
     prisma.dataTransfer.count({
       where: { ...org, processingActivityId: null, vendor: SYSTEM_VENDOR_DRAFT },
     }),
+    // Assessments of every type, for the assessments step (any approved one
+    // finishes it unless a DPIA is required).
+    prisma.assessment.count({ where: org }),
+    prisma.assessment.count({ where: { ...org, status: "APPROVED" } }),
+    prisma.assessment.count({ where: { ...org, ...UNTOUCHED_AUTO_DRAFT } }),
+    // The transfer assessment the service prepares for its own transfer
+    // (todolaw-transfer-assessment.ts): it starts nothing until approved.
+    prisma.assessment.count({ where: { ...SYSTEM_ASSESSMENT, organizationId, status: { not: "APPROVED" } } }),
   ]);
 
   const activityMissing = activityRows.map((r) => missingMinimumFields(r));
@@ -224,8 +246,11 @@ export async function loadPathCounts(
     vendorAssessments: Math.max(0, vendorAssessments - vendorAutoDrafts),
     assessments: Math.max(0, assessments - riskAutoDrafts),
     assessmentsApproved,
+    assessmentsAny: Math.max(0, assessmentsAll - allAutoDrafts - systemAssessmentsWaiting),
+    assessmentsAnyApproved: assessmentsAllApproved,
     dpiaApproved,
     dpiaDuty: dpiaItem?.state ?? null,
+    dpiaReasons: dpiaItem?.reasons ?? [],
     liaAssessments,
     liaApproved,
     transfers: Math.max(0, transfers - systemTransferDrafts),

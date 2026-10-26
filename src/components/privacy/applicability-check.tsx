@@ -247,7 +247,7 @@ export function ApplicabilityCard({
   const answers = edits ?? data.answers;
 
   return (
-    <Card>
+    <Card id="applicability" className="scroll-mt-20">
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <ListChecks className="w-4 h-4 text-primary" aria-hidden="true" />

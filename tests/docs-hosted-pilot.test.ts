@@ -17,13 +17,12 @@ import path from "node:path";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 import { PILOT_DOCS_PATH } from "@/lib/hosted";
-import { PILOT_DPIA_LIMIT, PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
+import { PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
 
 type Section = {
   title: string;
   intro: string;
   window: string;
-  assessments: string;
   ceilingsTitle: string;
   ceilingsIntro: string;
   exports: string;
@@ -49,7 +48,6 @@ describe("the hosted pilot documentation", () => {
         expect(text.length, key).toBeGreaterThan(5);
       }
       expect(s.window).toContain("{days}");
-      expect(s.assessments).toContain("{assessments}");
       // Owner, 16 Oct 2026: the public docs do not state how many organizations an account may hold.
       expect(JSON.stringify(s)).not.toMatch(/organizations per account|organizaciones por cuenta|up to \{organizations\}/i);
       // The intro names the limits and, as the landing does, that real client data may be used;
@@ -66,8 +64,9 @@ describe("the hosted pilot documentation", () => {
       expect(JSON.stringify(s)).not.toMatch(/contractual safeguards|garantías contractuales/);
     });
 
-    it(`says the count is of assessments created in ${locale}`, () => {
-      expect(s.assessments).toMatch(locale === "es" ? /creadas/i : /created/i);
+    it(`names no DPIA allowance in ${locale}`, () => {
+      expect(Object.keys(s)).not.toContain("assessments");
+      expect(JSON.stringify(s)).not.toMatch(/DPIA|EIPD/);
     });
 
     it(`says exports are not limited in ${locale}`, () => {
@@ -101,14 +100,16 @@ describe("the hosted pilot documentation", () => {
 
   it("takes its figures from the pilot configuration", () => {
     expect(PAGE).toContain("PILOT_DAYS");
-    expect(PAGE).toContain("PILOT_DPIA_LIMIT");
+    // DPIAs are not capped: the page names no DPIA allowance.
+    expect(PAGE).not.toContain("PILOT_DPIA_LIMIT");
+    expect(PAGE).not.toContain("hostedPilot.assessments");
     expect(PAGE).toContain("PILOT_LIMITS");
     expect(PAGE).toContain("RESOURCE_LABELS");
     expect(PAGE).not.toContain("ORGANIZATIONS_PER_ACCOUNT");
     // Nothing in the copy hard-codes a figure the configuration owns.
     for (const s of [section(en), section(es)]) {
       expect(s.window).not.toContain(String(PILOT_DAYS));
-      expect(s.assessments).not.toContain(String(PILOT_DPIA_LIMIT));
+      expect(s).not.toHaveProperty("assessments");
       expect(s.ceilingsIntro).not.toMatch(/\d/);
     }
     expect(Object.keys(PILOT_LIMITS).length).toBeGreaterThan(5);

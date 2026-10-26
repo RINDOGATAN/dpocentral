@@ -28,7 +28,6 @@ import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { PageHeader } from "@/components/privacy/page-header";
-import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { LicenceLock } from "@/components/premium/licence-lock";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
@@ -324,10 +323,9 @@ export default function AssessmentsPage() {
             {[
               { type: "LIA", nameKey: "lia" },
               { type: "CUSTOM", nameKey: "custom" },
-              // Hosted, the DPIA is on the pilot tier (two free for a limited
-              // time, said under the card; see isDpiaPilotTier). On your own
-              // instance without its licence, the card carries the lock and
-              // leads to the form's licence notice.
+              // Hosted, the DPIA is open to every organisation (see
+              // isDpiaPilotTier). On your own instance without its licence,
+              // the card carries the lock and leads to the form's licence notice.
               { type: "DPIA", nameKey: "dpia" },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
@@ -342,7 +340,6 @@ export default function AssessmentsPage() {
                         <LicenceLock className="ml-1.5 align-[-2px]" testId="assessments-dpia-lock" />
                       )}
                     </h4>
-                    {item.type === "DPIA" && <DpiaFreeNote className="mt-1" />}
                     <p className="text-xs text-muted-foreground mt-1">
                       {templates.find((tpl) => tpl.type === item.type)
                         ? t("quickStart.sectionsCount", { count: (templates.find((tpl) => tpl.type === item.type)!.sections as any[])?.length || 0 })

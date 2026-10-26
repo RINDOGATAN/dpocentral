@@ -42,7 +42,6 @@ import { RecordHeader } from "@/components/privacy/record-header";
 import { TemplateBadge } from "@/components/privacy/template-badge";
 import { ConfirmDraftButton, DraftBadge } from "@/components/privacy/draft-confirm";
 import { useOrgRole } from "@/lib/use-org-role";
-import { useDpiaQuota } from "@/components/pilot/dpia-free-note";
 
 export default function ActivityDetailPage() {
   const params = useParams();
@@ -54,9 +53,6 @@ export default function ActivityDetailPage() {
   const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const { canWrite } = useOrgRole();
-  // The pilot's free DPIAs (null off the pilot tier): no offer once used up.
-  const dpiaQuota = useDpiaQuota();
-  const canDraftDpia = canWrite && !(dpiaQuota && dpiaQuota.remaining <= 0);
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
   // Map of assetId -> elementIds (undefined = all elements)
@@ -245,7 +241,7 @@ export default function ActivityDetailPage() {
         actions={
           <>
           <ConfirmDraftButton kind="processingActivity" id={activity.id} record={activity} />
-          {canDraftDpia && (
+          {canWrite && (
             <Link href={`/privacy/assessments/auto-fill?activity=${encodeURIComponent(activity.id)}`}>
               <Button variant="outline" size="sm" data-testid="activity-draft-dpia">
                 <Sparkles className="w-4 h-4 mr-2" />

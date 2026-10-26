@@ -352,13 +352,6 @@
       "recordNameWithVendor": "EIPD: {activity} ({vendor})",
       "recordDescription": "Redactada automáticamente a partir de los datos de la actividad de tratamiento"
     },
-    "trialAssessments": {
-      "freeNote": "Gratis por tiempo limitado: {limit, plural, =2 {dos} other {#}} EIPD por cuenta en el nivel piloto, compartidas entre todas sus organizaciones",
-      "freeBadge": "Gratis por tiempo limitado",
-      "remaining": "Quedan {remaining} de las {limit} EIPD gratuitas, contadas entre todas las organizaciones de la misma cuenta.",
-      "usedUp": "Ya se han creado las {limit} EIPD gratuitas, contadas entre todas las organizaciones de la misma cuenta. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan.",
-      "seePlans": "Consulta los planes"
-    },
     "assessmentTemplates": {
       "title": "Plantillas de evaluación",
       "subtitle": "Las plantillas con las que se puede empezar una evaluación",
@@ -7258,7 +7251,6 @@
         "title": "Piloto alojado",
         "intro": "Piloto alojado: gratuito, dentro de los límites que se detallan a continuación. Puedes empezar gratis y usarlo con datos reales de clientes: todos nuestros subencargados cuentan con las certificaciones y garantías necesarias.",
         "window": "La edición dura {days} días desde el primer inicio de sesión en cualquiera de tus organizaciones, y el plazo nunca empieza antes del día en que el servicio entró en funcionamiento. El plazo es el mismo para todas las organizaciones que crees, en cualquier momento: una organización nueva no lo inicia ni lo alarga. Después, tus organizaciones pasan a solo lectura: no se borra nada y todo se puede seguir exportando.",
-        "assessments": "Por tiempo limitado, una cuenta puede crear {assessments} EIPD gratuitas, entre todas sus organizaciones. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Tus organizaciones, en conjunto, pueden tener como máximo:",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
@@ -10310,7 +10302,8 @@
         "countries": "dónde trata los datos",
         "complianceStatus": "un estado de cumplimiento registrado"
       },
-      "assessmentsCounts": "Las evaluaciones de transferencias, de proveedores y del interés legítimo no cuentan para este paso. Si el inicio rápido ha creado borradores de EIPD, empieza por uno de ellos.",
+      "dpiaWhy": "Por qué: {reasons}",
+      "dpiaAnswersLink": "Ver tus respuestas",
       "optional": {
         "aiSystems": "Opcional: este paso nunca cuenta en la cifra del programa. Tus sistemas de IA se gobiernan en AI Sentinel.",
         "lia": "Opcional: este paso nunca cuenta en la cifra del programa. Hazlo solo cuando el interés legítimo sea la base jurídica de alguna actividad."
@@ -10334,12 +10327,16 @@
       "dataInventory": "Confirma un sistema que registre los datos personales que contiene.",
       "ropa": "Confirma una actividad de tratamiento con sus interesados, categorías de datos y plazo de conservación.",
       "vendors": "Confirma un proveedor en uso, con los datos personales que trata y dónde.",
-      "assessments": "Aprueba una evaluación de riesgos: una EIPD o una evaluación general.",
-      "assessmentsDpia": "Aprueba una EIPD: tus respuestas indican que es obligatoria.",
-      "assessmentsCheck": "Aprueba una evaluación de riesgos. Tus respuestas indican que conviene valorar una EIPD.",
+      "assessments": "Aprueba una evaluación. Cuenta cualquier tipo, también una evaluación de impacto de transferencia.",
+      "assessmentsDpia": "Aprueba una EIPD: tus respuestas indican que es obligatoria, así que ninguna otra evaluación completa este paso.",
+      "assessmentsCheck": "Aprueba una evaluación. Cuenta cualquier tipo, también una evaluación de impacto de transferencia. Tus respuestas indican que conviene valorar una EIPD.",
       "transfers": "Registra el estado de cumplimiento de al menos una transferencia internacional.",
       "dsar": "Activa y publica tu formulario de solicitudes de derechos en los ajustes.",
       "incidents": "Confirma tu preparación ante brechas en el registro de brechas: los plazos de tus leyes, el contacto interno y la autoridad."
+    },
+    "menuNote": {
+      "assessments": "Aprueba una evaluación",
+      "assessmentsDpia": "Necesita una EIPD aprobada"
     },
     "notYetGroup": "Aún no en DPO Central",
     "stepDocsLabel": "Documentos",
@@ -10964,7 +10961,6 @@
       "assessment": "una evaluación",
       "dpiaStart": "empezar una EIPD",
       "dpiaModule": "el módulo de EIPD",
-      "dpiaModuleHosted": "un plan para crear otra EIPD",
       "dpaFacts": "los datos del contrato con un proveedor",
       "incident": "un incidente registrado",
       "aiAssist": "la asistencia de IA activada",
@@ -10976,7 +10972,6 @@
     "inputAction": {
       "default": "Añadir",
       "dpiaModule": "Ver cómo conseguirlo",
-      "dpiaModuleHosted": "Ver cómo conseguirlo",
       "aiAssist": "Abrir ajustes",
       "dpaFacts": "Empezar",
       "dpiaStart": "Empezar",

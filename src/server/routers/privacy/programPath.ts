@@ -35,6 +35,8 @@ export const programPathRouter = createTRPCRouter({
         // What the organisation's answers say about a DPIA: the assessments
         // step's bar ("applies") or only a suggestion ("check").
         dpiaDuty: counts.dpiaDuty ?? null,
+        // Which answers call for it (keys under applicability.reasons).
+        dpiaReasons: counts.dpiaReasons ?? [],
         // Records drafted for this organisation and not yet confirmed: what
         // "Review and confirm" holds (services/template-items/drafts.ts).
         drafts: draftTotal(counts),

@@ -41,11 +41,10 @@ export interface DocumentFacts extends PathCounts {
   dpiaApproved: number;
   /**
    * Whether a new DPIA can be started here:
-   * - `available`   the DPIA template is installed (or the pilot still has free ones)
+   * - `available`   the DPIA template is installed
    * - `module`      self-hosted without the DPIA module installed
-   * - `quotaUsed`   hosted, after the two free DPIAs
    */
-  dpiaAccess: "available" | "module" | "quotaUsed";
+  dpiaAccess: "available" | "module";
   /** Data processing agreements produced with a vendor (contracts of type DPA). */
   dpaContracts: number;
   /** Incidents with no impact recorded (no records affected and no data categories). */
@@ -82,7 +81,6 @@ export type DocumentInput =
   | "assessment"
   | "dpiaStart"
   | "dpiaModule"
-  | "dpiaModuleHosted"
   | "dpaFacts"
   | "incident"
   | "aiAssist"
@@ -173,9 +171,6 @@ export const INPUTS: Record<DocumentInput, { href: string; external?: boolean }>
   // Self-hosted: the modules page, where a signed module is installed and the
   // marketplace is linked.
   dpiaModule: { href: "/privacy/skills" },
-  // Hosted after the two free DPIAs: the storefront's plans page (resolved
-  // per language where it is shown, src/lib/hosted.ts plansUrl).
-  dpiaModuleHosted: { href: "plans", external: true },
   // The vendor list says what is missing and opens each vendor on its
   // Contracts tab, where the DPA is produced.
   dpaFacts: { href: "/privacy/vendors?missing=dpa" },
@@ -260,7 +255,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     href: "/privacy/assessments",
     formats: ["pdf"],
     needs: "On the self-hosted kit, the DPIA module (its template installed from a signed module); on the hosted service every module is included, and the DPIA only needs one to be started.",
-    rule: "The DPIAs already held decide first, whatever the module: draft while none is approved (the drafts waiting for review are counted), ready once one is. With none held, needs the DPIA module where it is not installed (self-hosted), a plan to create another on the hosted pilot after its free DPIAs are used, or otherwise a DPIA to be started.",
+    rule: "The DPIAs already held decide first, whatever the module: draft while none is approved (the drafts waiting for review are counted), ready once one is. With none held, needs the DPIA module where it is not installed (self-hosted), or otherwise a DPIA to be started.",
     evaluate: (f) =>
       f.dpiaAssessments > 0
         ? f.dpiaApproved > 0
@@ -268,9 +263,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
           : draftOrReady([{ key: "dpiaDraftsToReview", count: f.dpiaAssessments - f.dpiaApproved }])
         : f.dpiaAccess === "module"
           ? needs("dpiaModule")
-          : f.dpiaAccess === "quotaUsed"
-            ? needs("dpiaModuleHosted")
-            : needs("dpiaStart"),
+          : needs("dpiaStart"),
   },
   {
     id: "assessmentPortfolio",

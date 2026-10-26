@@ -112,30 +112,18 @@ test("M2: a member limited to one department works inside it", async ({ page }) 
   await expect(page.getByTestId("quickstart-limited")).toBeVisible();
 });
 
-test("M1: two DPIAs are free on the pilot tier; the third is refused with the plans link", async ({ page }) => {
+test("M1: DPIAs are not capped on the pilot tier: a third is created like the first", async ({ page }) => {
   test.skip(process.env.NEXT_PUBLIC_STRIPE_ENABLED !== "true", "no pilot tier on the kit");
   await signInWithNewOrganisation(page, "dpia");
 
   await page.goto("/privacy");
-  await expect(page.getByTestId("dpia-free-note").first()).toContainText(
-    "Free for a limited time: two DPIAs per organization on the pilot tier",
-  );
+  await expect(page.getByTestId("dpia-free-note")).toHaveCount(0);
 
-  for (const n of [1, 2]) {
+  for (const n of [1, 2, 3]) {
     await page.goto("/privacy/assessments/new?type=DPIA");
     await expect(page.getByTestId("assessment-type-gated")).toHaveCount(0);
-    await page.locator("form #name").fill(`Free DPIA ${n} ${stamp}`);
+    await page.locator("form #name").fill(`DPIA ${n} ${stamp}`);
     await page.locator("form button[type=submit]").click();
     await page.waitForURL(/\/privacy\/assessments\/(?!new)[^/?]+/);
   }
-
-  await page.goto("/privacy/assessments/new?type=DPIA");
-  await page.locator("form #name").fill(`Third DPIA ${stamp}`);
-  await page.locator("form button[type=submit]").click();
-  const alert = page.getByTestId("assessment-create-error");
-  await expect(alert).toBeVisible();
-  await expect(alert).toContainText("already created the 2 DPIAs that the pilot tier includes free");
-  await expect(alert).toContainText("https://www.todo.law/pricing");
-  await expect(alert).not.toContainText(/€|\$|EUR/);
-  await expect(page).toHaveURL(/\/privacy\/assessments\/new/);
 });

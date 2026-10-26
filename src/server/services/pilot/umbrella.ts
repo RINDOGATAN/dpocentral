@@ -13,7 +13,7 @@
  *     one payment covers every organisation of the group;
  *   - the pilot window (pilotStartedAt): it starts once and ends on the same
  *     date for every organisation, whenever each was created;
- *   - the pilot allowances (record ceilings and the free DPIAs): counted over
+ *   - the pilot allowances (record ceilings): counted over
  *     the whole group, so opening another organisation never multiplies them.
  *
  * The group's state is kept on each organisation row, equal across the group:
