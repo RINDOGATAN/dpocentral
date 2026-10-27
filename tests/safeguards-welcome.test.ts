@@ -58,6 +58,7 @@ vi.mock("resend", () => ({
 }));
 
 import { safeguardsRouter } from "@/server/routers/privacy/safeguards";
+import { createTRPCRouter } from "@/server/trpc";
 import { organizationRouter } from "@/server/routers/privacy/organization";
 import {
   purgeClosedSafeguardsRequests,
@@ -116,10 +117,12 @@ function as(userId: string, role: string, row: OrgRow = org(), cookies: Record<s
     organization: row,
     user: { locale: null },
   });
-  return callerFor(safeguardsRouter, sessionFor(userId, `${userId}@firm.example`), cookies) as ReturnType<
-    typeof safeguardsRouter.createCaller
-  >;
+  // Mounted as in the app router, so procedure paths read "safeguards.*" like
+  // the pilot's read-only allow-list (READ_ONLY_ALLOWED_PATHS) expects.
+  return callerFor(mountedSafeguards, sessionFor(userId, `${userId}@firm.example`), cookies).safeguards;
 }
+
+const mountedSafeguards = createTRPCRouter({ safeguards: safeguardsRouter });
 
 const REQUEST = {
   organizationId: "org-a",
