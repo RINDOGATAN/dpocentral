@@ -42,6 +42,17 @@ export function isRightsRequestEntry(entityType: string): boolean {
   );
 }
 
+/**
+ * The platform operators' audit views (src/server/routers/platformAdmin.ts)
+ * follow the same rule: an entry about a rights request keeps its action,
+ * ids and date, and its recorded detail is withheld.
+ */
+export function withholdRightsRequestDetail<T extends { entityType: string; changes: unknown; metadata: unknown }>(
+  row: T,
+): T {
+  return isRightsRequestEntry(row.entityType) ? { ...row, changes: null, metadata: null } : row;
+}
+
 /** One entry as stored (the fields the trail reads). */
 export interface StoredAuditEntry {
   id: string;
