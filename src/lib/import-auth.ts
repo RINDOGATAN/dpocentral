@@ -44,42 +44,28 @@ export function validateImportApiKey(request: Request): boolean {
 const IMPORT_IDENTITY_AUDIENCE = "dpocentral-import";
 const IMPORT_IDENTITY_ISSUERS = ["vendorwatch"] as const;
 
-let loggedNotConfigured = false;
-
 function identityRefusal(status: 401 | 403, error: string): Response {
   return NextResponse.json({ error }, { status });
 }
 
 /**
  * The one identity decision every /api/import/* route takes, after the key
- * check and once it knows which account the body names.
- *
- *  - No IMPORT_IDENTITY_SECRETS configured: the header is ignored and the
- *    route behaves as before (the key alone).
- *  - Header present: it must verify (401 otherwise) and its subject must be
- *    the account the body names (403 otherwise).
- *  - Header absent: accepted as before, unless IMPORT_IDENTITY_REQUIRED is
- *    "true" (401).
+ * check and once it knows which account the body names. A signed statement
+ * of the person is mandatory: it must be present (401), verify against
+ * IMPORT_IDENTITY_SECRETS (401; none configured refuses every call) and name
+ * the account in the body (403).
  *
  * Returns a Response to send back, or null to carry on.
  */
 export function checkImportIdentity(request: Request, accountEmail: string): Response | null {
   const secrets = secretList(process.env.IMPORT_IDENTITY_SECRETS);
   if (secrets.length === 0) {
-    if (!loggedNotConfigured) {
-      loggedNotConfigured = true;
-      logger.info("Import identity verification is not configured; the import key alone is checked");
-    }
-    return null;
+    logger.error("IMPORT_IDENTITY_SECRETS is not configured; refusing import calls");
+    return identityRefusal(401, "Identity statement required");
   }
 
   const token = request.headers.get(IMPORT_IDENTITY_HEADER);
-  if (!token) {
-    if (process.env.IMPORT_IDENTITY_REQUIRED === "true") {
-      return identityRefusal(401, "Identity statement required");
-    }
-    return null;
-  }
+  if (!token) return identityRefusal(401, "Identity statement required");
 
   const result = verifyImportIdentity(token, {
     secrets,
