@@ -90,6 +90,10 @@ export interface PublicPropertiesBackfillRow {
   returnFlowsKept: number;
 }
 
+// Run from an operator's machine against the hosted database, one organisation
+// per transaction: Prisma's 5-second default is too short for the round trips.
+const BACKFILL_TX_OPTIONS = { maxWait: 20_000, timeout: 120_000 };
+
 export async function backfillPublicPropertiesFlows(
   db: any,
   opts: { execute: boolean; organizationId?: string }
@@ -199,7 +203,7 @@ export async function backfillPublicPropertiesFlows(
           });
         }
         if (activities.length > 0) await syncGeneratedFlows(tx, org.id, activities.map((a) => a.id));
-      });
+      }, BACKFILL_TX_OPTIONS);
     }
     rows.push(row);
   }
