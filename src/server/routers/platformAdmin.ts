@@ -5,6 +5,7 @@ import { deleteOrganizationCompletely, type DeleteOrgDb } from "@/server/service
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure, protectedProcedure, isPlatformAdmin } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { withholdRightsRequestDetail } from "@/lib/audit-access";
 import { CustomerType, LicenseType, EntitlementStatus, UserType } from "@prisma/client";
 import {
   createEntitlement,
@@ -429,7 +430,7 @@ export const platformAdminRouter = createTRPCRouter({
         take: 20,
       });
 
-      return { ...organization, recentLogs };
+      return { ...organization, recentLogs: recentLogs.map(withholdRightsRequestDetail) };
     }),
 
   updateOrganization: adminProcedure
@@ -615,7 +616,7 @@ export const platformAdminRouter = createTRPCRouter({
         take: 20,
       });
 
-      return { ...user, recentLogs };
+      return { ...user, recentLogs: recentLogs.map(withholdRightsRequestDetail) };
     }),
 
   updateUser: adminProcedure
@@ -706,7 +707,7 @@ export const platformAdminRouter = createTRPCRouter({
       }
 
       return {
-        logs,
+        logs: logs.map(withholdRightsRequestDetail),
         nextCursor,
         filterOptions: {
           entityTypes: entityTypes.map((e) => e.entityType),
@@ -799,6 +800,11 @@ export const platformAdminRouter = createTRPCRouter({
       }),
     ]);
 
-    return { recentLogs, newUsers7d, newUsers30d, activeSubscriptions };
+    return {
+      recentLogs: recentLogs.map(withholdRightsRequestDetail),
+      newUsers7d,
+      newUsers30d,
+      activeSubscriptions,
+    };
   }),
 });

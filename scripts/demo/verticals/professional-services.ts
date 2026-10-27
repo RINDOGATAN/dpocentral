@@ -2357,7 +2357,7 @@ export const scenario: VerticalScenario = {
       entityType: "DSARRequest",
       entityId: "proserv-dsar-1",
       action: "CREATE",
-      changes: { type: "ACCESS", requesterName: "Dr. Friedrich Weber" },
+      changes: { type: "ACCESS" },
       createdAt: "2025-09-10T09:00:00Z",
     },
     {

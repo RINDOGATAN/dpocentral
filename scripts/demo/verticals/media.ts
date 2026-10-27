@@ -2235,7 +2235,7 @@ export const scenario: VerticalScenario = {
       entityType: "DSARRequest",
       entityId: "media-dsar-1",
       action: "CREATE",
-      changes: { type: "ACCESS", requesterName: "Annika Lindgren" },
+      changes: { type: "ACCESS" },
       createdAt: "2025-09-15T10:30:00Z",
     },
     {

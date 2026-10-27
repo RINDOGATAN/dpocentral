@@ -35,6 +35,7 @@
     "db:seed-demo-all": "tsx scripts/assert-safe-db.ts && tsx scripts/demo/runner.ts --all",
     "db:verify-demo": "tsx scripts/assert-safe-db.ts && tsx scripts/verify-demo.ts",
     "db:purge-dsar-data": "tsx scripts/assert-safe-db.ts && tsx scripts/purge-dsar-data.ts",
+    "db:redact-dsar-audit-requester": "tsx scripts/assert-safe-db.ts && tsx scripts/redact-dsar-audit-requester.ts",
     "db:set-org-plan": "tsx scripts/assert-safe-db.ts && tsx scripts/set-org-plan.ts",
     "db:set-dsar-module": "tsx scripts/assert-safe-db.ts && tsx scripts/set-dsar-module.ts",
     "db:dsar-support-read": "tsx scripts/assert-safe-db.ts && tsx scripts/dsar-support-read.ts",

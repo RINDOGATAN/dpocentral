@@ -2254,7 +2254,7 @@ export const scenario: VerticalScenario = {
       entityType: "DSARRequest",
       entityId: "fintech-dsar-1",
       action: "CREATE",
-      changes: { type: "ACCESS", requesterName: "Elena Vasquez" },
+      changes: { type: "ACCESS" },
       createdAt: "2025-10-15T09:00:00Z",
     },
     {
