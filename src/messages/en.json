@@ -2610,7 +2610,13 @@
         "removeConfirmTitle": "Remove {name}?",
         "removeConfirmDescription": "They will lose access to this organization immediately. You can add them again later.",
         "removeConfirm": "Remove",
-        "rolesLegend": "Roles: OWNER (full control) · ADMIN (manage modules and members) · PRIVACY_OFFICER (manage records) · MEMBER (create and edit) · VIEWER (read only)"
+        "rolesLegend": "Roles: OWNER (full control) · ADMIN (manage modules and members) · PRIVACY_OFFICER (manage records) · MEMBER (create and edit) · VIEWER (read only)",
+        "scoped": {
+          "title": "People in {organization}",
+          "descriptionAdmin": "People you add here see and work only in {organization}, not in your other organisations.",
+          "inviteLabel": "Add someone to {organization}",
+          "inviteHelp": "Enter their e-mail address and choose a role. Someone who has not signed in yet gets an invitation e-mail and joins when they first sign in with that address. To give a client's staff access, add them here while that client is selected."
+        }
       },
       "portability": {
         "export": {

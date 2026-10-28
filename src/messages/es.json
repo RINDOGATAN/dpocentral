@@ -2610,7 +2610,13 @@
         "removeConfirmTitle": "¿Eliminar a {name}?",
         "removeConfirmDescription": "Perderá el acceso a esta organización de inmediato. Puedes volver a añadir a esta persona más tarde.",
         "removeConfirm": "Eliminar",
-        "rolesLegend": "Roles: Propietario (control total) · Administrador (gestiona módulos y miembros) · Responsable de privacidad (gestiona registros) · Miembro (crea y edita) · Lector (solo lectura)"
+        "rolesLegend": "Roles: Propietario (control total) · Administrador (gestiona módulos y miembros) · Responsable de privacidad (gestiona registros) · Miembro (crea y edita) · Lector (solo lectura)",
+        "scoped": {
+          "title": "Personas en {organization}",
+          "descriptionAdmin": "Las personas que añadas aquí solo ven y trabajan en {organization}, no en tus otras organizaciones.",
+          "inviteLabel": "Añadir a alguien a {organization}",
+          "inviteHelp": "Escribe su dirección de correo y elige un rol. Si aún no ha iniciado sesión, recibe una invitación por correo y se une cuando inicia sesión por primera vez con esa dirección. Para dar acceso al personal de un cliente, añádelo aquí con ese cliente seleccionado."
+        }
       },
       "portability": {
         "export": {
