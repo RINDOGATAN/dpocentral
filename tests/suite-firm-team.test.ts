@@ -5,6 +5,7 @@
  * The firm team sent to AI Sentinel (src/lib/suite-firm-team.ts,
  * src/server/services/suite/firm-team-push.ts): the signed contract and its
  * own prefix, the full list sent after each change and by the hourly cron,
+ * an empty list owed after the last removal retried until it is accepted,
  * nothing sent with the switch off, and a failed push never failing the
  * person's action.
  */
@@ -271,6 +272,59 @@ describe("pushed after every change (switch on)", () => {
       })
     );
     await expect(firm("a").add({ email: "other@test.example" })).resolves.toMatchObject({ pending: true });
+  });
+});
+
+describe("an empty list owed", () => {
+  it("is recorded when the last person is removed, retried hourly while it fails, and cleared once accepted", async () => {
+    vi.stubEnv("SUITE_FIRM_TEAM", "on");
+    vi.stubEnv("PLAN_SYNC_SECRET", SECRET);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("down");
+      })
+    );
+    const one = await firm("a").add({ email: "one@test.example" });
+    const two = await firm("a").add({ email: "two@test.example" });
+    await firm("a").remove({ id: one.id });
+    expect(db.tables.firmTeamPushOwed).toHaveLength(0); // someone is left: the full list is still found hourly
+    await firm("a").remove({ id: two.id });
+    expect(db.tables.firmTeamPushOwed.map((r) => r.ownerUserId)).toEqual(["a"]);
+    await new Promise((r) => setTimeout(r, 20));
+
+    const down = vi.fn(async () => {
+      throw new Error("down");
+    });
+    expect(await pushAllFirmTeams(db, { env: ON, fetch: down })).toEqual({ owners: 1, sent: 0, failed: 1 });
+    expect(db.tables.firmTeamPushOwed).toHaveLength(1);
+
+    const f = okFetch();
+    expect(await pushAllFirmTeams(db, { env: ON, fetch: f })).toEqual({ owners: 1, sent: 1, failed: 0 });
+    expect(JSON.parse(f.mock.calls[0][1].body)).toMatchObject({ ownerEmail: "a@test.example", members: [] });
+    expect(db.tables.firmTeamPushOwed).toHaveLength(0);
+    expect(await pushAllFirmTeams(db, { env: ON, fetch: f })).toEqual({ owners: 0, sent: 0, failed: 0 });
+  });
+
+  it("is cleared by a newer push (409) or a later full list, and kept on any other refusal", async () => {
+    db.tables.firmTeamPushOwed.push({ ownerUserId: "a", owedAt: new Date() });
+    expect(await pushFirmTeam(db, "a", { env: ON, fetch: okFetch(500), includeEmpty: true })).toBe("refused");
+    expect(db.tables.firmTeamPushOwed).toHaveLength(1);
+    expect(await pushFirmTeam(db, "a", { env: ON, fetch: okFetch(409), includeEmpty: true })).toBe("refused");
+    expect(db.tables.firmTeamPushOwed).toHaveLength(0);
+
+    db.tables.firmTeamPushOwed.push({ ownerUserId: "a", owedAt: new Date() });
+    await firm("a").add({ email: "back@test.example" });
+    const f = okFetch();
+    expect(await pushAllFirmTeams(db, { env: ON, fetch: f })).toEqual({ owners: 1, sent: 1, failed: 0 });
+    expect(JSON.parse(f.mock.calls[0][1].body).members).toHaveLength(1);
+    expect(db.tables.firmTeamPushOwed).toHaveLength(0);
+  });
+
+  it("is not recorded with the switch off", async () => {
+    const added = await firm("a").add({ email: "staff@test.example" });
+    await firm("a").remove({ id: added.id });
+    expect(db.tables.firmTeamPushOwed).toHaveLength(0);
   });
 });
 
