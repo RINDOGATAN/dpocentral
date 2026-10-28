@@ -13,6 +13,7 @@ import { ControllerDetailsCard } from "@/components/privacy/controller-details-c
 import { ProgrammeExportCard } from "@/components/privacy/programme-export-card";
 import { ProgrammeImportCard } from "@/components/privacy/programme-import-card";
 import { DeleteOrganizationCard } from "@/components/privacy/delete-organization-card";
+import { FirmTeamCard } from "@/components/privacy/firm-team-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -41,7 +42,7 @@ import { trpc } from "@/lib/trpc";
 import { EmailNotAcceptedNote, isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
-import { membersCardIsScoped, membersCardKey } from "@/lib/members-card-copy";
+import { membersCardIsScoped, membersCardKey, splitFirmMembers } from "@/lib/members-card-copy";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { SafeguardsSettingsCard } from "@/components/safeguards/safeguards-settings-card";
@@ -120,6 +121,9 @@ export default function SettingsPage() {
   const membersOrgName = org?.name ?? organization?.name ?? "";
   const tm = (key: "title" | "descriptionAdmin" | "inviteLabel" | "inviteHelp") =>
     tMembers(membersCardKey(key, membersScoped), { organization: membersOrgName });
+  // Memberships from a firm team are listed apart, in one group per team; only
+  // the account that owns the team changes them, from its firm team card.
+  const { own: ownMembers, firmGroups } = splitFirmMembers(org?.members ?? []);
 
   const setUserType = trpc.user.setUserType.useMutation({
     onSuccess: async (saved) => {
@@ -352,6 +356,10 @@ export default function SettingsPage() {
         </Card>
       )}
 
+      {/* The account's firm team: people who join every client it manages.
+          Shown to privacy professional accounts (server-checked). */}
+      <FirmTeamCard />
+
       {/* Language */}
       <Card>
         <CardHeader>
@@ -553,7 +561,7 @@ export default function SettingsPage() {
             )}
 
             <div className="space-y-2">
-              {org.members?.map((member) => {
+              {ownMembers.map((member) => {
                 const isSelf = member.userId === profile?.id;
                 const canChange = isOwner && !isSelf;
                 return (
@@ -618,6 +626,49 @@ export default function SettingsPage() {
                 );
               })}
             </div>
+
+            {firmGroups.map((group) => {
+              const mine = group.ownerUserId === profile?.id;
+              return (
+                <div key={group.ownerUserId} className="space-y-2 pt-3 border-t" data-testid="firm-team-group">
+                  <div>
+                    <p className="text-sm font-medium">
+                      {mine ? tMembers("firmGroupOwner") : tMembers("firmGroup", { name: group.ownerName })}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {mine
+                        ? tMembers.rich("firmGroupOwnerHelp", {
+                            link: (chunks) => (
+                              <a href="#firm-team" className="text-primary underline underline-offset-4">
+                                {chunks}
+                              </a>
+                            ),
+                          })
+                        : tMembers("firmGroupHelp", { name: group.ownerName })}
+                    </p>
+                  </div>
+                  {group.members.map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex items-center justify-between gap-2 p-2 border rounded-md bg-muted/30"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate">
+                          {member.user.name || member.user.email}
+                          {member.userId === profile?.id && (
+                            <span className="ml-2 text-xs text-muted-foreground">{tMembers("you")}</span>
+                          )}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">{member.user.email}</p>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        {enumLabel("role", member.role)}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
 
             {!isAdmin && (
               <p className="text-xs text-muted-foreground pt-2 border-t">

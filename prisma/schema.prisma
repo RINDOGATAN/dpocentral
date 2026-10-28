@@ -45,6 +45,11 @@ model User {
   // Hosted service: the organisations this account pays for (one plan for all)
   billedOrganizations Organization[] @relation("OrganizationBillingOwner")
 
+  // Firm team: the people this account added to its firm team (as the firm's
+  // owner), and the firm teams this account belongs to (as a member).
+  firmTeamMembers     FirmTeamMember[] @relation("FirmTeamOwner")
+  firmTeamMemberships FirmTeamMember[] @relation("FirmTeamPerson")
+
   // Saved list views (a personal preference kept per organisation)
   savedViews SavedView[]
 
@@ -292,8 +297,16 @@ model OrganizationMember {
   invitedAt      DateTime?
   joinedAt       DateTime         @default(now())
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Set when the membership was created by the firm team of the account that
+  // owns the organisation (src/server/services/members/firm-team.ts). Such a
+  // membership is managed only from that account's firm team: removing the
+  // person there removes it (and only memberships with this column set).
+  // Null for every membership added any other way.
+  firmTeamMemberId String?
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firmTeamMember FirmTeamMember? @relation(fields: [firmTeamMemberId], references: [id], onDelete: Cascade)
 
   // Departments (business units): the ones this member owns, and the ones this
   // member is limited to (no rows = the whole organisation, the default).
@@ -302,7 +315,34 @@ model OrganizationMember {
 
   @@unique([organizationId, userId])
   @@index([userId])
+  @@index([firmTeamMemberId])
   @@map("organization_members")
+}
+
+// A person in the firm team of an account (typically a privacy professional
+// managing several client organisations). Each firm-team person is a member,
+// with this role, of every organisation the account owns and pays for,
+// including organisations it creates later
+// (src/server/services/members/firm-team.ts). memberUserId is null until the
+// invited address first signs in. The role is never OWNER.
+model FirmTeamMember {
+  id           String           @id @default(cuid())
+  ownerUserId  String
+  memberUserId String?
+  invitedEmail String
+  role         OrganizationRole @default(PRIVACY_OFFICER)
+  createdAt    DateTime         @default(now())
+  invitedAt    DateTime         @default(now())
+  acceptedAt   DateTime?
+
+  owner       User                 @relation("FirmTeamOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  member      User?                @relation("FirmTeamPerson", fields: [memberUserId], references: [id], onDelete: Cascade)
+  memberships OrganizationMember[]
+
+  @@unique([ownerUserId, invitedEmail])
+  @@index([memberUserId])
+  @@index([invitedEmail])
+  @@map("firm_team_members")
 }
 
 // ============================================================

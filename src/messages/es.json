@@ -2616,7 +2616,11 @@
           "descriptionAdmin": "Las personas que añadas aquí solo ven y trabajan en {organization}, no en tus otras organizaciones.",
           "inviteLabel": "Añadir a alguien a {organization}",
           "inviteHelp": "Escribe su dirección de correo y elige un rol. Si aún no ha iniciado sesión, recibe una invitación por correo y se une cuando inicia sesión por primera vez con esa dirección. Para dar acceso al personal de un cliente, añádelo aquí con ese cliente seleccionado."
-        }
+        },
+        "firmGroup": "Equipo de {name}",
+        "firmGroupHelp": "Estas personas forman parte del equipo de {name} y trabajan en todos los clientes que gestiona. Solo {name} puede cambiar su rol o quitarlas.",
+        "firmGroupOwner": "Tu equipo",
+        "firmGroupOwnerHelp": "Personas de tu equipo. Cambia su rol o quítalas en <link>Tu equipo</link>."
       },
       "portability": {
         "export": {
@@ -10531,7 +10535,8 @@
       "cancel": "Cancelar",
       "deleted": "{name} se ha eliminado.",
       "loading": "Comprobando si se puede eliminar este cliente"
-    }
+    },
+    "firmTeam": "Tu equipo"
   },
   "applicability": {
     "cardTitle": "Normativa aplicable",
@@ -11394,7 +11399,11 @@
       "SUITE_LINK_CREATED": "Vinculada con AI Sentinel",
       "SUITE_LINK_REMOVED": "Desvinculada de AI Sentinel",
       "AI_KEY_SET": "Clave de API de inferencia añadida",
-      "AI_KEY_REMOVED": "Clave de API de inferencia quitada"
+      "AI_KEY_REMOVED": "Clave de API de inferencia quitada",
+      "FIRM_TEAM_INVITE": "Añadido al equipo",
+      "FIRM_TEAM_ADD": "Incorporado a través del equipo",
+      "FIRM_TEAM_ROLE": "Rol en el equipo cambiado",
+      "FIRM_TEAM_REMOVE": "Quitado a través del equipo"
     }
   },
   "dsarGeneratedTask": {
@@ -11582,5 +11591,29 @@
     "unlinked": "Se ha desvinculado de AI Sentinel.",
     "noteRemovedInAis": "Este sistema ya no está en AI Sentinel (anotado el {date}). Aquí no se ha borrado nada.",
     "fromAisBadge": "Desde AI Sentinel, por confirmar"
+  },
+  "firmTeam": {
+    "title": "Tu equipo",
+    "description": "Las personas de tu despacho o empresa que ven y trabajan en todos los clientes que gestionas, también en los que añadas más adelante. El personal de cada cliente sigue en la lista de miembros de ese cliente.",
+    "addLabel": "Añadir a alguien de tu equipo",
+    "emailPlaceholder": "companero@tudespacho.example",
+    "roleLabel": "Rol en todos los clientes",
+    "add": "Añadir",
+    "addHelp": "Se une a todos los clientes que gestionas con este rol. Si aún no ha iniciado sesión, recibe una invitación por correo y se une cuando inicia sesión por primera vez con esa dirección. Te sugerimos responsable de privacidad: trabaja en registros, solicitudes, incidentes y evaluaciones, pero no cambia la configuración ni los miembros de un cliente.",
+    "invitedSent": "Invitación enviada a {email}",
+    "invitedNoEmail": "Invitación guardada. Aquí no hay un servicio de correo configurado: pídele que inicie sesión con esta dirección en {url}",
+    "added": "{count, plural, =0 {Añadido a tu equipo} one {Añadido a tu equipo y a # cliente} other {Añadido a tu equipo y a # clientes}}",
+    "roleUpdated": "Rol actualizado en todos los clientes",
+    "removed": "Eliminado de tu equipo y de tus clientes",
+    "empty": "Aún no hay nadie en tu equipo.",
+    "pendingSince": "invitado el {date}, se une al iniciar sesión por primera vez",
+    "inClients": "en {joined} de {total} clientes",
+    "roleFor": "Rol de {name}",
+    "removeAria": "Quitar a {name} de tu equipo",
+    "removeConfirmTitle": "¿Quitar a {name} de tu equipo?",
+    "removeConfirmDescription": "Pierde de inmediato el acceso a todos los clientes a los que ha entrado a través de tu equipo. El acceso que se le haya dado aparte en un cliente se mantiene.",
+    "removeConfirm": "Quitar",
+    "partialNote": "Hay alguien que no está en todos tus clientes: puede que ya pertenezca a ese cliente por su cuenta o, en el piloto del servicio alojado, que ya pertenezca al máximo de organizaciones que permite una cuenta. Se le añade cuando haya sitio, la próxima vez que inicie sesión.",
+    "clientsCount": "{count, plural, one {# cliente que gestionas} other {# clientes que gestionas}}"
   }
 }

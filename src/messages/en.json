@@ -2616,7 +2616,11 @@
           "descriptionAdmin": "People you add here see and work only in {organization}, not in your other organisations.",
           "inviteLabel": "Add someone to {organization}",
           "inviteHelp": "Enter their e-mail address and choose a role. Someone who has not signed in yet gets an invitation e-mail and joins when they first sign in with that address. To give a client's staff access, add them here while that client is selected."
-        }
+        },
+        "firmGroup": "{name}'s team",
+        "firmGroupHelp": "These people are in {name}'s firm team and work in every client that account manages. Only {name} can change their role or remove them.",
+        "firmGroupOwner": "Your firm team",
+        "firmGroupOwnerHelp": "People in your firm team. Change their role or remove them in <link>Firm team</link>."
       },
       "portability": {
         "export": {
@@ -10531,7 +10535,8 @@
       "cancel": "Cancel",
       "deleted": "{name} has been deleted.",
       "loading": "Checking whether this client can be deleted"
-    }
+    },
+    "firmTeam": "Firm team"
   },
   "applicability": {
     "cardTitle": "What applies to you",
@@ -11394,7 +11399,11 @@
       "SUITE_LINK_CREATED": "Linked with AI Sentinel",
       "SUITE_LINK_REMOVED": "Unlinked from AI Sentinel",
       "AI_KEY_SET": "API inference key added",
-      "AI_KEY_REMOVED": "API inference key removed"
+      "AI_KEY_REMOVED": "API inference key removed",
+      "FIRM_TEAM_INVITE": "Added to the firm team",
+      "FIRM_TEAM_ADD": "Joined through the firm team",
+      "FIRM_TEAM_ROLE": "Firm team role changed",
+      "FIRM_TEAM_REMOVE": "Removed through the firm team"
     }
   },
   "dsarGeneratedTask": {
@@ -11582,5 +11591,29 @@
     "unlinked": "Unlinked from AI Sentinel.",
     "noteRemovedInAis": "This system is no longer in AI Sentinel (noted on {date}). Nothing has been deleted here.",
     "fromAisBadge": "From AI Sentinel, to confirm"
+  },
+  "firmTeam": {
+    "title": "Firm team",
+    "description": "People in your firm who see and work in every client you manage, including clients you add later. Each client's own staff stay in that client's members list.",
+    "addLabel": "Add someone from your firm",
+    "emailPlaceholder": "colleague@yourfirm.example",
+    "roleLabel": "Role in every client",
+    "add": "Add",
+    "addHelp": "They join every client you manage with this role. Someone who has not signed in yet gets an invitation e-mail and joins when they first sign in with that address. Privacy officer is suggested: they work on records, requests, incidents and assessments, but do not change a client's settings or members.",
+    "invitedSent": "Invitation sent to {email}",
+    "invitedNoEmail": "Invitation saved. No e-mail service is set up here: ask them to sign in with this address at {url}",
+    "added": "{count, plural, =0 {Added to your firm team} one {Added to your firm team and to # client} other {Added to your firm team and to # clients}}",
+    "roleUpdated": "Role updated in every client",
+    "removed": "Removed from your firm team and from your clients",
+    "empty": "Nobody in your firm team yet.",
+    "pendingSince": "invited {date}, joins at first sign-in",
+    "inClients": "in {joined} of {total} clients",
+    "roleFor": "Role of {name}",
+    "removeAria": "Remove {name} from your firm team",
+    "removeConfirmTitle": "Remove {name} from your firm team?",
+    "removeConfirmDescription": "They lose access at once to every client they joined through your firm team. Access given to them separately in a client stays.",
+    "removeConfirm": "Remove",
+    "partialNote": "Someone is not in all your clients: they may already belong to that client in their own right or, on the hosted pilot, already belong to the most organisations an account may have. They are added when there is room, at their next sign-in.",
+    "clientsCount": "{count, plural, one {# client you manage} other {# clients you manage}}"
   }
 }

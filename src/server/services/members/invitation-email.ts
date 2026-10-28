@@ -28,11 +28,28 @@ export interface InvitationEmailInput {
   role: string;
   locale: Locale;
   signInUrl: string;
+  /** An invitation to the inviter's firm team (every client they manage), not to one organisation. */
+  firmTeam?: boolean;
 }
 
 /** The parts of the e-mail, before layout (tested on their own). */
 export function invitationCopy(input: InvitationEmailInput) {
   const role = ROLE[input.locale][input.role] ?? input.role.toLowerCase();
+  if (input.firmTeam) {
+    return input.locale === "es"
+      ? {
+          subject: `${input.inviterName} te ha añadido a su equipo en ${brand.name}`,
+          body: `${input.inviterName} te ha añadido a su equipo en ${brand.name} con el rol de ${role}: verás y trabajarás en todos los clientes que gestiona. Inicia sesión con esta dirección de correo (${input.to}) para aceptar: se te añadirá a sus clientes al iniciar sesión.`,
+          button: "Iniciar sesión",
+          ignore: "Si no esperabas esta invitación, puedes ignorar este correo.",
+        }
+      : {
+          subject: `${input.inviterName} added you to their team on ${brand.name}`,
+          body: `${input.inviterName} has added you to their firm team on ${brand.name} as ${role}: you will see and work in every client they manage. Sign in with this e-mail address (${input.to}) to accept: you will be added to their clients when you sign in.`,
+          button: "Sign in",
+          ignore: "If you did not expect this invitation, you can ignore this e-mail.",
+        };
+  }
   if (input.locale === "es") {
     return {
       subject: `${input.inviterName} te ha invitado a ${input.orgName} en ${brand.name}`,

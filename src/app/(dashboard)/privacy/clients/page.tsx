@@ -31,7 +31,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, Loader2, MoreHorizontal, Copy, Plus, Trash2 } from "lucide-react";
+import { Building2, Loader2, MoreHorizontal, Copy, Plus, Trash2, Users } from "lucide-react";
+import Link from "next/link";
+import { useUserType } from "@/lib/use-user-type";
 import type { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@/lib/trpc";
 import type { AppRouter } from "@/server/routers";
@@ -122,6 +124,8 @@ export default function ClientsPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("portfolio");
+  // The firm team (Settings): people who join every client listed here.
+  const { userType } = useUserType();
 
   // "Create a new client from this one": the row's client is the source; the
   // dialog creates the new client and copies into it. Owner/admin only.
@@ -164,10 +168,20 @@ export default function ClientsPage() {
             {attentionCount > 0 && ` · ${t("needAttention", { count: attentionCount })}`}
           </p>
         </div>
-        <Button size="sm" className="gap-2 shrink-0 self-start" onClick={() => setAddOpen(true)}>
-          <Plus className="w-4 h-4" aria-hidden="true" />
-          {t("addClient")}
-        </Button>
+        <div className="flex gap-2 shrink-0 self-start">
+          {userType === "PRIVACY_PROFESSIONAL" && (
+            <Button asChild size="sm" variant="outline" className="gap-2">
+              <Link href="/privacy/settings#firm-team" data-testid="clients-firm-team-link">
+                <Users className="w-4 h-4" aria-hidden="true" />
+                {t("firmTeam")}
+              </Link>
+            </Button>
+          )}
+          <Button size="sm" className="gap-2" onClick={() => setAddOpen(true)}>
+            <Plus className="w-4 h-4" aria-hidden="true" />
+            {t("addClient")}
+          </Button>
+        </div>
       </div>
 
       {rows.length > 0 ? (

@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { acceptPendingInvitations } from "@/server/services/members/invitations";
+import { acceptFirmTeamInvitations } from "@/server/services/members/firm-team";
 import { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
@@ -291,6 +292,9 @@ export const authOptions: NextAuthOptions = {
         // Invitations waiting for this address become memberships now
         // (src/server/services/members/invitations.ts). Never blocks sign-in.
         await acceptPendingInvitations(prisma, user.id, user.email);
+        // Firm teams this address was added to, and any firm organisation
+        // still missing (src/server/services/members/firm-team.ts).
+        await acceptFirmTeamInvitations(prisma, user.id, user.email);
         // The last sign-in, for the twelve-month inactivity rule of pilot
         // organisations (src/server/services/organization/retention.ts).
         // Never blocks sign-in.
