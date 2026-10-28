@@ -27,6 +27,7 @@ import {
   updateFirmTeamRole,
 } from "@/server/services/members/firm-team";
 import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
+import { schedulePushFirmTeam } from "@/server/services/suite/firm-team-push";
 
 const firmRole = z.enum(FIRM_TEAM_ROLES as unknown as [OrganizationRole, ...OrganizationRole[]]);
 
@@ -98,6 +99,8 @@ export const firmTeamRouter = createTRPCRouter({
         role: input.role as (typeof FIRM_TEAM_ROLES)[number],
         locale,
       });
+      // AI Sentinel applies the same list (src/server/services/suite/firm-team-push.ts).
+      schedulePushFirmTeam(ctx.prisma, ownerUserId);
       let emailSent = false;
       if (pending) {
         emailSent = await sendInvitationEmail({
@@ -132,12 +135,16 @@ export const firmTeamRouter = createTRPCRouter({
         id: input.id,
         role: input.role as (typeof FIRM_TEAM_ROLES)[number],
       });
+      schedulePushFirmTeam(ctx.prisma, ownerUserId);
       return { id: firm.id, role: firm.role };
     }),
 
   // Removing is allowed whatever the account type now is, so an account that
   // switched type can still take people out of its clients.
   remove: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    return removeFirmTeamMember(ctx.prisma, { ownerUserId: ctx.session.user.id, id: input.id });
+    const result = await removeFirmTeamMember(ctx.prisma, { ownerUserId: ctx.session.user.id, id: input.id });
+    // Sent even when the team is now empty, so the last person goes on AI Sentinel too.
+    schedulePushFirmTeam(ctx.prisma, ctx.session.user.id, { includeEmpty: true });
+    return result;
   }),
 });
