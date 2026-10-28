@@ -79,6 +79,66 @@ export function payLinkProps(kind: PayKind): {
   return { target: "_blank", rel: "noopener noreferrer", onClick: () => armPayReturn(kind) };
 }
 
+/** What the watcher needs from the browser; the real window and document by default. */
+export interface PayReturnHost {
+  win: Pick<Window, "addEventListener" | "removeEventListener" | "setInterval" | "clearInterval">;
+  doc: Pick<Document, "addEventListener" | "removeEventListener" | "visibilityState">;
+  now: () => number;
+}
+
+/**
+ * While a link of `kind` is armed: refetch on each return to the tab
+ * (throttled), then every POLL_INTERVAL_MS for POLL_WINDOW_MS while the tab
+ * stays visible. Disarms itself once ARM_WINDOW_MS has passed since the
+ * click. Returns the cleanup.
+ */
+export function watchPayReturn(
+  kind: PayKind,
+  refetch: () => unknown,
+  host: PayReturnHost = { win: window, doc: document, now: Date.now }
+): () => void {
+  const { win, doc, now: clock } = host;
+  let lastReturn = 0;
+  let lastRefetch = 0;
+  const visible = () => doc.visibilityState === "visible";
+  const run = (now: number) => {
+    lastRefetch = now;
+    void Promise.resolve()
+      .then(() => refetch())
+      .catch(() => {
+        // A failed read is retried on the next tick or return.
+      });
+  };
+  const onReturn = () => {
+    const now = clock();
+    if (!isPayReturnArmed(kind, now)) {
+      disarmPayReturn(kind);
+      return;
+    }
+    if (!visible() || now - lastRefetch < RETURN_THROTTLE_MS) return;
+    lastReturn = now;
+    run(now);
+  };
+  const onVisibility = () => {
+    if (visible()) onReturn();
+  };
+  const timer = win.setInterval(() => {
+    const now = clock();
+    if (!isPayReturnArmed(kind, now)) {
+      disarmPayReturn(kind);
+      return;
+    }
+    if (lastReturn && visible() && now - lastReturn < POLL_WINDOW_MS) run(now);
+  }, POLL_INTERVAL_MS);
+  win.addEventListener("focus", onReturn);
+  doc.addEventListener("visibilitychange", onVisibility);
+  return () => {
+    win.clearInterval(timer);
+    win.removeEventListener("focus", onReturn);
+    doc.removeEventListener("visibilitychange", onVisibility);
+  };
+}
+
 /**
  * Refetches a plan query when the person returns to this tab after clicking
  * a payment link of `kind` (see the module comment). `done` is true once the
@@ -101,44 +161,6 @@ export function usePayReturnRefetch(kind: PayKind, refetch: () => unknown, done:
 
   useEffect(() => {
     if (!armed || done) return;
-    let lastReturn = 0;
-    let lastRefetch = 0;
-    const visible = () => document.visibilityState === "visible";
-    const run = (now: number) => {
-      lastRefetch = now;
-      void Promise.resolve()
-        .then(() => refetchRef.current())
-        .catch(() => {
-          // A failed read is retried on the next tick or return.
-        });
-    };
-    const onReturn = () => {
-      const now = Date.now();
-      if (!isPayReturnArmed(kind, now)) {
-        disarmPayReturn(kind);
-        return;
-      }
-      if (!visible() || now - lastRefetch < RETURN_THROTTLE_MS) return;
-      lastReturn = now;
-      run(now);
-    };
-    const onVisibility = () => {
-      if (visible()) onReturn();
-    };
-    const timer = window.setInterval(() => {
-      const now = Date.now();
-      if (!isPayReturnArmed(kind, now)) {
-        disarmPayReturn(kind);
-        return;
-      }
-      if (lastReturn && visible() && now - lastReturn < POLL_WINDOW_MS) run(now);
-    }, POLL_INTERVAL_MS);
-    window.addEventListener("focus", onReturn);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => {
-      window.clearInterval(timer);
-      window.removeEventListener("focus", onReturn);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
+    return watchPayReturn(kind, () => refetchRef.current());
   }, [armed, done, kind]);
 }
