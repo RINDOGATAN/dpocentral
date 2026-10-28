@@ -16,6 +16,7 @@ import {
 } from "@/lib/pilot-end-bar";
 import { PILOT_DAYS } from "@/server/services/pilot/limits";
 import { useChargeCurrency } from "@/components/region-provider";
+import { payLinkProps, usePayReturnRefetch } from "@/lib/pay-return";
 
 // Whether this deployment is the hosted pilot. Resolved on the server
 // (src/lib/hosted.ts) and handed down from the root layout.
@@ -177,8 +178,7 @@ export function PilotEndBar({
         {text}{" "}
         <a
           href={pricingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...payLinkProps("plan")}
           className="underline underline-offset-2 font-medium hover:text-primary"
         >
           {t("pricing")}
@@ -186,10 +186,10 @@ export function PilotEndBar({
         {upgradeHref && upgradeMonthlyHref && (
           <>
             {" "}
-            <a href={upgradeMonthlyHref} data-testid="pilot-upgrade-monthly-link" className={UPGRADE_LINK}>
+            <a href={upgradeMonthlyHref} {...payLinkProps("plan")} data-testid="pilot-upgrade-monthly-link" className={UPGRADE_LINK}>
               {t("upgradeMonthly")}
             </a>{" "}
-            <a href={upgradeHref} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
+            <a href={upgradeHref} {...payLinkProps("plan")} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
               {t("upgradeYearly")}
             </a>
           </>
@@ -197,7 +197,7 @@ export function PilotEndBar({
         {upgradeHref && !upgradeMonthlyHref && (
           <>
             {" "}
-            <a href={upgradeHref} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
+            <a href={upgradeHref} {...payLinkProps("plan")} data-testid="pilot-upgrade-link" className={UPGRADE_LINK}>
               {t("upgrade")}
             </a>
           </>
@@ -227,7 +227,8 @@ export function PilotEndBar({
  * upgrade switched on), an owner or admin of the selected organisation also
  * sees "Move to the paid plan", which opens the plan's checkout for that
  * organisation (with `upgradeMonthly`, two links instead: pay monthly, pay
- * yearly); other members never see it.
+ * yearly); other members never see it. The checkout opens in a new tab and
+ * the plan is read again when the person comes back (src/lib/pay-return.ts).
  */
 export function HostedPilotEndBar({
   upgrade = false,
@@ -239,10 +240,14 @@ export function HostedPilotEndBar({
   const locale = useLocale();
   const organization = useSelectedOrganizationOrNull();
   const onPaidPlan = organization?.plan === "EU_CLOUD";
-  const { data: status } = trpc.organization.getPilotStatus.useQuery(
+  const { data: status, refetch } = trpc.organization.getPilotStatus.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id && !onPaidPlan, staleTime: 60 * 1000 }
   );
+  // The checkout opens in a new tab: on coming back, read the plan again so
+  // the bar goes once the payment has synced (the Settings card shares this
+  // query's cache).
+  usePayReturnRefetch("plan", refetch, onPaidPlan || !!(status?.hosted && status.paid));
   if (!organization || onPaidPlan) return null;
   const state = pilotEndBarState(status);
   const canUpgrade = upgrade && (organization.role === "OWNER" || organization.role === "ADMIN");

@@ -12,6 +12,9 @@ import { plansUrl } from "@/lib/hosted";
 import { isDsarModuleEnabled } from "@/config/features";
 import { useOrganization } from "@/lib/organization-context";
 import { formatDateIn } from "@/lib/utils";
+// The pricing block carries the plan's payment links: the click arms the
+// plan refetch on return (the pilot bar's query, which this card shares).
+import { payLinkProps } from "@/lib/pay-return";
 
 const ALL_EXPORTS = [
   { key: "all", path: "organization-data", format: null },
@@ -112,8 +115,7 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
     run: (chunks: React.ReactNode) => (
       <a
         href={plansUrl(locale)}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...payLinkProps("plan")}
         className="text-primary underline"
       >
         {chunks}

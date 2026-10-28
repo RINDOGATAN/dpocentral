@@ -8,6 +8,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { brand } from "@/config/brand";
 import { useChargeCurrency, usePriceInSentence } from "@/components/region-provider";
 import { DSAR_VOLUME_UPGRADE_MONTHLY_PRICE, UPGRADED_PUBLIC_REQUESTS_PER_MONTH } from "@/lib/dsar-addon";
+import { payLinkProps, usePayReturnRefetch } from "@/lib/pay-return";
 
 /**
  * Above every page of the rights-request module (hosted service only), and
@@ -16,7 +17,9 @@ import { DSAR_VOLUME_UPGRADE_MONTHLY_PRICE, UPGRADED_PUBLIC_REQUESTS_PER_MONTH }
  * what happens at the limit and, below the 1,000 ceiling, the volume upgrade
  * (its price in the currency the customer is charged in, and its payment link
  * when one is set; otherwise our address). The upgrade comes with the paid
- * plan only, so a pilot organisation is told that instead of a link. Nothing below half the ceiling,
+ * plan only, so a pilot organisation is told that instead of a link. The
+ * payment link opens in a new tab, and the line is read again when the person
+ * comes back (src/lib/pay-return.ts). Nothing below half the ceiling,
  * and nothing on the self-hosted kit.
  */
 export function DsarModuleAccessNote() {
@@ -25,10 +28,13 @@ export function DsarModuleAccessNote() {
   const price = usePriceInSentence();
   const currency = useChargeCurrency();
   const { organization } = useOrganization();
-  const { data: access } = trpc.dsar.moduleAccess.useQuery(
+  const { data: access, refetch } = trpc.dsar.moduleAccess.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id, refetchOnWindowFocus: false }
   );
+  // The upgrade's payment link opens in a new tab: on coming back, read the
+  // module's state again so the line reflects the upgrade once it has synced.
+  usePayReturnRefetch("dsarVolume", refetch, !!access && access.gate !== "standard");
   if (!access || access.gate === "open" || access.warningPercent === 0) return null;
 
   const resets = new Date(access.resetsAt).toLocaleDateString(locale.startsWith("es") ? "es-ES" : "en-US", {
@@ -54,7 +60,7 @@ export function DsarModuleAccessNote() {
           ) : !access.canBuy ? (
             t("volumeUpgradeAskAdmin")
           ) : link ? (
-            <a className="underline underline-offset-4 text-primary" href={link}>
+            <a className="underline underline-offset-4 text-primary" href={link} {...payLinkProps("dsarVolume")}>
               {t("volumeUpgradeLink")}
             </a>
           ) : (
