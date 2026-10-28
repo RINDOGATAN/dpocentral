@@ -22,6 +22,7 @@ import { userRouter } from "./privacy/user";
 import { expertsRouter } from "./privacy/experts";
 import { clientsRouter } from "./privacy/clients";
 import { clientTemplateRouter } from "./privacy/clientTemplate";
+import { firmTeamRouter } from "./privacy/firmTeam";
 import { notificationRouter } from "./privacy/notification";
 import { reportsRouter } from "./privacy/reports";
 import { regulationsRouter } from "./privacy/regulations";
@@ -61,6 +62,7 @@ export const appRouter = createTRPCRouter({
   experts: expertsRouter,
   clients: clientsRouter,
   clientTemplate: clientTemplateRouter,
+  firmTeam: firmTeamRouter,
   notification: notificationRouter,
   reports: reportsRouter,
   regulations: regulationsRouter,

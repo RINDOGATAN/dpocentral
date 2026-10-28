@@ -5,6 +5,7 @@ import { suiteForRequest, type ApplyDb, type SuiteOrg } from "@/server/services/
 import { signupRegionSettings } from "@/server/services/org-region";
 import { normEmail, pendingInvitesOf, settingsWithInvite, settingsWithoutInvite } from "@/server/services/members/invitations";
 import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
+import { addFirmTeamToOrganization, removeFirmTeamFromOrganization } from "@/server/services/members/firm-team";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
@@ -69,6 +70,13 @@ export async function availableSlug(
     code: "CONFLICT",
     message: "This organization could not be created. Please try again with a slightly different name.",
   });
+}
+
+/** Refusal for a change to a membership that a firm team manages. */
+function firmManagedMessage(getCookie: (name: string) => string | undefined): string {
+  return pilotLocale(localeFromCookieGetter(getCookie)) === "es"
+    ? "Esta persona forma parte del equipo de quien gestiona esta organización. Solo esa cuenta puede cambiar su rol o quitarla, desde su equipo en Configuración."
+    : "This person is in the team of the account that manages this organisation. Only that account can change their role or remove them, from its firm team in Settings.";
 }
 
 /**
@@ -169,6 +177,12 @@ export const organizationRouter = createTRPCRouter({
                   email: true,
                   image: true,
                 },
+              },
+              // A membership from a firm team: whose team, for the separate
+              // group on the members card. The owner is a member of the
+              // organisation already, so nothing new is disclosed.
+              firmTeamMember: {
+                select: { ownerUserId: true, owner: { select: { name: true, email: true } } },
               },
             },
           },
@@ -357,6 +371,10 @@ export const organizationRouter = createTRPCRouter({
         });
         await addTodoLawProcessor(ctx.prisma, organization.id);
       }
+
+      // The creator's firm team joins the new organisation
+      // (src/server/services/members/firm-team.ts). Never blocks creation.
+      await addFirmTeamToOrganization(ctx.prisma, ctx.session.user.id, organization.id);
 
       // Seed a default DSAR intake form so the public portal works out of the
       // box. Not when the rights-request module is left out of this plan
@@ -722,6 +740,11 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      // A membership from a firm team is managed only from that team.
+      if (memberToUpdate.firmTeamMemberId) {
+        throw new TRPCError({ code: "FORBIDDEN", message: firmManagedMessage(ctx.getCookie) });
+      }
+
       // Cannot demote the last owner
       if (memberToUpdate.role === "OWNER" && input.role !== "OWNER") {
         const ownerCount = await ctx.prisma.organizationMember.count({
@@ -764,6 +787,17 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
+      // An owner who is no longer one no longer manages this organisation:
+      // the memberships their firm team holds here go.
+      if (memberToUpdate.role === "OWNER" && input.role !== "OWNER") {
+        await removeFirmTeamFromOrganization(
+          ctx.prisma,
+          memberToUpdate.userId,
+          ctx.organization.id,
+          ctx.session.user.id
+        );
+      }
+
       return membership;
     }),
 
@@ -802,6 +836,11 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      // A membership from a firm team is managed only from that team.
+      if (memberToRemove.firmTeamMemberId) {
+        throw new TRPCError({ code: "FORBIDDEN", message: firmManagedMessage(ctx.getCookie) });
+      }
+
       // Only an owner may remove an owner.
       if (memberToRemove.role === "OWNER" && ctx.membership.role !== "OWNER") {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can remove an owner" });
@@ -827,6 +866,17 @@ export const organizationRouter = createTRPCRouter({
       await ctx.prisma.organizationMember.delete({
         where: { id: memberToRemove.id },
       });
+
+      // A removed owner no longer manages this organisation: the memberships
+      // their firm team holds here go too.
+      if (memberToRemove.role === "OWNER") {
+        await removeFirmTeamFromOrganization(
+          ctx.prisma,
+          memberToRemove.userId,
+          ctx.organization.id,
+          ctx.session.user.id
+        );
+      }
 
       await ctx.prisma.auditLog.create({
         data: {
