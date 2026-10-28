@@ -431,7 +431,8 @@ export async function removeFirmTeamFromOrganization(
 export async function acceptFirmTeamInvitations(
   db: Db,
   userId: string,
-  email: string | null | undefined
+  email: string | null | undefined,
+  opts: { onAccepted?: (ownerUserId: string) => void } = {}
 ): Promise<number> {
   let added = 0;
   try {
@@ -449,6 +450,7 @@ export async function acceptFirmTeamInvitations(
           where: { id: row.id },
           data: { memberUserId: userId, acceptedAt: new Date() },
         });
+        opts.onAccepted?.(firm.ownerUserId);
       }
       const orgs = await firmOrganizations(db, firm.ownerUserId);
       added += (await syncFirmMember(db, firm, orgs, { actorUserId: userId })).added.length;

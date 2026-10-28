@@ -3,6 +3,7 @@
 
 import { acceptPendingInvitations } from "@/server/services/members/invitations";
 import { acceptFirmTeamInvitations } from "@/server/services/members/firm-team";
+import { schedulePushFirmTeam } from "@/server/services/suite/firm-team-push";
 import { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
@@ -294,7 +295,10 @@ export const authOptions: NextAuthOptions = {
         await acceptPendingInvitations(prisma, user.id, user.email);
         // Firm teams this address was added to, and any firm organisation
         // still missing (src/server/services/members/firm-team.ts).
-        await acceptFirmTeamInvitations(prisma, user.id, user.email);
+        // An accepted invitation changes the list AI Sentinel applies.
+        await acceptFirmTeamInvitations(prisma, user.id, user.email, {
+          onAccepted: (ownerUserId) => schedulePushFirmTeam(prisma, ownerUserId),
+        });
         // The last sign-in, for the twelve-month inactivity rule of pilot
         // organisations (src/server/services/organization/retention.ts).
         // Never blocks sign-in.

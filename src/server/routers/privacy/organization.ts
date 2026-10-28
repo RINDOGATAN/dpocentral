@@ -6,6 +6,7 @@ import { signupRegionSettings } from "@/server/services/org-region";
 import { normEmail, pendingInvitesOf, settingsWithInvite, settingsWithoutInvite } from "@/server/services/members/invitations";
 import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
 import { addFirmTeamToOrganization, removeFirmTeamFromOrganization } from "@/server/services/members/firm-team";
+import { schedulePushFirmTeam } from "@/server/services/suite/firm-team-push";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { TODOLAW_SOURCE_REF } from "@/lib/todolaw-source";
@@ -375,6 +376,8 @@ export const organizationRouter = createTRPCRouter({
       // The creator's firm team joins the new organisation
       // (src/server/services/members/firm-team.ts). Never blocks creation.
       await addFirmTeamToOrganization(ctx.prisma, ctx.session.user.id, organization.id);
+      // A new firm organisation: AI Sentinel's copy of the list learns of it.
+      schedulePushFirmTeam(ctx.prisma, ctx.session.user.id);
 
       // Seed a default DSAR intake form so the public portal works out of the
       // box. Not when the rights-request module is left out of this plan
@@ -796,6 +799,7 @@ export const organizationRouter = createTRPCRouter({
           ctx.organization.id,
           ctx.session.user.id
         );
+        schedulePushFirmTeam(ctx.prisma, memberToUpdate.userId);
       }
 
       return membership;
@@ -876,6 +880,7 @@ export const organizationRouter = createTRPCRouter({
           ctx.organization.id,
           ctx.session.user.id
         );
+        schedulePushFirmTeam(ctx.prisma, memberToRemove.userId);
       }
 
       await ctx.prisma.auditLog.create({

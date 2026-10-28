@@ -358,6 +358,8 @@ describe("display and wiring", () => {
 
   it("sign-in accepts firm team invitations", () => {
     const src = readFileSync(path.resolve(__dirname, "../src/lib/auth.ts"), "utf8");
-    expect(src).toMatch(/await acceptFirmTeamInvitations\(prisma, user\.id, user\.email\)/);
+    expect(src).toMatch(/await acceptFirmTeamInvitations\(prisma, user\.id, user\.email[,)]/);
+    // An accepted invitation sends the list to AI Sentinel (tests/suite-firm-team.test.ts).
+    expect(src).toMatch(/onAccepted: \(ownerUserId\) => schedulePushFirmTeam\(prisma, ownerUserId\)/);
   });
 });

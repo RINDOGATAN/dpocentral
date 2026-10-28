@@ -79,8 +79,12 @@ export function normalizeEmail(email: string | null | undefined): string | null 
   return e.includes("@") && e.length <= 320 ? e : null;
 }
 
-export function signSuiteRequest(secret: string, t: number, rawBody: string): string {
-  const v1 = createHmac("sha256", secret).update(`${PURPOSE}.${t}.${rawBody}`).digest("hex");
+/**
+ * `purpose` is the endpoint's own prefix (default "suite-plan-state.v1"), so
+ * a signature made for one suite endpoint never verifies at another.
+ */
+export function signSuiteRequest(secret: string, t: number, rawBody: string, purpose: string = PURPOSE): string {
+  const v1 = createHmac("sha256", secret).update(`${purpose}.${t}.${rawBody}`).digest("hex");
   return `t=${t},v1=${v1}`;
 }
 
@@ -88,7 +92,8 @@ export function verifySuiteSignature(
   header: string | null,
   rawBody: string,
   secret: string,
-  nowSeconds: number = Math.floor(Date.now() / 1000)
+  nowSeconds: number = Math.floor(Date.now() / 1000),
+  purpose: string = PURPOSE
 ): boolean {
   if (!header) return false;
   const parts = Object.fromEntries(
@@ -101,7 +106,7 @@ export function verifySuiteSignature(
   const v1 = parts.v1;
   if (!Number.isInteger(t) || !v1 || !/^[0-9a-f]{64}$/.test(v1)) return false;
   if (Math.abs(nowSeconds - t) > SUITE_TOLERANCE_SECONDS) return false;
-  const expected = createHmac("sha256", secret).update(`${PURPOSE}.${t}.${rawBody}`).digest("hex");
+  const expected = createHmac("sha256", secret).update(`${purpose}.${t}.${rawBody}`).digest("hex");
   return safeEqual(v1, expected);
 }
 
