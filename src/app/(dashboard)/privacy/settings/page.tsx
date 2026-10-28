@@ -41,6 +41,7 @@ import { trpc } from "@/lib/trpc";
 import { EmailNotAcceptedNote, isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
+import { membersCardIsScoped, membersCardKey } from "@/lib/members-card-copy";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { SafeguardsSettingsCard } from "@/components/safeguards/safeguards-settings-card";
@@ -111,6 +112,15 @@ export default function SettingsPage() {
   const userType = savedUserType ?? sessionUserType;
   // A business account works with one organisation (src/server/routers/privacy/user.ts).
   const businessBlocked = organizations.length > 1;
+
+  // ----- Team members wording -----
+  // The card names the selected organisation for an account that works across
+  // several organisations, since an invitation joins this organisation only.
+  const membersScoped = membersCardIsScoped(userType, organizations.length);
+  const membersOrgName = org?.name ?? organization?.name ?? "";
+  const tm = (key: "title" | "descriptionAdmin" | "inviteLabel" | "inviteHelp") =>
+    tMembers(membersCardKey(key, membersScoped), { organization: membersOrgName });
+
   const setUserType = trpc.user.setUserType.useMutation({
     onSuccess: async (saved) => {
       setSavedUserType(saved.userType);
@@ -455,15 +465,15 @@ export default function SettingsPage() {
       {org && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{tMembers("title")}</CardTitle>
+            <CardTitle className="text-base">{tm("title")}</CardTitle>
             <CardDescription>
-              {isAdmin ? tMembers("descriptionAdmin") : tMembers("descriptionViewer")}
+              {isAdmin ? tm("descriptionAdmin") : tMembers("descriptionViewer")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {isAdmin && (
               <div className="space-y-2 pb-3 border-b">
-                <Label htmlFor="invite-email">{tMembers("inviteLabel")}</Label>
+                <Label htmlFor="invite-email">{tm("inviteLabel")}</Label>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     id="invite-email"
@@ -512,7 +522,7 @@ export default function SettingsPage() {
                 </Button>
                 </div>
                 <EmailNotAcceptedNote show={isEmailNotAcceptedError(addMember.error)} />
-                <p className="text-xs text-muted-foreground">{tMembers("inviteHelp")}</p>
+                <p className="text-xs text-muted-foreground">{tm("inviteHelp")}</p>
               </div>
             )}
 
