@@ -49,6 +49,7 @@ model User {
   // owner), and the firm teams this account belongs to (as a member).
   firmTeamMembers     FirmTeamMember[] @relation("FirmTeamOwner")
   firmTeamMemberships FirmTeamMember[] @relation("FirmTeamPerson")
+  firmTeamPushOwed    FirmTeamPushOwed?
 
   // Saved list views (a personal preference kept per organisation)
   savedViews SavedView[]
@@ -343,6 +344,18 @@ model FirmTeamMember {
   @@index([memberUserId])
   @@index([invitedEmail])
   @@map("firm_team_members")
+}
+
+// An empty firm-team list still owed to AI Sentinel: written when the last
+// person is removed, cleared once a push for the account is accepted, so the
+// hourly push retries it (src/server/services/suite/firm-team-push.ts).
+model FirmTeamPushOwed {
+  ownerUserId String   @id
+  owedAt      DateTime @default(now())
+
+  owner User @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  @@map("firm_team_push_owed")
 }
 
 // ============================================================

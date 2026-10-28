@@ -10,7 +10,10 @@
  * person removed, an invitation accepted, a firm organisation gained or
  * lost) the account's FULL list is pushed, and the hourly suite-sync cron
  * pushes every account's list again, so a push lost on the way is made good
- * within the hour.
+ * within the hour. An account whose last person was removed has no list
+ * left to find, so the removal also records the empty list as owed
+ * (FirmTeamPushOwed); the hourly push sends it until AI Sentinel accepts a
+ * push for that account.
  *
  * Fire and forget: the push runs after the response (next/server `after`),
  * is logged, and never fails or slows the person's action. Nothing is sent
@@ -94,6 +97,32 @@ export interface PushDeps {
 
 export type PushOutcome = "off" | "nothing" | "sent" | "refused" | "failed";
 
+/**
+ * Records that the account's (now empty) list is owed to AI Sentinel. Called
+ * before the push is scheduled, so a push lost on the way is retried hourly.
+ * Never throws: the removal itself has already been made.
+ */
+export async function markEmptyFirmTeamOwed(db: Db, ownerUserId: string): Promise<void> {
+  try {
+    await db.firmTeamPushOwed.upsert({
+      where: { ownerUserId },
+      create: { ownerUserId },
+      update: { owedAt: new Date() },
+    });
+  } catch (err) {
+    logger.warn("Firm team push: could not record the owed list", { error: err instanceof Error ? err.message : String(err) });
+  }
+}
+
+/** Clears the owed mark once a push for the account was accepted. Never throws. */
+async function clearOwed(db: Db, ownerUserId: string): Promise<void> {
+  try {
+    await db.firmTeamPushOwed.deleteMany({ where: { ownerUserId } });
+  } catch (err) {
+    logger.warn("Firm team push: could not clear the owed mark", { error: err instanceof Error ? err.message : String(err) });
+  }
+}
+
 /** Sends the account's list now. Never throws. */
 export async function pushFirmTeam(
   db: Db,
@@ -106,7 +135,11 @@ export async function pushFirmTeam(
   try {
     const now = opts.now ?? Date.now;
     const push = await buildFirmTeamPush(db, ownerUserId, { includeEmpty: opts.includeEmpty, now });
-    if (!push) return "nothing";
+    if (!push) {
+      // No usable e-mail: no push can ever be made for this account.
+      if (opts.includeEmpty) await clearOwed(db, ownerUserId);
+      return "nothing";
+    }
     const body = JSON.stringify(push);
     const f = opts.fetch ?? (globalThis.fetch as unknown as FetchLike);
     const res = await f(firmTeamPeerUrl(env), {
@@ -120,10 +153,12 @@ export async function pushFirmTeam(
     });
     if (res.ok) {
       logger.info("Firm team pushed to AI Sentinel", { members: push.members.length });
+      await clearOwed(db, ownerUserId);
       return "sent";
     }
     // 409: a newer push for this account was applied first; nothing to do.
-    if (res.status !== 409) logger.warn("Firm team push: AI Sentinel refused", { status: res.status });
+    if (res.status === 409) await clearOwed(db, ownerUserId);
+    else logger.warn("Firm team push: AI Sentinel refused", { status: res.status });
     return "refused";
   } catch (err) {
     logger.warn("Firm team push failed", { error: err instanceof Error ? err.message : String(err) });
@@ -145,13 +180,21 @@ export function schedulePushFirmTeam(db: Db, ownerUserId: string, opts: { includ
   }
 }
 
-/** The hourly push: every account that has a firm team. Never throws. */
+/**
+ * The hourly push: every account that has a firm team, and every account
+ * still owed an empty list. Never throws.
+ */
 export async function pushAllFirmTeams(db: Db, deps: PushDeps = {}): Promise<{ owners: number; sent: number; failed: number }> {
   const env = deps.env ?? process.env;
   if (!suiteFirmTeamEnabled(env)) return { owners: 0, sent: 0, failed: 0 };
   let owners: Array<{ ownerUserId: string }> = [];
+  let owed = new Set<string>();
   try {
     owners = await db.firmTeamMember.findMany({ distinct: ["ownerUserId"], select: { ownerUserId: true } });
+    const owedRows: Array<{ ownerUserId: string }> = await db.firmTeamPushOwed.findMany({ select: { ownerUserId: true } });
+    const withTeam = new Set(owners.map((o) => o.ownerUserId));
+    owed = new Set(owedRows.map((o) => o.ownerUserId).filter((id) => !withTeam.has(id)));
+    owners = [...owners, ...[...owed].map((ownerUserId) => ({ ownerUserId }))];
   } catch (err) {
     logger.warn("Firm team push: could not list the accounts", { error: err instanceof Error ? err.message : String(err) });
     return { owners: 0, sent: 0, failed: 1 };
@@ -159,7 +202,7 @@ export async function pushAllFirmTeams(db: Db, deps: PushDeps = {}): Promise<{ o
   let sent = 0;
   let failed = 0;
   for (const o of owners) {
-    const outcome = await pushFirmTeam(db, o.ownerUserId, deps);
+    const outcome = await pushFirmTeam(db, o.ownerUserId, { ...deps, includeEmpty: owed.has(o.ownerUserId) });
     if (outcome === "sent") sent++;
     else if (outcome === "failed") failed++;
   }

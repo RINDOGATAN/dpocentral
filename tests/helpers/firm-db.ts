@@ -3,7 +3,7 @@
 
 /**
  * An in-memory stand-in for the Prisma models the firm team touches (users,
- * organisations, memberships, firm-team rows, audit entries), with the two
+ * organisations, memberships, firm-team rows, owed pushes, audit entries), with the two
  * relation filters the code uses (Organization.members.some and
  * OrganizationMember.firmTeamMember), the unique keys the database enforces,
  * the ON DELETE CASCADE from a firm-team row to its memberships, and
@@ -35,6 +35,7 @@ export function firmDb(): FirmDb {
     organization: [],
     organizationMember: [],
     firmTeamMember: [],
+    firmTeamPushOwed: [],
     auditLog: [],
   };
   const t = (model: string) => (tables[model] ??= []);
@@ -172,6 +173,16 @@ export function firmDb(): FirmDb {
       remove(model, [row]);
       return structuredClone(row);
     },
+    upsert: async (args: { where: Where; create: Row; update: Row }) => {
+      const row = t(model).find((r) => matches(model, r, args.where));
+      if (row) {
+        Object.assign(row, args.update);
+        return structuredClone(row);
+      }
+      const created: Row = { id: genId(model), ...args.create };
+      t(model).push(created);
+      return structuredClone(created);
+    },
     deleteMany: async (args: { where: Where }) => {
       const rows = t(model).filter((r) => matches(model, r, args.where));
       remove(model, rows);
@@ -196,7 +207,7 @@ export function firmDb(): FirmDb {
           }
         };
       }
-      if (!["user", "organization", "organizationMember", "firmTeamMember", "auditLog"].includes(prop)) {
+      if (!["user", "organization", "organizationMember", "firmTeamMember", "firmTeamPushOwed", "auditLog"].includes(prop)) {
         return undefined;
       }
       let d = delegates.get(prop);
