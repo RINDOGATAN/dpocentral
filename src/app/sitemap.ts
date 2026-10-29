@@ -7,24 +7,28 @@ import { isDsarModuleEnabled } from "@/config/features";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = brand.appUrl;
-  const now = new Date();
+
+  // No lastModified on any entry. Each page renders text from the shared
+  // message catalogs (messages/en.json, messages/es.json), shared components
+  // and config, so no single file's history gives the date the page's content
+  // last changed, and hosted builds have no full git history to compute it.
+  // A request or build timestamp would claim every page changed on every
+  // fetch, so the field is left out: crawlers fall back to their own change
+  // detection.
 
   return [
     {
       url: baseUrl,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${baseUrl}/docs`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/docs/data-inventory`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
@@ -33,39 +37,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? [
           {
             url: `${baseUrl}/docs/dsar`,
-            lastModified: now,
-            changeFrequency: "monthly" as const,
+                  changeFrequency: "monthly" as const,
             priority: 0.8,
           },
         ]
       : []),
     {
       url: `${baseUrl}/docs/assessments`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/docs/incidents`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/docs/vendors`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/security`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/sign-in`,
-      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
     },
