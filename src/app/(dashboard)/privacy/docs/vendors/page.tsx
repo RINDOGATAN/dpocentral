@@ -1,0 +1,142 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { Building2, FileCheck, ShieldAlert, Clock } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
+import { formatDateIn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { DocSection } from "@/components/docs/doc-section";
+import { StepList } from "@/components/docs/step-list";
+import { FeatureMockup } from "@/components/docs/feature-mockup";
+import { InfoCallout } from "@/components/docs/info-callout";
+import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForRiskTier, toneForVendorStatus } from "@/config/status-tone";
+
+// The documentation shows the same tones the product paints: toneForRiskTier
+// and toneForVendorStatus, the same two helpers the vendor register uses.
+
+export default async function DocsVendorsPage() {
+  const t = await getTranslations("docs.vendors");
+  const toc = await getTranslations("docs.toc");
+  const locale = await getLocale();
+
+  const stats: { key: string; value: string; icon: typeof Building2 }[] = [
+    { key: "total", value: "18", icon: Building2 },
+    { key: "active", value: "14", icon: Building2 },
+    { key: "highRisk", value: "3", icon: ShieldAlert },
+    { key: "pendingReview", value: "2", icon: Clock },
+  ];
+
+  const vendorCards: { name: string; status: string; risk: string; categoryKey: string }[] = [
+    { name: "Acme Cloud Services", status: "ACTIVE", risk: "LOW", categoryKey: "cloudInfra" },
+    { name: "DataTech Analytics", status: "ACTIVE", risk: "HIGH", categoryKey: "analytics" },
+    { name: "SecureMail Pro", status: "UNDER_REVIEW", risk: "MEDIUM", categoryKey: "email" },
+    { name: "Legacy CRM Inc.", status: "SUSPENDED", risk: "CRITICAL", categoryKey: "crm" },
+  ];
+
+  const stepKeys = ["navigate", "click", "details", "risk", "contract"] as const;
+
+  const contracts: { vendor: string; type: "DPA" | "DPA_SCC"; start: string; end: string; statusKey: "Active" | "ExpiringSoon" | "Expired"; badgeVariant: "success" | "warning" | "destructive" }[] = [
+    { vendor: "Acme Cloud Services", type: "DPA", start: "2024-01-01", end: "2025-12-31", statusKey: "Active", badgeVariant: "success" },
+    { vendor: "DataTech Analytics", type: "DPA_SCC", start: "2024-06-15", end: "2025-06-14", statusKey: "ExpiringSoon", badgeVariant: "warning" },
+    { vendor: "SecureMail Pro", type: "DPA", start: "2023-03-01", end: "2024-02-28", statusKey: "Expired", badgeVariant: "destructive" },
+  ];
+
+
+  return (
+    <div className="space-y-10">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
+      </div>
+
+      <DocSection id="adding" title={t("adding.title")} description={t("adding.description")}>
+        <FeatureMockup title={t("adding.statsMockupTitle")}>
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={stat.key} className="hover:translate-y-0">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+                    <CardTitle className="text-xs font-medium">{t(`adding.stats.${stat.key}`)}</CardTitle>
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="text-xl font-bold text-primary">{stat.value}</div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </FeatureMockup>
+
+        <FeatureMockup title={t("adding.cardsMockupTitle")}>
+          <div className="space-y-2">
+            {vendorCards.map((vendor) => (
+              <div key={vendor.name} className="flex items-center justify-between rounded-md border px-3 py-2.5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">{vendor.name}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5 ml-6">{t(`adding.categories.${vendor.categoryKey}`)}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StatusChip tone={toneForRiskTier(vendor.risk)} className="text-[10px]">
+                    {vendor.risk} {t("adding.riskSuffix")}
+                  </StatusChip>
+                  <StatusChip tone={toneForVendorStatus(vendor.status)} className="text-[10px]">
+                    {t(`adding.statusLabels.${vendor.status}`)}
+                  </StatusChip>
+                </div>
+              </div>
+            ))}
+          </div>
+        </FeatureMockup>
+
+        <StepList
+          steps={stepKeys.map((k) => ({
+            title: t(`adding.steps.${k}.title`),
+            description: t(`adding.steps.${k}.description`),
+          }))}
+        />
+      </DocSection>
+
+      <DocSection id="contracts" title={t("contracts.title")} description={t("contracts.description")}>
+        <FeatureMockup title={t("contracts.mockupTitle")}>
+          <div className="space-y-2">
+            {contracts.map((contract) => (
+              <div key={contract.vendor} className="flex items-center justify-between rounded-md border px-3 py-2">
+                <div className="flex items-center gap-3">
+                  <FileCheck className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">{contract.vendor}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t(`contracts.types.${contract.type}`)} · {formatDateIn(contract.start, locale)} {t("contracts.dateRangeSeparator")} {formatDateIn(contract.end, locale)}
+                    </p>
+                  </div>
+                </div>
+                <Badge variant={contract.badgeVariant} className="text-[10px]">
+                  {t(`contracts.statuses.${contract.statusKey}`)}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </FeatureMockup>
+        <InfoCallout type="warning" title={t("contracts.calloutTitle")}>
+          {t("contracts.calloutBody")}
+        </InfoCallout>
+      </DocSection>
+
+      <DocSection id="risk-reviews" title={t("riskReviews.title")} description={t("riskReviews.description")}>
+        <InfoCallout type="info" title={t("riskReviews.infoTitle")}>
+          {t("riskReviews.infoBody")}
+        </InfoCallout>
+      </DocSection>
+
+      <DocNavFooter previous={{ title: toc("incidents.label"), href: "/privacy/docs/incidents" }} />
+    </div>
+  );
+}

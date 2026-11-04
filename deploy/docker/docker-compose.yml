@@ -1,0 +1,131 @@
+# DPO Central community edition: the full stack with Docker Compose.
+#
+#   cp .env.example .env    # set POSTGRES_PASSWORD, NEXTAUTH_SECRET, PUBLIC_URL
+#   docker compose up -d --build
+#
+# Services: db (Postgres 16), migrator (one-shot migrate + seed), app (the
+# Next.js server), cron (daily rights-request redaction and reminders), and an
+# optional tls profile (Caddy) for LAN or server use. See README.md here.
+name: dpocentral
+
+x-build: &app-build
+  context: ../..
+  dockerfile: deploy/docker/Dockerfile
+  args:
+    NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
+    NEXT_PUBLIC_EMAIL_AUTH_ENABLED: ${NEXT_PUBLIC_EMAIL_AUTH_ENABLED:-false}
+    NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: ${NEXT_PUBLIC_GOOGLE_AUTH_ENABLED:-false}
+    NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-DPO Central}
+    NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
+    NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+    NEXT_PUBLIC_APP_URL: ${PUBLIC_URL:-http://localhost:8485}
+    NEXT_PUBLIC_DSAR_ENABLED: ${NEXT_PUBLIC_DSAR_ENABLED:-}
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dpocentral
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: dpocentral
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dpocentral -d dpocentral"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  migrator:
+    build:
+      <<: *app-build
+      target: migrator
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://dpocentral:${POSTGRES_PASSWORD}@db:5432/dpocentral
+      DEMO_SEED: ${DEMO_SEED:-}
+    entrypoint: ["/bin/sh", "deploy/docker/migrate.sh"]
+    restart: "no"
+
+  app:
+    build:
+      <<: *app-build
+      target: runner
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://dpocentral:${POSTGRES_PASSWORD}@db:5432/dpocentral
+      NEXTAUTH_URL: ${PUBLIC_URL:?e.g. http://localhost:8485}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?openssl rand -base64 32}
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      RATE_LIMIT_DISABLED: ${RATE_LIMIT_DISABLED:-}
+      HEALTH_CACHE_MS: ${HEALTH_CACHE_MS:-}
+      NEXT_PUBLIC_SOURCE_URL: ${NEXT_PUBLIC_SOURCE_URL:-}
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${PORT:-8485}:3001"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3001/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  cron:
+    image: curlimages/curl:8.11.1
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ -z "$$CRON_SECRET" ]; then
+          echo "[cron] WARNING: CRON_SECRET is empty: rights-request redaction and reminders are DISABLED (the endpoints fail closed). Set CRON_SECRET in .env and run 'docker compose up -d'."
+        fi
+        while true; do
+          if [ -n "$$CRON_SECRET" ]; then
+            echo "[cron] $$(date -u +%FT%TZ) running the daily jobs…"
+            curl -fsS -H "Authorization: Bearer $$CRON_SECRET" http://app:3001/api/cron/dsar-redaction \
+              || echo "[cron] redaction run failed (see app logs)"
+            echo ""
+            curl -fsS -H "Authorization: Bearer $$CRON_SECRET" http://app:3001/api/cron/dsar-reminders \
+              || echo "[cron] reminders run failed (see app logs)"
+            echo ""
+          fi
+          sleep 86400
+        done
+
+  tls:
+    profiles: ["tls"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: caddy reverse-proxy --from ${TLS_DOMAIN:-localhost} --to app:3001
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:

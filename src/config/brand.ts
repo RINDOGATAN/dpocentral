@@ -1,0 +1,251 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+/**
+ * Brand Configuration
+ *
+ * This file defines all branding-related settings that can be customized
+ * for white-label deployments. All values can be overridden via environment
+ * variables to support different deployments without code changes.
+ *
+ * Set individual NEXT_PUBLIC_* env vars to customize branding
+ * for white-label deployments without code changes.
+ *
+ * AGPL-3.0 License - Part of the open-source core
+ */
+
+export interface BrandConfig {
+  // Core identity
+  name: string;
+  nameUppercase: string;
+  tagline: string;
+  /** True when the deployment set its own tagline: shown as written, never translated. */
+  customTagline?: boolean;
+  description: string;
+
+  // Company/Provider info
+  companyName: string;
+  companyTrademark: string;
+  companyWebsite: string;
+
+  // Deployment
+  appUrl: string;
+
+  // Legal links
+  termsOfUseUrl: string;
+  privacyPolicyUrl: string;
+
+  // Contact
+  supportEmail: string;
+
+  // Email
+  emailFrom: string;
+
+  // Assets
+  logoPath: string;
+  faviconPath: string;
+
+  // Theme colors
+  colors: {
+    primary: string;
+    primaryForeground: string;
+    background: string;
+    foreground: string;
+    card: string;
+    cardForeground: string;
+    border: string;
+    muted: string;
+    mutedForeground: string;
+    accent: string;
+    accentForeground: string;
+  };
+}
+
+/**
+ * Default brand configuration for the DPO Central community edition.
+ *
+ * Every deployment sets its own address, company and legal links via the
+ * NEXT_PUBLIC_* env vars below; links left empty are not shown.
+ */
+const defaultBrand: BrandConfig = {
+  name: "DPO Central",
+  nameUppercase: "DPO CENTRAL",
+  tagline: "Privacy Management Made Simple",
+  description:
+    "A single source of truth for your privacy management program.",
+  companyName: "",
+  companyTrademark: "",
+  companyWebsite: "",
+  appUrl: "http://localhost:3001",
+  termsOfUseUrl: "",
+  privacyPolicyUrl: "",
+  supportEmail: "",
+  emailFrom: "noreply@example.com",
+  logoPath: "/apple-touch-icon.png",
+  faviconPath: "/favicon.png",
+  colors: {
+    primary: "#53aecc",
+    primaryForeground: "#1a1a1a",
+    background: "#1a1a1a",
+    foreground: "#fefeff",
+    card: "#242424",
+    cardForeground: "#fefeff",
+    border: "#333333",
+    muted: "#242424",
+    mutedForeground: "#a0a0a0",
+    accent: "#53aecc",
+    accentForeground: "#fefeff",
+  },
+};
+
+/**
+ * Get brand configuration with preset + environment overrides
+ *
+ * Priority: env vars > defaults
+ *
+ * Environment variables:
+ * - NEXT_PUBLIC_BRAND_NAME
+ * - NEXT_PUBLIC_BRAND_NAME_UPPER
+ * - NEXT_PUBLIC_BRAND_TAGLINE
+ * - NEXT_PUBLIC_BRAND_DESCRIPTION
+ * - NEXT_PUBLIC_COMPANY_NAME
+ * - NEXT_PUBLIC_COMPANY_TRADEMARK
+ * - NEXT_PUBLIC_COMPANY_WEBSITE
+ * - NEXT_PUBLIC_APP_URL
+ * - NEXT_PUBLIC_TERMS_URL
+ * - NEXT_PUBLIC_PRIVACY_URL
+ * - NEXT_PUBLIC_SUPPORT_EMAIL
+ * - NEXT_PUBLIC_EMAIL_FROM
+ * - NEXT_PUBLIC_LOGO_PATH
+ * - NEXT_PUBLIC_FAVICON_PATH
+ * - NEXT_PUBLIC_COLOR_PRIMARY
+ * - NEXT_PUBLIC_COLOR_PRIMARY_FG
+ * - NEXT_PUBLIC_COLOR_BACKGROUND
+ * - NEXT_PUBLIC_COLOR_FOREGROUND
+ * - NEXT_PUBLIC_COLOR_CARD
+ * - NEXT_PUBLIC_COLOR_CARD_FG
+ * - NEXT_PUBLIC_COLOR_BORDER
+ * - NEXT_PUBLIC_COLOR_MUTED
+ * - NEXT_PUBLIC_COLOR_MUTED_FG
+ * - NEXT_PUBLIC_COLOR_ACCENT
+ * - NEXT_PUBLIC_COLOR_ACCENT_FG
+ */
+export function getBrandConfig(): BrandConfig {
+  // Convenience aliases for white-label deployments (deploy/docker):
+  // NEXT_PUBLIC_BRAND_ACCENT sets primary + accent in one variable and
+  // NEXT_PUBLIC_BRAND_LOGO_URL overrides the logo. The fine-grained
+  // NEXT_PUBLIC_COLOR_* / NEXT_PUBLIC_LOGO_PATH vars still win if set.
+  const brandName = process.env.NEXT_PUBLIC_BRAND_NAME;
+  const brandAccent = process.env.NEXT_PUBLIC_BRAND_ACCENT;
+
+  return {
+    name: brandName || defaultBrand.name,
+    nameUppercase:
+      process.env.NEXT_PUBLIC_BRAND_NAME_UPPER ||
+      (brandName ? brandName.toUpperCase() : defaultBrand.nameUppercase),
+    tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || defaultBrand.tagline,
+    customTagline: !!process.env.NEXT_PUBLIC_BRAND_TAGLINE,
+    description:
+      process.env.NEXT_PUBLIC_BRAND_DESCRIPTION || defaultBrand.description,
+    companyName:
+      process.env.NEXT_PUBLIC_COMPANY_NAME || defaultBrand.companyName,
+    companyTrademark:
+      process.env.NEXT_PUBLIC_COMPANY_TRADEMARK || defaultBrand.companyTrademark,
+    companyWebsite:
+      process.env.NEXT_PUBLIC_COMPANY_WEBSITE || defaultBrand.companyWebsite,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL || defaultBrand.appUrl,
+    termsOfUseUrl:
+      process.env.NEXT_PUBLIC_TERMS_URL || defaultBrand.termsOfUseUrl,
+    privacyPolicyUrl:
+      process.env.NEXT_PUBLIC_PRIVACY_URL || defaultBrand.privacyPolicyUrl,
+    supportEmail:
+      process.env.NEXT_PUBLIC_SUPPORT_EMAIL || defaultBrand.supportEmail,
+    emailFrom:
+      process.env.NEXT_PUBLIC_EMAIL_FROM || defaultBrand.emailFrom,
+    logoPath:
+      process.env.NEXT_PUBLIC_LOGO_PATH ||
+      process.env.NEXT_PUBLIC_BRAND_LOGO_URL ||
+      defaultBrand.logoPath,
+    faviconPath:
+      process.env.NEXT_PUBLIC_FAVICON_PATH || defaultBrand.faviconPath,
+    colors: {
+      primary:
+        process.env.NEXT_PUBLIC_COLOR_PRIMARY ||
+        brandAccent ||
+        defaultBrand.colors.primary,
+      primaryForeground:
+        process.env.NEXT_PUBLIC_COLOR_PRIMARY_FG ||
+        defaultBrand.colors.primaryForeground,
+      background:
+        process.env.NEXT_PUBLIC_COLOR_BACKGROUND ||
+        defaultBrand.colors.background,
+      foreground:
+        process.env.NEXT_PUBLIC_COLOR_FOREGROUND ||
+        defaultBrand.colors.foreground,
+      card: process.env.NEXT_PUBLIC_COLOR_CARD || defaultBrand.colors.card,
+      cardForeground:
+        process.env.NEXT_PUBLIC_COLOR_CARD_FG ||
+        defaultBrand.colors.cardForeground,
+      border:
+        process.env.NEXT_PUBLIC_COLOR_BORDER || defaultBrand.colors.border,
+      muted:
+        process.env.NEXT_PUBLIC_COLOR_MUTED || defaultBrand.colors.muted,
+      mutedForeground:
+        process.env.NEXT_PUBLIC_COLOR_MUTED_FG ||
+        defaultBrand.colors.mutedForeground,
+      accent:
+        process.env.NEXT_PUBLIC_COLOR_ACCENT ||
+        brandAccent ||
+        defaultBrand.colors.accent,
+      accentForeground:
+        process.env.NEXT_PUBLIC_COLOR_ACCENT_FG ||
+        defaultBrand.colors.accentForeground,
+    },
+  };
+}
+
+/**
+ * Singleton brand config instance
+ * Use this for most cases to avoid repeated env reads
+ */
+export const brand = getBrandConfig();
+
+const DEFAULT_MAIL_ADDRESS = defaultBrand.emailFrom;
+
+/**
+ * Build a sender header: "<Product> by <Company> <address>", or
+ * "<Product> <address>" when no company name is set.
+ *
+ * The address may come from NEXT_PUBLIC_EMAIL_FROM, which some deployments
+ * set with a display name of its own ("DPO CENTRAL <noreply@example.com>"). Only
+ * the address is kept, so the display name is always the one built here and
+ * an environment variable cannot change it. The product name is the
+ * title-case `name`, never `nameUppercase`.
+ */
+export function formatMailFrom(
+  productName: string,
+  companyName: string,
+  rawAddress: string | undefined
+): string {
+  const raw = (rawAddress ?? "").trim();
+  const bracketed = raw.match(/<([^<>]*)>/);
+  const candidate = bracketed ? bracketed[1] : raw.split(/\s+/).pop() ?? "";
+  const address = candidate.trim().includes("@") ? candidate.trim() : DEFAULT_MAIL_ADDRESS;
+  return companyName.trim() ? `${productName} by ${companyName} <${address}>` : `${productName} <${address}>`;
+}
+
+/**
+ * The sender header for every e-mail this app sends. Every send call uses it;
+ * no literal `from:` string belongs anywhere else.
+ */
+export function emailFrom(): string {
+  return formatMailFrom(brand.name, brand.companyName, brand.emailFrom);
+}
+
+/**
+ * Generate footer text for emails
+ */
+export function emailFooterHtml(): string {
+  const company = brand.companyTrademark || brand.companyName;
+  return `${company ? `${company} · ` : ""}${brand.nameUppercase} · <a href="${brand.appUrl}" style="color: ${brand.colors.primary}; text-decoration: none;">${brand.appUrl.replace(/^https?:\/\//, "")}</a>`;
+}

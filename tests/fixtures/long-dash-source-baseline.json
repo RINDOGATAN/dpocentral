@@ -1,0 +1,4 @@
+{
+  "_comment": "String literals in src that may keep a long or en dash (tests/copy-long-dash.test.ts). This list may only shrink.",
+  "literals": []
+}

@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+/**
+ * Maps an incoming API request to the limiter that governs it. Pure and
+ * edge-safe (no Node imports) because src/middleware.ts runs it on every
+ * request. One request is counted in exactly ONE bucket.
+ *
+ * Buckets (see src/lib/rate-limit.ts for the ceilings and env overrides):
+ *   magicLink   POST /api/auth/signin/email — sends an e-mail per call
+ *   signIn      every other sign-in step: /api/auth/callback/* (credentials,
+ *               OAuth return, magic-link consumption), POST /api/auth/signin/*,
+ *               and the development-only /api/auth/dev-login
+ *   authRead    the reads every page load and window focus makes: GET/POST
+ *               /api/auth/session, GET /api/auth/csrf, GET /api/auth/providers
+ *               and POST /api/auth/_log. A generous ceiling of its own, so
+ *               several people behind one office address can browse without
+ *               a 429, while sign-in attempts keep their strict bucket.
+ *   auth        the rest of /api/auth (signout, the sign-in page render)
+ *   dsarPublic  the unauthenticated DSAR tRPC procedures that write
+ *               (submit, withdraw)
+ *   publicRead  the other unauthenticated tRPC procedures (dsar.checkStatus,
+ *               dsar.getPublicForm)
+ *   health      /api/health
+ *   cron        /api/cron/*
+ * Not limited: /api/export/* (limited inside the route, per user, see
+ * src/lib/api-export.ts), and the authenticated tRPC surface.
+ *
+ * AGPL-3.0 License - Part of the open-source core
+ */
+
+export type LimitedRoute =
+  | "magicLink"
+  | "signIn"
+  | "authRead"
+  | "auth"
+  | "dsarPublic"
+  | "publicRead"
+  | "health"
+  | "cron";
+
+export function classifyRequest(rawPathname: string, method: string): LimitedRoute | null {
+  const upper = method.toUpperCase();
+
+  // Match on the DECODED path: the tRPC handler decodes the procedure name,
+  // so "dsar%2EsubmitPublic" reaches dsar.submitPublic and must be counted as
+  // such. A path that cannot be decoded is counted in the strictest bucket
+  // its prefix allows rather than let through uncounted.
+  let pathname: string;
+  try {
+    pathname = decodeURIComponent(rawPathname);
+  } catch {
+    if (rawPathname.startsWith("/api/trpc")) return "dsarPublic";
+    pathname = rawPathname;
+  }
+
+  if (pathname.startsWith("/api/auth")) {
+    if (pathname === "/api/auth/signin/email" && upper === "POST") return "magicLink";
+    if (pathname.startsWith("/api/auth/callback/")) return "signIn";
+    if (pathname.startsWith("/api/auth/signin/") && upper === "POST") return "signIn";
+    if (pathname === "/api/auth/dev-login") return "signIn";
+    if (pathname === "/api/auth/session" && (upper === "GET" || upper === "POST")) return "authRead";
+    if ((pathname === "/api/auth/csrf" || pathname === "/api/auth/providers") && upper === "GET") {
+      return "authRead";
+    }
+    if (pathname === "/api/auth/_log" && upper === "POST") return "authRead";
+    return "auth";
+  }
+
+  // Public DSAR intake + withdraw. Matches tRPC paths like
+  // /api/trpc/dsar.submitPublic and batched /api/trpc/dsar.submitPublic,x.
+  if (
+    pathname.startsWith("/api/trpc") &&
+    (pathname.includes("dsar.submitPublic") || pathname.includes("dsar.withdrawPublic"))
+  ) {
+    return "dsarPublic";
+  }
+
+  if (
+    pathname.startsWith("/api/trpc") &&
+    (pathname.includes("dsar.checkStatus") ||
+      pathname.includes("dsar.getPublicForm"))
+  ) {
+    return "publicRead";
+  }
+
+  if (pathname === "/api/health") return "health";
+
+  if (pathname.startsWith("/api/cron/")) return "cron";
+
+  return null;
+}

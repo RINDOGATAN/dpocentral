@@ -1,0 +1,218 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+/**
+ * Middleware for i18n locale detection, rate limiting, and CSP nonces
+ *
+ * AGPL-3.0 License - Part of the open-source core
+ */
+
+import createMiddleware from "next-intl/middleware";
+import { NextRequest, NextResponse } from "next/server";
+import { locales, defaultLocale, type Locale } from "./i18n/config";
+import { LOCALE_COOKIE, langParamLocale, localeCookieCleanup, localeCookieWrites } from "./i18n/locale-cookie";
+import {
+  authLimiter,
+  authReadLimiter,
+  cronLimiter,
+  dsarPublicLimiter,
+  publicReadLimiter,
+  healthLimiter,
+  magicLinkLimiter,
+  signInLimiter,
+  type RateLimiter,
+} from "./lib/rate-limit";
+import { classifyRequest, type LimitedRoute } from "./lib/rate-limit-routes";
+import { isDsarModuleEnabled } from "./config/features";
+import { isDsarModulePath } from "./lib/dsar-module";
+
+// One bucket per route class; a request is counted in exactly one of them.
+// Ceilings and the RATE_LIMIT_* overrides live in src/lib/rate-limit.ts.
+const limiters: Record<LimitedRoute, RateLimiter> = {
+  magicLink: magicLinkLimiter,
+  signIn: signInLimiter,
+  authRead: authReadLimiter,
+  auth: authLimiter,
+  dsarPublic: dsarPublicLimiter,
+  publicRead: publicReadLimiter,
+  health: healthLimiter,
+  cron: cronLimiter,
+};
+
+// next-intl middleware for locale routing
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: "as-needed",
+  // The language cookie is `locale`, written only by src/i18n/locale-cookie.ts
+  // when the visitor chooses. next-intl must not write its own.
+  localeCookie: false,
+});
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+function rateLimitResponse(result: { limit: number; reset: number }) {
+  return NextResponse.json(
+    { error: "Too many requests. Please try again later." },
+    {
+      status: 429,
+      headers: {
+        "Retry-After": String(Math.ceil((result.reset - Date.now()) / 1000)),
+        "X-RateLimit-Limit": String(result.limit),
+        "X-RateLimit-Remaining": "0",
+      },
+    }
+  );
+}
+
+function generateNonce(): string {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  let binary = "";
+  for (const byte of array) {
+    binary += String.fromCharCode(byte);
+  }
+  return btoa(binary);
+}
+
+function applyCsp(response: NextResponse) {
+  const nonce = generateNonce();
+
+  // ENFORCED policy. Deliberately conservative on script-src ('unsafe-inline'
+  // instead of nonces) because Next.js only attaches nonces to its inline
+  // bootstrap scripts when the CSP travels on the *request* headers and every
+  // route renders dynamically — enforcing the nonce policy today would blank
+  // the app. What this still buys, enforced: no scripts from any third-party
+  // origin (kills the analytics-beacon class of regression),
+  // no plugins, no <base> hijack, no form exfiltration, no framing.
+  const isDev = process.env.NODE_ENV === "development";
+  const enforced = [
+    "default-src 'self'",
+    // Next dev mode needs eval for react-refresh; production does not get it.
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join("; ");
+  response.headers.set("Content-Security-Policy", enforced);
+
+  // MIGRATION TARGET, still report-only: the strict nonce + strict-dynamic
+  // policy. Violations show up in DevTools without breaking anything; when
+  // nonce propagation to Next's inline scripts is wired (request-header CSP
+  // + dynamic rendering), promote this to the enforced header above.
+  const strict = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
+  response.headers.set("Content-Security-Policy-Report-Only", strict);
+  response.headers.set("x-nonce", nonce);
+}
+
+/**
+ * Language cookie on the way out. `chosen` is a language the visitor picked
+ * through the request (the DSAR `?lang=` link): record it. Otherwise, collapse
+ * duplicate `locale` cookies an older release left behind. Never a default.
+ */
+function applyLocaleCookies(response: NextResponse, request: NextRequest, chosen?: Locale) {
+  const hostname = request.nextUrl.hostname;
+  const cookies = chosen
+    ? localeCookieWrites(chosen, hostname)
+    : localeCookieCleanup(request.headers.get("cookie"), hostname);
+  for (const cookie of cookies) {
+    response.headers.append("Set-Cookie", cookie);
+  }
+}
+
+export default function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const ip = getClientIp(request);
+
+  if (!isDsarModuleEnabled() && isDsarModulePath(pathname)) {
+    const notFound = new NextResponse("Not found", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+    applyCsp(notFound);
+    return notFound;
+  }
+
+  // Carry the path being requested so a server component (the dashboard
+  // layout) can send a signed-out visitor back to it after sign-in.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+  // A shareable language link (`?lang=es|en` on the public DSAR portal and the
+  // public docs): record the language, and add it to the cookie header the page
+  // reads, so the first render is already in that language (last value wins).
+  const chosen = langParamLocale(pathname, request.nextUrl.searchParams.get("lang"));
+  const shown = chosen;
+  if (shown) {
+    const cookie = request.headers.get("cookie");
+    requestHeaders.set("cookie", `${cookie ? `${cookie}; ` : ""}${LOCALE_COOKIE}=${shown}`);
+  }
+  const forwarded = { request: { headers: requestHeaders } };
+
+  // Rate limit the public and static-key API surface, one bucket per route
+  // class (sign-in, magic link, other auth, public DSAR, health, cron).
+  // Per-process counters — see src/lib/rate-limit.ts.
+  const routeClass = classifyRequest(pathname, request.method);
+  if (routeClass) {
+    const result = limiters[routeClass].check(`${routeClass}:${ip}`);
+    if (!result.success) {
+      return rateLimitResponse(result);
+    }
+  }
+
+  // Skip i18n for API routes, static files, and specific paths
+  if (
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/dsar") ||
+    pathname.includes(".")
+  ) {
+    const response = NextResponse.next(forwarded);
+    applyLocaleCookies(response, request, chosen);
+    applyCsp(response);
+    return response;
+  }
+
+  // Check if i18n locale routing is enabled
+  // The intl middleware handles /es/* rewrites — only enable when NEXT_PUBLIC_I18N_ENABLED=true
+  // Note: the language switcher (features.i18nEnabled) controls UI visibility separately;
+  // it works without this by swapping messages via cookies, not URL prefixes.
+  const i18nRoutingEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
+
+  if (!i18nRoutingEnabled) {
+    const response = NextResponse.next(forwarded);
+    applyLocaleCookies(response, request, chosen);
+    applyCsp(response);
+    return response;
+  }
+
+  const intlResponse = intlMiddleware(request);
+
+  applyLocaleCookies(intlResponse, request, chosen);
+  applyCsp(intlResponse);
+  return intlResponse;
+}
+
+export const config = {
+  matcher: ["/((?!_next|.*\\..*).*)"],
+};

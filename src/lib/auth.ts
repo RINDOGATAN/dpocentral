@@ -1,0 +1,453 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { acceptPendingInvitations } from "@/server/services/members/invitations";
+import { type NextAuthOptions } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Resend } from "resend";
+import prisma from "@/lib/prisma";
+import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
+import { features } from "@/config/features";
+import { logger } from "@/lib/logger";
+import { AUTO_JOIN_ROLE, emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
+import { ensureDpoUser } from "@/lib/jit-provisioning";
+import { sessionTokenCookieName } from "@/lib/session-cookie";
+import { emailConfigured, googleConfigured, localSignInAllowed } from "@/lib/sign-in-methods";
+import { getCookieLocale } from "@/i18n/server-locale";
+import { refusesAccountEmail } from "@/lib/email-policy-server";
+import { BLOCKED_EMAIL_MESSAGE_KEY } from "@/lib/email-policy";
+import { defaultLocale, type Locale } from "@/i18n/config";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
+
+/**
+ * The sign-in e-mail goes out in the language the visitor chose on the
+ * sign-in page (the locale cookie travels with the request that asks for the
+ * link). Outside a request, or with no cookie, it falls back to the default.
+ */
+const SIGN_IN_EMAIL_MESSAGES: Record<Locale, typeof enMessages> = {
+  en: enMessages,
+  es: esMessages as typeof enMessages,
+};
+
+async function signInEmailLocale(): Promise<Locale> {
+  try {
+    return (await getCookieLocale()) ?? defaultLocale;
+  } catch {
+    return defaultLocale;
+  }
+}
+
+function fillBrand(template: string, brandName: string): string {
+  return template.replace(/\{brand\}/g, brandName);
+}
+
+// Only initialize Resend if API key is available
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+const isDev = process.env.NODE_ENV === "development";
+
+// Session-cookie scope. Default: host-only (NextAuth's default — the cookie
+// is valid only for the exact host in NEXTAUTH_URL), which is correct for
+// every self-hosted install. Deployments that need cross-subdomain SSO opt
+// IN by setting AUTH_COOKIE_DOMAIN to the parent domain (".example.com").
+const isProduction = process.env.NODE_ENV === "production";
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN || undefined;
+const cookiePrefix = isProduction ? "__Secure-" : "";
+
+// Cookie naming on the local-auth posture: browsers scope cookies per host,
+// NOT per port, and a self-hosted install may run several apps on localhost
+// with one shared NEXTAUTH_SECRET. With the NextAuth default names, signing
+// in to a sibling app overwrites this app's session
+// cookie with a token whose user id only exists in the sibling's database —
+// DB writes then die on foreign-key violations. Scope our cookies with a
+// "dpocentral." prefix on the local-auth posture (the convention the sibling
+// apps use). A shared parent-domain deployment keeps the
+// default names, which its cross-app SSO cookie expects.
+//
+// Secure-cookie handling for that block keys off the actual scheme, not
+// NODE_ENV alone: self-hosted installs are production builds served over
+// plain http on localhost, where `secure` cookies would never be stored.
+const useSecureCookies =
+  isProduction && (process.env.NEXTAUTH_URL?.startsWith("https://") ?? true);
+
+// Wrap PrismaAdapter to strip OAuth tokens before storage.
+// DPO Central uses JWT sessions and never reads these tokens,
+// so storing them is unnecessary risk.
+const baseAdapter = PrismaAdapter(prisma) as NextAuthOptions["adapter"];
+const adapter = {
+  ...baseAdapter!,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  linkAccount: async (account: any) => {
+    const { refresh_token, access_token, id_token, ...safeAccount } = account;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await baseAdapter!.linkAccount!(safeAccount as any);
+  },
+} as NextAuthOptions["adapter"];
+
+export const authOptions: NextAuthOptions = {
+  adapter,
+  providers: [
+    // Local credentials provider: dev mode, and self-hosted
+    // deployments (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true — no external
+    // OAuth/mailer required behind the firm's own network).
+    // Never on a Vercel production deployment (src/lib/sign-in-methods.ts), checked
+    // when the providers are registered and again on every attempt.
+    ...(localSignInAllowed()
+      ? [
+          CredentialsProvider({
+            id: "dev-credentials",
+            name: "Dev Login",
+            credentials: {
+              email: { label: "Email", type: "email", placeholder: "dev@example.com" },
+            },
+            async authorize(credentials) {
+              if (!localSignInAllowed()) {
+                logger.error("Local sign-in refused on a public production deployment");
+                return null;
+              }
+              if (!credentials?.email) return null;
+              // E-mail policy: a refused address may not sign in at all.
+              if (refusesAccountEmail(credentials.email)) return null;
+
+              // Find or create user for dev mode
+              let user = await prisma.user.findUnique({
+                where: { email: credentials.email },
+              });
+
+              if (!user) {
+                user = await prisma.user.create({
+                  data: {
+                    email: credentials.email,
+                    name: credentials.email.split("@")[0],
+                  },
+                });
+              }
+
+              return {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+              };
+            },
+          }),
+        ]
+      : []),
+    // Production providers
+    // Registered by the same rules the sign-in page shows them by
+    // (src/lib/sign-in-methods.ts).
+    ...(googleConfigured()
+      ? [
+          GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            authorization: {
+              params: {
+                prompt: "select_account",
+                access_type: "offline",
+                response_type: "code",
+              },
+            },
+          }),
+        ]
+      : []),
+    ...(emailConfigured() && resend
+      ? [
+          EmailProvider({
+            from: emailFrom(),
+            sendVerificationRequest: async ({ identifier: email, url }) => {
+              const messages = SIGN_IN_EMAIL_MESSAGES[await signInEmailLocale()];
+              const copy = messages.auth.signInEmail;
+              // A tagline set by the deployment is shown as written; the
+              // default one is translated.
+              const tagline =
+                brand.tagline === enMessages.metadata.tagline ? messages.metadata.tagline : brand.tagline;
+              try {
+                await resend!.emails.send({
+                  from: emailFrom(),
+                  to: email,
+                  subject: fillBrand(copy.subject, brand.name),
+                  html: `
+                    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
+                      <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">
+                        <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">${brand.name}</span>
+                        <span style="font-size: 13px; color: ${brand.colors.mutedForeground}; margin-left: 10px;">${tagline}</span>
+                      </div>
+                      <div style="padding: 32px 24px;">
+                        <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">${fillBrand(copy.body, brand.name)}</p>
+                        <a href="${url}" style="display: inline-block; background: ${brand.colors.primary}; color: ${brand.colors.primaryForeground}; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">${fillBrand(copy.button, brand.name)}</a>
+                        <p style="color: ${brand.colors.mutedForeground}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">${copy.ignore}</p>
+                      </div>
+                      <div style="padding: 16px 24px; border-top: 1px solid ${brand.colors.border};">
+                        <p style="color: #666666; font-size: 11px; margin: 0;">${emailFooterHtml()}</p>
+                      </div>
+                    </div>
+                  `,
+                });
+              } catch (error) {
+                logger.error("Failed to send verification email", error);
+                throw new Error("Failed to send verification email");
+              }
+            },
+          }),
+        ]
+      : []),
+  ],
+  session: {
+    strategy: "jwt",
+    // A signed-in session lasts 12 hours from sign-in; once
+    // it ends the visitor is sent to sign-in with a safe return path (see the
+    // dashboard layout). The JWT below carries the same lifetime, so the token
+    // can never outlive the session it stands for.
+    maxAge: 12 * 60 * 60,
+  },
+  jwt: {
+    maxAge: 12 * 60 * 60,
+  },
+  callbacks: {
+    async signIn({ user }) {
+      // E-mail policy (src/lib/email-policy.ts): a refused address may not
+      // sign in, by e-mail link or by Google, existing account or not. The
+      // error page shows the one approved sentence.
+      if (refusesAccountEmail(user.email)) {
+        return `/auth-error?error=${BLOCKED_EMAIL_MESSAGE_KEY}`;
+      }
+      // Auto-join organization by email domain
+      // Wrapped in try/catch so sign-in succeeds even if auto-join fails
+      try {
+        if (user.email) {
+          const emailDomain = emailDomainOf(user.email);
+
+          // The one organisation whose stored domain still passes the domain
+          // rule against its OWNER's proven address today (never a public
+          // domain, never where two organisations store the same domain).
+          const matchingOrg = await findAutoJoinOrganization(prisma, user.email);
+
+          if (matchingOrg) {
+            // Check if user is already a member
+            const existingMembership = await prisma.organizationMember.findFirst({
+              where: {
+                organizationId: matchingOrg.id,
+                userId: user.id,
+              },
+            });
+
+            if (!existingMembership) {
+              // Joined read-only (VIEWER): an owner or admin promotes the
+              // colleague from the team page once they know who it is.
+              await prisma.organizationMember.create({
+                data: {
+                  organizationId: matchingOrg.id,
+                  userId: user.id,
+                  role: AUTO_JOIN_ROLE,
+                },
+              });
+
+              // Log the auto-join
+              await prisma.auditLog.create({
+                data: {
+                  organizationId: matchingOrg.id,
+                  userId: user.id,
+                  entityType: "OrganizationMember",
+                  entityId: user.id,
+                  action: "AUTO_JOIN",
+                  changes: { domain: emailDomain, email: user.email, role: AUTO_JOIN_ROLE },
+                },
+              });
+            }
+          }
+        }
+      } catch (error) {
+        logger.error("Auto-join organization failed during sign-in", error);
+      }
+      return true;
+    },
+    async session({ session, token }) {
+      if (token.emailNotAccepted) session.emailNotAccepted = true;
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+        session.user.userType = token.userType ?? null;
+        session.user.signedInHere = token.dpoSignIn === true;
+      }
+      return session;
+    },
+    async jwt({ token, user, trigger }) {
+      if (user) {
+        token.id = user.id;
+        // Invitations waiting for this address become memberships now
+        // (src/server/services/members/invitations.ts). Never blocks sign-in.
+        await acceptPendingInvitations(prisma, user.id, user.email);
+        // The last sign-in. Never blocks sign-in.
+        try {
+          await prisma.user.update({ where: { id: user.id }, data: { lastSignInAt: new Date() } });
+        } catch (error) {
+          logger.error("Recording the last sign-in failed", error);
+        }
+        // Stamped ONLY by a sign-in this product performed itself. A sibling's
+        // token may say who the person is; it never carries this claim, and
+        // platform-admin rights require it (src/server/trpc.ts).
+        token.dpoSignIn = true;
+      }
+
+      // JIT provisioning: a cross-app SSO cookie (AUTH_COOKIE_DOMAIN) can
+      // present a valid session for a user who signed into a sibling app
+      // but has no local DPO `users` row.
+      // Mint one from the token claims, keyed by email, and repoint the
+      // token at the local user id. Direct DPO sign-ins go through the
+      // PrismaAdapter (user present) and already have a local row, so this
+      // is a no-op for them. The JIT user has no org membership yet and
+      // lands in DPO's normal create-or-join-organization onboarding.
+      // The same situation arises on a self-hosted install WITHOUT any SSO
+      // intent: all apps share localhost and one NEXTAUTH_SECRET, so a
+      // sibling app's cookie (minted before the per-app cookie prefix, or
+      // one that outlived a database wipe) decodes here with a foreign sub.
+      // Re-anchoring by email covers both cases; a token with no email to
+      // re-anchor with is cleared so it reads as signed out rather than
+      // reaching Prisma with a nonexistent user id (FK violations).
+      // E-mail policy: a session for a refused address is not honoured,
+      // whether it was carried over from a sibling app or minted here before
+      // the policy. No local account is minted and nothing stored changes; the
+      // token reads as signed out and the dashboard sends the visitor to the
+      // error page with the one approved sentence.
+      if (!user && token.email && refusesAccountEmail(token.email)) {
+        token.sub = undefined;
+        token.id = undefined;
+        token.dpoSignIn = false;
+        token.userType = undefined;
+        token.emailNotAccepted = true;
+        return token;
+      }
+
+      if (!user) {
+        const claimedId = token.sub ?? (token.id as string | undefined);
+        const existing = claimedId
+          ? await prisma.user.findUnique({
+              where: { id: claimedId },
+              select: { id: true },
+            })
+          : null;
+        if (!existing) {
+          // The token was minted elsewhere. It may identify the person; it
+          // carries NO rights across: not the sign-in stamp that platform
+          // admin requires, and not a sibling's idea of the account type
+          // (re-read from this product's own row below).
+          token.dpoSignIn = false;
+          token.userType = undefined;
+          if (token.email) {
+            const dpoUser = await ensureDpoUser(prisma, {
+              email: token.email,
+              name: token.name,
+              picture: token.picture,
+            });
+            token.sub = dpoUser.id;
+            token.id = dpoUser.id;
+          } else {
+            token.sub = undefined;
+            token.id = undefined;
+          }
+        }
+      }
+
+      // Fetch userType on sign-in, explicit session update, or if the
+      // JWT was minted before userType existed (backfill for old tokens).
+      const userId = token.sub ?? (token.id as string | undefined);
+      if (userId && (user || trigger === "update" || token.userType === undefined)) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { userType: true },
+        });
+        token.userType = dbUser?.userType ?? null;
+      }
+      return token;
+    },
+  },
+  pages: {
+    signIn: "/sign-in",
+    // GET /api/auth/signout lands on our own confirmation, not the library's
+    // unstyled default; the account menu signs out directly.
+    signOut: "/sign-out",
+    verifyRequest: "/verify-request",
+    error: "/auth-error",
+  },
+  // Cross-app SSO cookie config (AUTH_COOKIE_DOMAIN)
+  ...(cookieDomain && {
+    cookies: {
+      sessionToken: {
+        // Route handlers read the token under this same name (session-cookie.ts).
+        name: sessionTokenCookieName()!,
+        options: {
+          httpOnly: true,
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+      callbackUrl: {
+        name: `${cookiePrefix}next-auth.callback-url`,
+        options: {
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+      csrfToken: {
+        name: `next-auth.csrf-token`,
+        options: {
+          httpOnly: true,
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+    },
+  }),
+  // Self-host / local-auth posture (no cross-subdomain SSO): app-prefixed,
+  // host-only cookies so sibling apps on the same localhost cannot clobber
+  // this app's session. See the cookie-naming comment near the top.
+  ...(!cookieDomain &&
+    features.devAuthEnabled && {
+      cookies: {
+        sessionToken: {
+          // Route handlers read the token under this same name (session-cookie.ts).
+          name: sessionTokenCookieName()!,
+          options: {
+            httpOnly: true,
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+        callbackUrl: {
+          name: useSecureCookies
+            ? "__Secure-dpocentral.callback-url"
+            : "dpocentral.callback-url",
+          options: {
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+        csrfToken: {
+          name: useSecureCookies
+            ? "__Host-dpocentral.csrf-token"
+            : "dpocentral.csrf-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+      },
+    }),
+  // Allow credentials in development
+  ...(isDev && {
+    debug: true,
+  }),
+};

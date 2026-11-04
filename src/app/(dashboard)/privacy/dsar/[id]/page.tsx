@@ -1,0 +1,1058 @@
+"use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { StatusNote } from "@/components/ui/status-note";
+import { use, useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  ArrowLeft,
+  Clock,
+  CheckCircle2,
+  Circle,
+  User,
+  Mail,
+  Phone,
+  MessageSquare,
+  Plus,
+  Send,
+  AlertTriangle,
+  Loader2,
+  Lock,
+  CalendarPlus,
+} from "lucide-react";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useTranslations, useLocale } from "next-intl";
+import { trpc } from "@/lib/trpc";
+import { useRecordOrgSwitch } from "@/lib/use-record-org-switch";
+import { RecordOrgSwitchNotice } from "@/components/privacy/record-org-switch-notice";
+import { useEnumLabels } from "@/lib/enum-labels";
+import { useOrganization } from "@/lib/organization-context";
+import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
+import { StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneChip } from "@/config/status-palette";
+
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
+import { formatRequestRef } from "@/lib/request-ref";
+import {
+  fillModelReply,
+  modelRepliesFor,
+  modelReplyValues,
+  remainingPlaceholders,
+} from "@/lib/dsar-model-replies";
+import type { ModelReplyLanguage } from "@/config/dsar-model-replies";
+const statusColors: Record<string, string> = {
+  SUBMITTED: "border-muted-foreground text-muted-foreground",
+  IDENTITY_PENDING: "border-muted-foreground text-muted-foreground",
+  IDENTITY_VERIFIED: "border-primary text-primary",
+  IN_PROGRESS: "border-primary text-primary",
+  DATA_COLLECTED: "border-primary text-primary",
+  REVIEW_PENDING: "border-muted-foreground text-muted-foreground",
+  APPROVED: "border-primary text-primary",
+  COMPLETED: "border-primary bg-primary text-primary-foreground",
+  REJECTED: `border-transparent ${toneChip("danger")}`,
+  CANCELLED: "border-muted-foreground text-muted-foreground",
+};
+
+const taskStatusColors: Record<string, string> = {
+  PENDING: "border-muted-foreground text-muted-foreground",
+  IN_PROGRESS: "border-primary text-primary",
+  COMPLETED: "border-primary bg-primary text-primary-foreground",
+  BLOCKED: `border-transparent ${toneChip("danger")}`,
+  NOT_APPLICABLE: "border-muted-foreground text-muted-foreground",
+};
+
+const statusOrder: DSARStatus[] = [
+  "SUBMITTED",
+  "IDENTITY_PENDING",
+  "IDENTITY_VERIFIED",
+  "IN_PROGRESS",
+  "DATA_COLLECTED",
+  "REVIEW_PENDING",
+  "COMPLETED",
+];
+
+export default function DSARDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const router = useRouter();
+  const { organization } = useOrganization();
+  const t = useTranslations("toasts");
+  const locale = useLocale();
+  const tp = useTranslations("pages.dsarDetail");
+  const tList = useTranslations("pages.dsar");
+  const tRelPublic = useTranslations("dsarPublic.form.relationship");
+  const tRelStaff = useTranslations("pages.newDsar.requester.relationshipOptions");
+  const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
+  const [taskForm, setTaskForm] = useState({ title: "", description: "" });
+  const [messageForm, setMessageForm] = useState({ subject: "", content: "" });
+  // Model replies (src/config/dsar-model-replies.ts): which one, in which language.
+  const [replyId, setReplyId] = useState("");
+  const [replyLanguage, setReplyLanguage] = useState<ModelReplyLanguage | null>(null);
+  const tm = useTranslations("pages.dsarDetail.modelReplies");
+  const [responseLinkDraft, setResponseLinkDraft] = useState({ url: "", expiresAt: "" });
+  const [isExtendOpen, setIsExtendOpen] = useState(false);
+  const [isCompleteConfirmOpen, setIsCompleteConfirmOpen] = useState(false);
+  const [extendReason, setExtendReason] = useState("");
+
+  const { data: request, isLoading, error: loadError } = trpc.dsar.getById.useQuery(
+    { organizationId: organization?.id ?? "", id },
+    {
+      enabled: !!organization?.id,
+      // A refusal is an answer, not a fault: no retry.
+      retry: (count, err) => err.data?.code !== "FORBIDDEN" && count < 1,
+    }
+  );
+  // A link to a record of another of the person's organisations: switch to it.
+  const orgSwitch = useRecordOrgSwitch("dsar", id, !isLoading && !request && loadError?.data?.code !== "FORBIDDEN");
+
+  const utils = trpc.useUtils();
+
+  const updateStatus = trpc.dsar.updateStatus.useMutation({
+    onSuccess: () => {
+      toast.success(t("dsar.statusUpdated"));
+      utils.dsar.getById.invalidate();
+      utils.dsar.list.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const createTask = trpc.dsar.createTask.useMutation({
+    onSuccess: () => {
+      toast.success(t("dsar.taskAdded"));
+      utils.dsar.getById.invalidate();
+      setIsAddTaskOpen(false);
+      setTaskForm({ title: "", description: "" });
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const updateTask = trpc.dsar.updateTask.useMutation({
+    onSuccess: () => {
+      toast.success(t("dsar.taskUpdated"));
+      utils.dsar.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const generateTasks = trpc.dsar.generateTasks.useMutation({
+    onSuccess: () => {
+      toast.success(t("dsar.tasksGenerated"));
+      utils.dsar.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const addCommunication = trpc.dsar.addCommunication.useMutation({
+    onSuccess: () => {
+      toast.success(t("dsar.messageSent"));
+      utils.dsar.getById.invalidate();
+      setIsSendMessageOpen(false);
+      setMessageForm({ subject: "", content: "" });
+      setReplyId("");
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const extendDeadline = trpc.dsar.extendDeadline.useMutation({
+    onSuccess: (data) => {
+      const newDate = formatDateIn(new Date(data.dueDate), locale);
+      // The requester was told of the new date by e-mail when the mail
+      // service accepted it; the reasons are still the organisation's to send.
+      toast.success(tp(data.requesterNotified ? "extend.doneNotified" : "extend.done", { newDate }));
+      utils.dsar.getById.invalidate();
+      utils.dsar.list.invalidate();
+      setIsExtendOpen(false);
+      setExtendReason("");
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const setResponseLink = trpc.dsar.setResponseLink.useMutation({
+    onSuccess: (_data, variables) => {
+      toast.success(
+        variables.responseUrl
+          ? tp("responseLink.saved")
+          : tp("responseLink.cleared")
+      );
+      utils.dsar.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  useEffect(() => {
+    const meta = (request?.metadata && typeof request.metadata === "object")
+      ? (request.metadata as Record<string, unknown>)
+      : null;
+    setResponseLinkDraft({
+      url: typeof meta?.responseUrl === "string" ? meta.responseUrl : "",
+      expiresAt: typeof meta?.responseExpiresAt === "string" ? meta.responseExpiresAt.slice(0, 10) : "",
+    });
+  }, [request?.metadata]);
+
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!organization?.id || !taskForm.title) return;
+    createTask.mutate({
+      organizationId: organization.id,
+      dsarRequestId: id,
+      title: taskForm.title,
+      description: taskForm.description || undefined,
+    });
+  };
+
+  // Placeholders left in the message: sending waits until they are completed.
+  const unfilled = remainingPlaceholders(messageForm.subject, messageForm.content);
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!organization?.id || !messageForm.content || unfilled.length > 0) return;
+    addCommunication.mutate({
+      organizationId: organization.id,
+      dsarRequestId: id,
+      direction: CommunicationDirection.OUTBOUND,
+      channel: "Email",
+      subject: messageForm.subject || undefined,
+      content: messageForm.content,
+    });
+  };
+
+  const handleStatusChange = (newStatus: DSARStatus) => {
+    if (!organization?.id) return;
+    updateStatus.mutate({
+      organizationId: organization.id,
+      id,
+      status: newStatus,
+    });
+  };
+
+  const handleTaskStatusChange = (taskId: string, newStatus: DSARTaskStatus) => {
+    if (!organization?.id) return;
+    updateTask.mutate({
+      organizationId: organization.id,
+      id: taskId,
+      status: newStatus,
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!request && loadError?.data?.code === "FORBIDDEN") {
+    // Members other than officers, admins and owners open only the requests
+    // on which they hold a task (src/lib/dsar-access.ts).
+    return (
+      <div className="text-center py-12 max-w-xl mx-auto">
+        <Lock className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
+        <p className="font-medium">{tList("restricted.detailTitle")}</p>
+        <p className="text-sm text-muted-foreground mt-2">{tList("restricted.detailBody")}</p>
+        <Link href="/privacy/dsar">
+          <Button variant="outline" className="mt-4">{tList("restricted.backToList")}</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  if (!request && (orgSwitch.checking || orgSwitch.switchingTo)) {
+    return <RecordOrgSwitchNotice switchingTo={orgSwitch.switchingTo} />;
+  }
+
+  if (!request) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">{tp("notFound")}</p>
+        <Link href="/privacy/dsar">
+          <Button variant="outline" className="mt-4">{tp("back")}</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const completedTasks = request.tasks?.filter(t => t.status === "COMPLETED").length ?? 0;
+  const totalTasks = request.tasks?.length ?? 0;
+
+  const responseMeta = (request.metadata && typeof request.metadata === "object")
+    ? (request.metadata as Record<string, unknown>)
+    : null;
+  const existingResponseUrl = typeof responseMeta?.responseUrl === "string" ? responseMeta.responseUrl : "";
+  const existingResponseExpiresAt = typeof responseMeta?.responseExpiresAt === "string" ? responseMeta.responseExpiresAt : "";
+  const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  // Closing with tasks still open asks first: one click used to close a
+  // request with none of its tasks done.
+  const openTasks = totalTasks - completedTasks;
+  const requestStatusChange = (next: DSARStatus) => {
+    if (next === DSARStatus.COMPLETED && openTasks > 0) setIsCompleteConfirmOpen(true);
+    else handleStatusChange(next);
+  };
+  const daysRemaining = request.daysUntilDue ?? 0;
+  const isCompleted = request.status === "COMPLETED" || request.status === "CANCELLED" || request.status === "REJECTED";
+  const isOverdue = !isCompleted && daysRemaining < 0;
+  const isAtRisk = !isCompleted && daysRemaining <= 7 && daysRemaining >= 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
+          <Link href="/privacy/dsar" className="shrink-0">
+            <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div className="min-w-0">
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* The short reference a person reads (REQ-ABC123); the full
+                  publicId, also the key to the public status page, stays in
+                  the title attribute for support and search. */}
+              <h1 className="text-xl sm:text-2xl font-semibold font-mono break-all min-w-0" title={request.publicId}>
+                {formatRequestRef(request.publicId, locale)}
+              </h1>
+              <Badge variant="outline">{tList(`type.${request.type}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</Badge>
+              <Badge variant="outline" className={statusColors[request.status] || ""}>
+                {tList(`status.${request.status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED` | `status.REJECTED`)}
+              </Badge>
+            </div>
+            {/* An address is one unbroken token and is routinely longer than a
+                phone screen: it has to be allowed to break. */}
+            <p className="text-sm text-muted-foreground break-words">
+              {request.requesterName} - {request.requesterEmail}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {request.status !== "COMPLETED" && request.status !== "CANCELLED" && (
+            <>
+              <Select
+                value={request.status}
+                onValueChange={(value) => requestStatusChange(value as DSARStatus)}
+              >
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {statusOrder.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {tList(`status.${status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={() => requestStatusChange(DSARStatus.COMPLETED)}
+                disabled={updateStatus.isPending}
+              >
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+                {tp("complete")}
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Progress and SLA */}
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle>{tp("progress.title")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* "0 of 0 tasks, 0%" said nothing: with no task yet, say how to start. */}
+            {totalTasks === 0 ? (
+              <p className="text-sm text-muted-foreground" data-testid="dsar-no-tasks">{tp("progress.noTasks")}</p>
+            ) : (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span>{tp("progress.tasksCompleted", { completed: completedTasks, total: totalTasks })}</span>
+                  <span className="font-medium">{progress}%</span>
+                </div>
+                <Progress value={progress} className="h-3" />
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className={isCompleted ? "border-primary" : isOverdue ? toneBorder("danger") : isAtRisk ? toneBorder("warning") : ""}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">{tp("sla.title")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {isCompleted ? (
+                <span className="text-primary flex items-center gap-2">
+                  <CheckCircle2 className="w-8 h-8" />
+                  {tp("sla.completed")}
+                </span>
+              ) : isOverdue ? (
+                <span className="flex items-center gap-2 font-semibold">
+                  <StatusMark tone="danger" className="h-8 w-8" />
+                  {tp("sla.overdue")}
+                </span>
+              ) : isAtRisk ? (
+                <span className="flex items-center gap-2">
+                  <StatusMark tone="warning" className="h-8 w-8" />
+                  {tp("sla.daysShort", { count: daysRemaining })}
+                </span>
+              ) : (
+                tp("sla.daysShort", { count: daysRemaining })
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {isCompleted ? tp("sla.closed") : tp("sla.due")}:{" "}
+              {formatDateIn(new Date(isCompleted ? (request.completedAt ?? request.updatedAt ?? request.dueDate) : request.dueDate), locale)}
+            </p>
+            {!isCompleted && request.extension.allowed && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full sm:w-auto"
+                data-testid="dsar-extend-deadline"
+                onClick={() => setIsExtendOpen(true)}
+              >
+                <CalendarPlus className="w-4 h-4 mr-2" />
+                {tp("extend.button")}
+              </Button>
+            )}
+            {!isCompleted && !request.extension.allowed && request.extension.reason !== "closed" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {tp(`extend.unavailable.${request.extension.reason}`)}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* LOPDGDD art. 13.3: an access request repeated within six months */}
+      {request.repeatAccess && (
+        <StatusNote tone="warning" title={tp("repeatAccess.title")} data-testid="dsar-repeat-access">
+          {tp("repeatAccess.body", {
+            count: request.repeatAccess.count,
+            date: formatDateIn(new Date(request.repeatAccess.lastReceivedAt), locale),
+          })}
+        </StatusNote>
+      )}
+
+      {/* Requester Info */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{tp("requester.title")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+            <div className="flex items-center gap-3">
+              <User className="w-4 h-4 text-muted-foreground shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground">{tp("requester.name")}</p>
+                <p className="font-medium truncate">{request.requesterName}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground">{tp("requester.email")}</p>
+                <p className="font-medium truncate">{request.requesterEmail}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground">{tp("requester.phone")}</p>
+                <p className="font-medium truncate">{request.requesterPhone || tp("requester.empty")}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">{tp("requester.relationship")}</p>
+              <p className="font-medium">{request.relationship
+                  ? tRelPublic.has(request.relationship as never)
+                    ? tRelPublic(request.relationship as never)
+                    : tRelStaff.has(request.relationship as never)
+                      ? tRelStaff(request.relationship as never)
+                      : request.relationship
+                  : tp("requester.empty")}</p>
+            </div>
+          </div>
+          {request.description && (
+            <>
+              <Separator className="my-4" />
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">{tp("requester.details")}</p>
+                <p>{request.description}</p>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Response Download Link (visible to requester on public status page) */}
+      {request.status === "COMPLETED" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{tp("responseLink.title")}</CardTitle>
+            <CardDescription>{tp("responseLink.description")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              className="grid gap-4 sm:grid-cols-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!organization?.id) return;
+                setResponseLink.mutate({
+                  organizationId: organization.id,
+                  id,
+                  responseUrl: responseLinkDraft.url || null,
+                  responseExpiresAt: responseLinkDraft.expiresAt
+                    ? new Date(responseLinkDraft.expiresAt).toISOString()
+                    : null,
+                });
+              }}
+            >
+              <div className="sm:col-span-2 space-y-2">
+                <Label htmlFor="response-url">{tp("responseLink.urlLabel")}</Label>
+                <Input
+                  id="response-url"
+                  type="url"
+                  placeholder={tp("responseLink.urlPlaceholder")}
+                  value={responseLinkDraft.url}
+                  onChange={(e) => setResponseLinkDraft((d) => ({ ...d, url: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="response-expires">{tp("responseLink.expiresLabel")}</Label>
+                <Input
+                  id="response-expires"
+                  type="date"
+                  value={responseLinkDraft.expiresAt}
+                  onChange={(e) => setResponseLinkDraft((d) => ({ ...d, expiresAt: e.target.value }))}
+                />
+              </div>
+              <div className="sm:col-span-3 flex flex-wrap gap-2 justify-end">
+                {existingResponseUrl && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      if (!organization?.id) return;
+                      setResponseLink.mutate({
+                        organizationId: organization.id,
+                        id,
+                        responseUrl: null,
+                        responseExpiresAt: null,
+                      });
+                    }}
+                    disabled={setResponseLink.isPending}
+                  >
+                    {tp("responseLink.clear")}
+                  </Button>
+                )}
+                <Button
+                  type="submit"
+                  disabled={
+                    setResponseLink.isPending ||
+                    !responseLinkDraft.url ||
+                    (responseLinkDraft.url === existingResponseUrl &&
+                      responseLinkDraft.expiresAt === (existingResponseExpiresAt ? existingResponseExpiresAt.slice(0, 10) : ""))
+                  }
+                >
+                  {setResponseLink.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {tp("responseLink.save")}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tabs */}
+      <Tabs defaultValue="tasks">
+        <TabsList className="w-full justify-start overflow-x-auto">
+          <TabsTrigger value="tasks" className="text-xs sm:text-sm">
+            {tp("tabs.tasks", { count: totalTasks })}
+          </TabsTrigger>
+          <TabsTrigger value="communications" className="text-xs sm:text-sm">
+            {tp("tabs.communications", { count: request.communications?.length ?? 0 })}
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="text-xs sm:text-sm">
+            {tp("tabs.audit")}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="tasks" className="mt-4">
+          <Card>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
+                <CardTitle>{tp("tasks.title")}</CardTitle>
+                <CardDescription>{tp("tasks.subtitle")}</CardDescription>
+              </div>
+              <div className="flex flex-wrap gap-2 shrink-0">
+                {totalTasks === 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => generateTasks.mutate({
+                      organizationId: organization?.id ?? "",
+                      dsarRequestId: id,
+                    })}
+                    disabled={generateTasks.isPending}
+                  >
+                    {generateTasks.isPending ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : null}
+                    {tp("tasks.autoGenerate")}
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => setIsAddTaskOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {tp("tasks.addTask")}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {request.tasks && request.tasks.length > 0 ? (
+                <div className="space-y-3">
+                  {request.tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-center justify-between p-3 border"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {task.status === "COMPLETED" ? (
+                          <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+                        ) : task.status === "IN_PROGRESS" ? (
+                          <Circle className="w-5 h-5 text-primary fill-primary/20 shrink-0" />
+                        ) : task.status === "BLOCKED" ? (
+                          <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
+                        ) : (
+                          <Circle className="w-5 h-5 text-muted-foreground shrink-0" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{task.title}</p>
+                          <p className="text-sm text-muted-foreground truncate">
+                            {task.assignee ? tp("tasks.assignedTo", { name: task.assignee.name || task.assignee.email }) : tp("tasks.unassigned")}
+                            {task.dataAsset && ` • ${task.dataAsset.name}`}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Select
+                          value={task.status}
+                          onValueChange={(value) => handleTaskStatusChange(task.id, value as DSARTaskStatus)}
+                        >
+                          <SelectTrigger className="h-8 w-[120px] text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PENDING">{tp("tasks.status.PENDING")}</SelectItem>
+                            <SelectItem value="IN_PROGRESS">{tp("tasks.status.IN_PROGRESS")}</SelectItem>
+                            <SelectItem value="COMPLETED">{tp("tasks.status.COMPLETED")}</SelectItem>
+                            <SelectItem value="BLOCKED">{tp("tasks.status.BLOCKED")}</SelectItem>
+                            <SelectItem value="NOT_APPLICABLE">{tp("tasks.status.NOT_APPLICABLE")}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>{tp("tasks.empty")}</p>
+                  <p className="text-sm">{tp("tasks.emptySub")}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="communications" className="mt-4">
+          <Card>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
+                <CardTitle>{tp("comms.title")}</CardTitle>
+                <CardDescription>{tp("comms.subtitle")}</CardDescription>
+              </div>
+              <Button size="sm" className="self-start sm:self-auto shrink-0" onClick={() => setIsSendMessageOpen(true)}>
+                <Send className="w-4 h-4 mr-2" />
+                {tp("comms.send")}
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {request.communications && request.communications.length > 0 ? (
+                <div className="space-y-4">
+                  {request.communications.map((comm) => (
+                    <div
+                      key={comm.id}
+                      className={`p-4 ${
+                        comm.direction === "OUTBOUND" ? "bg-primary/5 ml-0 sm:ml-8" : "bg-muted mr-0 sm:mr-8"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                          <span className="font-medium text-sm">
+                            {comm.direction === "OUTBOUND"
+                              ? (comm.sentBy?.name || comm.sentBy?.email || tp("comms.team"))
+                              : request.requesterName}
+                          </span>
+                          <Badge variant="outline" className="text-xs">
+                            {comm.direction === "OUTBOUND" ? tp("comms.sent") : tp("comms.received")}
+                          </Badge>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {formatDateTimeIn(new Date(comm.sentAt), locale)}
+                        </span>
+                      </div>
+                      {comm.subject && (
+                        <p className="text-sm font-medium mb-1">{comm.subject}</p>
+                      )}
+                      <p className="text-sm">{comm.content}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>{tp("comms.empty")}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="audit" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{tp("audit.title")}</CardTitle>
+              <CardDescription>{tp("audit.subtitle")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {request.auditLog && request.auditLog.length > 0 ? (
+                <div className="space-y-3">
+                  {request.auditLog.map((entry) => (
+                    <div key={entry.id} className="flex items-start gap-3 p-3 border">
+                      <Clock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm">{enumLabel("auditAction", entry.action)}</p>
+                        {entry.action === "DEADLINE_EXTENDED" &&
+                          typeof (entry.details as { reason?: unknown } | null)?.reason === "string" && (
+                            <p className="text-sm break-words">
+                              {tp("extend.reasonShown", { reason: (entry.details as { reason: string }).reason })}
+                            </p>
+                          )}
+                        <p className="text-xs text-muted-foreground">
+                          {formatDateTimeIn(new Date(entry.createdAt), locale)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>{tp("audit.empty")}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Add Task Sheet */}
+      <Sheet open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{tp("addTask.title")}</SheetTitle>
+            <SheetDescription>{tp("addTask.subtitle")}</SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleAddTask} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="task-title">{tp("addTask.titleLabel")}</Label>
+              <Input
+                id="task-title"
+                placeholder={tp("addTask.titlePlaceholder")}
+                value={taskForm.title}
+                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="task-description">{tp("addTask.descLabel")}</Label>
+              <Textarea
+                id="task-description"
+                placeholder={tp("addTask.descPlaceholder")}
+                rows={3}
+                value={taskForm.description}
+                onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+              />
+            </div>
+            <SheetFooter>
+              <Button type="button" variant="outline" onClick={() => setIsAddTaskOpen(false)}>
+                {tCommon("cancel")}
+              </Button>
+              <Button type="submit" disabled={createTask.isPending || !taskForm.title}>
+                {createTask.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {tp("addTask.submit")}
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+
+      {/* Closing with tasks still open asks first. */}
+      <ConfirmDialog
+        open={isCompleteConfirmOpen}
+        onOpenChange={setIsCompleteConfirmOpen}
+        title={tp("completeConfirm.title")}
+        description={tp("completeConfirm.description", { count: openTasks })}
+        confirmText={tp("completeConfirm.confirm")}
+        cancelText={tCommon("cancel")}
+        pending={updateStatus.isPending}
+        onConfirm={() => {
+          setIsCompleteConfirmOpen(false);
+          handleStatusChange(DSARStatus.COMPLETED);
+        }}
+      />
+
+      {/* Extend deadline: the law's own extension, once, with a reason */}
+      {request.extension.allowed && (
+        <Dialog
+          open={isExtendOpen}
+          onOpenChange={(open) => {
+            setIsExtendOpen(open);
+            if (!open) setExtendReason("");
+          }}
+        >
+          <DialogContent>
+            <form
+              className="space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!organization?.id || !extendReason.trim()) return;
+                extendDeadline.mutate({ organizationId: organization.id, id, reason: extendReason.trim() });
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>{tp("extend.title")}</DialogTitle>
+                <DialogDescription>
+                  {tp("extend.description", {
+                    newDate: formatDateIn(new Date(request.extension.newDueDate), locale),
+                  })}
+                </DialogDescription>
+              </DialogHeader>
+              <p className="text-sm font-medium" role="note">
+                {tp("extend.tellBy", { date: formatDateIn(new Date(request.extension.tellBy), locale) })}
+              </p>
+              <div className="space-y-2">
+                <Label htmlFor="extend-reason">{tp("extend.reasonLabel")}</Label>
+                <Textarea
+                  id="extend-reason"
+                  rows={3}
+                  required
+                  maxLength={2000}
+                  placeholder={tp("extend.reasonPlaceholder")}
+                  value={extendReason}
+                  onChange={(e) => setExtendReason(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">{tp("extend.reasonHint")}</p>
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsExtendOpen(false)}>
+                  {tCommon("cancel")}
+                </Button>
+                <Button type="submit" disabled={extendDeadline.isPending || !extendReason.trim()}>
+                  {extendDeadline.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {tp("extend.confirm", {
+                    newDate: formatDateIn(new Date(request.extension.newDueDate), locale),
+                  })}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Send Message Sheet */}
+      <Sheet open={isSendMessageOpen} onOpenChange={setIsSendMessageOpen}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{tp("sendMessage.title")}</SheetTitle>
+            <SheetDescription>{tp("sendMessage.subtitle", { name: request.requesterName })}</SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleSendMessage} className="space-y-4 mt-4">
+            {(() => {
+              // Language: the one chosen, else the requester's, else the page's.
+              const language: ModelReplyLanguage =
+                replyLanguage ??
+                (request.modelReply?.requesterLocale === "es" || request.modelReply?.requesterLocale === "en"
+                  ? request.modelReply.requesterLocale
+                  : locale === "es"
+                    ? "es"
+                    : "en");
+              const replies = modelRepliesFor(request.type);
+              const insert = (id: string, lang: ModelReplyLanguage) => {
+                const reply = replies.find((r) => r.id === id);
+                if (!reply) return;
+                const filled = fillModelReply(
+                  reply,
+                  lang,
+                  modelReplyValues(
+                    {
+                      requesterName: request.requesterName,
+                      publicId: request.publicId,
+                      receivedAt: request.receivedAt,
+                      dueDate: request.dueDate,
+                      extendedDueDate: request.extendedDueDate,
+                      originalDueDate: request.modelReply?.originalDueDate,
+                      organizationName: organization?.name ?? "",
+                      statusLink: request.modelReply?.statusLink ?? "",
+                      privacyContact: request.modelReply?.privacyContact,
+                    },
+                    lang
+                  )
+                );
+                setMessageForm({ subject: filled.subject, content: filled.body });
+              };
+              return (
+                <div className="space-y-2 rounded-lg border p-3" data-testid="dsar-model-replies">
+                  <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                    <div className="space-y-1">
+                      <Label>{tm("label")}</Label>
+                      <Select
+                        value={replyId}
+                        onValueChange={(id) => {
+                          setReplyId(id);
+                          insert(id, language);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={tm("placeholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {replies.map((r) => (
+                            <SelectItem key={r.id} value={r.id}>
+                              {tm(`names.${r.id}`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label>{tm("languageLabel")}</Label>
+                      <Select
+                        value={language}
+                        onValueChange={(value) => {
+                          const lang = value as ModelReplyLanguage;
+                          setReplyLanguage(lang);
+                          if (replyId) insert(replyId, lang);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="es">{tm("languages.es")}</SelectItem>
+                          <SelectItem value="en">{tm("languages.en")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{tm("hint")}</p>
+                </div>
+              );
+            })()}
+            <div className="space-y-2">
+              <Label htmlFor="message-subject">{tp("sendMessage.subjectLabel")}</Label>
+              <Input
+                id="message-subject"
+                placeholder={tp("sendMessage.subjectPlaceholder")}
+                value={messageForm.subject}
+                onChange={(e) => setMessageForm({ ...messageForm, subject: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message-content">{tp("sendMessage.messageLabel")}</Label>
+              <Textarea
+                id="message-content"
+                placeholder={tp("sendMessage.messagePlaceholder")}
+                rows={replyId ? 14 : 5}
+                value={messageForm.content}
+                onChange={(e) => setMessageForm({ ...messageForm, content: e.target.value })}
+                required
+              />
+            </div>
+            {unfilled.length > 0 && (
+              <StatusNote tone="warning" data-testid="dsar-unfilled-placeholders">
+                {tm("remaining", { list: unfilled.join(", ") })}
+              </StatusNote>
+            )}
+            <SheetFooter>
+              <Button type="button" variant="outline" onClick={() => setIsSendMessageOpen(false)}>
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={addCommunication.isPending || !messageForm.content || unfilled.length > 0}
+              >
+                {addCommunication.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {tp("sendMessage.submit")}
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}

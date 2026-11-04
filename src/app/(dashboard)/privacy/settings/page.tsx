@@ -1,0 +1,542 @@
+"use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { JurisdictionsCard } from "@/components/privacy/jurisdictions-card";
+import { DepartmentsCard } from "@/components/privacy/departments-card";
+import { ControllerDetailsCard } from "@/components/privacy/controller-details-card";
+import { DeleteOrganizationCard } from "@/components/privacy/delete-organization-card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, UserPlus, Trash2, Globe, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { useTranslations, useLocale } from "next-intl";
+import { formatDateIn } from "@/lib/utils";
+import { useEnumLabels } from "@/lib/enum-labels";
+import { trpc } from "@/lib/trpc";
+import { EmailNotAcceptedNote, isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
+import { useUserType } from "@/lib/use-user-type";
+import { useOrganization } from "@/lib/organization-context";
+import { membersCardIsScoped, membersCardKey } from "@/lib/members-card-copy";
+import { OrganizationRole } from "@prisma/client";
+import { locales, localeNames, type Locale } from "@/i18n/config";
+import { writeLocaleCookie } from "@/i18n/locale-cookie";
+
+const ROLE_OPTIONS: OrganizationRole[] = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"];
+
+export default function SettingsPage() {
+  const _t = useTranslations("toasts");
+  void _t;
+  const ts = useTranslations("pages.settings");
+  const tCommon = useTranslations("common");
+  const tProfile = useTranslations("pages.settings.profile");
+  const tLang = useTranslations("pages.settings.language");
+  const tOrg = useTranslations("pages.settings.organization");
+  const tMembers = useTranslations("pages.settings.members");
+  const { label: enumLabel } = useEnumLabels();
+  const { userType: sessionUserType } = useUserType();
+  const { organization, organizations } = useOrganization();
+  const orgId = organization?.id ?? "";
+  const locale = useLocale() as Locale;
+  const utils = trpc.useUtils();
+
+  const { data: profile } = trpc.user.getProfile.useQuery();
+  const { data: org } = trpc.organization.getById.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId }
+  );
+
+  const isOwner = org?.currentUserRole === "OWNER";
+  const isAdmin = isOwner || org?.currentUserRole === "ADMIN";
+
+  // ----- Profile -----
+  const [profileName, setProfileName] = useState("");
+  const [profileDirty, setProfileDirty] = useState(false);
+
+  useEffect(() => {
+    if (profile?.name && !profileDirty) {
+      setProfileName(profile.name);
+    }
+  }, [profile, profileDirty]);
+
+  const updateProfile = trpc.user.updateProfile.useMutation({
+    onSuccess: () => {
+      toast.success(tProfile("updated"));
+      utils.user.getProfile.invalidate();
+      setProfileDirty(false);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const userType = sessionUserType;
+
+  // ----- Team members wording -----
+  // The card names the selected organisation for an account that works across
+  // several organisations, since an invitation joins this organisation only.
+  const membersScoped = membersCardIsScoped(userType, organizations.length);
+  const membersOrgName = org?.name ?? organization?.name ?? "";
+  const tm = (key: "title" | "descriptionAdmin" | "inviteLabel" | "inviteHelp") =>
+    tMembers(membersCardKey(key, membersScoped), { organization: membersOrgName });
+  const ownMembers = org?.members ?? [];
+
+  // ----- Locale -----
+  const setLocale = (newLocale: Locale) => {
+    writeLocaleCookie(newLocale);
+    window.location.reload();
+  };
+
+  // ----- Organization -----
+  const [orgForm, setOrgForm] = useState({ name: "", domain: "" });
+  const [orgFormDirty, setOrgFormDirty] = useState(false);
+
+  useEffect(() => {
+    if (org?.name && !orgFormDirty) {
+      setOrgForm({ name: org.name, domain: org.domain ?? "" });
+    }
+  }, [org, orgFormDirty]);
+
+  const updateOrg = trpc.organization.update.useMutation({
+    onSuccess: (saved, sent) => {
+      toast.success(tOrg("updated"));
+      // A domain that is not the owner's own is saved as "no domain".
+      if (sent.domain && !saved.domain) toast.warning(tOrg("domainNotAccepted"));
+      utils.organization.getById.invalidate();
+      setOrgFormDirty(false);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  // ----- Members -----
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<OrganizationRole>("MEMBER");
+  const [memberToRemove, setMemberToRemove] = useState<{ id: string; name: string } | null>(null);
+
+  const { data: invitations } = trpc.organization.listInvitations.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId && isAdmin }
+  );
+  const cancelInvitation = trpc.organization.cancelInvitation.useMutation({
+    onSuccess: () => {
+      toast.success(tMembers("inviteCancelled"));
+      utils.organization.listInvitations.invalidate();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+  const addMember = trpc.organization.addMember.useMutation({
+    onSuccess: (result, vars) => {
+      if (result.invited) {
+        if (result.emailSent) toast.success(tMembers("invitedSent", { email: vars.email }));
+        else toast.info(tMembers("invitedNoEmail", { url: result.signInUrl }), { duration: 15000 });
+        utils.organization.listInvitations.invalidate();
+      } else {
+        toast.success(tMembers("added"));
+      }
+      utils.organization.getById.invalidate();
+      setInviteEmail("");
+      setInviteRole("MEMBER");
+    },
+    // The e-mail policy refusal shows under the field, not as a toast.
+    onError: (e) => {
+      if (!isEmailNotAcceptedError(e)) toast.error(e.message);
+    },
+  });
+
+  const updateMember = trpc.organization.updateMember.useMutation({
+    onSuccess: () => {
+      toast.success(tMembers("roleUpdated"));
+      utils.organization.getById.invalidate();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const removeMember = trpc.organization.removeMember.useMutation({
+    onSuccess: () => {
+      toast.success(tMembers("removed"));
+      utils.organization.getById.invalidate();
+      setMemberToRemove(null);
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  return (
+    <div className="space-y-4 sm:space-y-6 max-w-3xl">
+      <div>
+        <h1 className="text-xl sm:text-2xl font-semibold">{ts("title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{ts("subtitle")}</p>
+      </div>
+
+
+      {/* Profile */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{tProfile("title")}</CardTitle>
+          <CardDescription>{tProfile("description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="profile-name">{tProfile("name")}</Label>
+            <Input
+              id="profile-name"
+              value={profileName}
+              onChange={(e) => {
+                setProfileName(e.target.value);
+                setProfileDirty(true);
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{tProfile("email")}</Label>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground break-all">
+              <Mail className="w-3.5 h-3.5 shrink-0" />
+              {profile?.email ?? tCommon("notStated")}
+            </div>
+            <p className="text-xs text-muted-foreground">{tProfile("emailHint")}</p>
+          </div>
+          {profileDirty && (
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setProfileName(profile?.name ?? "");
+                  setProfileDirty(false);
+                }}
+              >
+                {tProfile("cancel")}
+              </Button>
+              <Button
+                size="sm"
+                disabled={
+                  updateProfile.isPending ||
+                  !profileName.trim() ||
+                  profileName === profile?.name
+                }
+                onClick={() => updateProfile.mutate({ name: profileName.trim() })}
+              >
+                {updateProfile.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {tProfile("save")}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Language */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Globe className="w-4 h-4" /> {tLang("title")}
+          </CardTitle>
+          <CardDescription>{tLang("description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-2 flex-wrap">
+            {locales.map((loc) => (
+              <Button
+                key={loc}
+                variant={locale === loc ? "default" : "outline"}
+                size="sm"
+                onClick={() => setLocale(loc)}
+                disabled={locale === loc}
+              >
+                {localeNames[loc]}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Organization */}
+      {org && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{tOrg("title")}</CardTitle>
+            <CardDescription>
+              {isAdmin ? tOrg("descriptionAdmin") : tOrg("descriptionViewer")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="org-name">{tOrg("name")}</Label>
+              <Input
+                id="org-name"
+                value={orgForm.name}
+                onChange={(e) => {
+                  setOrgForm({ ...orgForm, name: e.target.value });
+                  setOrgFormDirty(true);
+                }}
+                disabled={!isAdmin}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="org-domain">{tOrg("domain")}</Label>
+              <Input
+                id="org-domain"
+                placeholder="example.com"
+                value={orgForm.domain}
+                onChange={(e) => {
+                  setOrgForm({ ...orgForm, domain: e.target.value });
+                  setOrgFormDirty(true);
+                }}
+                disabled={!isAdmin}
+              />
+              <p className="text-xs text-muted-foreground">{tOrg("domainHint")}</p>
+            </div>
+            {isAdmin && orgFormDirty && (
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setOrgForm({ name: org.name ?? "", domain: org.domain ?? "" });
+                    setOrgFormDirty(false);
+                  }}
+                >
+                  {tOrg("cancel")}
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={updateOrg.isPending || !orgForm.name.trim()}
+                  onClick={() =>
+                    updateOrg.mutate({
+                      organizationId: orgId,
+                      name: orgForm.name.trim(),
+                      domain: orgForm.domain.trim() || null,
+                    })
+                  }
+                >
+                  {updateOrg.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {tOrg("save")}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Where the organisation operates: the laws that set the deadlines. */}
+      {org && (
+        <JurisdictionsCard
+          organizationId={orgId}
+          canWrite={!!org.currentUserRole && org.currentUserRole !== "VIEWER"}
+        />
+      )}
+
+      {/* The controller block of the record of processing (Art. 30). */}
+      {org && (
+        <ControllerDetailsCard
+          organizationId={orgId}
+          canEdit={["OWNER", "ADMIN", "PRIVACY_OFFICER"].includes(org.currentUserRole ?? "")}
+        />
+      )}
+
+      {/* Team Members */}
+      {org && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{tm("title")}</CardTitle>
+            <CardDescription>
+              {isAdmin ? tm("descriptionAdmin") : tMembers("descriptionViewer")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {isAdmin && (
+              <div className="space-y-2 pb-3 border-b">
+                <Label htmlFor="invite-email">{tm("inviteLabel")}</Label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    id="invite-email"
+                    type="email"
+                    placeholder={tMembers("inviteEmailPlaceholder")}
+                    value={inviteEmail}
+                    onChange={(e) => {
+                      setInviteEmail(e.target.value);
+                      if (addMember.error) addMember.reset();
+                    }}
+                    className="flex-1"
+                  />
+                <Select
+                  value={inviteRole}
+                  onValueChange={(v) => setInviteRole(v as OrganizationRole)}
+                >
+                  <SelectTrigger className="sm:w-44">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLE_OPTIONS.filter((r) => (isOwner ? true : r !== "OWNER")).map(
+                      (role) => (
+                        <SelectItem key={role} value={role}>
+                          {enumLabel("role", role)}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+                <Button
+                  onClick={() =>
+                    addMember.mutate({
+                      organizationId: orgId,
+                      email: inviteEmail.trim(),
+                      role: inviteRole,
+                    })
+                  }
+                  disabled={addMember.isPending || !inviteEmail.trim()}
+                >
+                  {addMember.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <UserPlus className="w-4 h-4 mr-2" />
+                  )}
+                  {tMembers("add")}
+                </Button>
+                </div>
+                <EmailNotAcceptedNote show={isEmailNotAcceptedError(addMember.error)} />
+                <p className="text-xs text-muted-foreground">{tm("inviteHelp")}</p>
+              </div>
+            )}
+
+            {isAdmin && invitations && invitations.length > 0 && (
+              <div className="space-y-2" data-testid="pending-invitations">
+                <p className="text-sm font-medium">{tMembers("pendingTitle")}</p>
+                {invitations.map((inv) => (
+                  <div key={inv.email} className="flex items-center justify-between gap-2 p-2 border border-dashed rounded-md">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm truncate">{inv.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {enumLabel("role", inv.role)} · {tMembers("pendingSince", { date: formatDateIn(new Date(inv.invitedAt), locale) })}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={tMembers("cancelInviteAria", { email: inv.email })}
+                      title={tMembers("cancelInvite")}
+                      onClick={() => cancelInvitation.mutate({ organizationId: orgId, email: inv.email })}
+                      disabled={cancelInvitation.isPending}
+                    >
+                      <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              {ownMembers.map((member) => {
+                const isSelf = member.userId === profile?.id;
+                const canChange = isOwner && !isSelf;
+                return (
+                  <div
+                    key={member.id}
+                    className="flex items-center justify-between gap-2 p-2 border rounded-md"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">
+                        {member.user.name || member.user.email}
+                        {isSelf && (
+                          <span className="ml-2 text-xs text-muted-foreground">{tMembers("you")}</span>
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">{member.user.email}</p>
+                    </div>
+                    {canChange ? (
+                      <Select
+                        value={member.role}
+                        onValueChange={(v) =>
+                          updateMember.mutate({
+                            organizationId: orgId,
+                            memberId: member.id,
+                            role: v as OrganizationRole,
+                          })
+                        }
+                        disabled={updateMember.isPending}
+                      >
+                        <SelectTrigger className="w-40">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ROLE_OPTIONS.map((role) => (
+                            <SelectItem key={role} value={role}>
+                              {enumLabel("role", role)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Badge variant="outline" className="text-xs">
+                        {enumLabel("role", member.role)}
+                      </Badge>
+                    )}
+                    {isAdmin && !isSelf && member.role !== "OWNER" && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={tMembers("removeAria")}
+                        onClick={() =>
+                          setMemberToRemove({
+                            id: member.id,
+                            name: member.user.name || member.user.email || tCommon("notStated"),
+                          })
+                        }
+                        disabled={removeMember.isPending}
+                      >
+                        <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive" />
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {!isAdmin && (
+              <p className="text-xs text-muted-foreground pt-2 border-t">
+                {tMembers("rolesLegend")}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Departments (business units): create them, assign owners and limit
+          members. Management is OWNER/ADMIN, enforced server-side. */}
+      {orgId && isAdmin && <DepartmentsCard organizationId={orgId} />}
+
+
+
+
+      {/* Programme portability: the whole programme out, and a programme or a
+          register in, in the open format. OWNER/ADMIN, enforced server-side. */}
+
+      {/* Deleting the organisation. Owner only, enforced server-side. */}
+      {orgId && isOwner && (
+        <DeleteOrganizationCard organizationId={orgId} />
+      )}
+
+      <ConfirmDialog
+        open={!!memberToRemove}
+        onOpenChange={(open) => !open && setMemberToRemove(null)}
+        title={tMembers("removeConfirmTitle", { name: memberToRemove?.name ?? tCommon("notStated") })}
+        description={tMembers("removeConfirmDescription")}
+        confirmText={tMembers("removeConfirm")}
+        danger
+        pending={removeMember.isPending}
+        onConfirm={() =>
+          memberToRemove &&
+          removeMember.mutate({ organizationId: orgId, memberId: memberToRemove.id })
+        }
+      />
+    </div>
+  );
+}

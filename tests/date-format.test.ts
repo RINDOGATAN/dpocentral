@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+/**
+ * Recent activity dates (F10 of the September browser round): one format per
+ * interface language, to the minute, never the browser's own numeric default
+ * with seconds ("9/28/2026, 11:34:49 AM").
+ */
+
+import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
+
+const WHEN = "2026-09-28T11:34:49Z";
+
+describe("formatDateTimeIn", () => {
+  it("writes English dates day first, to the minute", () => {
+    const s = formatDateTimeIn(WHEN, "en", "UTC");
+    expect(s).toMatch(/^28 Sept? 2026, 11:34$/);
+  });
+
+  it("writes Spanish dates in Castilian, to the minute", () => {
+    const s = formatDateTimeIn(WHEN, "es", "UTC");
+    expect(s).toMatch(/^28 sept? 2026, 11:34$/);
+  });
+
+  it("never shows seconds, and falls back to English for another language", () => {
+    for (const locale of ["en", "es", "fr"]) {
+      expect(formatDateTimeIn(WHEN, locale, "UTC")).not.toContain(":49");
+    }
+    expect(formatDateTimeIn(WHEN, "fr", "UTC")).toBe(formatDateTimeIn(WHEN, "en", "UTC"));
+  });
+});
+
+describe("formatDateIn", () => {
+  // A day-first numeric date (12/10/2026) reads as 10 December to a US
+  // reader: the month is written as a word in both languages.
+  it("writes the month as a word in English and in Spanish", () => {
+    expect(formatDateIn("2026-10-12T10:00:00Z", "en", "UTC")).toBe("12 Oct 2026");
+    expect(formatDateIn("2026-10-12T10:00:00Z", "es", "UTC")).toBe("12 oct 2026");
+  });
+
+  it("never writes a numeric date", () => {
+    for (const locale of ["en", "es"]) {
+      expect(formatDateIn(WHEN, locale, "UTC")).not.toMatch(/\d{1,2}\/\d{1,2}\//);
+    }
+  });
+});

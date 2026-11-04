@@ -1,0 +1,362 @@
+"use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { ArrowLeft, Plus, Search, FileSpreadsheet, FileText, Download, Loader2, Scale, Clock } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { useOrganization } from "@/lib/organization-context";
+import { useOrgRole } from "@/lib/use-org-role";
+import { NewActivityDialog } from "@/components/privacy/new-activity-dialog";
+
+const LEGAL_BASES = new Set([
+  "CONSENT",
+  "CONTRACT",
+  "LEGAL_OBLIGATION",
+  "VITAL_INTERESTS",
+  "PUBLIC_TASK",
+  "LEGITIMATE_INTERESTS",
+]);
+
+const legalBasisColors: Record<string, string> = {
+  CONSENT: "border-primary text-primary",
+  CONTRACT: "border-primary text-primary",
+  LEGAL_OBLIGATION: "border-muted-foreground text-muted-foreground",
+  VITAL_INTERESTS: "border-muted-foreground text-muted-foreground",
+  PUBLIC_TASK: "border-muted-foreground text-muted-foreground",
+  LEGITIMATE_INTERESTS: "border-primary text-primary",
+};
+
+export default function ProcessingActivitiesPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const { organization } = useOrganization();
+  const { canWrite } = useOrgRole();
+  const t = useTranslations("pages.processingActivities");
+  const tBasis = useTranslations("pages.dataInventory.legalBasis");
+  const tInv = useTranslations("pages.dataInventory");
+  const locale = useLocale();
+  const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
+
+
+  // Activities are created and listed here (their one home); `?new=activity`
+  // opens the form, once, for a person allowed to write.
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const wantsNewActivity = searchParams.get("new") === "activity";
+  const [activityDialogOpen, setActivityDialogOpen] = useState(false);
+  useEffect(() => {
+    if (wantsNewActivity && canWrite) {
+      setActivityDialogOpen(true);
+      router.replace("/privacy/data-inventory/processing-activities", { scroll: false });
+    }
+  }, [wantsNewActivity, canWrite, router]);
+
+  const {
+    data: activitiesPages,
+    isLoading,
+    hasNextPage: hasMoreActivities,
+    fetchNextPage: fetchMoreActivities,
+    isFetchingNextPage: fetchingMoreActivities,
+  } = trpc.dataInventory.listActivities.useInfiniteQuery(
+    // The search runs on the server too, so it finds activities beyond the
+    // first page.
+    { organizationId: organization?.id ?? "", limit: 50, search: searchQuery.trim() || undefined },
+    { enabled: !!organization?.id, placeholderData: (prev) => prev, getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
+
+  const activities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+  const hasProcessorActivities = activities.some((a) => a.role === "PROCESSOR");
+
+  // Every export is built on the server (one source for the PDF, the CSV, the
+  // XLSX and the JSON; audited; the department limit applied).
+  const exportUrl = (format: "pdf" | "csv" | "xlsx" | "json", record: "controller" | "processor" = "controller") =>
+    `/api/export/ropa?${new URLSearchParams({
+      organizationId: organization?.id ?? "",
+      format,
+      locale,
+      ...(record === "processor" ? { record } : {}),
+    }).toString()}`;
+  const download = (format: "pdf" | "csv" | "xlsx" | "json", record?: "controller" | "processor") =>
+    window.open(exportUrl(format, record), "_blank");
+
+  const filteredActivities = activities.filter(
+    (activity) =>
+      activity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.purpose.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/data-inventory" className="shrink-0">
+            <Button variant="ghost" size="icon" aria-label={t("back")}>
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold">{t("title")}</h1>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  {t("exportRopa")}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => download("pdf")}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  {t("downloadPdf")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => download("xlsx")}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                  {t("downloadXlsx")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => download("csv")}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                  {t("downloadCsv")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => download("json")}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  {t("downloadJson")}
+                </DropdownMenuItem>
+                {hasProcessorActivities && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                      {t("processorRecord")}
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => download("pdf", "processor")}>
+                      <FileText className="w-4 h-4 mr-2" />
+                      {t("downloadPdf")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => download("xlsx", "processor")}>
+                      <FileSpreadsheet className="w-4 h-4 mr-2" />
+                      {t("downloadXlsx")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => download("csv", "processor")}>
+                      <FileSpreadsheet className="w-4 h-4 mr-2" />
+                      {t("downloadCsv")}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          {canWrite && (
+            <Button onClick={() => setActivityDialogOpen(true)} data-testid="ropa-add-activity">
+              <Plus className="w-4 h-4 mr-2" />
+              {t("addActivity")}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-primary">{activities.length}</div>
+            <p className="text-sm text-muted-foreground">{t("stats.total")}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-primary">
+              {activities.filter((a) => a.isActive).length}
+            </div>
+            <p className="text-sm text-muted-foreground">{t("stats.active")}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-primary">
+              {activities.filter((a) => a.legalBasis === "CONSENT").length}
+            </div>
+            <p className="text-sm text-muted-foreground">{t("stats.consent")}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-primary">
+              {activities.filter((a) => a._count?.transfers && a._count.transfers > 0).length}
+            </div>
+            <p className="text-sm text-muted-foreground">{t("stats.transfers")}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search */}
+      <div className="flex gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t("searchPlaceholder")}
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Activities List */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : filteredActivities.length > 0 ? (
+        <div className="flex flex-col gap-4">
+          {filteredActivities.map((activity) => (
+            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              <Card className="hover:border-primary/50 transition-colors">
+                <CardContent className="py-4">
+                  <div className="flex items-start gap-6">
+                    {/* Icon */}
+                    <div className="w-10 h-10 border-2 border-primary flex items-center justify-center flex-shrink-0">
+                      <FileSpreadsheet className="w-5 h-5 text-primary" />
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="font-medium">{activity.name}</span>
+                        <Badge
+                          variant="outline"
+                          className={legalBasisColors[activity.legalBasis] || ""}
+                        >
+                          <Scale className="w-3 h-3 mr-1" />
+                          {basisLabel(activity.legalBasis)}
+                        </Badge>
+                        {!activity.isActive && (
+                          <Badge variant="secondary">{t("inactive")}</Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                        {activity.purpose}
+                      </p>
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                        <span>{t("assetsCount", { count: activity.assets?.length ?? 0 })}</span>
+                        <span>{t("subjectTypesCount", { count: (activity.dataSubjects as string[])?.length ?? 0 })}</span>
+                        <span>{t("categoriesCount", { count: (activity.categories as string[])?.length ?? 0 })}</span>
+                        {activity.retentionPeriod && (
+                          <span>
+                            <Clock className="inline w-3 h-3 mr-1" />
+                            {activity.retentionPeriod}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Data Subjects */}
+                    <div className="hidden md:block">
+                      <p className="text-xs text-muted-foreground mb-1">{t("dataSubjects")}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(activity.dataSubjects as string[])?.slice(0, 3).map((subject) => (
+                          <Badge key={subject} variant="outline" className="text-xs">
+                            {subject}
+                          </Badge>
+                        ))}
+                        {(activity.dataSubjects as string[])?.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{(activity.dataSubjects as string[]).length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+          {hasMoreActivities && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => fetchMoreActivities()}
+                disabled={fetchingMoreActivities}
+              >
+                {fetchingMoreActivities && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                {tInv("loadMore")}
+              </Button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>{t("empty.title")}</p>
+            <p className="text-sm mb-4">{t("empty.body")}</p>
+            {canWrite && (
+              <Button onClick={() => setActivityDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("addActivity")}
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      <NewActivityDialog open={activityDialogOpen} onOpenChange={setActivityDialogOpen} />
+
+      {/* ROPA Info */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{t("about.title")}</CardTitle>
+          <CardDescription>{t("about.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 text-sm">
+            <div>
+              <h4 className="font-medium mb-2">{t("about.requiredTitle")}</h4>
+              <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                <li>{t("about.required.controller")}</li>
+                <li>{t("about.required.purposes")}</li>
+                <li>{t("about.required.categories")}</li>
+                <li>{t("about.required.recipients")}</li>
+                <li>{t("about.required.transfers")}</li>
+                <li>{t("about.required.retention")}</li>
+                <li>{t("about.required.security")}</li>
+              </ul>
+              <p className="mt-3 text-muted-foreground">
+                <Link href="/privacy/settings#controller-details" className="underline">
+                  {t("about.controllerDetailsLink")}
+                </Link>
+              </p>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">{t("about.whenTitle")}</h4>
+              <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                <li>{t("about.when.employees")}</li>
+                <li>{t("about.when.risk")}</li>
+                <li>{t("about.when.notOccasional")}</li>
+                <li>{t("about.when.specialCategory")}</li>
+                <li>{t("about.when.criminal")}</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+    </div>
+  );
+}

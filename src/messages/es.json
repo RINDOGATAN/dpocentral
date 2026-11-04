@@ -1,0 +1,3966 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "add": "Añadir",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "submit": "Enviar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "close": "Cerrar",
+    "yes": "Sí",
+    "no": "No",
+    "all": "Todo",
+    "none": "Ninguno",
+    "actions": "Acciones",
+    "status": "Estado",
+    "name": "Nombre",
+    "description": "Descripción",
+    "date": "Fecha",
+    "type": "Tipo",
+    "details": "Detalles",
+    "notes": "Notas",
+    "more": "Más",
+    "less": "Menos",
+    "showAll": "Mostrar todo",
+    "viewDetails": "Ver detalles",
+    "sortLabel": "Ordenar",
+    "sortNewest": "Más recientes primero",
+    "sortOldest": "Más antiguos primero",
+    "sortName": "Nombre (A-Z)",
+    "notStated": "Sin indicar",
+    "recordBelongsTo": "Este registro pertenece a {client}. Cambiando a ese cliente..."
+  },
+  "pages": {
+    "newVendor": {
+      "title": "Añadir proveedor",
+      "subtitle": "Registra un nuevo proveedor externo",
+      "info": {
+        "title": "Información del proveedor",
+        "subtitle": "Datos básicos del proveedor",
+        "name": "Nombre del proveedor *",
+        "namePlaceholder": "p. ej., Acme Cloud Services",
+        "website": "Sitio web",
+        "websitePlaceholder": "https://example.com",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe el proveedor y los servicios ofrecidos...",
+        "contactName": "Nombre del contacto",
+        "contactNamePlaceholder": "Juan Pérez",
+        "contactEmail": "Correo del contacto",
+        "contactEmailPlaceholder": "contacto@proveedor.com"
+      },
+      "categoriesRisk": {
+        "title": "Categorías y riesgo",
+        "subtitle": "Clasifica al proveedor y evalúa su nivel de riesgo",
+        "serviceCategories": "Categorías de servicio",
+        "riskTier": "Nivel de riesgo",
+        "selectRisk": "Selecciona el nivel de riesgo"
+      },
+      "dataProcessing": {
+        "title": "Tratamiento de datos",
+        "subtitle": "¿Qué datos trata este proveedor?",
+        "dataCategories": "Categorías de datos tratados",
+        "countries": "Países (transferencia de datos)",
+        "countriesPlaceholder": "p. ej., Estados Unidos",
+        "addCountry": "Añadir"
+      },
+      "usage": {
+        "title": "Uso",
+        "status": "Estado",
+        "inUse": "En uso",
+        "considering": "En estudio",
+        "activity": "¿Qué actividad de tratamiento lo usa? (opcional)",
+        "noActivity": "Ahora no",
+        "activityHint": "El proveedor se añade a los destinatarios de esa actividad, así que aparece en el Registro de Actividades de Tratamiento."
+      },
+      "errorPrefix": "Error: {message}",
+      "creating": "Creando...",
+      "submit": "Crear proveedor",
+      "category": {
+        "CLOUD_SERVICES": "Servicios en la nube",
+        "DATA_PROCESSING": "Tratamiento de datos",
+        "ANALYTICS": "Analítica",
+        "MARKETING": "Marketing",
+        "HR_SERVICES": "Servicios de RR. HH.",
+        "PAYMENT_PROCESSING": "Procesamiento de pagos",
+        "CUSTOMER_SUPPORT": "Atención al cliente",
+        "IT_SECURITY": "Seguridad informática",
+        "LEGAL": "Jurídico",
+        "OTHER": "Otros"
+      },
+      "riskTierOption": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo"
+      },
+      "openInNewTab": "Abrir en una nueva pestaña"
+    },
+    "newIncident": {
+      "title": "Registrar incidente",
+      "subtitle": "Documenta un incidente de seguridad o una brecha de seguridad de los datos personales",
+      "highSeverityTitle": "Gravedad alta o crítica seleccionada",
+      "highSeverityBody": "Este incidente puede requerir notificación a la autoridad de control en un plazo de 72 horas (RGPD) u otros plazos.",
+      "details": "Datos del incidente",
+      "detailsSubtitle": "Describe el incidente y cómo se ha descubierto",
+      "incidentTitle": "Título del incidente *",
+      "titlePlaceholder": "Breve descripción del incidente",
+      "type": "Tipo de incidente *",
+      "typePlaceholder": "Selecciona el tipo",
+      "severity": "Gravedad *",
+      "severityPlaceholder": "Selecciona la gravedad",
+      "description": "Descripción completa",
+      "descriptionPlaceholder": "Proporciona información detallada sobre lo ocurrido...",
+      "discovery": "Información del descubrimiento",
+      "discoverySubtitle": "¿Cuándo y cómo se descubrió el incidente?",
+      "discoveredAt": "Fecha de descubrimiento *",
+      "discoveryMethod": "Método de descubrimiento",
+      "discoveryMethodPlaceholder": "¿Cómo se ha descubierto?",
+      "discoveredBy": "Descubierto por",
+      "discoveredByPlaceholder": "Nombre o rol de la persona o sistema que lo ha descubierto",
+      "impact": "Evaluación del impacto",
+      "impactSubtitle": "Estima el alcance y la naturaleza de los datos afectados",
+      "affectedRecords": "Registros afectados estimados",
+      "affectedRecordsPlaceholder": "p. ej., 1000",
+      "dataCategoriesLabel": "Categorías de datos afectadas",
+      "affectedSubjectsLabel": "Interesados afectados",
+      "affectedSubjectsHint": "Selecciona las categorías de personas afectadas o añade las tuyas.",
+      "affectedSubjectsAdd": "Añadir",
+      "affectedSubjectsCustomPlaceholder": "Añadir otra categoría (p. ej., donantes)",
+      "jurisdiction": "Jurisdicción principal",
+      "jurisdictionHint": "Determina el plazo de notificación a la autoridad (p. ej., 72 horas en el RGPD). En España, el RGPD se aplica junto con la LOPDGDD: elige el RGPD.",
+      "jurisdictionPlaceholder": "Selecciona la jurisdicción",
+      "errorPrefix": "Error: {message}",
+      "reporting": "Notificando...",
+      "submit": "Registrar incidente",
+      "incidentType": {
+        "DATA_BREACH": "Brecha de datos personales",
+        "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
+        "DATA_LOSS": "Pérdida de datos",
+        "SYSTEM_COMPROMISE": "Sistema comprometido",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Amenaza interna",
+        "PHYSICAL_SECURITY": "Seguridad física",
+        "VENDOR_INCIDENT": "Incidente de proveedor",
+        "OTHER": "Otro"
+      },
+      "severityOption": {
+        "LOW": "Baja",
+        "LOW_desc": "Impacto mínimo, sin exposición de datos",
+        "MEDIUM": "Media",
+        "MEDIUM_desc": "Impacto limitado, algunos datos en riesgo",
+        "HIGH": "Alta",
+        "HIGH_desc": "Impacto significativo, datos sensibles expuestos",
+        "CRITICAL": "Crítica",
+        "CRITICAL_desc": "Impacto grave, brecha de gran alcance"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identificadores (nombre, correo, ID)",
+        "DEMOGRAPHICS": "Datos demográficos",
+        "FINANCIAL": "Datos financieros",
+        "HEALTH": "Información de salud",
+        "BIOMETRIC": "Datos biométricos",
+        "LOCATION": "Datos de ubicación",
+        "BEHAVIORAL": "Datos de comportamiento",
+        "EMPLOYMENT": "Datos laborales",
+        "CRIMINAL": "Antecedentes penales",
+        "OTHER": "Otros"
+      },
+      "discoveryMethodOption": {
+        "INTERNAL_MONITORING": "Monitorización interna",
+        "EMPLOYEE_REPORT": "Aviso de un empleado",
+        "CUSTOMER_REPORT": "Aviso de un cliente",
+        "THIRD_PARTY": "Aviso de un tercero",
+        "SECURITY_AUDIT": "Auditoría de seguridad",
+        "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+        "OTHER": "Otro"
+      },
+      "affectedSubject": {
+        "CUSTOMERS": "Clientes",
+        "EMPLOYEES": "Empleados",
+        "JOB_APPLICANTS": "Candidatos",
+        "SUPPLIERS": "Proveedores",
+        "WEBSITE_VISITORS": "Visitantes web",
+        "CHILDREN": "Menores",
+        "PATIENTS": "Pacientes",
+        "STUDENTS": "Estudiantes"
+      }
+    },
+    "editAsset": {
+      "title": "Editar sistema",
+      "subtitle": "Actualiza los datos de este sistema",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editElement": {
+      "title": "Editar elemento de datos",
+      "subtitle": "Actualiza los metadatos de este elemento",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editActivity": {
+      "title": "Editar actividad de tratamiento",
+      "subtitle": "Actualiza los datos de esta actividad",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editIncident": {
+      "title": "Editar incidente",
+      "subtitle": "Actualiza los datos de este incidente",
+      "saving": "Guardando...",
+      "save": "Guardar cambios",
+      "investigation": "Investigación y resolución",
+      "investigationSubtitle": "Análisis de causa raíz, contención y lecciones aprendidas",
+      "rootCauseCategory": "Categoría de causa raíz",
+      "rootCauseCategoryPlaceholder": "p. ej., error humano, mala configuración",
+      "rootCause": "Causa raíz",
+      "rootCausePlaceholder": "Análisis detallado de qué ha causado este incidente",
+      "containmentActions": "Acciones de contención",
+      "containmentActionsPlaceholder": "Acciones tomadas para contener el incidente",
+      "resolutionNotes": "Notas de resolución",
+      "resolutionNotesPlaceholder": "Cómo se ha resuelto el incidente",
+      "lessonsLearned": "Lecciones aprendidas",
+      "lessonsLearnedPlaceholder": "Qué haremos de otra forma en adelante",
+      "errorPrefix": "Error: {message}"
+    },
+    "editElementExt": {
+      "name": "Nombre",
+      "category": "Categoría",
+      "description": "Descripción",
+      "sensitivity": "Sensibilidad",
+      "retentionDays": "Conservación (días)",
+      "legalBasis": "Base jurídica",
+      "notSpecified": "No especificada",
+      "personalDataToggle": "Este elemento contiene datos personales",
+      "specialCategoryToggle": "Categorías especiales de datos (art. 9 RGPD)",
+      "errorPrefix": "Error: {message}",
+      "backToAsset": "← Volver al sistema principal",
+      "category_option": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Datos demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Laborales",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Políticos",
+        "RELIGIOUS": "Religiosos",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Penales",
+        "OTHER": "Otros"
+      },
+      "sensitivity_option": {
+        "PUBLIC": "Público",
+        "INTERNAL": "Interno",
+        "CONFIDENTIAL": "Confidencial",
+        "RESTRICTED": "Restringido",
+        "SPECIAL_CATEGORY": "Categoría especial"
+      },
+      "legalBasis_option": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión de interés público",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      }
+    },
+    "editActivityExt": {
+      "basics": "Información básica",
+      "basicsSubtitle": "Nombre, finalidad y base jurídica",
+      "name": "Nombre *",
+      "legalBasis": "Base jurídica *",
+      "legalBasisPlaceholder": "Selecciona...",
+      "purpose": "Finalidad *",
+      "legalBasisDetail": "Detalle de la base jurídica",
+      "legalBasisDetailPlaceholder": "Notas adicionales sobre la base jurídica",
+      "description": "Descripción",
+      "subjectsAndCategories": "Interesados y categorías",
+      "subjectsAndCategoriesSubtitle": "Quién está afectado y qué datos se tratan",
+      "dataSubjects": "Interesados",
+      "dataSubjectsPlaceholder": "p. ej., clientes, empleados, pacientes",
+      "add": "Añadir",
+      "dataCategories": "Categorías de datos",
+      "recipients": "Destinatarios",
+      "recipientsHelp": "Categorías de destinatarios internos o externos con quienes se comparten los datos.",
+      "recipientsPlaceholder": "p. ej., equipo de marketing, auditores, proveedor de pagos",
+      "retentionAndAutomation": "Conservación y automatización",
+      "retentionAndAutomationSubtitle": "Cuánto tiempo se conservan los datos y si las decisiones están automatizadas",
+      "retentionPeriod": "Plazo de conservación (descripción)",
+      "retentionPeriodPlaceholder": "p. ej., 7 años tras el fin del contrato",
+      "retentionDays": "Conservación (días)",
+      "automatedDecisionMaking": "Implica decisiones automatizadas (art. 22 RGPD)",
+      "automatedDecisionDetail": "Detalles de la decisión automatizada",
+      "automatedDecisionDetailPlaceholder": "Lógica aplicada, importancia, consecuencias para los interesados...",
+      "isActive": "Actividad activa (incluida en las exportaciones del RAT)",
+      "errorPrefix": "Error: {message}",
+      "category_option": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Datos demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Laborales",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Políticos",
+        "RELIGIOUS": "Religiosos",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Penales",
+        "OTHER": "Otros"
+      },
+      "legalBasis_option": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión de interés público",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      },
+      "roleAndSecurity": "Condición y seguridad",
+      "roleAndSecuritySubtitle": "Cómo participas en este tratamiento y cómo se protegen los datos (artículo 30 del RGPD)",
+      "role": "Tu condición",
+      "role_option": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado (por cuenta de otro responsable)"
+      },
+      "roleHelp": "Como encargado, la actividad pasa al RAT como encargado (artículo 30.2) en lugar del RAT como responsable.",
+      "jointControllerDetails": "Corresponsable: nombre y datos de contacto",
+      "jointControllerDetailsPlaceholder": "Por ejemplo: Empresa Socia, S.L., privacidad@socia.example",
+      "clientHelp": "El responsable por cuenta del cual realizas este tratamiento.",
+      "clientControllerName": "Responsable",
+      "clientControllerContact": "Datos de contacto del responsable",
+      "clientRepresentative": "Representante del responsable en la Unión",
+      "clientDpo": "Delegado de protección de datos del responsable",
+      "securityMeasures": "Medidas técnicas y organizativas de seguridad",
+      "securityMeasuresPlaceholder": "Por ejemplo: cifrado en reposo y en tránsito, acceso por perfiles, registros conservados 12 meses",
+      "securityMeasuresHelp": "Déjalo vacío para usar la descripción general de la organización.",
+      "securityMeasuresLink": "Editar la descripción general",
+      "lastReviewedAt": "Última revisión",
+      "nextReviewAt": "Próxima revisión",
+      "reviewHelp": "Ambas fechas aparecen en el RAT. Una actividad que nunca se ha revisado cuenta como pendiente de revisión."
+    },
+    "transfers": {
+      "list": {
+        "title": "Transferencias",
+        "subtitle": "Transferencias internacionales de datos y la garantía en que se basa cada una, conforme al capítulo V del RGPD (arts. 44 a 49)",
+        "add": "Añadir transferencia",
+        "addFirst": "Añade tu primera transferencia",
+        "total": "Total",
+        "compliant": "Conforme",
+        "needsReview": "Requiere revisión",
+        "nonCompliant": "No conforme",
+        "expiring30d": "Caduca en 30 días",
+        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en SCC no tiene} other {<b>#</b> transferencias basadas en SCC no tienen}} aún evaluación de impacto de la transferencia (EIT). Tras Schrems II, las SCC exigen una EIT.",
+        "all": "Todas las transferencias",
+        "allSubtitle": "Pulsa una transferencia para revisar los detalles de cumplimiento y la lista de comprobación de Schrems II.",
+        "empty": "Aún no hay transferencias registradas",
+        "emptySubtitle": "Añade una transferencia internacional de datos para empezar a controlar el cumplimiento del capítulo V del RGPD.",
+        "linkedTo": "vinculada a {name}",
+        "tiaDone": "EIT hecha",
+        "tiaPending": "EIT pendiente",
+        "suggestedStatus": "{status} (sugerido)",
+        "suggestedNote": "{count, plural, one {# transferencia no tiene estado registrado: el estado que se muestra se sugiere a partir de sus datos actuales.} other {# transferencias no tienen estado registrado: los estados que se muestran se sugieren a partir de sus datos actuales.}}",
+        "sccExpires": "Las SCC caducan el {date}",
+        "create": "Crear",
+        "descriptionLabel": "Descripción"
+      },
+      "detail": {
+        "back": "Volver",
+        "edit": "Editar",
+        "adequateCountry": "País con adecuación",
+        "tiaDone": "EIT hecha",
+        "tiaPending": "EIT pendiente",
+        "suggestedStatus": "{status} (sugerido)",
+        "adequacyTitle": "Decisión de adecuación en vigor",
+        "adequacyBody": "{country} cuenta con una decisión de adecuación de la UE (adoptada el {date}).",
+        "adequacyPartial": " ⚠ Parcial: consulta las notas.",
+        "adequacyNotes": {
+          "CA": "Solo cubre a las organizaciones comerciales sujetas a la Personal Information Protection and Electronic Documents Act (PIPEDA). No cubre a todas las organizaciones canadienses.",
+          "JP": "Se basa en la Act on the Protection of Personal Information (APPI), con normas complementarias para los datos procedentes de la UE.",
+          "KR": "Se basa en la Personal Information Protection Act (PIPA). La Comisión la ha confirmado en su primera revisión, de julio de 2026.",
+          "GB": "Decisión de adecuación adoptada tras el Brexit con arreglo al art. 45 del RGPD. Renovada por la Comisión Europea el 19 de diciembre de 2025; vigente hasta el 27 de diciembre de 2031.",
+          "US": "Marco de Privacidad de Datos UE-EE. UU. (DPF). Solo cubre a las organizaciones estadounidenses que se autocertifican en el DPF. Comprueba la certificación del destinatario en dataprivacyframework.gov.",
+          "BR": "Se basa en la Ley General de Protección de Datos (LGPD). Cubre los sectores público y privado; excluye las transferencias realizadas solo con fines de seguridad pública, defensa nacional, seguridad del Estado o investigación y enjuiciamiento penal."
+        },
+        "complianceStatus": "Estado de cumplimiento",
+        "suggestedFromData": "Sugerido a partir de los datos actuales: <b>{status}</b>",
+        "required": "Obligatorio",
+        "category_technical": "Técnicas",
+        "category_contractual": "Contractuales",
+        "category_organizational": "Organizativas",
+        "measuresActive": "{count, plural, one {# medida activa} other {# medidas activas}}",
+        "sccExpires": "Las SCC caducan el {date}.",
+        "sccExpired": "Estas cláusulas ya han caducado: renuévalas de inmediato.",
+        "sccExpiringSoon": "{count, plural, one {Solo queda # día: programa la renovación.} other {Solo quedan # días: programa la renovación.}}",
+        "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
+        "withinEea": "Dentro del EEE (no es una transferencia restringida)",
+        "partialUnconfirmedBadge": "Adecuación parcial: sin confirmar",
+        "partialUnconfirmedBody": "Este registro no indica que el destinatario esté dentro de ese ámbito, así que la decisión no cubre la transferencia: se aplica la garantía registrada abajo (con SCC, hace falta una evaluación de impacto de la transferencia).",
+        "recordScope": "Registrar la situación del destinatario",
+        "scopeCheckedOn": "Comprobado el {date}.",
+        "scopeReference": "Referencia: {reference}",
+        "activityLink": "Actividad de tratamiento: {name}",
+        "noActivity": "Sin actividad de tratamiento vinculada",
+        "vendorLink": "Proveedor: {name}",
+        "noVendor": "Sin proveedor vinculado",
+        "checklistCategories": {
+          "know": "Conoce tus transferencias",
+          "tool": "Identifica el instrumento de transferencia",
+          "law": "Evalúa la legislación del país de destino",
+          "measures": "Medidas complementarias",
+          "procedural": "Trámites",
+          "monitor": "Seguimiento"
+        },
+        "checklistState": {
+          "DONE": "Hecho",
+          "NA": "No aplica",
+          "PENDING": "Pendiente"
+        },
+        "checklistSummary": "{pending, plural, =0 {Todos los puntos están respondidos.} one {Queda # punto pendiente de {total}.} other {Quedan # puntos pendientes de {total}.}}",
+        "checklistNote": "Nota (opcional)",
+        "checklistNoteSave": "Guardar nota"
+      },
+      "edit": {
+        "title": "Editar cumplimiento de la transferencia",
+        "complianceStatus": "Estado de cumplimiento",
+        "complianceStatusSubtitle": "Ajuste manual del estado de cumplimiento de la transferencia",
+        "status": "Estado",
+        "tia": "Evaluación de impacto de la transferencia (EIT)",
+        "tiaSubtitle": "Obligatoria para transferencias basadas en SCC a jurisdicciones sin adecuación (Schrems II).",
+        "tiaCompleted": "EIT completada",
+        "tiaDate": "Fecha de finalización de la EIT",
+        "sccAndSafeguards": "SCC y salvaguardas",
+        "sccAndSafeguardsSubtitle": "Validez de las SCC y salvaguardas adicionales",
+        "sccExpiry": "Fecha de caducidad de las SCC",
+        "sccExpiryHelp": "Fecha en la que caducan las cláusulas contractuales. Las transferencias que caduquen en 30 días aparecen en el panel de cumplimiento.",
+        "safeguards": "Salvaguardas (descripción)",
+        "safeguardsPlaceholder": "p. ej., SCC de la UE de 2021, módulo 2 + cifrado en reposo + EIPD",
+        "saving": "Guardando...",
+        "save": "Guardar cambios",
+        "errorPrefix": "Error: {message}",
+        "links": "Actividad y proveedor",
+        "linksSubtitle": "La actividad de tratamiento a la que pertenece la transferencia (así aparece en el Registro de Actividades de Tratamiento) y el proveedor que recibe los datos.",
+        "adequacyScope": "Decisión de adecuación parcial"
+      },
+      "status_option": {
+        "COMPLIANT": "Conforme",
+        "NEEDS_REVIEW": "Requiere revisión",
+        "NON_COMPLIANT": "No conforme",
+        "PENDING": "Pendiente"
+      },
+      "adequacy": {
+        "withinEea": "{country} está en el EEE: no es una transferencia internacional restringida y no necesita garantías del capítulo V.",
+        "none": "{country} no tiene decisión de adecuación de la UE: elige una garantía (por ejemplo, SCC) y completa una evaluación de impacto de la transferencia.",
+        "full": "{country} tiene una decisión de adecuación de la UE: esta transferencia no necesita más garantías.",
+        "partialTitle": "{country}: la decisión de adecuación solo cubre a algunos destinatarios",
+        "partialBody": {
+          "DPF": "La decisión UE-EE. UU. solo cubre a los destinatarios certificados en el Marco de Privacidad de Datos UE-EE. UU. (comprueba la lista en dataprivacyframework.gov).",
+          "PIPEDA": "La decisión sobre Canadá solo cubre a las organizaciones comerciales sujetas a la PIPEDA (Personal Information Protection and Electronic Documents Act)."
+        },
+        "scopeQuestion": {
+          "DPF": "El destinatario está certificado en el Marco de Privacidad de Datos UE-EE. UU. (inscripción activa comprobada en la lista del DPF)",
+          "PIPEDA": "El destinatario es una organización comercial sujeta a la PIPEDA"
+        },
+        "scopeReference": {
+          "DPF": "Inscripción en la lista del DPF (enlace o referencia)",
+          "PIPEDA": "Fundamento de la sujeción a la PIPEDA (opcional)"
+        },
+        "scopeReferencePlaceholder": {
+          "DPF": "p. ej., https://www.dataprivacyframework.gov/list",
+          "PIPEDA": "p. ej., empresa privada de ámbito federal"
+        },
+        "scopeRecorded": {
+          "DPF": "Destinatario registrado como certificado en el Marco de Privacidad de Datos UE-EE. UU.",
+          "PIPEDA": "Destinatario registrado como organización comercial sujeta a la PIPEDA."
+        }
+      }
+    },
+    "newAsset": {
+      "title": "Añadir sistema",
+      "subtitle": "Registra un nuevo sistema o almacén de datos",
+      "details": "Datos del sistema",
+      "detailsSubtitle": "Proporciona información sobre el sistema",
+      "name": "Nombre del sistema *",
+      "namePlaceholder": "p. ej., Base de datos de clientes",
+      "type": "Tipo de sistema *",
+      "typePlaceholder": "Selecciona el tipo",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe el sistema y su finalidad...",
+      "owner": "Responsable / Departamento",
+      "ownerPlaceholder": "p. ej., Ingeniería",
+      "location": "Ubicación",
+      "locationPlaceholder": "p. ej., AWS eu-west-1",
+      "hosting": "Tipo de alojamiento",
+      "hostingPlaceholder": "Selecciona el tipo de alojamiento",
+      "vendor": "Proveedor (si procede)",
+      "vendorPlaceholder": "p. ej., AWS, Salesforce",
+      "production": "Entorno de producción",
+      "errorPrefix": "Error: {message}",
+      "creating": "Creando...",
+      "submit": "Crear sistema",
+      "assetType": {
+        "DATABASE": "Base de datos",
+        "APPLICATION": "Aplicación",
+        "CLOUD_SERVICE": "Servicio en la nube",
+        "FILE_SYSTEM": "Sistema de archivos",
+        "THIRD_PARTY": "Tercero",
+        "PHYSICAL": "Físico",
+        "OTHER": "Otro"
+      },
+      "hostingType": {
+        "ON_PREMISE": "Instalación local",
+        "CLOUD": "Nube",
+        "HYBRID": "Híbrido",
+        "SAAS": "SaaS"
+      }
+    },
+    "newDsar": {
+      "title": "Nueva solicitud de ejercicio de derechos",
+      "subtitle": "Registra una solicitud de ejercicio de derechos de un interesado",
+      "type": {
+        "title": "Tipo de solicitud",
+        "subtitle": "Selecciona el tipo de solicitud del interesado",
+        "ACCESS": "Acceso",
+        "ACCESS_desc": "Derecho a obtener una copia de los datos personales",
+        "RECTIFICATION": "Rectificación",
+        "RECTIFICATION_desc": "Derecho a corregir datos inexactos",
+        "ERASURE": "Supresión",
+        "ERASURE_desc": "Derecho de supresión (derecho al olvido)",
+        "PORTABILITY": "Portabilidad",
+        "PORTABILITY_desc": "Derecho a recibir los datos en un formato portátil",
+        "OBJECTION": "Oposición",
+        "OBJECTION_desc": "Derecho a oponerse al tratamiento",
+        "RESTRICTION": "Limitación",
+        "RESTRICTION_desc": "Derecho a la limitación del tratamiento"
+      },
+      "requester": {
+        "title": "Datos del solicitante",
+        "subtitle": "Datos del interesado que realiza la solicitud",
+        "name": "Nombre completo *",
+        "namePlaceholder": "p. ej., Juan Pérez",
+        "email": "Correo electrónico *",
+        "emailPlaceholder": "p. ej., juan@example.com",
+        "phone": "Teléfono",
+        "phonePlaceholder": "p. ej., +34 600 000 000",
+        "relationship": "Relación",
+        "relationshipPlaceholder": "Selecciona la relación",
+        "relationshipOptions": {
+          "Customer": "Cliente",
+          "Employee": "Empleado",
+          "Former Employee": "Antiguo empleado",
+          "Job Applicant": "Candidato",
+          "Contractor": "Contratista",
+          "Website Visitor": "Visitante del sitio web",
+          "Other": "Otro"
+        },
+        "address": "Dirección",
+        "addressPlaceholder": "p. ej., Calle Mayor 123, Madrid, España"
+      },
+      "details": {
+        "title": "Detalles de la solicitud",
+        "subtitle": "Información adicional sobre la solicitud",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe la solicitud en detalle...",
+        "requestedData": "Datos solicitados",
+        "requestedDataPlaceholder": "p. ej., todas las comunicaciones de marketing, registros del CRM, historial de facturación..."
+      },
+      "submit": "Crear solicitud"
+    },
+    "activityDetail": {
+      "back": "Actividades de tratamiento",
+      "backToInventory": "Volver al inventario de datos",
+      "notFound": "No se ha encontrado la actividad de tratamiento",
+      "inactive": "Inactiva",
+      "edit": "Editar",
+      "purpose": "Finalidad",
+      "description": "Descripción",
+      "legalBasisDetail": "Detalle de la base jurídica",
+      "dataSubjects": "Interesados",
+      "noDataSubjects": "No se han indicado interesados",
+      "dataCategories": "Categorías de datos",
+      "noCategories": "No se han indicado categorías",
+      "retentionPeriod": "Plazo de conservación",
+      "automatedDecisionMaking": "Decisiones automatizadas",
+      "recipients": "Destinatarios",
+      "linkedAssets": "Sistemas vinculados ({count})",
+      "generateFlows": "Generar flujos",
+      "manageAssets": "Gestionar sistemas",
+      "elementCount": "{count, plural, one {# elemento} other {# elementos}}",
+      "elementCountOf": "{count}/{total} elementos",
+      "notLinked": "+{count} sin vincular",
+      "noLinkedAssets": "No hay sistemas vinculados a esta actividad",
+      "transfers": "Transferencias de datos ({count})",
+      "linkDialog": {
+        "title": "Vincular sistemas",
+        "description": "Selecciona qué sistemas y elementos de datos trata esta actividad.",
+        "assetMeta": "{type}: {count, plural, one {# elemento} other {# elementos}}",
+        "hide": "Ocultar",
+        "elements": "Elementos",
+        "allElements": "Todos los elementos",
+        "noAssets": "Todavía no hay sistemas en esta organización",
+        "selected": "{count, plural, one {# sistema seleccionado} other {# sistemas seleccionados}}"
+      },
+      "retentionDays": "{count, plural, one {# día} other {# días}}",
+      "notSpecified": "Sin especificar",
+      "role": "Condición en el tratamiento",
+      "roleOption": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado (por cuenta de otro responsable)"
+      },
+      "jointController": "Corresponsable del tratamiento",
+      "clientController": "Responsable por cuenta del cual se trata",
+      "securityMeasures": "Medidas de seguridad",
+      "securityInherited": "Se aplica la descripción general de las medidas de seguridad de la organización.",
+      "lastReviewed": "Última revisión",
+      "nextReview": "Próxima revisión",
+      "neverReviewed": "Nunca se ha revisado"
+    },
+    "assetDetail": {
+      "notFound": "Sistema no encontrado",
+      "back": "Volver al inventario",
+      "production": "Producción",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "overview": {
+        "title": "Resumen",
+        "noDescription": "No se ha proporcionado descripción",
+        "owner": "Responsable",
+        "location": "Ubicación",
+        "hosting": "Alojamiento",
+        "vendor": "Proveedor",
+        "notSpecified": "No especificado",
+        "na": "N/D"
+      },
+      "stats": {
+        "title": "Estadísticas",
+        "elements": "Elementos de datos",
+        "activities": "Actividades de tratamiento",
+        "lastUpdated": "Última actualización"
+      },
+      "tabs": {
+        "elements": "Elementos de datos",
+        "activities": "Actividades de tratamiento",
+        "flows": "Flujos de datos"
+      },
+      "elements": {
+        "title": "Elementos de datos",
+        "subtitle": "Campos y puntos de datos almacenados en este sistema",
+        "addElement": "Añadir elemento",
+        "personalData": "Datos personales",
+        "emptyTitle": "Aún no hay elementos de datos definidos",
+        "emptySub": "Añade elementos para documentar qué datos se almacenan"
+      },
+      "activities": {
+        "title": "Actividades de tratamiento vinculadas",
+        "subtitle": "Actividades que utilizan datos de este sistema",
+        "manage": "Gestionar actividades",
+        "elementCount": "{used, plural, one {# elemento} other {# elementos}}",
+        "elementCountFiltered": "{used}/{total} {used, plural, one {elemento} other {elementos}}",
+        "notLinked": "+{count} sin vincular",
+        "empty": "No hay actividades de tratamiento vinculadas"
+      },
+      "addElement": {
+        "title": "Añadir elemento de datos",
+        "subtitle": "Añade un nuevo campo o elemento de datos a este sistema",
+        "nameLabel": "Nombre del elemento *",
+        "namePlaceholder": "p. ej., email_address, phone_number",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Breve descripción de este elemento de datos",
+        "categoryLabel": "Categoría *",
+        "sensitivityLabel": "Sensibilidad *",
+        "retentionLabel": "Periodo de conservación (días)",
+        "retentionPlaceholder": "p. ej., 365",
+        "isPersonal": "Es dato personal",
+        "isSpecial": "Es categoría especial",
+        "errorPrefix": "Error: {message}",
+        "adding": "Añadiendo...",
+        "submit": "Añadir elemento"
+      },
+      "linkActivities": {
+        "title": "Vincular actividades de tratamiento",
+        "subtitle": "Selecciona qué actividades usan datos de este sistema y qué elementos tratan.",
+        "elements": "Elementos",
+        "hide": "Ocultar",
+        "allElements": "Todos los elementos",
+        "empty": "Aún no hay actividades de tratamiento en esta organización",
+        "selectedCount": "{count, plural, one {# actividad seleccionada} other {# actividades seleccionadas}}",
+        "save": "Guardar"
+      },
+      "category": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Políticos",
+        "RELIGIOUS": "Religiosos",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Antecedentes penales",
+        "OTHER": "Otros"
+      },
+      "sensitivity": {
+        "PUBLIC": "Público",
+        "INTERNAL": "Interno",
+        "CONFIDENTIAL": "Confidencial",
+        "RESTRICTED": "Restringido",
+        "SPECIAL_CATEGORY": "Categoría especial"
+      }
+    },
+    "incidentDetail": {
+      "recordedInError": {
+        "action": "Registrada por error",
+        "undo": "Deshacer «registrada por error»",
+        "dialogTitle": "¿Marcar como registrada por error?",
+        "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.",
+        "reasonLabel": "¿Por qué se ha registrado por error?",
+        "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba",
+        "confirm": "Marcar como registrada por error",
+        "marked": "Incidencia marcada como registrada por error",
+        "undone": "La incidencia vuelve a contar",
+        "noticeTitle": "Registrada por error el {date}",
+        "noticeReason": "Motivo: {reason}.",
+        "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.",
+        "badge": "Registrada por error"
+      },
+      "notFound": "Incidente no encontrado",
+      "back": "Volver a incidentes",
+      "close": "Cerrar incidente",
+      "updateStatus": "Actualizar estado",
+      "notifBanner": {
+        "title": "Notificación reglamentaria obligatoria",
+        "deadline": "Fecha límite: {date}",
+        "overdue": "VENCIDA: debía notificarse el {date}",
+        "create": "Crear notificación"
+      },
+      "windowClock": {
+        "open": "El plazo de 72 horas vence el {date}. Decide si hay que notificar.",
+        "ended": "El plazo de 72 horas venció el {date}. No consta ninguna notificación."
+      },
+      "stats": {
+        "discovered": "Descubierto",
+        "affectedRecords": "Registros afectados",
+        "unknown": "Desconocido",
+        "affectedSubjects": "Interesados afectados",
+        "subjectTypesCount": "{count, plural, one {# tipo} other {# tipos}}",
+        "notifications": "Notificaciones",
+        "notifyAuthority": "Notificar a la autoridad: {state}",
+        "notifyAuthorityState": {
+          "REQUIRED": "Sí",
+          "NOT_REQUIRED": "No",
+          "NOT_ASSESSED": "Aún sin evaluar"
+        }
+      },
+      "tabs": {
+        "details": "Detalles",
+        "timelineWithCount": "Cronología ({count})",
+        "tasksWithCount": "Tareas ({count})",
+        "notificationsWithCount": "Notificaciones ({count})",
+        "documents": "Documentos"
+      },
+      "details": {
+        "description": "Descripción",
+        "noDescription": "No se ha proporcionado descripción",
+        "discovery": "Descubrimiento",
+        "discoveredBy": "Descubierto por:",
+        "discoveryMethod": "Método de descubrimiento:",
+        "notSpecified": "No especificado",
+        "dataCategories": "Categorías de datos afectadas",
+        "dataCategoriesEmpty": "No se han especificado categorías",
+        "rootCause": "Causa raíz",
+        "lessonsLearned": "Lecciones aprendidas"
+      },
+      "timeline": {
+        "addEntry": "Añadir entrada",
+        "empty": "Aún no hay entradas en la cronología",
+        "createdBy": " por {name}",
+        "system": {
+          "reported": "Incidente registrado",
+          "reportedBody": "Se ha registrado el incidente «{title}»",
+          "statusChanged": "Cambio de estado: {status}",
+          "notificationCreated": "Notificación creada: {recipient}{jurisdiction, select, other {}}",
+          "notificationStatus": "Notificación ({recipient}): {status}",
+          "markedInError": "Marcada como registrada por error",
+          "unmarkedInError": "Ya no está marcada como registrada por error",
+          "notificationNowRequired": "La notificación a la autoridad está marcada ahora como obligatoria",
+          "notificationNoLongerRequired": "La notificación a la autoridad ya no está marcada como obligatoria",
+          "notificationDeadlineRecalculated": "Plazo de notificación recalculado"
+        }
+      },
+      "tasks": {
+        "addTask": "Añadir tarea",
+        "empty": "No hay tareas asignadas",
+        "priority": "Prioridad {value}"
+      },
+      "notifications": {
+        "due": "Vence: {date}",
+        "noFixedDeadline": "Sin plazo fijo según esta ley",
+        "sent": "Enviada el {date}",
+        "authority": "Autoridad: {authority}",
+        "overdue": "VENCIDA",
+        "empty": "No se han creado notificaciones",
+        "createDpa": "Crear notificación a la autoridad de control",
+        "create": "Crear notificación",
+        "voluntaryHint": "Este incidente no requiere notificación; aun así, puedes crear una de forma voluntaria.",
+        "undecidedHint": "Todavía no has decidido si hay que notificar este incidente. Si decides notificarlo, crea aquí la notificación.",
+        "recipient": {
+          "DPA": "Autoridad de control",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        }
+      },
+      "documents": {
+        "title": "Próximamente: subida de documentos",
+        "subtitle": "Adjunta pruebas, informes y comunicaciones al incidente."
+      },
+      "statusDialog": {
+        "title": "Actualizar estado del incidente",
+        "subtitle": "Avanza el incidente por el flujo de respuesta. Se registrará una entrada en la cronología.",
+        "newStatus": "Nuevo estado",
+        "selectStatus": "Selecciona un estado",
+        "submit": "Actualizar"
+      },
+      "timelineDialog": {
+        "title": "Añadir entrada a la cronología",
+        "subtitle": "Registra una observación, acción o decisión tomada durante la respuesta al incidente.",
+        "entryType": "Tipo de entrada",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Resumen breve de la entrada",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles: qué ha ocurrido, quién ha intervenido, qué pruebas hay",
+        "submit": "Añadir entrada",
+        "type": {
+          "OBSERVATION": "Observación",
+          "ACTION": "Acción realizada",
+          "EVIDENCE": "Evidencia",
+          "COMMUNICATION": "Comunicación",
+          "DECISION": "Decisión",
+          "NOTE": "Nota",
+          "STATUS_CHANGE": "Cambio de estado",
+          "NOTIFICATION": "Notificación"
+        }
+      },
+      "taskDialog": {
+        "title": "Añadir tarea",
+        "subtitle": "Crea una tarea de respuesta para hacer seguimiento de la subsanación de este incidente.",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Qué hay que hacer",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles opcionales",
+        "priority": "Prioridad",
+        "dueDate": "Fecha límite",
+        "submit": "Crear tarea",
+        "priorities": {
+          "LOW": "Baja",
+          "MEDIUM": "Media",
+          "HIGH": "Alta",
+          "URGENT": "Urgente"
+        }
+      },
+      "notifDialog": {
+        "title": "Crear notificación reglamentaria",
+        "subtitle": "La fecha límite se calcula a partir del plazo de notificación de la jurisdicción.",
+        "jurisdiction": "Jurisdicción",
+        "selectJurisdiction": "Selecciona una jurisdicción",
+        "jurisdictionWindow": "{name} ({hours, plural, =0 {sin plazo fijo en horas} other {plazo de # h}})",
+        "noJurisdictions": "No hay jurisdicciones aplicadas a esta organización",
+        "noJurisdictionsHint": "Todavía no hay jurisdicciones aplicadas a esta organización.",
+        "goToRegulations": "Añade los lugares donde operas en Ajustes",
+        "recipient": "Tipo de destinatario",
+        "recipientType": {
+          "DPA": "Autoridad de control (p. ej., AEPD)",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        },
+        "submit": "Crear"
+      }
+    },
+    "vendorDetail": {
+      "notFound": "Proveedor no encontrado",
+      "back": "Volver a proveedores",
+      "delete": "Eliminar",
+      "edit": "Editar proveedor",
+      "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}",
+      "noCategories": "Sin categorías",
+      "info": {
+        "website": "Sitio web",
+        "contact": "Contacto",
+        "email": "Correo",
+        "added": "Añadido",
+        "empty": "-"
+      },
+      "tabs": {
+        "overview": "Resumen",
+        "contractsWithCount": "Contratos ({count})",
+        "reviews": "Revisiones"
+      },
+      "overview": {
+        "description": "Descripción",
+        "dataProcessing": "Tratamiento de datos",
+        "dataProcessingDesc": "Categorías de datos que trata este proveedor",
+        "dataEmpty": "No se han especificado categorías de datos",
+        "countries": "Países",
+        "countriesDesc": "Ubicaciones de transferencia de datos",
+        "countriesEmpty": "No se han especificado países",
+        "certifications": "Certificaciones",
+        "certificationsDesc": "Certificaciones de seguridad y cumplimiento",
+        "certificationsEmpty": "No hay certificaciones registradas",
+        "privacyTech": "Tecnologías de privacidad",
+        "privacyTechDesc": "Tecnologías de privacidad que utiliza este proveedor"
+      },
+      "contracts": {
+        "add": "Añadir contrato",
+        "start": "Inicio: {date}",
+        "endSuffix": ", fin: {date}",
+        "open": "Abrir",
+        "noDocument": "Sin documento",
+        "empty": "No hay contratos registrados"
+      },
+      "reviews": {
+        "empty": "No hay revisiones programadas",
+        "schedule": "Programar revisión",
+        "reviewLabel": "Revisión {type}",
+        "completed": "Completada",
+        "overdue": "Vencida",
+        "scheduled": "Programada",
+        "risk": "Riesgo: {level}",
+        "unassigned": "Sin asignar",
+        "completedOn": "Completada el {date}",
+        "scheduledFor": "Programada para el {date}",
+        "markComplete": "Marcar como completada"
+      },
+      "editDialog": {
+        "title": "Editar proveedor",
+        "subtitle": "Actualiza los datos principales del proveedor.",
+        "nameLabel": "Nombre *",
+        "descLabel": "Descripción",
+        "websiteLabel": "Sitio web",
+        "websitePlaceholder": "https://…",
+        "statusLabel": "Estado",
+        "riskLabel": "Nivel de riesgo",
+        "riskNotSet": "Sin definir",
+        "contactLabel": "Contacto principal",
+        "emailLabel": "Correo de contacto",
+        "save": "Guardar"
+      },
+      "contractDialog": {
+        "title": "Añadir contrato",
+        "subtitle": "Registra un contrato, un contrato de encargo del tratamiento o unas SCC para este proveedor.",
+        "nameLabel": "Nombre *",
+        "namePlaceholder": "p. ej., Contrato marco de servicios 2026",
+        "typeLabel": "Tipo *",
+        "type": {
+          "DPA": "DPA (contrato de encargo del tratamiento)",
+          "SCC": "SCC (cláusulas contractuales tipo)",
+          "MSA": "MSA (contrato marco de servicios)",
+          "NDA": "NDA (acuerdo de confidencialidad)",
+          "OTHER": "Otro"
+        },
+        "descLabel": "Descripción",
+        "urlLabel": "URL del documento",
+        "urlPlaceholder": "https://…",
+        "startLabel": "Fecha de inicio",
+        "endLabel": "Fecha de fin",
+        "submit": "Añadir"
+      },
+      "reviewDialog": {
+        "title": "Programar revisión",
+        "subtitle": "Asigna un revisor y una fecha para la próxima revisión del proveedor.",
+        "reviewerLabel": "Revisor *",
+        "reviewerPlaceholder": "Selecciona un revisor",
+        "typeLabel": "Tipo de revisión",
+        "type": {
+          "PERIODIC": "Periódica",
+          "INITIAL": "Inicial",
+          "INCIDENT_TRIGGERED": "Por incidente",
+          "CONTRACT_RENEWAL": "Renovación de contrato"
+        },
+        "dateLabel": "Fecha programada *",
+        "submit": "Programar"
+      }
+    },
+    "dsarDetail": {
+      "notFound": "Solicitud no encontrada",
+      "back": "Volver a las solicitudes",
+      "complete": "Completar",
+      "progress": {
+        "title": "Progreso",
+        "tasksCompleted": "{completed} de {total} tareas completadas",
+        "noTasks": "Aún no hay tareas. Genéralas más abajo, en Tareas."
+      },
+      "sla": {
+        "title": "Estado del plazo",
+        "overdue": "VENCIDA",
+        "completed": "COMPLETADA",
+        "daysShort": "{count, plural, one {# día} other {# días}}",
+        "closed": "Cerrada el",
+        "due": "Vence"
+      },
+      "extend": {
+        "button": "Prorrogar el plazo",
+        "title": "Prorrogar el plazo",
+        "description": "La norma de tu jurisdicción principal permite una prórroga. El nuevo plazo vencerá el {newDate}.",
+        "tellBy": "Debes informar a la persona de la prórroga, indicando los motivos de la dilación, a más tardar el {date}, dentro del primer plazo.",
+        "reasonLabel": "Motivo de la prórroga",
+        "reasonPlaceholder": "Por ejemplo: la solicitud es compleja y afecta a varios sistemas.",
+        "reasonHint": "Queda anotado en el registro de auditoría de esta solicitud.",
+        "confirm": "Prorrogar hasta el {newDate}",
+        "done": "Plazo prorrogado hasta el {newDate}. Recuerda informar a la persona.",
+        "reasonShown": "Motivo: {reason}",
+        "unavailable": {
+          "no_extension": "La norma de tu jurisdicción principal no permite prórrogas.",
+          "already_extended": "Este plazo ya se ha prorrogado."
+        },
+        "doneNotified": "Plazo ampliado hasta el {newDate}. Se ha comunicado la nueva fecha a la persona por correo; envíale los motivos."
+      },
+      "requester": {
+        "title": "Datos del solicitante",
+        "name": "Nombre",
+        "email": "Correo",
+        "phone": "Teléfono",
+        "relationship": "Relación",
+        "details": "Detalles de la solicitud",
+        "empty": "-"
+      },
+      "responseLink": {
+        "title": "Enlace de descarga de la respuesta",
+        "description": "Pega una URL segura donde el solicitante pueda descargar su respuesta. Será visible en la página pública de estado.",
+        "urlLabel": "URL de descarga",
+        "urlPlaceholder": "https://...",
+        "expiresLabel": "Caduca (opcional)",
+        "save": "Guardar enlace",
+        "clear": "Eliminar enlace",
+        "saved": "Enlace de respuesta guardado",
+        "cleared": "Enlace de respuesta eliminado"
+      },
+      "tabs": {
+        "tasks": "Tareas ({count})",
+        "communications": "Comunicaciones ({count})",
+        "audit": "Registro de auditoría"
+      },
+      "tasks": {
+        "title": "Tareas de recopilación",
+        "subtitle": "Tareas para cada fuente de datos",
+        "autoGenerate": "Generar automáticamente",
+        "addTask": "Añadir tarea",
+        "assignedTo": "Asignada a: {name}",
+        "unassigned": "Sin asignar",
+        "empty": "Aún no hay tareas",
+        "emptySub": "Añade tareas o genéralas automáticamente a partir de los sistemas",
+        "status": {
+          "PENDING": "Pendiente",
+          "IN_PROGRESS": "En curso",
+          "COMPLETED": "Completada",
+          "BLOCKED": "Bloqueada",
+          "NOT_APPLICABLE": "No aplica"
+        }
+      },
+      "comms": {
+        "title": "Comunicaciones",
+        "subtitle": "Historial de mensajes con el solicitante",
+        "send": "Enviar mensaje",
+        "team": "Equipo de privacidad",
+        "sent": "Enviado",
+        "received": "Recibido",
+        "empty": "Aún no hay comunicaciones"
+      },
+      "audit": {
+        "title": "Registro de auditoría",
+        "subtitle": "Historial completo de las acciones realizadas",
+        "empty": "No hay entradas de auditoría"
+      },
+      "addTask": {
+        "title": "Añadir tarea",
+        "subtitle": "Crear una nueva tarea de recopilación de datos",
+        "titleLabel": "Título de la tarea *",
+        "titlePlaceholder": "p. ej., Buscar en el CRM de marketing",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles de la tarea...",
+        "submit": "Añadir tarea"
+      },
+      "sendMessage": {
+        "title": "Enviar mensaje",
+        "subtitle": "Envía un mensaje a {name}",
+        "subjectLabel": "Asunto",
+        "subjectPlaceholder": "Asunto del mensaje",
+        "messageLabel": "Mensaje *",
+        "messagePlaceholder": "Escribe tu mensaje...",
+        "submit": "Enviar"
+      },
+      "repeatAccess": {
+        "title": "Solicitud de acceso repetida",
+        "body": "Esta dirección de correo ha hecho {count, plural, one {otra solicitud de acceso} other {otras # solicitudes de acceso}} en los seis meses anteriores a esta (la última, el {date}). Según el artículo 13.3 de la LOPDGDD, el ejercicio del derecho de acceso más de una vez en seis meses puede considerarse repetitivo, salvo que exista causa legítima. La decisión es tuya."
+      },
+      "modelReplies": {
+        "label": "Respuesta modelo",
+        "placeholder": "Elige una respuesta modelo",
+        "languageLabel": "Idioma de la respuesta",
+        "languages": {
+          "en": "Inglés",
+          "es": "Español"
+        },
+        "hint": "Al insertar una respuesta modelo se sustituyen el asunto y el mensaje. Se rellenan el nombre, la referencia, las fechas y los enlaces; completa el resto.",
+        "remaining": "Completa esto antes de enviar: {list}",
+        "names": {
+          "acknowledgement": "Acuse de recibo",
+          "identity": "Petición de información para confirmar la identidad",
+          "extension": "Ampliación del plazo",
+          "refusal": "Denegación",
+          "favourable-access": "Respuesta favorable: acceso",
+          "favourable-rectification": "Respuesta favorable: rectificación",
+          "favourable-erasure": "Respuesta favorable: supresión",
+          "favourable-erasure-blocked": "Respuesta favorable: supresión, con algunos datos bloqueados",
+          "favourable-objection": "Respuesta favorable: oposición",
+          "favourable-restriction": "Respuesta favorable: limitación",
+          "favourable-portability": "Respuesta favorable: portabilidad",
+          "repetitive": "Solicitud repetitiva (acceso en menos de seis meses)"
+        }
+      },
+      "completeConfirm": {
+        "title": "¿Cerrar la solicitud con tareas pendientes?",
+        "description": "{count, plural, one {Queda # tarea pendiente.} other {Quedan # tareas pendientes.}} Si la cierras ahora, la solicitud constará como completada.",
+        "confirm": "Cerrar igualmente"
+      }
+    },
+    "incidents": {
+      "title": "Registro de brechas",
+      "subtitle": "Incidentes de seguridad y brechas de datos personales (gestión de incidentes)",
+      "exportRegister": "Exportar registro",
+      "exportPdf": "Descargar como PDF",
+      "exportCsv": "Descargar como CSV",
+      "reportIncident": "Registrar incidente",
+      "search": "Buscar incidentes...",
+      "stats": {
+        "total": "Total",
+        "open": "Abiertos",
+        "critical": "Críticos",
+        "pendingDpa": "Por notificar"
+      },
+      "tabs": {
+        "all": "Todos",
+        "open": "Abiertos",
+        "critical": "Críticos",
+        "closed": "Cerrados"
+      },
+      "card": {
+        "records": "Registros",
+        "recordsShort": "{count, plural, one {# registro} other {# registros}}"
+      },
+      "type": {
+        "DATA_BREACH": "Brecha de datos",
+        "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
+        "DATA_LOSS": "Pérdida de datos",
+        "SYSTEM_COMPROMISE": "Sistema comprometido",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Amenaza interna",
+        "PHYSICAL_SECURITY": "Seguridad física",
+        "VENDOR_INCIDENT": "Incidente de proveedor",
+        "OTHER": "Otro"
+      },
+      "status": {
+        "REPORTED": "Registrado",
+        "INVESTIGATING": "En investigación",
+        "CONTAINED": "Contenido",
+        "ERADICATED": "Erradicado",
+        "RECOVERING": "En recuperación",
+        "CLOSED": "Cerrado",
+        "FALSE_POSITIVE": "Falso positivo"
+      },
+      "severity": {
+        "LOW": "Baja",
+        "MEDIUM": "Media",
+        "HIGH": "Alta",
+        "CRITICAL": "Crítica"
+      },
+      "emptyAll": {
+        "title": "No hay incidentes registrados",
+        "subtitle": "Registra aquí los incidentes de seguridad y las brechas de datos"
+      },
+      "emptyOpen": "No hay incidentes abiertos",
+      "emptyCritical": "No hay incidentes críticos",
+      "emptyClosed": "No hay incidentes cerrados",
+      "emptyFiltered": "Ningún incidente coincide con estos filtros"
+    },
+    "vendors": {
+      "title": "Proveedores y encargados",
+      "subtitle": "Los proveedores externos y los encargados que tratan datos personales por ti (gestión de proveedores)",
+      "missingDpa": "Falta un contrato de encargo: abre un proveedor y, en Contratos, añade el contrato de encargo firmado.",
+      "exportRegister": "Exportar registro",
+      "exportPdf": "Descargar como PDF",
+      "exportCsv": "Descargar como CSV",
+      "addVendor": "Añadir proveedor",
+      "addVendorShort": "Añadir",
+      "search": "Buscar proveedores...",
+      "stats": {
+        "total": "Total de proveedores",
+        "active": "Proveedores activos",
+        "highRisk": "Riesgo alto",
+        "pendingReview": "Revisión pendiente"
+      },
+      "tabs": {
+        "all": "Todos",
+        "active": "Activos",
+        "review": "En revisión",
+        "highRisk": "Riesgo alto"
+      },
+      "card": {
+        "noCategories": "Sin categorías",
+        "dataProcessed": "Datos tratados",
+        "moreItems": "+{count} más",
+        "added": "Añadido: {date}",
+        "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}"
+      },
+      "status": {
+        "PROSPECTIVE": "Potencial",
+        "ACTIVE": "Activo",
+        "UNDER_REVIEW": "En revisión",
+        "SUSPENDED": "Suspendido",
+        "TERMINATED": "Finalizado"
+      },
+      "riskTier": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "emptyAll": {
+        "title": "Aún no hay proveedores",
+        "subtitle": "Añade tu primer proveedor para gestionar el riesgo de terceros"
+      },
+      "emptyActive": "No hay proveedores activos",
+      "emptyReview": "No hay proveedores en revisión",
+      "emptyHighRisk": "No hay proveedores de riesgo alto",
+      "emptyFiltered": "Ningún proveedor coincide con estos filtros"
+    },
+    "settings": {
+      "title": "Ajustes",
+      "subtitle": "Gestiona tu cuenta, organización y equipo.",
+      "profile": {
+        "title": "Perfil",
+        "description": "Tu información de cuenta",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "emailHint": "Tu correo lo establece tu proveedor de identidad y no puede cambiarse aquí.",
+        "save": "Guardar nombre",
+        "cancel": "Cancelar",
+        "updated": "Perfil actualizado"
+      },
+      "language": {
+        "title": "Idioma",
+        "description": "Cambia el idioma de la interfaz. Afecta a todas las páginas."
+      },
+      "organization": {
+        "title": "Organización",
+        "descriptionAdmin": "Renombra tu organización o configura su dominio. Solo los propietarios y administradores pueden editar estos campos.",
+        "descriptionViewer": "Solo lectura: solo los propietarios y administradores pueden cambiar estos valores.",
+        "name": "Nombre",
+        "domain": "Dominio",
+        "domainHint": "Solo se acepta el dominio de la dirección con la que inicia sesión el propietario. No se permiten dominios de correo público (gmail.com, etc.). Quien inicie sesión con una dirección de este dominio se incorpora como lector (solo lectura) hasta que un propietario o administrador le asigne un rol en la página del equipo.",
+        "domainNotAccepted": "El dominio no se ha guardado: debe coincidir con el dominio de la dirección con la que inicia sesión el propietario.",
+        "save": "Guardar organización",
+        "cancel": "Cancelar",
+        "updated": "Organización actualizada"
+      },
+      "members": {
+        "title": "Miembros del equipo",
+        "descriptionAdmin": "Añade compañeros para colaborar en tu programa de privacidad.",
+        "descriptionViewer": "Solo los propietarios y administradores pueden gestionar los miembros.",
+        "inviteLabel": "Añadir a un compañero",
+        "inviteHelp": "Escribe la dirección de correo de un compañero y elige un rol. Si aún no ha iniciado sesión, recibe una invitación por correo y se une cuando inicia sesión por primera vez con esa dirección.",
+        "invitedSent": "Invitación enviada a {email}",
+        "invitedNoEmail": "Invitación guardada. Aquí no hay un servicio de correo configurado: pídele que inicie sesión con esta dirección en {url}",
+        "pendingTitle": "Invitaciones pendientes del primer inicio de sesión",
+        "pendingSince": "invitado el {date}",
+        "cancelInvite": "Cancelar invitación",
+        "cancelInviteAria": "Cancelar la invitación de {email}",
+        "inviteCancelled": "Invitación cancelada",
+        "inviteEmailPlaceholder": "companero@ejemplo.com",
+        "add": "Añadir",
+        "added": "Miembro añadido",
+        "roleUpdated": "Rol actualizado",
+        "removed": "Miembro eliminado",
+        "you": "(tú)",
+        "removeAria": "Eliminar miembro",
+        "removeConfirmTitle": "¿Eliminar a {name}?",
+        "removeConfirmDescription": "Perderá el acceso a esta organización de inmediato. Puedes volver a añadir a esta persona más tarde.",
+        "removeConfirm": "Eliminar",
+        "rolesLegend": "Roles: Propietario (control total) · Administrador (gestiona módulos y miembros) · Responsable de privacidad (gestiona registros) · Miembro (crea y edita) · Lector (solo lectura)",
+        "scoped": {
+          "title": "Personas en {organization}",
+          "descriptionAdmin": "Las personas que añadas aquí solo ven y trabajan en {organization}, no en tus otras organizaciones.",
+          "inviteLabel": "Añadir a alguien a {organization}",
+          "inviteHelp": "Escribe su dirección de correo y elige un rol. Si aún no ha iniciado sesión, recibe una invitación por correo y se une cuando inicia sesión por primera vez con esa dirección. Para dar acceso al personal de un cliente, añádelo aquí con ese cliente seleccionado."
+        }
+      },
+      "deleteOrganization": {
+        "title": "Eliminar esta organización",
+        "description": "Elimina solo la organización abierta ahora, {name}, y todo lo registrado en ella. Tu cuenta y tus otras organizaciones se mantienen. Solo puede hacerlo un propietario.",
+        "start": "Eliminar esta organización…",
+        "whatGoes": "Se elimina todo lo registrado aquí: actividades, sistemas, proveedores, incidentes, solicitudes de derechos con sus mensajes, el registro de actividad, los miembros y las invitaciones pendientes.",
+        "whatStays": "Solo queda una anotación, sin contenido: la fecha de la eliminación y quién la ha pedido.",
+        "accounts": "Los miembros conservan sus cuentas y sus otras organizaciones.",
+        "noUndo": "Se elimina en el acto. No hay plazo de espera, y no puedes deshacerlo ni recuperarla.",
+        "confirmLabel": "Para confirmar, escribe el nombre de la organización: {name}",
+        "confirm": "Eliminar definitivamente",
+        "cancel": "Cancelar",
+        "deleted": "La organización se ha eliminado."
+      },
+      "jurisdictions": {
+        "title": "Dónde opera tu organización",
+        "description": "Las leyes de los lugares que elijas fijan los plazos de las solicitudes de derechos y de las notificaciones de brechas.",
+        "save": "Guardar",
+        "saved": "Guardado"
+      }
+    },
+    "dsar": {
+      "title": "Solicitudes de derechos",
+      "subtitle": "Solicitudes de ejercicio de derechos de los interesados y sus plazos",
+      "exportReport": "Exportar informe",
+      "settings": "Ajustes",
+      "comingSoon": "Próximamente",
+      "newRequest": "Nueva solicitud",
+      "newRequestShort": "Nueva",
+      "stats": {
+        "total": "Total de solicitudes",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "atRisk": "En riesgo"
+      },
+      "search": "Buscar solicitudes...",
+      "tabs": {
+        "all": "Todas",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "completed": "Completadas"
+      },
+      "card": {
+        "tasks": "Tareas",
+        "tasksShort": "{count, plural, one {# tarea} other {# tareas}}",
+        "completed": "Completada",
+        "rejected": "Rechazada",
+        "due": "Vence: {date}",
+        "naDate": "N/D",
+        "dueToday": "Vence hoy",
+        "daysLeft": "{count, plural, one {# día restante} other {# días restantes}}",
+        "daysLeftShort": "{count} d restantes",
+        "daysOverdue": "{count, plural, one {# día de retraso} other {# días de retraso}}",
+        "daysOverdueShort": "{count} d de retraso"
+      },
+      "type": {
+        "ACCESS": "Acceso",
+        "RECTIFICATION": "Rectificación",
+        "ERASURE": "Supresión",
+        "PORTABILITY": "Portabilidad",
+        "OBJECTION": "Oposición",
+        "RESTRICTION": "Limitación",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible",
+        "AUTOMATED_DECISION": "Decisión automatizada",
+        "WITHDRAW_CONSENT": "Retirada del consentimiento",
+        "OTHER": "Otro"
+      },
+      "status": {
+        "SUBMITTED": "Recibida",
+        "IDENTITY_PENDING": "Identidad pendiente",
+        "IDENTITY_VERIFIED": "Identidad verificada",
+        "IN_PROGRESS": "En curso",
+        "DATA_COLLECTED": "Datos recopilados",
+        "REVIEW_PENDING": "Revisión pendiente",
+        "COMPLETED": "Completada",
+        "REJECTED": "Rechazada"
+      },
+      "emptyAll": {
+        "title": "Aún no hay solicitudes de ejercicio de derechos",
+        "subtitle": "Crea una solicitud o configura un formulario de recepción público"
+      },
+      "emptyOpen": "No hay solicitudes abiertas",
+      "emptyOverdue": "No hay solicitudes vencidas",
+      "emptyCompleted": "No hay solicitudes completadas",
+      "emptyFiltered": "Ninguna solicitud coincide con estos filtros",
+      "restricted": {
+        "title": "El acceso a las solicitudes de derechos está restringido",
+        "body": "Las solicitudes de derechos contienen datos personales de quienes las presentan, por lo que solo pueden abrirlas los delegados de protección de datos, los administradores y los propietarios. Puedes abrir una solicitud cuando tengas asignada una de sus tareas. Las cifras de arriba están abiertas a todos los miembros.",
+        "emptyAssigned": "No tienes asignada ninguna tarea en ninguna solicitud",
+        "detailTitle": "No puedes abrir esta solicitud",
+        "detailBody": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas. Si necesitas trabajar en ella, pide a un delegado de protección de datos que te asigne una tarea.",
+        "backToList": "Volver a las solicitudes de derechos",
+        "actionBody": "Solo los delegados de protección de datos, los administradores y los propietarios pueden crear solicitudes o abrir su configuración."
+      },
+      "publicPortal": {
+        "title": "Portal público de recepción",
+        "subtitle": "Comparte este enlace con los interesados",
+        "comingSoonSubtitle": "Un portal público para que los interesados ejerzan sus derechos conforme al RGPD. Actualmente en desarrollo.",
+        "open": "Abrir portal"
+      }
+    },
+    "dataInventory": {
+      "title": "Inventario de datos",
+      "subtitle": "Tus sistemas: dónde se guardan los datos personales y los elementos de datos de cada uno",
+      "export": "Exportar",
+      "exportRopa": "Exportar RAT",
+      "addAsset": "Añadir sistema",
+      "addAssetShort": "Añadir",
+      "addActivity": "Añadir actividad",
+      "addTransfer": "Añadir transferencia",
+      "search": "Buscar sistemas...",
+      "filters": "Filtros",
+      "tabs": {
+        "assets": "Sistemas ({count})",
+        "activities": "Actividades ({count})",
+        "flows": "Flujos de datos",
+        "transfers": "Transferencias",
+        "transfersWithCount": "Transferencias ({count})"
+      },
+      "asset": {
+        "ownerEmpty": "Sin responsable",
+        "elements": "{count, plural, one {# elemento} other {# elementos}}",
+        "activities": "{count, plural, one {# actividad} other {# actividades}}",
+        "locationEmpty": "Ubicación no especificada"
+      },
+      "activity": {
+        "noBasis": "Sin base jurídica",
+        "noSubjects": "Sin interesados",
+        "assetsCount": "{count, plural, one {# sistema} other {# sistemas}}",
+        "details": "Detalles",
+        "viewDetails": "Ver detalles"
+      },
+      "loadMore": "Cargar más",
+      "emptyAssets": {
+        "title": "Aún no hay sistemas",
+        "subtitle": "Comienza añadiendo tu primer sistema"
+      },
+      "emptyActivities": {
+        "title": "Aún no hay actividades de tratamiento",
+        "subtitle": "Documenta tus actividades de tratamiento para cumplir con el RAT"
+      },
+      "emptyTransfers": {
+        "title": "No hay transferencias internacionales registradas",
+        "subtitle": "Documenta las transferencias internacionales y sus garantías (arts. 44 a 49 del RGPD)"
+      },
+      "transfer": {
+        "tiaCompleted": "EIT completada",
+        "tiaPending": "EIT pendiente"
+      },
+      "activityDialog": {
+        "title": "Añadir actividad de tratamiento",
+        "description": "Documenta una actividad de tratamiento para tu RAT (Registro de Actividades de Tratamiento).",
+        "nameLabel": "Nombre de la actividad",
+        "namePlaceholder": "p. ej., Alta de clientes",
+        "purposeLabel": "Finalidad",
+        "purposePlaceholder": "p. ej., Recopilar y verificar la identidad del cliente para crear su cuenta",
+        "legalBasisLabel": "Base jurídica",
+        "legalBasisPlaceholder": "Selecciona una base jurídica...",
+        "subjectsLabel": "Interesados",
+        "subjectsPlaceholder": "p. ej., clientes, empleados, visitantes del sitio web",
+        "subjectsHelp": "Lista separada por comas"
+      },
+      "transferDialog": {
+        "title": "Añadir transferencia internacional",
+        "description": "Registra una transferencia internacional de datos conforme a los arts. 44 a 49 del RGPD.",
+        "nameLabel": "Nombre de la transferencia",
+        "namePlaceholder": "p. ej., Datos de clientes al proveedor de analítica de EE. UU.",
+        "countryLabel": "País de destino",
+        "countryPlaceholder": "Elige un país",
+        "orgLabel": "Organización receptora",
+        "orgPlaceholder": "p. ej., Stripe Inc.",
+        "mechanismLabel": "Mecanismo de transferencia",
+        "mechanismPlaceholder": "Selecciona un mecanismo...",
+        "safeguardsLabel": "Garantías",
+        "safeguardsPlaceholder": "p. ej., SCC UE (2021) + medidas complementarias",
+        "descriptionLabel": "Descripción",
+        "create": "Crear",
+        "countryHint": "Se guarda con su código ISO 3166 de dos letras (por ejemplo, IN para India).",
+        "vendorLabel": "Proveedor",
+        "vendorPlaceholder": "Elige un proveedor",
+        "noneOption": "Ninguno",
+        "activityLabel": "Actividad de tratamiento",
+        "activityPlaceholder": "Elige una actividad",
+        "activityHint": "Vinculada a una actividad, la transferencia aparece en su entrada del RAT (art. 30.1.e)."
+      },
+      "legalBasis": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión de interés público",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      },
+      "mechanism": {
+        "ADEQUACY_DECISION": "Decisión de adecuación",
+        "STANDARD_CONTRACTUAL_CLAUSES": "SCC",
+        "BINDING_CORPORATE_RULES": "NCV",
+        "DEROGATION": "Excepción",
+        "CERTIFICATION": "Certificación",
+        "CODE_OF_CONDUCT": "Código de conducta",
+        "OTHER": "Otro"
+      }
+    },
+    "dashboard": {
+      "subtitle": "Panel de privacidad",
+      "newOrgDialog": {
+        "title": "Nueva organización",
+        "nameLabel": "Nombre de la organización",
+        "namePlaceholder": "p. ej., Ejemplo Logística, S.L.",
+        "creating": "Creando...",
+        "create": "Crear"
+      }
+    },
+    "processingActivities": {
+      "back": "Volver",
+      "title": "Registro de Actividades de Tratamiento",
+      "subtitle": "Tus actividades de tratamiento: el registro de actividades de tratamiento (RAT, artículo 30 del RGPD)",
+      "exportRopa": "Exportar RAT",
+      "downloadPdf": "Descargar en PDF",
+      "downloadCsv": "Descargar en CSV",
+      "downloadJson": "Descargar en JSON",
+      "addActivity": "Añadir actividad",
+      "stats": {
+        "total": "Actividades en total",
+        "active": "Activas",
+        "consent": "Basadas en consentimiento",
+        "transfers": "Con transferencias"
+      },
+      "searchPlaceholder": "Buscar actividades...",
+      "inactive": "Inactiva",
+      "assetsCount": "{count, plural, one {# sistema} other {# sistemas}}",
+      "subjectTypesCount": "{count, plural, one {# tipo de interesado} other {# tipos de interesados}}",
+      "categoriesCount": "{count, plural, one {# categoría de datos} other {# categorías de datos}}",
+      "dataSubjects": "Interesados",
+      "empty": {
+        "title": "No se han encontrado actividades de tratamiento",
+        "body": "Documenta tus actividades de tratamiento para cumplir con el RAT"
+      },
+      "about": {
+        "title": "Sobre el RAT",
+        "description": "Requisitos del registro de actividades de tratamiento según el artículo 30 del RGPD",
+        "requiredTitle": "Información obligatoria",
+        "required": {
+          "controller": "Nombre y datos de contacto del responsable del tratamiento",
+          "purposes": "Fines del tratamiento",
+          "categories": "Categorías de interesados y de datos personales",
+          "recipients": "Categorías de destinatarios",
+          "transfers": "Transferencias a terceros países",
+          "retention": "Plazos de conservación",
+          "security": "Medidas de seguridad"
+        },
+        "whenTitle": "Cuándo es obligatorio el RAT",
+        "when": {
+          "employees": "Organizaciones con 250 empleados o más",
+          "risk": "Tratamiento que pueda entrañar un riesgo para los derechos",
+          "notOccasional": "Tratamiento que no es ocasional",
+          "specialCategory": "Tratamiento que incluye categorías especiales de datos",
+          "criminal": "Tratamiento que incluye datos relativos a condenas penales"
+        },
+        "controllerDetailsLink": "Responsable, delegado de protección de datos, representante y medidas de seguridad: indícalos en Ajustes"
+      },
+      "downloadXlsx": "Descargar en Excel (XLSX)",
+      "processorRecord": "RAT como encargado (artículo 30.2)"
+    },
+    "elementDetail": {
+      "notFound": "No se ha encontrado el elemento de datos",
+      "notFoundBody": "Puede que se haya eliminado o que no tengas acceso.",
+      "backToInventory": "Volver al inventario de datos",
+      "back": "Volver",
+      "personalData": "Datos personales",
+      "specialCategory": "Categoría especial",
+      "edit": "Editar",
+      "overview": "Resumen",
+      "noDescription": "Sin descripción",
+      "retention": "Conservación",
+      "retentionDays": "{days, plural, one {# día} other {# días}}",
+      "notSpecified": "Sin especificar",
+      "legalBasis": "Base jurídica",
+      "parentAsset": "Sistema principal",
+      "linkedTitle": "Actividades de tratamiento vinculadas",
+      "linkedDescription": "Actividades que tratan expresamente este elemento de datos",
+      "inactive": "Inactiva",
+      "noLinked": "No hay actividades de tratamiento vinculadas a este elemento",
+      "noLinkedHint": "Abre el sistema principal y usa «Gestionar actividades» para vincular una"
+    },
+    "dataMap": {
+      "title": "Mapa de datos",
+      "subtitle": "Tus sistemas, los flujos de datos entre ellos, los proveedores y las transferencias fuera del EEE con su garantía y su estado.",
+      "transfers": "Transferencias"
+    }
+  },
+  "confirms": {
+    "deleteAssetTitle": "¿Eliminar sistema?",
+    "deleteAssetDesc": "Se eliminará el sistema y todos sus elementos vinculados de forma permanente. Esta acción no se puede deshacer.",
+    "deleteElementTitle": "¿Eliminar elemento?",
+    "deleteElementDesc": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
+    "deleteVendorTitle": "¿Eliminar proveedor?",
+    "deleteVendorDesc": "Se eliminará el proveedor y se desvinculará de los sistemas o actividades asociados. Esta acción no se puede deshacer.",
+    "deleteFlowTitle": "¿Eliminar flujo de datos?",
+    "deleteFlowDesc": "¿Eliminar el flujo «{name}»? Esta acción no se puede deshacer.",
+    "deleteActivityTitle": "¿Eliminar la actividad de tratamiento?",
+    "deleteActivityDesc": "¿Eliminar «{name}»? Se eliminan también sus vínculos con sistemas y los flujos propuestos a partir de ellos. Las transferencias que la mencionan se conservan. No se puede deshacer.",
+    "deleteTransferTitle": "¿Eliminar la transferencia?",
+    "deleteTransferDesc": "¿Eliminar «{name}»? No se puede deshacer."
+  },
+  "auth": {
+    "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "signUp": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "enterEmail": "Introduce tu correo para recibir un enlace mágico",
+    "continueWithEmail": "Continuar con correo electrónico",
+    "continueWithGoogle": "Continuar con Google",
+    "orContinueWith": "O continuar con",
+    "noPasswordNeeded": "No se necesita contraseña. Te enviaremos un enlace seguro.",
+    "checkEmail": "Revisa tu correo",
+    "magicLinkSent": "Hemos enviado un enlace mágico a {email}. Pulsa el enlace del correo para iniciar sesión.",
+    "didntReceive": "¿No lo has recibido?",
+    "tryAgain": "Inténtalo de nuevo",
+    "sendingLink": "Enviando...",
+    "signingIn": "Iniciando sesión...",
+    "bySigningIn": "Al iniciar sesión, aceptas las",
+    "termsOfUse": "Condiciones de uso",
+    "and": "y la",
+    "privacyPolicy": "Política de privacidad",
+    "developmentMode": "Modo de desarrollo",
+    "devSignIn": "Acceso de desarrollo (inmediato)",
+    "termsOfService": "Condiciones del servicio",
+    "emailPlaceholder": "nombre@empresa.com",
+    "devEmailPlaceholder": "dev@example.com",
+    "failedToSendLink": "No se ha podido enviar el enlace mágico. Inténtalo de nuevo.",
+    "unexpectedError": "Se ha producido un error inesperado.",
+    "devSignInFailed": "Error al iniciar sesión en modo de desarrollo.",
+    "localSignInTitle": "Acceso local",
+    "localSignInBody": "Tu cuenta está guardada en este ordenador. Introduce tu correo para abrirla (no se envía nada a ningún sitio).",
+    "signedOut": "Has cerrado la sesión. Vuelve a entrar para continuar.",
+    "signInToContinue": "Inicia sesión para continuar. Volverás a la página en la que estabas.",
+    "noSignInMethod": "Este servidor no tiene ningún método de acceso configurado. El administrador puede activar el acceso local, una clave del servicio de correo o el acceso con Google.",
+    "error": {
+      "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
+      "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
+      "OAuthSignin": "No se ha podido iniciar sesión con Google. Inténtalo de nuevo.",
+      "Default": "Error al iniciar sesión. Inténtalo de nuevo."
+    },
+    "authErrorPage": {
+      "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
+      "title": "Error de autenticación",
+      "titleAccountExists": "La cuenta ya existe",
+      "body": "Algo ha ido mal durante el inicio de sesión. Puede que el enlace haya caducado o que ya se haya utilizado.",
+      "bodyAccountExists": "Ya existe una cuenta con este correo electrónico que utiliza otro método de inicio de sesión. Inicia sesión con tu método original (enlace mágico por correo o Google) para acceder a tu cuenta.",
+      "bodyFallback": "Algo ha ido mal durante el inicio de sesión.",
+      "cta": "Intentar de nuevo",
+      "ctaAccountExists": "Iniciar sesión con el método original"
+    },
+    "verifyRequestPage": {
+      "body": "Se ha enviado un enlace de inicio de sesión a tu correo. Pulsa el enlace para iniciar sesión."
+    },
+    "signOutPage": {
+      "title": "Cerrar sesión",
+      "body": "Se cerrará tu sesión en DPO Central en este navegador.",
+      "confirm": "Cerrar sesión",
+      "leaving": "Cerrando sesión…",
+      "cancel": "Seguir con la sesión iniciada"
+    },
+    "signInEmail": {
+      "subject": "Inicia sesión en {brand}",
+      "body": "Pulsa el botón para iniciar sesión en tu cuenta de {brand}:",
+      "button": "Iniciar sesión en {brand}",
+      "ignore": "Si no has solicitado este correo, puedes ignorarlo sin problema."
+    }
+  },
+  "nav": {
+    "openMenu": "Abrir menú",
+    "feedback": "Comentarios",
+    "signOut": "Cerrar sesión"
+  },
+  "dataFlow": {
+    "filters": {
+      "all": "Todos",
+      "special": "Cat. especiales",
+      "personal": "Mayor riesgo",
+      "general": "Otros personales",
+      "autoGen": "Por confirmar",
+      "showAutoGenerated": "Mostrar flujos por confirmar",
+      "hideAutoGenerated": "Ocultar flujos por confirmar",
+      "categories": "Categorías",
+      "clearCategories": "Borrar categorías",
+      "clearAll": "Borrar todos los filtros",
+      "flowCount": "{shown} / {total} flujos",
+      "unclassified": "Sin categoría",
+      "activity": "Actividad",
+      "allActivities": "Todas las actividades"
+    },
+    "node": {
+      "production": "PROD",
+      "productionTitle": "Entorno de producción",
+      "inbound": "ent.",
+      "outbound": "sal.",
+      "location": "Ubicación",
+      "outsideEea": "Fuera del EEE: {countries}",
+      "outsideEeaTitle": "{count, plural, one {Abrir el registro de la transferencia} other {Abrir los # registros de transferencias}}",
+      "transferLine": "{country}: {mechanism} ({status})",
+      "noMechanism": "Sin garantía registrada",
+      "outsideEeaStatus": "Fuera del EEE: {countries} · {status}",
+      "unrecorded": "Sin registro de transferencia: {countries}",
+      "unrecordedTitle": "El proveedor opera o almacena datos en estos países fuera del EEE y ningún registro de transferencia los cubre. Abre Transferencias para registrarla.",
+      "moreCategories": "{count, plural, one {# categoría más} other {# categorías más}}",
+      "noFlows": "Aún no hay flujos registrados",
+      "vendor": "Proveedor",
+      "outsideEeaCountry": "{count, plural, one {# transferencia fuera del EEE} other {# transferencias fuera del EEE}}",
+      "suggestedStatus": "{status} (sugerido)"
+    },
+    "sheet": {
+      "createTitle": "Crear flujo de datos",
+      "editTitle": "Editar flujo de datos",
+      "createDescription": "Define cómo se mueven los datos entre sistemas",
+      "editDescription": "Actualiza cómo se mueven los datos entre sistemas",
+      "name": "Nombre del flujo *",
+      "namePlaceholder": "p. ej., Sincronización de usuarios con analítica",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe la finalidad de este flujo de datos",
+      "source": "Sistema de origen *",
+      "sourcePlaceholder": "Selecciona el sistema de origen",
+      "destination": "Sistema de destino *",
+      "destinationPlaceholder": "Selecciona el sistema de destino",
+      "categories": "Categorías de datos",
+      "categoriesSelected": "{count} seleccionadas",
+      "frequency": "Frecuencia",
+      "frequencyPlaceholder": "Con qué frecuencia circulan los datos",
+      "volume": "Volumen de datos",
+      "volumePlaceholder": "p. ej., ~10.000 registros/día",
+      "encryption": "Método de cifrado",
+      "encryptionPlaceholder": "p. ej., TLS 1.3, AES-256",
+      "cancel": "Cancelar",
+      "automated": "Flujo automatizado",
+      "saving": "Guardando…",
+      "creating": "Creando…",
+      "saveChanges": "Guardar cambios",
+      "createFlow": "Crear flujo"
+    },
+    "empty": {
+      "loading": "Cargando la visualización de flujos de datos…",
+      "noAssetsTitle": "No se han encontrado sistemas",
+      "noAssetsBody": "Añade primero sistemas para visualizar los flujos",
+      "noFlowsTitle": "Todavía no hay flujos de datos definidos",
+      "noFlowsBody": "Crea flujos para visualizar cómo se mueven los datos entre sistemas",
+      "noAssetFlowsTitle": "No hay flujos de datos conectados a este sistema",
+      "noAssetFlowsBody": "Crea un flujo para conectar este sistema con otros sistemas",
+      "noFlowsHint": "Se muestran tus sistemas. Añade un flujo entre dos de ellos, o vincula sistemas a una actividad de tratamiento para obtener flujos propuestos que confirmar."
+    },
+    "actions": {
+      "addAsset": "Añadir sistema",
+      "addFlow": "Añadir flujo"
+    },
+    "frequencyOptions": {
+      "realTime": "En tiempo real",
+      "hourly": "Cada hora",
+      "daily": "Diaria",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "onDemand": "Bajo demanda",
+      "batch": "Por lotes",
+      "continuous": "Continua",
+      "onRequest": "Bajo petición"
+    },
+    "details": {
+      "automated": "Automatizado",
+      "noDescription": "Sin descripción",
+      "direction": "Dirección del flujo de datos",
+      "noCategories": "No se han indicado categorías",
+      "title": "Detalles del flujo",
+      "volume": "Volumen",
+      "encryption": "Cifrado",
+      "noDetails": "Sin más detalles",
+      "generated": "Propuesto a partir de los sistemas vinculados a una actividad de tratamiento. Es un borrador, que no aparece en los informes PDF, hasta que lo confirmes o lo edites.",
+      "generatedConfirmed": "Creado a partir de los sistemas vinculados a una actividad de tratamiento, y confirmado.",
+      "confirm": "Confirmar flujo",
+      "confirmed": "Flujo confirmado",
+      "draftBadge": "Por confirmar",
+      "transfersTitle": "Transferencias fuera del EEE desde el destino"
+    },
+    "legend": {
+      "title": "Leyenda",
+      "inbound": "flujos de entrada",
+      "outbound": "flujos de salida",
+      "lineSpecial": "categorías especiales (arts. 9 y 10)",
+      "lineHigherRisk": "datos personales de mayor riesgo",
+      "lineOther": "otros datos personales",
+      "lineUnclassified": "sin categoría registrada",
+      "dashed": "flujo por confirmar (propuesto a partir de una actividad)",
+      "thickness": "línea más gruesa: más frecuente",
+      "stripe": "Tipo de sistema",
+      "transfers": "Transferencias",
+      "transferLine": "transferencia a un país fuera del EEE (garantía y estado en la etiqueta)",
+      "outsideEeaShort": "Fuera del EEE",
+      "unrecorded": "país del proveedor sin registro de transferencia"
+    },
+    "abbr": {
+      "IDENTIFIERS": "ID",
+      "DEMOGRAPHICS": "DEM",
+      "FINANCIAL": "FIN",
+      "HEALTH": "SAL",
+      "BIOMETRIC": "BIO",
+      "LOCATION": "UBI",
+      "BEHAVIORAL": "COM",
+      "EMPLOYMENT": "LAB",
+      "EDUCATION": "ACA",
+      "POLITICAL": "POL",
+      "RELIGIOUS": "REL",
+      "GENETIC": "GEN",
+      "SEXUAL_ORIENTATION": "SEX",
+      "CRIMINAL": "PEN",
+      "OTHER": "OTR"
+    },
+    "edge": {
+      "fallback": "Flujo",
+      "open": "Abrir el flujo {name}"
+    },
+    "summary": {
+      "counts": "{systems, plural, one {# sistema} other {# sistemas}} ({isolated} sin flujos) · {flows, plural, one {# flujo} other {# flujos}} · {transfers, plural, one {# transferencia} other {# transferencias}} fuera del EEE a {countries, plural, one {# país} other {# países}} · {vendors, plural, one {# proveedor} other {# proveedores}} sin sistema"
+    },
+    "view": {
+      "label": "Vista",
+      "map": "Mapa",
+      "list": "Lista",
+      "canvasLabel": "Mapa de datos con {systems} sistemas y {flows} flujos. Usa el tabulador para moverte entre sistemas y flujos, e Intro para abrir uno. La vista de lista muestra los mismos registros."
+    },
+    "list": {
+      "flowsTitle": "{count, plural, one {# flujo} other {# flujos}}",
+      "systemsTitle": "{count, plural, one {# sistema} other {# sistemas}}",
+      "transfersTitle": "{count, plural, one {# transferencia fuera del EEE} other {# transferencias fuera del EEE}}",
+      "vendorsTitle": "{count, plural, one {# proveedor sin sistema} other {# proveedores sin sistema}}",
+      "to": "a",
+      "flowCounts": "{inbound} de entrada, {outbound} de salida"
+    }
+  },
+  "metadata": {
+    "tagline": "Gestión de la privacidad sin complicaciones",
+    "description": "Inventario de datos y Registro de Actividades de Tratamiento, solicitudes de derechos, registro de brechas y gestión de proveedores para programas de privacidad.",
+    "licenses": {
+      "title": "Licencia y código fuente",
+      "description": "La edición comunitaria de DPO Central es de código abierto bajo la licencia AGPL-3.0. Consulta la licencia y obtén el código fuente completo correspondiente."
+    },
+    "pageTitles": {
+      "signIn": "Iniciar sesión",
+      "authError": "Problema al iniciar sesión",
+      "verifyRequest": "Revisa tu correo electrónico",
+      "signOut": "Cerrar sesión",
+      "notFound": "Página no encontrada"
+    }
+  },
+  "enums": {
+    "assessmentRiskStatus": {
+      "OPEN": "Abierto",
+      "CLOSED": "Cerrado"
+    },
+    "mitigationStatus": {
+      "IDENTIFIED": "Identificada",
+      "PLANNED": "Planificada",
+      "IN_PROGRESS": "En curso",
+      "IMPLEMENTED": "Implementada",
+      "VERIFIED": "Verificada",
+      "NOT_REQUIRED": "No requerida"
+    },
+    "vendorCategory": {
+      "CLOUD_SERVICES": "Servicios en la nube",
+      "DATA_PROCESSING": "Tratamiento de datos",
+      "ANALYTICS": "Analítica",
+      "MARKETING": "Marketing",
+      "HR_SERVICES": "Servicios de RR. HH.",
+      "PAYMENT_PROCESSING": "Procesamiento de pagos",
+      "CUSTOMER_SUPPORT": "Atención al cliente",
+      "IT_SECURITY": "Seguridad informática",
+      "LEGAL": "Jurídico",
+      "OTHER": "Otros"
+    },
+    "vendorCatalogCategory": {
+      "Cloud_Infrastructure": "Infraestructura en la nube",
+      "Data_Warehouse_Integration": "Almacén e integración de datos",
+      "Analytics_BI": "Analítica e inteligencia de negocio",
+      "Customer_Data_Platform": "Plataforma de datos de clientes",
+      "CRM_Sales": "CRM y ventas",
+      "Marketing_Automation": "Automatización del marketing",
+      "Advertising": "Publicidad",
+      "Content_Management": "Gestión de contenidos",
+      "E_commerce": "Comercio electrónico",
+      "Payment_Processing": "Procesamiento de pagos",
+      "Communication": "Comunicaciones",
+      "Customer_Support": "Atención al cliente",
+      "Personalization_Engagement": "Personalización y fidelización",
+      "HR_People": "RR. HH. y personas",
+      "Productivity_Collaboration": "Productividad y colaboración",
+      "Developer_Tools": "Herramientas para desarrolladores",
+      "Security_Identity": "Seguridad e identidad",
+      "Privacy_Consent": "Privacidad y consentimiento",
+      "AI_Machine_Learning": "IA y aprendizaje automático",
+      "Legal_Compliance": "Jurídico y cumplimiento",
+      "Design_Creative": "Diseño y creatividad",
+      "Surveys_Research": "Encuestas e investigación",
+      "Collaboration": "Colaboración",
+      "Knowledge_Management": "Gestión del conocimiento",
+      "Data_Analytics": "Analítica de datos",
+      "Database_Hosting": "Alojamiento de bases de datos",
+      "Electronic_Health_Records": "Historia clínica electrónica",
+      "Project_Management": "Gestión de proyectos",
+      "Sales_Automation": "Automatización de ventas",
+      "Email_Marketing": "Marketing por correo electrónico",
+      "eSignature": "Firma electrónica",
+      "Advertising_Technology": "Tecnología publicitaria",
+      "Platform_as_a_Service": "Plataforma como servicio",
+      "Podcast_Hosting": "Alojamiento de pódcast",
+      "IT_Support": "Soporte informático",
+      "ERP": "ERP",
+      "AML_CFT": "Prevención del blanqueo de capitales",
+      "CRM": "CRM",
+      "Financial_Infrastructure": "Infraestructura financiera",
+      "Analytics": "Analítica",
+      "Video_Conferencing": "Videoconferencia",
+      "Content_Distribution": "Distribución de contenidos",
+      "Privacy_Technology": "Tecnología de privacidad",
+      "Cloud_Storage": "Almacenamiento en la nube",
+      "Insurance_Communication": "Comunicación de seguros",
+      "Crypto_Compliance": "Cumplimiento en criptoactivos",
+      "Financial_Management": "Gestión financiera",
+      "Telemedicine": "Telemedicina",
+      "Identity_Verification": "Verificación de identidad",
+      "Help_Desk": "Servicio de asistencia",
+      "E_commerce_Platform": "Plataforma de comercio electrónico",
+      "Managed_Services": "Servicios gestionados",
+      "DevOps": "DevOps",
+      "Billing": "Facturación",
+      "Accounting": "Contabilidad",
+      "Messaging": "Mensajería",
+      "Document_Management": "Gestión documental",
+      "Privacy": "Privacidad",
+      "Healthcare_Exchange": "Intercambio de información sanitaria",
+      "Medical_Imaging": "Imagen médica",
+      "Laboratory_Services": "Servicios de laboratorio",
+      "Video_Communication": "Comunicación por vídeo",
+      "Warehouse_Management": "Gestión de almacenes",
+      "Blockchain_Analytics": "Analítica de cadena de bloques",
+      "HR_Management": "Gestión de RR. HH.",
+      "Productivity": "Productividad",
+      "PACS": "PACS",
+      "Cloud_Platform": "Plataforma en la nube",
+      "Consent_Management": "Gestión del consentimiento",
+      "KYC_AML": "Diligencia debida de clientes y prevención del blanqueo",
+      "Diagnostics": "Diagnóstico",
+      "Contract_Management": "Gestión de contratos",
+      "Pharmacy_Management": "Gestión de farmacia",
+      "ITSM": "Gestión de servicios de TI",
+      "Compliance_Technology": "Tecnología de cumplimiento",
+      "Subscription_Management": "Gestión de suscripciones",
+      "SMS_Marketing": "Marketing por SMS",
+      "Communications": "Comunicaciones",
+      "Payroll": "Nóminas",
+      "Sales": "Ventas",
+      "Hosting": "Alojamiento",
+      "Fraud_Detection": "Detección del fraude",
+      "Ad_Serving": "Servicio de anuncios",
+      "Product_Intelligence": "Analítica de producto",
+      "Monitoring": "Monitorización",
+      "2FA_MFA": "Autenticación multifactor"
+    },
+    "dataCategory": {
+      "IDENTIFIERS": "Identificadores",
+      "DEMOGRAPHICS": "Datos demográficos",
+      "FINANCIAL": "Datos financieros",
+      "HEALTH": "Datos de salud",
+      "BIOMETRIC": "Datos biométricos",
+      "LOCATION": "Datos de ubicación",
+      "BEHAVIORAL": "Datos de comportamiento",
+      "EMPLOYMENT": "Datos laborales",
+      "EDUCATION": "Datos académicos",
+      "POLITICAL": "Opiniones políticas",
+      "RELIGIOUS": "Creencias religiosas",
+      "GENETIC": "Datos genéticos",
+      "SEXUAL_ORIENTATION": "Orientación sexual",
+      "CRIMINAL": "Antecedentes penales",
+      "OTHER": "Otros"
+    },
+    "assessmentType": {
+      "DPIA": "EIPD",
+      "PIA": "PIA",
+      "TIA": "EIT",
+      "LIA": "EIL",
+      "VENDOR": "Evaluación de proveedor",
+      "CUSTOM": "Personalizada"
+    },
+    "assessmentStatus": {
+      "DRAFT": "Borrador",
+      "IN_PROGRESS": "En curso",
+      "PENDING_REVIEW": "Pendiente de revisión",
+      "PENDING_APPROVAL": "Pendiente de aprobación",
+      "APPROVED": "Aprobada",
+      "REJECTED": "Rechazada",
+      "ARCHIVED": "Archivada"
+    },
+    "approvalStatus": {
+      "PENDING": "Pendiente",
+      "APPROVED": "Aprobada",
+      "REJECTED": "Rechazada",
+      "DELEGATED": "Delegada"
+    },
+    "dsarType": {
+      "ACCESS": "Acceso",
+      "RECTIFICATION": "Rectificación",
+      "ERASURE": "Supresión",
+      "PORTABILITY": "Portabilidad",
+      "OBJECTION": "Oposición",
+      "RESTRICTION": "Limitación",
+      "AUTOMATED_DECISION": "Decisión automatizada",
+      "WITHDRAW_CONSENT": "Retirada del consentimiento",
+      "OTHER": "Otro",
+      "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+      "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
+    },
+    "dsarStatus": {
+      "SUBMITTED": "Recibida",
+      "IDENTITY_PENDING": "Identidad pendiente",
+      "IDENTITY_VERIFIED": "Identidad verificada",
+      "IN_PROGRESS": "En curso",
+      "DATA_COLLECTED": "Datos recopilados",
+      "REVIEW_PENDING": "Pendiente de revisión",
+      "APPROVED": "Aprobada",
+      "COMPLETED": "Completada",
+      "REJECTED": "Rechazada",
+      "CANCELLED": "Cancelada"
+    },
+    "dsarTaskStatus": {
+      "PENDING": "Pendiente",
+      "IN_PROGRESS": "En curso",
+      "COMPLETED": "Completada",
+      "BLOCKED": "Bloqueada",
+      "NOT_APPLICABLE": "No aplicable"
+    },
+    "incidentSeverity": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "CRITICAL": "Crítica"
+    },
+    "incidentStatus": {
+      "REPORTED": "Registrado",
+      "INVESTIGATING": "En investigación",
+      "CONTAINED": "Contenido",
+      "ERADICATED": "Erradicado",
+      "RECOVERING": "En recuperación",
+      "CLOSED": "Cerrado",
+      "FALSE_POSITIVE": "Falso positivo"
+    },
+    "incidentType": {
+      "DATA_BREACH": "Brecha de datos",
+      "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
+      "DATA_LOSS": "Pérdida de datos",
+      "SYSTEM_COMPROMISE": "Sistema comprometido",
+      "PHISHING": "Phishing",
+      "RANSOMWARE": "Ransomware",
+      "INSIDER_THREAT": "Amenaza interna",
+      "PHYSICAL_SECURITY": "Seguridad física",
+      "VENDOR_INCIDENT": "Incidente de proveedor",
+      "OTHER": "Otro"
+    },
+    "transferMechanism": {
+      "ADEQUACY_DECISION": "Decisión de adecuación",
+      "STANDARD_CONTRACTUAL_CLAUSES": "Cláusulas contractuales tipo",
+      "BINDING_CORPORATE_RULES": "Normas corporativas vinculantes",
+      "DEROGATION": "Excepción",
+      "CERTIFICATION": "Certificación",
+      "CODE_OF_CONDUCT": "Código de conducta",
+      "OTHER": "Otro"
+    },
+    "transferStatus": {
+      "COMPLIANT": "Conforme",
+      "NEEDS_REVIEW": "Requiere revisión",
+      "NON_COMPLIANT": "No conforme",
+      "PENDING": "Pendiente"
+    },
+    "riskLevel": {
+      "LOW": "Bajo",
+      "MEDIUM": "Medio",
+      "HIGH": "Alto",
+      "CRITICAL": "Crítico"
+    },
+    "legalBasis": {
+      "CONSENT": "Consentimiento",
+      "CONTRACT": "Contrato",
+      "LEGAL_OBLIGATION": "Obligación legal",
+      "VITAL_INTERESTS": "Intereses vitales",
+      "PUBLIC_TASK": "Misión de interés público",
+      "LEGITIMATE_INTERESTS": "Interés legítimo"
+    },
+    "vendorStatus": {
+      "PROSPECTIVE": "Potencial",
+      "ACTIVE": "Activo",
+      "UNDER_REVIEW": "En revisión",
+      "SUSPENDED": "Suspendido",
+      "TERMINATED": "Finalizado"
+    },
+    "contractType": {
+      "DPA": "Contrato de encargo",
+      "MSA": "MSA",
+      "NDA": "NDA",
+      "SCC": "SCC",
+      "SUBPROCESSOR": "Subencargado",
+      "OTHER": "Otro"
+    },
+    "contractStatus": {
+      "DRAFT": "Borrador",
+      "PENDING_SIGNATURE": "Pendiente de firma",
+      "ACTIVE": "Activo",
+      "EXPIRED": "Caducado",
+      "TERMINATED": "Finalizado",
+      "RENEWED": "Renovado"
+    },
+    "dataAssetType": {
+      "DATABASE": "Base de datos",
+      "APPLICATION": "Aplicación",
+      "FILE_SYSTEM": "Sistema de archivos",
+      "CLOUD_SERVICE": "Servicio en la nube",
+      "THIRD_PARTY": "Tercero",
+      "PHYSICAL": "Físico",
+      "OTHER": "Otro"
+    },
+    "dataSensitivity": {
+      "PUBLIC": "Público",
+      "INTERNAL": "Interno",
+      "CONFIDENTIAL": "Confidencial",
+      "RESTRICTED": "Restringido",
+      "SPECIAL_CATEGORY": "Categoría especial"
+    },
+    "notificationStatus": {
+      "PENDING": "Pendiente",
+      "SENT": "Enviada",
+      "NOT_REQUIRED": "No requerida",
+      "OVERDUE": "Vencida",
+      "ACKNOWLEDGED": "Confirmada",
+      "DRAFTED": "Redactada",
+      "FOLLOW_UP_REQUIRED": "Requiere seguimiento",
+      "CLOSED": "Cerrada"
+    },
+    "reviewType": {
+      "SECURITY": "Seguridad",
+      "PRIVACY": "Privacidad",
+      "COMPLIANCE": "Cumplimiento",
+      "DUE_DILIGENCE": "Diligencia debida",
+      "ANNUAL": "Anual",
+      "OTHER": "Otro"
+    },
+    "role": {
+      "OWNER": "Propietario",
+      "ADMIN": "Administrador",
+      "PRIVACY_OFFICER": "Responsable de privacidad",
+      "MEMBER": "Miembro",
+      "VIEWER": "Lector"
+    },
+    "auditAction": {
+      "REOPEN": "Reabierta como nueva revisión",
+      "CREATE": "Creado",
+      "UPDATE": "Actualizado",
+      "DELETE": "Eliminado",
+      "VIEW": "Consultado",
+      "SUBMIT": "Enviado",
+      "SUBMIT_AND_APPROVE": "Enviado y aprobado",
+      "STATUS_CHANGED": "Estado cambiado",
+      "DEADLINE_EXTENDED": "Plazo prorrogado",
+      "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
+      "INVITE": "Invitación creada",
+      "INVITE_CANCELLED": "Invitación cancelada",
+      "JOIN_BY_INVITATION": "Se ha unido por invitación",
+      "RECORDED_IN_ERROR": "Registrada por error",
+      "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
+      "TASKS_GENERATED": "Tareas generadas",
+      "PII_REDACTED": "Datos personales ocultados",
+      "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
+      "VIEWED": "Consultada",
+      "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
+      "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "UPDATE_CHECKLIST": "Lista de comprobación de la transferencia actualizada",
+      "EXPORT_TO_AI_SENTINEL": "Exportado a un registro externo",
+      "REQUEST_CREATED": "Solicitud creada",
+      "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal",
+      "SUPPORT": "Consultada por soporte",
+      "INACTIVITY_NOTICE_SENT": "Aviso de eliminación enviado a propietarios y administradores",
+      "DSAR_PUBLIC_SUBMISSION": "Solicitud recibida por el formulario público",
+      "DSAR_DELETED_INACTIVE": "Eliminada tras 30 días sin actividad"
+    },
+    "auditEntity": {
+      "Organization": "Organización",
+      "OrganizationMember": "Miembro del equipo",
+      "OrganizationJurisdiction": "Jurisdicción",
+      "OrganizationAiSettings": "Ajustes de IA",
+      "DataAsset": "Sistema",
+      "ProcessingActivity": "Actividad de tratamiento",
+      "DataFlow": "Flujo de datos",
+      "DataTransfer": "Transferencia",
+      "Vendor": "Proveedor",
+      "VendorContract": "Contrato de proveedor",
+      "Assessment": "Evaluación",
+      "DSARRequest": "Solicitud de derechos",
+      "Incident": "Incidente",
+      "IncidentNotification": "Notificación de brecha",
+      "AISystem": "Sistema de IA"
+    }
+  },
+  "footer": {
+    "serviceBy": "{brandName} es un servicio de {companyName}.",
+    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
+    "userGuide": "Documentación",
+    "sourceAndLicence": "Código fuente y licencia",
+    "termsOfService": "Condiciones del servicio",
+    "privacyPolicy": "Política de privacidad",
+    "dataSecurity": "Seguridad de los datos",
+    "docs": "Documentación",
+    "howItWorks": "Cómo funciona",
+    "signIn": "Iniciar sesión",
+    "communityEdition": "{brandName}, edición comunitaria"
+  },
+  "organization": {
+    "welcome": "Te damos la bienvenida a {brandName}",
+    "createOrg": "Crea tu organización para comenzar con la gestión de privacidad",
+    "orgName": "Nombre de la organización",
+    "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
+    "createOrganization": "Crear organización",
+    "creating": "Creando...",
+    "switchOrg": "Cambiar organización",
+    "dpaAccept": "Acepto el <link>contrato de encargo del tratamiento</link>",
+    "dpaStepTitle": "Contrato de encargo del tratamiento",
+    "dpaStepBody": "Antes de seguir, acepta el contrato de encargo del tratamiento para {name} en nombre de la organización. Solo tienes que hacerlo una vez.",
+    "dpaStepContinue": "Aceptar y continuar",
+    "dpaPendingNote": "Un propietario o administrador de esta organización tiene que aceptar el <link>contrato de encargo del tratamiento</link> (versión {version})."
+  },
+  "dashboard": {
+    "title": "Panel de privacidad",
+    "overview": "Resumen",
+    "recentActivity": "Actividad reciente",
+    "quickActions": "Acciones rápidas",
+    "metrics": {
+      "totalAssets": "Total de sistemas",
+      "activeRequests": "Solicitudes activas",
+      "openIncidents": "Incidentes abiertos"
+    }
+  },
+  "dsarReminderEmail": {
+    "subject": "{kind, select, DAYS_7 {{orgName}: solicitud de derechos que vence en 7 días} DAYS_3 {{orgName}: solicitud de derechos que vence en 3 días} DAYS_1 {{orgName}: solicitud de derechos que vence en 1 día o menos} other {{orgName}: solicitud de derechos vencida}}",
+    "heading": "{kind, select, DAYS_7 {Vence en 7 días} DAYS_3 {Vence en 3 días} DAYS_1 {Vence en 1 día o menos} other {Vencida}}",
+    "body": "{kind, select, OVERDUE {El plazo de una solicitud de derechos de {orgName} venció el {dueDate} y la solicitud sigue abierta.} other {Una solicitud de derechos de {orgName} debe responderse a más tardar el {dueDate}.}}",
+    "referenceLabel": "Referencia",
+    "typeLabel": "Tipo",
+    "receivedLabel": "Recibida",
+    "dueLabel": "Plazo",
+    "ctaText": "Abrir la solicitud",
+    "whyYou": "Recibes este aviso porque tienes asignada una tarea de esta solicitud o, si nadie la tiene, porque eres responsable de privacidad, administrador o propietario de {orgName}.",
+    "switchOff": "Un administrador puede desactivar estos recordatorios en la configuración del formulario de solicitudes."
+  },
+  "dsarSettings": {
+    "title": "Configuración del formulario de solicitudes",
+    "subtitle": "Configura tu portal público de solicitudes",
+    "back": "Volver",
+    "portalCard": {
+      "title": "Portal público",
+      "description": "Comparte este enlace con los interesados para que envíen solicitudes",
+      "copyUrl": "Copiar URL",
+      "openInNewTab": "Abrir en una nueva pestaña",
+      "activeLabel": "Formulario público activo",
+      "publishedHint": "El formulario está publicado y acepta solicitudes. Enlaza esta dirección desde tu política de privacidad para que las personas puedan ejercer sus derechos.",
+      "unpublishedHint": "El formulario aún no está publicado. Quien abra el enlace verá tu contacto de privacidad. Actívalo cuando quieras empezar a recibir solicitudes.",
+      "confirmHint": "Este formulario se ha publicado antes de que DPO Central pidiera confirmarlo. Confírmalo para que conste que lo has revisado.",
+      "confirmPublish": "Confirmar y publicar",
+      "publishedToast": "El formulario público está publicado",
+      "unpublishedToast": "El formulario público está desactivado"
+    },
+    "formCard": {
+      "title": "Configuración del formulario",
+      "description": "Personaliza la apariencia del formulario",
+      "name": "Nombre del formulario (interno)",
+      "slug": "Identificador en la URL",
+      "publicTitle": "Título del formulario (público)",
+      "formDescription": "Descripción del formulario",
+      "thankYou": "Mensaje de agradecimiento"
+    },
+    "typesCard": {
+      "title": "Tipos de solicitud habilitados",
+      "description": "Selecciona qué tipos de solicitudes pueden enviarse"
+    },
+    "typeDescriptions": {
+      "ACCESS": "Solicitar acceso a los datos personales",
+      "RECTIFICATION": "Solicitar la corrección de los datos",
+      "ERASURE": "Solicitar la eliminación de los datos",
+      "PORTABILITY": "Solicitar la exportación de los datos",
+      "OBJECTION": "Oponerse al tratamiento de datos",
+      "RESTRICTION": "Limitar el tratamiento de los datos"
+    },
+    "complianceCard": {
+      "title": "Cumplimiento y conservación",
+      "description": "Enlaza tu aviso de privacidad y configura cuánto tiempo se conservan los datos personales",
+      "privacyNoticeUrl": "URL del aviso de privacidad",
+      "privacyNoticeUrlHint": "URL pública del aviso de privacidad de tu organización. Se muestra al solicitante en el formulario.",
+      "retentionDays": "Plazo de conservación (días)",
+      "retentionDaysHint": "Días que transcurren desde que se completa una solicitud hasta que se ocultan automáticamente los datos personales. Valor predeterminado: 90.",
+      "privacyContactEmail": "Correo de contacto de privacidad",
+      "privacyContactEmailHint": "Se muestra en el formulario público cuando no admite solicitudes, para que la gente pueda seguir contactándote."
+    },
+    "cssCard": {
+      "title": "Estilo personalizado",
+      "description": "Añade CSS personalizado para adaptarlo a tu marca (opcional)",
+      "label": "CSS personalizado",
+      "help": "Se aplica al formulario público de solicitudes. Déjalo vacío para usar el estilo predeterminado."
+    },
+    "remindersCard": {
+      "title": "Recordatorios de plazo",
+      "description": "Correos electrónicos antes de que venza una solicitud",
+      "label": "Enviar recordatorios por correo electrónico",
+      "hint": "Se envía un correo electrónico a las personas asignadas a las tareas abiertas de la solicitud (o, si no hay nadie asignado, a los responsables de privacidad, administradores y propietarios) 7, 3 y 1 día antes del vencimiento, y una vez cuando vence. Las solicitudes cerradas no reciben ninguno. Se guarda en cuanto lo cambias.",
+      "savedOn": "Recordatorios por correo electrónico activados",
+      "savedOff": "Recordatorios por correo electrónico desactivados"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "saving": "Guardando...",
+      "save": "Guardar cambios",
+      "errorPrefix": "Error: {message}",
+      "saved": "Configuración guardada"
+    },
+    "defaultFormName": "Formulario de solicitudes de derechos"
+  },
+  "dsarPublic": {
+    "form": {
+      "loadingError": {
+        "title": "Formulario no disponible",
+        "description": "No hemos encontrado ningún formulario activo de solicitud de ejercicio de derechos para esta organización.",
+        "hint": "Comprueba el enlace que has utilizado o contacta directamente con la organización."
+      },
+      "header": {
+        "fallbackDescription": "Envía una solicitud sobre tus datos personales en poder de {orgName}",
+        "defaultTitle": "Solicitud de ejercicio de derechos",
+        "defaultDescription": "Envía una solicitud sobre tus datos personales"
+      },
+      "card": {
+        "title": "Tu solicitud",
+        "description": "Rellena los siguientes datos para que podamos tramitar tu solicitud"
+      },
+      "fields": {
+        "requestTypeLabel": "¿Qué deseas hacer?",
+        "requestTypePlaceholder": "Selecciona el tipo de solicitud",
+        "name": "Nombre completo",
+        "namePlaceholder": "Ana García",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "nombre@ejemplo.com",
+        "phone": "Teléfono",
+        "phonePlaceholder": "+34 612 345 678",
+        "relationshipLabel": "Relación",
+        "relationshipPlaceholder": "Selecciona tu relación",
+        "details": "Detalles adicionales",
+        "detailsPlaceholder": "Indica cualquier información adicional que pueda ayudarnos a procesar tu solicitud..."
+      },
+      "relationship": {
+        "customer": "Cliente",
+        "employee": "Empleado/a",
+        "jobApplicant": "Candidato/a",
+        "websiteVisitor": "Visitante del sitio web",
+        "other": "Otro"
+      },
+      "consent": {
+        "retention": "Tus datos de contacto se tratarán únicamente para verificar tu identidad y atender esta solicitud. Se conservarán mientras se tramita la solicitud y se eliminarán automáticamente en un plazo de {days} días desde su finalización.",
+        "privacyNoticeLink": "Consulta nuestro aviso de privacidad para más información.",
+        "checkbox": "Entiendo que mis datos de contacto se tratarán para atender esta solicitud y consiento dicho tratamiento."
+      },
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando...",
+      "requiredMark": "*",
+      "types": {
+        "ACCESS": {
+          "label": "Acceder a mis datos",
+          "description": "Obtener una copia de los datos personales que se conservan sobre ti"
+        },
+        "ERASURE": {
+          "label": "Eliminar mis datos",
+          "description": "Solicitar la supresión de tus datos personales"
+        },
+        "RECTIFICATION": {
+          "label": "Corregir mis datos",
+          "description": "Solicitar la corrección de datos personales inexactos"
+        },
+        "PORTABILITY": {
+          "label": "Exportar mis datos",
+          "description": "Recibir tus datos en un formato que permita transmitirlos"
+        },
+        "OBJECTION": {
+          "label": "Oponerme al tratamiento",
+          "description": "Oponerte a cómo se tratan tus datos"
+        },
+        "RESTRICTION": {
+          "label": "Limitar el tratamiento",
+          "description": "Limitar cómo se utilizan tus datos"
+        },
+        "AUTOMATED_DECISION": {
+          "label": "Decisiones automatizadas",
+          "description": "Solicitar revisión humana de decisiones automatizadas"
+        },
+        "WITHDRAW_CONSENT": {
+          "label": "Retirar consentimiento",
+          "description": "Retirar el consentimiento prestado anteriormente"
+        },
+        "OTHER": {
+          "label": "Otra solicitud",
+          "description": "Otro tipo de solicitud relacionada con la protección de datos"
+        }
+      },
+      "success": {
+        "title": "Solicitud enviada",
+        "fallbackDescription": "Hemos recibido tu solicitud",
+        "referenceLabel": "Número de referencia",
+        "copyAriaLabel": "Copiar número de referencia",
+        "copiedAriaLabel": "Copiado",
+        "emailSentLead": "Hemos enviado una confirmación a ",
+        "emailSentTrail": " con esta referencia y un enlace para seguir el progreso. Guárdalo: lo necesitarás para consultar el estado.",
+        "checkStatus": "Consultar estado de la solicitud",
+        "defaultThankYou": "Gracias por tu solicitud. La tramitaremos dentro del plazo que marca la ley.",
+        "noEmailNote": "Guarda esta referencia: la necesitarás para consultar el estado de tu solicitud. Esta vez no se ha enviado ningún correo de confirmación."
+      },
+      "languageSwitcher": "Idioma",
+      "closed": {
+        "title": "Este formulario no admite solicitudes en este momento",
+        "withContact": "Escribe a {orgName} a <mail>{email}</mail>.",
+        "withoutContact": "Ponte en contacto directamente con {orgName}."
+      }
+    },
+    "status": {
+      "loadingError": {
+        "title": "Solicitud no encontrada",
+        "description": "No hemos encontrado ninguna solicitud con este número de referencia.",
+        "hint": "Comprueba el número de referencia que figura en tu correo de confirmación."
+      },
+      "header": {
+        "title": "Estado de la solicitud",
+        "fallbackDescription": "Sigue el progreso de tu solicitud",
+        "trackingDescription": "Seguimiento de tu solicitud ({requestType}) ante {orgName}"
+      },
+      "overallProgress": "Progreso general",
+      "currentlyProcessing": "Estamos procesando tu solicitud",
+      "rejectedNotice": "Esta solicitud ha sido rechazada. Contacta con la organización para obtener más información.",
+      "cancelledNotice": "Esta solicitud ha sido cancelada. Contacta con la organización para obtener más información.",
+      "expectedCompletion": "Finalización prevista",
+      "completedLabel": "Completada",
+      "daysOverdue": "{count, plural, one {# día de retraso} other {# días de retraso}}",
+      "daysRemaining": "{count, plural, one {# día restante} other {# días restantes}}",
+      "keyDates": "Fechas clave",
+      "requestReceived": "Solicitud recibida",
+      "acknowledged": "Acuse de recibo",
+      "completedDate": "Completada",
+      "timeline": {
+        "submitted": "Enviada",
+        "identityVerified": "Identidad verificada",
+        "inProgress": "En proceso",
+        "dataCollected": "Datos recopilados",
+        "completed": "Completada"
+      },
+      "typeLabels": {
+        "ACCESS": "Solicitud de acceso a datos",
+        "ERASURE": "Solicitud de supresión de datos",
+        "RECTIFICATION": "Solicitud de rectificación de datos",
+        "PORTABILITY": "Solicitud de portabilidad de datos",
+        "OBJECTION": "Oposición al tratamiento de datos",
+        "RESTRICTION": "Solicitud de limitación del tratamiento",
+        "AUTOMATED_DECISION": "Revisión de decisión automatizada",
+        "WITHDRAW_CONSENT": "Retirada del consentimiento",
+        "OTHER": "Solicitud del interesado",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
+      },
+      "withdraw": {
+        "button": "Retirar esta solicitud",
+        "dialogTitle": "¿Retirar tu solicitud?",
+        "dialogDescription": "Si ya no necesitas esta solicitud, la cancelaremos. Esta acción no se puede deshacer, pero puedes enviar una nueva solicitud cuando quieras.",
+        "confirm": "Sí, retirar",
+        "cancel": "Mantener la solicitud abierta",
+        "successTitle": "Solicitud retirada",
+        "successDescription": "Tu solicitud ha sido cancelada."
+      },
+      "download": {
+        "title": "Tus datos están listos",
+        "description": "La organización ha subido tu respuesta. Puedes descargarla desde el siguiente enlace.",
+        "download": "Descargar respuesta",
+        "expiresOn": "Disponible hasta el {date}"
+      },
+      "unavailable": {
+        "title": "Esta página no está disponible",
+        "description": "Ponte en contacto directamente con la organización."
+      }
+    },
+    "email": {
+      "subject": "{orgName}: Hemos recibido tu solicitud",
+      "greeting": "Hola:",
+      "body": "{orgName} ha recibido tu {requestType}. Te responderemos antes del {dueDate}.",
+      "referenceLabel": "Número de referencia",
+      "ctaText": "Comprobar estado de la solicitud",
+      "footer": "Guarda este correo o añade el enlace anterior a tus marcadores para seguir el progreso. Podemos contactarte en esta dirección si necesitamos verificar tu identidad. Tus datos de contacto se utilizarán únicamente para tramitar esta solicitud, nunca con fines de marketing."
+    },
+    "communicationEmail": {
+      "subject": "{orgName}: Actualización sobre tu solicitud de datos",
+      "subjectWithCustom": "{orgName}: {subject}",
+      "greeting": "Hola:",
+      "intro": "{orgName} te ha enviado un mensaje sobre tu solicitud de datos:",
+      "referenceLabel": "Número de referencia",
+      "ctaText": "Ver estado de la solicitud",
+      "footer": "Si tienes preguntas, responde a este correo o utiliza el enlace anterior para consultar el estado de tu solicitud."
+    },
+    "extensionEmail": {
+      "subject": "{orgName}: nueva fecha para tu solicitud",
+      "greeting": "Hola:",
+      "body": "{orgName} ha ampliado el plazo para responder a tu solicitud. La nueva fecha es el {newDate}.",
+      "reasons": "{orgName} te enviará los motivos de la ampliación.",
+      "referenceLabel": "Número de referencia",
+      "statusLabel": "Consulta el estado de tu solicitud"
+    }
+  },
+  "toasts": {
+    "generic": {
+      "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."
+    },
+    "organization": {
+      "created": "Creada «{name}»",
+      "updated": "Organización actualizada",
+      "deleted": "Eliminada «{name}»"
+    },
+    "dataFlow": {
+      "created": "Flujo de datos creado",
+      "updated": "Flujo de datos actualizado",
+      "deleted": "Flujo de datos eliminado",
+      "createFailed": "No se ha podido crear el flujo de datos",
+      "updateFailed": "No se ha podido actualizar el flujo de datos",
+      "deleteFailed": "No se ha podido eliminar el flujo de datos"
+    },
+    "asset": {
+      "created": "Sistema creado",
+      "updated": "Sistema actualizado",
+      "deleted": "Sistema eliminado",
+      "elementAdded": "Elemento de datos añadido",
+      "elementUpdated": "Elemento de datos actualizado",
+      "elementDeleted": "Elemento eliminado",
+      "activitiesUpdated": "Actividades actualizadas",
+      "activitiesUpdatedWithFlows": "Actividades actualizadas: {count, plural, one {# flujo de datos propuesto} other {# flujos de datos propuestos}}, por confirmar en el mapa"
+    },
+    "activity": {
+      "created": "Actividad de tratamiento creada",
+      "updated": "Actividad de tratamiento actualizada",
+      "deleted": "Actividad de tratamiento eliminada",
+      "assetsLinked": "Sistemas enlazados actualizados",
+      "assetsLinkedWithFlows": "Sistemas vinculados: {count, plural, one {# flujo de datos propuesto} other {# flujos de datos propuestos}}, por confirmar en el mapa",
+      "flowsGenerated": "{count, plural, one {# nuevo flujo de datos propuesto} other {# nuevos flujos de datos propuestos}}, por confirmar en el mapa",
+      "noNewFlows": "No hay nuevos flujos que generar: el mapa existente ya cubre esta actividad"
+    },
+    "vendor": {
+      "created": "Proveedor creado",
+      "updated": "Proveedor actualizado",
+      "deleted": "Proveedor eliminado",
+      "contractAdded": "Contrato añadido",
+      "reviewScheduled": "Revisión programada",
+      "reviewCompleted": "Revisión marcada como completada"
+    },
+    "transfer": {
+      "created": "Transferencia creada",
+      "updated": "Transferencia actualizada",
+      "complianceUpdated": "Cumplimiento actualizado",
+      "deleted": "Transferencia eliminada"
+    },
+    "incident": {
+      "created": "Incidencia registrada",
+      "updated": "Incidencia actualizada",
+      "deleted": "Incidencia eliminada",
+      "statusUpdated": "Estado del incidente actualizado",
+      "timelineAdded": "Entrada de cronología añadida",
+      "taskCreated": "Tarea creada",
+      "notificationCreated": "Notificación creada",
+      "statusUpdateFailed": "No se ha podido actualizar el estado",
+      "timelineAddFailed": "No se ha podido añadir la entrada",
+      "taskCreateFailed": "No se ha podido crear la tarea",
+      "notificationCreateFailed": "No se ha podido crear la notificación"
+    },
+    "dsar": {
+      "created": "Solicitud de derechos creada",
+      "statusUpdated": "Estado de la solicitud actualizado",
+      "taskAdded": "Tarea añadida",
+      "taskUpdated": "Tarea actualizada",
+      "tasksGenerated": "Tareas generadas a partir de los sistemas",
+      "messageSent": "Mensaje enviado"
+    }
+  },
+  "pdf": {
+    "common": {
+      "brand": "DPO Central",
+      "brandUppercase": "DPO CENTRAL",
+      "confidential": "CONFIDENCIAL",
+      "generated": "Generado el {date}",
+      "confidentialBody": "CONFIDENCIAL: este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse al personal autorizado y, previa solicitud, a las autoridades de control."
+    },
+    "enum": {
+      "assetType": {
+        "APPLICATION": "Aplicación",
+        "CLOUD_SERVICE": "Servicio en la nube",
+        "DATABASE": "Base de datos",
+        "FILE_SYSTEM": "Sistema de archivos",
+        "THIRD_PARTY": "Tercero",
+        "PHYSICAL": "Físico",
+        "OTHER": "Otro"
+      },
+      "legalBasis": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión de interés público",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      },
+      "riskTier": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "aiRisk": {
+        "UNACCEPTABLE": "Inaceptable",
+        "HIGH_RISK": "Alto riesgo",
+        "LIMITED": "Limitado",
+        "MINIMAL": "Mínimo"
+      },
+      "vendorStatus": {
+        "PROSPECTIVE": "Potencial",
+        "ACTIVE": "Activo",
+        "UNDER_REVIEW": "En revisión",
+        "SUSPENDED": "Suspendido",
+        "TERMINATED": "Finalizado"
+      },
+      "contractStatus": {
+        "DRAFT": "Borrador",
+        "ACTIVE": "En vigor",
+        "EXPIRED": "Vencido",
+        "TERMINATED": "Rescindido",
+        "PENDING": "Pendiente",
+        "PENDING_SIGNATURE": "Pendiente de firma",
+        "RENEWED": "Renovado"
+      },
+      "aiSystemStatus": {
+        "DRAFT": "Borrador",
+        "REGISTERED": "Registrado",
+        "UNDER_REVIEW": "En revisión",
+        "COMPLIANT": "Conforme",
+        "NON_COMPLIANT": "No conforme",
+        "DECOMMISSIONED": "Retirado"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Opiniones políticas",
+        "RELIGIOUS": "Convicciones religiosas",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Condenas e infracciones",
+        "OTHER": "Otros"
+      }
+    },
+    "ropaReport": {
+      "eyebrow": "Registro de actividades de tratamiento (RAT)",
+      "coverTitle": "Registro de actividades de tratamiento",
+      "coverSubtitle": "Registro del artículo 30",
+      "coverReference": "RGPD · Artículo 30",
+      "stats": {
+        "processingActivities": "Actividades de tratamiento",
+        "intlTransfers": "Transferencias int.",
+        "automatedDecisions": "Decisiones automatizadas",
+        "needingReview": "Pendientes de revisión",
+        "incomplete": "Incompletas"
+      },
+      "byLegalBasis": "Por base jurídica",
+      "dataFlowMap": "Mapa de flujos de datos",
+      "dataFlowMapLead": "Cada actividad de tratamiento se muestra como un grupo con borde que contiene los activos a los que accede. Las líneas son flujos registrados o confirmados; los flujos propuestos a partir de los enlaces actividad-activo aparecen cuando alguien los confirma en la aplicación.",
+      "processingActivities": "Actividades de tratamiento",
+      "incomplete": "INCOMPLETA",
+      "activity": {
+        "purpose": "Finalidad",
+        "legalBasis": "Base jurídica",
+        "dataSubjects": "Interesados",
+        "dataCategories": "Categorías de datos",
+        "recipients": "Destinatarios",
+        "retentionPeriod": "Plazo de conservación",
+        "automatedDecisions": "Decisiones automatizadas",
+        "automatedYes": "Sí: {detail}",
+        "automatedNoDetails": "Sin detalles",
+        "automatedNo": "No",
+        "lastReviewed": "Última revisión",
+        "nextReview": "Próxima revisión",
+        "systems": "Sistemas / Activos",
+        "systemsColumns": {
+          "system": "Sistema",
+          "type": "Tipo",
+          "location": "Ubicación",
+          "elements": "Elementos"
+        },
+        "transfers": "Transferencias internacionales",
+        "transfersColumns": {
+          "destination": "Destino",
+          "organization": "Organización",
+          "mechanism": "Mecanismo",
+          "safeguards": "Garantías"
+        },
+        "warningPrefix": "Aviso: ",
+        "description": "Descripción",
+        "role": "Condición en el tratamiento",
+        "jointController": "Corresponsable del tratamiento",
+        "securityMeasures": "Medidas de seguridad",
+        "securityInherited": "Se aplica la descripción general de las medidas de seguridad (ver arriba).",
+        "processingCategories": "Categorías de tratamientos efectuados"
+      },
+      "securityTitle": "Medidas de seguridad",
+      "securityLead": "Descripción general de las medidas técnicas y organizativas de seguridad (artículo 32 del RGPD), que se aplica a cada actividad que no describe las suyas.",
+      "unassignedTransfers": "Transferencias no vinculadas a una actividad",
+      "unassignedTransfersLead": "Transferencias internacionales registradas en la organización que aún no están vinculadas a una actividad de tratamiento. Vincula cada una a su actividad.",
+      "empty": "No hay actividades de tratamiento activas como responsable.",
+      "processor": {
+        "eyebrow": "RAT como encargado",
+        "coverTitle": "Registro de actividades de tratamiento como encargado",
+        "coverSubtitle": "Registro del artículo 30.2",
+        "coverReference": "RGPD · Artículo 30.2",
+        "activities": "Tratamientos efectuados por cuenta de cada responsable",
+        "empty": "No hay actividades de tratamiento activas como encargado."
+      }
+    },
+    "dsarPerformance": {
+      "pageTitle": "Rendimiento del ejercicio de derechos",
+      "coverTitle": "Informe de rendimiento del ejercicio de derechos",
+      "coverSubtitle": "Cumplimiento y métricas de solicitudes de los interesados",
+      "coverGenerated": "Generado: {date}",
+      "coverConfidential": "CONFIDENCIAL: este informe contiene métricas agregadas de gestión de solicitudes de los interesados. No incluye datos personales individuales.",
+      "executiveSummary": "Resumen ejecutivo",
+      "stats": {
+        "totalRequests": "Solicitudes totales",
+        "onTimeRate": "Tasa en plazo",
+        "avgResolution": "Resolución media",
+        "overdue": "Vencidas",
+        "notAvailable": "N/D"
+      },
+      "meta": {
+        "organization": "Organización",
+        "reportDate": "Fecha del informe",
+        "primaryJurisdiction": "Jurisdicción principal",
+        "primaryJurisdictionNotSet": "Sin definir",
+        "defaultDeadline": "Plazo por defecto",
+        "defaultDeadlineDays": "{count} días",
+        "defaultDeadlineMonths": "{count, plural, one {# mes} other {# meses}}",
+        "totalRequests": "Solicitudes totales",
+        "completed": "Completadas",
+        "currentlyOpen": "Abiertas actualmente",
+        "completedLast30Days": "Completadas (últimos 30 días)",
+        "autoRedacted": "Anonimizadas automáticamente"
+      },
+      "privacyByDesign": "Privacidad desde el diseño",
+      "privacyByDesignBody": "Este informe no contiene datos personales individuales. Todas las métricas son agregadas. Los registros de solicitudes completadas se anonimizan automáticamente tras el periodo de conservación configurado para minimizar el riesgo para la protección de datos.",
+      "requestAnalysis": "Análisis de solicitudes",
+      "byType": "Por tipo de solicitud",
+      "byTypeDesc": "Distribución de las solicitudes de los interesados por tipo de derecho ejercido",
+      "typeColumns": {
+        "type": "Tipo de solicitud",
+        "count": "Nº",
+        "percentage": "Porcentaje"
+      },
+      "byStatus": "Por estado",
+      "byStatusDesc": "Distribución por estado actual de todas las solicitudes",
+      "statusColumns": {
+        "status": "Estado",
+        "count": "Nº",
+        "percentage": "Porcentaje"
+      },
+      "slaCompliance": "Cumplimiento de plazos por jurisdicción",
+      "slaDesc": "Los plazos de respuesta a las solicitudes de derechos varían según la jurisdicción. Cuando concurren varias jurisdicciones, prevalece el plazo más estricto. Cada solicitud tiene su propio plazo: el estado indica «Se cumple» solo si todas las solicitudes medidas se han respondido dentro de él, y «No se cumple» si alguna se ha respondido tarde o sigue abierta con el plazo vencido.",
+      "slaColumns": {
+        "jurisdiction": "Jurisdicción",
+        "deadline": "Plazo",
+        "avgResolution": "Resolución media",
+        "status": "Estado"
+      },
+      "slaDays": "{days} días",
+      "slaMonths": "{months, plural, one {# mes} other {# meses}}",
+      "monthlyTrend": "Tendencia mensual",
+      "monthlyTrendDesc": "Volumen de solicitudes y tasa de finalización en los últimos 12 meses. El seguimiento de tendencias ayuda a anticipar necesidades de recursos e identificar patrones estacionales.",
+      "monthlyColumns": {
+        "month": "Mes",
+        "received": "Recibidas",
+        "completed": "Completadas",
+        "backlog": "Pendientes"
+      },
+      "openRequestAging": "Antigüedad de solicitudes abiertas",
+      "agingDesc": "Las solicitudes que superan el plazo de la jurisdicción requieren atención inmediata. El análisis de antigüedad ayuda a priorizar la carga y a identificar cuellos de botella en la tramitación.",
+      "agingColumns": {
+        "band": "Rango de antigüedad",
+        "open": "Solicitudes abiertas",
+        "risk": "Nivel de riesgo"
+      },
+      "riskCritical": "Crítico: probablemente fuera de plazo",
+      "riskAtRisk": "En riesgo",
+      "slaStatusMeeting": "Se cumple",
+      "slaStatusNoData": "Sin datos",
+      "riskOnTrack": "En plazo",
+      "agingBands": {
+        "d0to7": "De 0 a 7 días",
+        "d7to14": "De 7 a 14 días",
+        "d14to30": "De 14 a 30 días",
+        "over30": "Más de 30 días"
+      },
+      "dsarTypes": {
+        "ACCESS": "Acceso (Derecho de acceso)",
+        "ERASURE": "Supresión (Derecho al olvido)",
+        "RECTIFICATION": "Rectificación",
+        "PORTABILITY": "Portabilidad de datos",
+        "OBJECTION": "Oposición al tratamiento",
+        "RESTRICTION": "Limitación del tratamiento",
+        "WITHDRAW_CONSENT": "Retirada del consentimiento",
+        "AUTOMATED_DECISION": "Revisión de decisión automatizada",
+        "OTHER": "Otros",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
+      },
+      "slaStatusNotMet": "No se cumple"
+    },
+    "breachRegister": {
+      "recordedInErrorPrefix": "[Registrada por error]",
+      "pageTitle": "Registro de brechas",
+      "coverTitle": "Registro de brechas e incidentes",
+      "coverSubtitle": "RGPD, artículo 33.5",
+      "summary": "Resumen",
+      "stats": {
+        "totalIncidents": "Incidencias totales",
+        "critical": "Críticas",
+        "high": "Altas",
+        "pendingNotifications": "Notificaciones pendientes a la autoridad de control"
+      },
+      "byStatus": "Por estado",
+      "allIncidents": "Todos los incidentes",
+      "unknown": "Desconocido",
+      "overviewColumns": {
+        "id": "ID",
+        "title": "Título",
+        "type": "Tipo",
+        "severity": "Gravedad",
+        "status": "Estado",
+        "discovered": "Descubierta",
+        "affectedRecords": "Registros afectados"
+      },
+      "statusColumns": {
+        "status": "Estado",
+        "count": "Nº"
+      },
+      "meta": {
+        "incidentId": "ID del incidente",
+        "type": "Tipo",
+        "discovered": "Descubierta",
+        "discoveredBy": "Descubierta por",
+        "discoveryMethod": "Método de descubrimiento",
+        "affectedRecords": "Registros afectados",
+        "affectedSubjects": "Interesados afectados",
+        "dataCategories": "Categorías de datos",
+        "containedAt": "Contenida el",
+        "resolvedAt": "Resuelta el",
+        "notificationRequired": "¿Requiere notificación a la autoridad de control?",
+        "notificationDeadline": "Plazo de notificación",
+        "yes": "Sí",
+        "no": "No",
+        "notAssessed": "Aún sin evaluar"
+      },
+      "subsections": {
+        "description": "Descripción",
+        "containmentActions": "Acciones de contención",
+        "rootCause": "Causa raíz",
+        "lessonsLearned": "Lecciones aprendidas",
+        "dpaNotifications": "Notificaciones a la autoridad de control",
+        "timeline": "Cronología",
+        "notifications": "Notificaciones",
+        "resolutionNotes": "Notas de resolución"
+      },
+      "notificationColumns": {
+        "jurisdiction": "Jurisdicción",
+        "status": "Estado",
+        "date": "Fecha",
+        "recipient": "Destinatario",
+        "deadline": "Plazo",
+        "noFixedDeadline": "Sin plazo fijo según esta ley",
+        "reference": "Referencia",
+        "recipientType": {
+          "DPA": "Autoridad de control",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        }
+      },
+      "timelineColumns": {
+        "timestamp": "Fecha y hora",
+        "event": "Evento",
+        "by": "Por"
+      },
+      "timelineSystem": "Sistema",
+      "overdue": "El plazo de notificación ha vencido y no se ha notificado a la autoridad de control"
+    },
+    "vendorRegister": {
+      "eyebrow": "Registro de proveedores",
+      "coverTitle": "Registro de proveedores",
+      "coverSubtitle": "Inventario de encargados y subencargados",
+      "coverReference": "RGPD · Artículo 28",
+      "stats": {
+        "totalVendors": "Proveedores totales",
+        "active": "Activos",
+        "highCritical": "Alto / Crítico",
+        "contractsExpiring": "Contratos que vencen en 30 días"
+      },
+      "criticality": "Criticidad",
+      "coverage": "Cobertura",
+      "coverageDpa": "Contratos de encargo en vigor",
+      "coverageCertified": "Certificados",
+      "certificationsTop": "Certificaciones más frecuentes",
+      "directory": "Directorio",
+      "directoryLead": "Todos los proveedores agrupados por categoría principal. El nivel de riesgo y el estado del contrato de encargo del tratamiento se muestran en línea; las certificaciones aparecen como etiquetas.",
+      "columns": {
+        "vendor": "Proveedor",
+        "status": "Estado",
+        "risk": "Riesgo",
+        "countries": "Países",
+        "certifications": "Certificaciones",
+        "dpa": "Contrato de encargo",
+        "nextReview": "Próxima revisión",
+        "service": "Servicio",
+        "dataProcessed": "Datos tratados",
+        "contract": "Contrato de encargo"
+      },
+      "dpaMissing": "FALTA",
+      "uncategorized": "Sin categoría",
+      "details": "Detalle del tratamiento",
+      "detailsLead": "Qué hace cada proveedor, qué datos personales trata, dónde y qué contrato de encargo del tratamiento lo regula (artículos 28 y 30 del RGPD).",
+      "dateRangeJoin": " a ",
+      "noDpa": "Sin contrato de encargo"
+    },
+    "chrome": {
+      "generatedBy": "Generado con DPO Central",
+      "noRecords": "Sin registros",
+      "notStated": "No consta"
+    },
+    "csv": {
+      "words": {
+        "notSpecified": "Sin especificar",
+        "yes": "Sí",
+        "no": "No",
+        "notAssessed": "Aún sin evaluar",
+        "none": "Ninguna",
+        "noDpa": "Sin contrato de encargo"
+      },
+      "vendors": {
+        "name": "Nombre",
+        "status": "Estado",
+        "riskTier": "Nivel de riesgo",
+        "riskScore": "Puntuación de riesgo",
+        "website": "Sitio web",
+        "primaryContact": "Contacto principal",
+        "contactEmail": "Correo electrónico de contacto",
+        "categories": "Categorías",
+        "dataProcessed": "Datos tratados",
+        "countries": "Países",
+        "certifications": "Certificaciones",
+        "lastAssessed": "Última evaluación",
+        "nextReview": "Próxima revisión",
+        "contractNames": "Contratos",
+        "dpaStatus": "Estado del contrato de encargo"
+      },
+      "breaches": {
+        "id": "ID",
+        "title": "Título",
+        "type": "Tipo",
+        "severity": "Gravedad",
+        "status": "Estado",
+        "description": "Descripción",
+        "discoveredAt": "Descubierta el",
+        "discoveredBy": "Descubierta por",
+        "affectedRecords": "Registros afectados",
+        "affectedSubjects": "Interesados afectados",
+        "dataCategories": "Categorías de datos",
+        "containedAt": "Contenida el",
+        "rootCause": "Causa raíz",
+        "resolvedAt": "Resuelta el",
+        "notificationRequired": "¿Requiere notificación a la autoridad de control?",
+        "notificationDeadline": "Plazo de notificación"
+      }
+    },
+    "ropaRecord": {
+      "role": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado"
+      },
+      "controller": {
+        "title": "Responsable del tratamiento (artículo 30.1.a del RGPD)",
+        "processorTitle": "Encargado del tratamiento (artículo 30.2.a del RGPD)",
+        "name": "Responsable del tratamiento",
+        "processorName": "Encargado del tratamiento",
+        "taxId": "NIF",
+        "address": "Dirección",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "dpo": "Delegado de protección de datos",
+        "representative": "Representante en la Unión (artículo 27)",
+        "securityMeasures": "Descripción general de las medidas de seguridad"
+      },
+      "columns": {
+        "activity": "Actividad de tratamiento",
+        "controller": "Responsable del tratamiento",
+        "controllerContact": "Datos de contacto del responsable",
+        "jointController": "Corresponsable del tratamiento",
+        "dpo": "Delegado de protección de datos",
+        "representative": "Representante en la Unión",
+        "purpose": "Fines del tratamiento",
+        "legalBasis": "Base jurídica",
+        "dataSubjects": "Categorías de interesados",
+        "dataCategories": "Categorías de datos personales",
+        "specialCategories": "Categorías especiales (artículos 9 y 10)",
+        "recipients": "Categorías de destinatarios",
+        "transfers": "Transferencias internacionales y garantías",
+        "retention": "Plazos previstos de supresión",
+        "security": "Medidas técnicas y organizativas de seguridad",
+        "role": "Condición en el tratamiento",
+        "description": "Descripción",
+        "automatedDecisions": "Decisiones automatizadas",
+        "systems": "Sistemas",
+        "lastReviewed": "Última revisión",
+        "nextReview": "Próxima revisión",
+        "processor": "Encargado del tratamiento",
+        "processorContact": "Datos de contacto del encargado",
+        "clientController": "Responsable por cuenta del cual se trata",
+        "clientControllerContact": "Datos de contacto del responsable",
+        "clientRepresentative": "Representante del responsable",
+        "clientDpo": "Delegado de protección de datos del responsable",
+        "processingCategories": "Categorías de tratamientos efectuados"
+      },
+      "warnings": {
+        "retentionMissing": "Plazo de conservación sin especificar",
+        "recipientsMissing": "Sin destinatarios indicados",
+        "dataSubjectsMissing": "Sin categorías de interesados",
+        "categoriesMissing": "Sin categorías de datos personales",
+        "securityMissing": "Sin descripción de las medidas de seguridad",
+        "noSystems": "Sin sistemas vinculados",
+        "neverReviewed": "Nunca se ha revisado",
+        "reviewOverdue": "La fecha de revisión ha pasado",
+        "automatedNoDetail": "Decisiones automatizadas sin detalles",
+        "clientControllerMissing": "No se ha indicado el responsable por cuenta del cual se trata"
+      },
+      "words": {
+        "notSpecified": "Sin especificar",
+        "notDesignated": "No designado",
+        "yes": "Sí",
+        "no": "No",
+        "none": "Ninguno",
+        "noTransfers": "Sin transferencias internacionales",
+        "neverReviewed": "Nunca se ha revisado",
+        "days": "{count, plural, one {# día} other {# días}}",
+        "tiaDone": "Evaluación de impacto de la transferencia realizada",
+        "tiaOn": "Evaluación de impacto de la transferencia realizada el {date}"
+      },
+      "sheets": {
+        "record": "RAT",
+        "processorRecord": "RAT como encargado",
+        "controller": "Responsable",
+        "processor": "Encargado",
+        "field": "Campo",
+        "value": "Valor"
+      }
+    }
+  },
+  "docs": {
+    "toc": {
+      "gettingStarted": {
+        "label": "Primeros pasos"
+      },
+      "dataInventory": {
+        "label": "Inventario de datos",
+        "items": {
+          "assets": "Sistemas",
+          "elements": "Elementos de datos",
+          "activities": "Actividades de tratamiento",
+          "flows": "Flujos de datos",
+          "transfers": "Transferencias internacionales"
+        }
+      },
+      "dsar": {
+        "label": "Ejercicio de derechos",
+        "items": {
+          "creating": "Crear solicitudes",
+          "tasks": "Gestión de tareas",
+          "sla": "Seguimiento de plazos",
+          "portal": "Portal público",
+          "intakeConfig": "Configuración del formulario"
+        }
+      },
+      "incidents": {
+        "label": "Incidentes",
+        "items": {
+          "reporting": "Registro",
+          "timeline": "Cronología",
+          "notifications": "Notificaciones a la autoridad",
+          "tasks": "Tareas de respuesta"
+        }
+      },
+      "vendors": {
+        "label": "Gestión de proveedores",
+        "items": {
+          "adding": "Añadir proveedores",
+          "contracts": "Contratos",
+          "questionnaires": "Diligencia debida",
+          "riskReviews": "Revisiones de riesgo"
+        }
+      }
+    },
+    "common": {
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "gettingStarted": {
+      "title": "Primeros pasos",
+      "roles": {
+        "title": "Roles de usuario",
+        "description": "Qué puede hacer cada rol, los departamentos y las aprobaciones."
+      },
+      "communitySubtitle": "Esta guía describe los módulos de la edición comunitaria: el inventario de datos y el Registro de Actividades de Tratamiento, las solicitudes de derechos, el registro de brechas y los proveedores.",
+      "modulesTitle": "Módulos",
+      "modulesDescription": "Una guía por módulo."
+    },
+    "incidents": {
+      "title": "Gestión de incidentes",
+      "subtitle": "Registra y gestiona las brechas de seguridad de los datos personales y los incidentes de seguridad desde su detección hasta su resolución. El módulo de incidentes te ayuda a cumplir los requisitos de notificación y a mantener una pista de auditoría completa.",
+      "reporting": {
+        "title": "Registrar incidentes",
+        "description": "Registra los incidentes en cuanto se detecten. El sistema recoge los datos clave y empieza a controlar los plazos automáticamente.",
+        "statsMockupTitle": "Estadísticas de incidentes",
+        "cardsMockupTitle": "Tarjetas de incidentes",
+        "stats": {
+          "total": "Total de incidentes",
+          "open": "Abiertos",
+          "critical": "Críticos",
+          "pendingDpa": "Pend. autoridad"
+        },
+        "cards": {
+          "email": "Acceso no autorizado al correo",
+          "export": "Error en exportación de datos de clientes",
+          "api": "Fuga de datos de API de terceros",
+          "usb": "Pendrive USB extraviado"
+        },
+        "reportedLabel": "Registrado el {date}",
+        "steps": {
+          "report": {
+            "title": "Registra el incidente",
+            "description": "Ve a Incidentes y pulsa «Registrar incidente». Indica un título, una descripción, la gravedad y la categoría."
+          },
+          "assess": {
+            "title": "Evalúa la gravedad",
+            "description": "Clasifica la gravedad (Baja, Media, Alta o Crítica) según los tipos de datos afectados, el número de interesados y el daño potencial."
+          },
+          "assign": {
+            "title": "Asigna el equipo de respuesta",
+            "description": "Añade miembros del equipo al incidente y asigna tareas de respuesta."
+          },
+          "investigate": {
+            "title": "Investiga y contén",
+            "description": "Documenta los hallazgos en la cronología. Actualiza el estado a medida que el incidente avanza de «En investigación» a «Contenido»."
+          },
+          "notify": {
+            "title": "Notifica si es necesario",
+            "description": "Determina si hay que notificarlo a la autoridad de control. En ese caso, usa el flujo de notificación (consulta más abajo)."
+          },
+          "resolve": {
+            "title": "Resuelve y cierra",
+            "description": "Documenta la causa raíz, las acciones correctivas y las lecciones aprendidas. Pasa el incidente a «Cerrado»."
+          }
+        }
+      },
+      "timeline": {
+        "title": "Cronología del incidente",
+        "description": "Cada incidente tiene una cronología que recoge todas las acciones, los cambios de estado y las comunicaciones.",
+        "mockupTitle": "Vista de cronología",
+        "entries": {
+          "reported": "Incidente registrado",
+          "severity": "Gravedad establecida en «Crítica»",
+          "investigation": "Investigación iniciada",
+          "rootCause": "Causa raíz identificada: configuración incorrecta de la API",
+          "notification": "Notificación a la autoridad de control iniciada"
+        }
+      },
+      "notifications": {
+        "title": "Notificaciones a la autoridad de control",
+        "description": "Cuando un incidente implica una brecha de seguridad de los datos personales, puede que tengas que notificarlo a la autoridad de control.",
+        "warningTitle": "Plazo de notificación de 72 horas",
+        "warningBody": "Según el artículo 33 del RGPD, debes notificar a tu autoridad de control en un plazo de 72 horas desde que tengas conocimiento de la brecha de seguridad de los datos personales (salvo que sea improbable que constituya un riesgo para los derechos y libertades de las personas). El sistema controla este plazo desde el momento en que se registra el incidente.",
+        "tipTitle": "Flujo de notificación",
+        "tipBody": "Cuando marcas que un incidente requiere notificación a la autoridad de control, el sistema crea una tarea de notificación con el plazo de 72 horas, rellena de antemano el formulario con los datos del incidente y hace seguimiento del estado del envío."
+      },
+      "tasks": {
+        "title": "Tareas de respuesta",
+        "description": "Desglosa la respuesta al incidente en tareas asignables con plazos.",
+        "mockupTitle": "Lista de tareas",
+        "items": {
+          "identify": "Identificar a los interesados afectados",
+          "contain": "Contener la fuga de datos",
+          "prepare": "Preparar la notificación a la autoridad de control",
+          "notifyIndividuals": "Notificar a las personas afectadas",
+          "document": "Documentar las lecciones aprendidas"
+        },
+        "assignees": {
+          "dpo": "DPD",
+          "itSecurity": "Seguridad informática",
+          "communications": "Comunicación"
+        }
+      }
+    },
+    "vendors": {
+      "title": "Gestión de proveedores",
+      "subtitle": "Gestiona los proveedores externos que tratan datos personales por cuenta tuya. Haz seguimiento de los contratos y las revisiones, y supervisa los niveles de riesgo de todos tus proveedores.",
+      "adding": {
+        "title": "Añadir proveedores",
+        "description": "Registra proveedores y recoge los datos clave de la relación de tratamiento de datos que tienen con tu organización.",
+        "statsMockupTitle": "Estadísticas de proveedores",
+        "stats": {
+          "total": "Total de proveedores",
+          "active": "Activos",
+          "highRisk": "Riesgo alto",
+          "pendingReview": "Pendientes de revisión"
+        },
+        "cardsMockupTitle": "Tarjetas de proveedor",
+        "categories": {
+          "cloudInfra": "Infraestructura en la nube",
+          "analytics": "Analítica",
+          "email": "Servicio de correo",
+          "crm": "CRM"
+        },
+        "riskSuffix": "Riesgo",
+        "statusLabels": {
+          "ACTIVE": "ACTIVO",
+          "UNDER_REVIEW": "EN REVISIÓN",
+          "SUSPENDED": "SUSPENDIDO"
+        },
+        "steps": {
+          "navigate": {
+            "title": "Ve a Proveedores",
+            "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Proveedores y encargados."
+          },
+          "click": {
+            "title": "Pulsa «Añadir proveedor»",
+            "description": "Abre el formulario de creación de proveedor."
+          },
+          "details": {
+            "title": "Introduce los detalles del proveedor",
+            "description": "Indica el nombre, la categoría, la descripción, los datos de contacto y los detalles del tratamiento de datos."
+          },
+          "risk": {
+            "title": "Establece el nivel de riesgo",
+            "description": "Asigna un nivel de riesgo inicial (Bajo, Medio, Alto o Crítico) según el tipo y el volumen de datos que tratan."
+          },
+          "contract": {
+            "title": "Sube el contrato",
+            "description": "Adjunta el contrato de encargo del tratamiento (DPA) u otros contratos pertinentes."
+          }
+        }
+      },
+      "contracts": {
+        "title": "Contratos",
+        "description": "Haz seguimiento de los contratos de encargo del tratamiento (DPA) y de otros contratos con cada proveedor.",
+        "mockupTitle": "Seguimiento de contratos",
+        "dateRangeSeparator": "a",
+        "statuses": {
+          "Active": "Activo",
+          "ExpiringSoon": "Próximo a vencer",
+          "Expired": "Vencido"
+        },
+        "calloutTitle": "Seguimiento del vencimiento de los contratos",
+        "calloutBody": "Los contratos que vencen en los próximos 30 días aparecen entre los indicadores de riesgo del informe de cumplimiento, para que tengas tiempo de renovar o renegociar las condiciones.",
+        "types": {
+          "DPA": "Contrato de encargo",
+          "DPA_SCC": "Contrato de encargo + SCC"
+        }
+      },
+      "riskReviews": {
+        "title": "Revisiones de riesgo",
+        "description": "Revisa periódicamente los niveles de riesgo de los proveedores según los resultados del cuestionario, el historial de incidentes y el cumplimiento contractual.",
+        "infoTitle": "Frecuencia de revisión",
+        "infoBody": "La frecuencia recomendada depende del nivel de riesgo del proveedor: los proveedores de riesgo crítico, cada trimestre; los de riesgo alto, cada semestre; los de riesgo medio, cada año, y los de riesgo bajo, cada dos años."
+      }
+    },
+    "dataInventory": {
+      "title": "Inventario de datos",
+      "subtitle": "El módulo Inventario de datos es la base de tu programa de privacidad. Recoge qué datos personales tienes, por dónde circulan y cómo se tratan, y constituye la base de tu registro de actividades de tratamiento (RAT).",
+      "assets": {
+        "title": "Sistemas",
+        "description": "Los sistemas son las bases de datos, aplicaciones y servicios que almacenan datos personales.",
+        "mockupTitle": "Tarjetas de sistema",
+        "elementsLabel": "{count} elementos de datos",
+        "activitiesLabel": "{count} actividades",
+        "steps": {
+          "navigate": {
+            "title": "Ve a Inventario de datos",
+            "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Inventario de datos."
+          },
+          "add": {
+            "title": "Pulsa «Añadir sistema»",
+            "description": "Usa el botón de la esquina superior derecha para abrir el formulario de creación de sistema."
+          },
+          "details": {
+            "title": "Rellena los detalles",
+            "description": "Introduce el nombre del sistema, el tipo (Base de datos, Aplicación, Servicio en la nube, etc.), la descripción y el responsable de los datos."
+          },
+          "link": {
+            "title": "Vincula elementos de datos",
+            "description": "Añade los elementos de datos personales que almacena este sistema (consulta la sección Elementos de datos)."
+          },
+          "save": {
+            "title": "Guarda el sistema",
+            "description": "El sistema aparecerá en tu inventario y podrá vincularse a actividades de tratamiento."
+          }
+        }
+      },
+      "elements": {
+        "title": "Elementos de datos",
+        "description": "Los elementos de datos son los tipos concretos de datos personales que tratas (p. ej., direcciones de correo electrónico, direcciones IP, historiales médicos).",
+        "mockupTitle": "Escala de sensibilidad de elementos de datos",
+        "items": {
+          "company": "Nombre de la empresa",
+          "email": "Dirección de correo electrónico",
+          "address": "Dirección postal",
+          "nationalId": "Número de identificación nacional",
+          "health": "Historial médico"
+        },
+        "calloutTitle": "Categorías especiales de datos (RGPD)",
+        "calloutBody": "Los datos clasificados como «Categoría especial» (datos del artículo 9) requieren consentimiento explícito u otra base jurídica específica. El sistema marca estos elementos para una revisión adicional en las evaluaciones."
+      },
+      "activities": {
+        "title": "Actividades de tratamiento",
+        "description": "Las actividades de tratamiento describen cómo y por qué se usan los datos personales. Cada actividad se vincula a sistemas, elementos y una base jurídica.",
+        "mockupTitle": "Tarjeta de actividad de tratamiento",
+        "sampleTitle": "Correspondencia de atención al cliente",
+        "sampleDesc": "Tratamiento de incidencias de soporte y seguimientos",
+        "sampleElements": {
+          "email": "Dirección de correo electrónico",
+          "name": "Nombre completo",
+          "history": "Historial de soporte"
+        },
+        "assetsLabel": "2 sistemas",
+        "elementsLabel": "3 elementos de datos",
+        "retentionLabel": "Conservación: 3 años",
+        "calloutTitle": "Base jurídica",
+        "calloutBody": "Cada actividad de tratamiento debe tener una base jurídica documentada: consentimiento, contrato, obligación legal, intereses vitales, misión realizada en interés público o interés legítimo."
+      },
+      "flows": {
+        "title": "Flujos de datos",
+        "description": "Los flujos de datos muestran cómo circulan los datos personales entre sistemas. Al vincular sistemas a una actividad de tratamiento se proponen flujos entre ellos, con línea discontinua hasta que los confirmas.",
+        "mockupTitle": "Diagrama de flujo de datos",
+        "nodes": {
+          "crm": "CRM",
+          "marketing": "Marketing",
+          "analytics": "Analítica (UE)"
+        },
+        "body1Bold": "No necesitas dibujar el mapa.",
+        "body1Rest": " Cada vez que vinculas una actividad de tratamiento a dos o más sistemas (desde el botón ",
+        "body1ManageAssets": "Gestionar sistemas",
+        "body1Mid": " en la página de detalle de la actividad, o desde ",
+        "body1ManageActivities": "Gestionar actividades",
+        "body1End": " en la página de la actividad), DPO Central crea automáticamente registros de flujo de datos que los conectan en un orden lógico, según la posición habitual de cada tipo de sistema en una canalización de datos (primero las aplicaciones de entrada, luego los servicios de ingesta, después las bases de datos, después el almacenamiento de archivos y, por último, los destinos de terceros).",
+        "body2Start": "Puedes volver a generar los flujos en cualquier momento con el botón ",
+        "body2GenerateFlows": "Generar flujos",
+        "body2End": " en la página de detalle de una actividad. Los flujos existentes no se duplican: lo que hayas editado a mano se conserva y solo se añaden las conexiones nuevas.",
+        "tipTitle": "Flujos bidireccionales",
+        "tipBody": "Muchos sistemas reales son bidireccionales (un CRM recibe y devuelve datos de clientes). Registra un flujo en cada sentido: el mapa dibuja las líneas de ida y de vuelta como curvas separadas para que no se solapen."
+      },
+      "transfers": {
+        "title": "Transferencias internacionales",
+        "description": "Haz seguimiento de las transferencias internacionales de datos y de las garantías aplicadas en cada una.",
+        "mockupTitle": "Registros de transferencia",
+        "statuses": {
+          "Active": "Activo",
+          "UnderReview": "En revisión"
+        },
+        "warningTitle": "Cumplimiento tras Schrems II",
+        "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de la transferencia (EIT) detecta riesgos, pueden ser necesarias garantías adicionales.",
+        "tipTitle": "Exportar el RAT",
+        "tipBody": "Puedes exportar tu registro de actividades de tratamiento (RAT) completo desde la vista de listado del Inventario de datos. La exportación incluye todos los sistemas, elementos, actividades, bases jurídicas y registros de transferencia."
+      }
+    },
+    "dsar": {
+      "title": "Ejercicio de derechos",
+      "subtitle": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados: desde la recepción a través de un portal público hasta la asignación de tareas, el control de plazos y la respuesta.",
+      "creating": {
+        "title": "Crear solicitudes",
+        "description": "El personal puede crear las solicitudes manualmente, o los interesados pueden enviarlas a través del portal público.",
+        "mockupTitle": "Vista de listado de solicitudes",
+        "daysLeftSuffix": "d restantes",
+        "typesLabel": "Tipos de solicitud",
+        "typesCaption": "Corresponden a los derechos de los interesados de los artículos 15 a 22 del RGPD."
+      },
+      "tasks": {
+        "title": "Gestión de tareas",
+        "description": "Cada solicitud puede tener varias tareas asignadas a distintos miembros del equipo.",
+        "steps": {
+          "verify": {
+            "title": "Verifica la identidad",
+            "description": "Confirma la identidad del interesado antes de tramitar la solicitud. El sistema registra el estado de la verificación de identidad."
+          },
+          "scope": {
+            "title": "Evalúa el alcance",
+            "description": "Determina qué sistemas y actividades de tratamiento son relevantes para la solicitud."
+          },
+          "assign": {
+            "title": "Asigna tareas",
+            "description": "Crea subtareas para cada departamento o sistema que tenga datos pertinentes. Asigna miembros del equipo con plazos."
+          },
+          "collect": {
+            "title": "Recopila los datos",
+            "description": "Cada persona asignada reúne y prepara su parte de la respuesta."
+          },
+          "review": {
+            "title": "Revisa y responde",
+            "description": "Revisa todos los datos recopilados, prepara la respuesta y envíala al interesado."
+          },
+          "close": {
+            "title": "Cierra la solicitud",
+            "description": "Marca la solicitud como completada. El sistema registra la fecha de finalización a efectos de cumplimiento."
+          }
+        }
+      },
+      "sla": {
+        "title": "Seguimiento de plazos",
+        "description": "DPO Central hace seguimiento automático de los plazos de respuesta, marca las solicitudes cuyo plazo está a punto de vencer y envía recordatorios por correo electrónico antes del vencimiento.",
+        "mockupTitle": "Indicadores de progreso de plazo",
+        "overdueLabel": "Vencida",
+        "daysRemaining": "{count} días restantes",
+        "warningTitle": "Plazos de respuesta",
+        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). Las solicitudes que vencen en 7 días o menos se marcan como en riesgo, y las vencidas, como vencidas. Se envían recordatorios por correo electrónico a las personas asignadas a las tareas abiertas de la solicitud (o, si no hay nadie asignado, a los responsables de privacidad, administradores y propietarios) 7, 3 y 1 día antes del vencimiento, y una vez cuando vence; un administrador puede desactivarlos en la configuración del formulario de solicitudes. Cuando la norma permite una prórroga, el botón Prorrogar el plazo de la solicitud la aplica una sola vez y anota tu motivo; aun así, debes informar a la persona dentro del primer plazo."
+      },
+      "portal": {
+        "title": "Portal público",
+        "description": "El portal público de ejercicio de derechos permite a los interesados enviar solicitudes sin tener que contactarte directamente.",
+        "mockupTitle": "Recepción del portal público",
+        "cardTitle": "Enviar una solicitud sobre tus datos",
+        "cardSubtitle": "Ejerce tus derechos de protección de datos",
+        "sampleType": "Acceder a mis datos",
+        "samplePlaceholder": "Me gustaría obtener una copia de todos los datos personales...",
+        "submitButton": "Enviar solicitud",
+        "tipTitle": "Enlace para compartir",
+        "tipPrefix": "Cada organización obtiene una URL única para su portal público (p. ej., ",
+        "tipSuffix": "). Comparte este enlace en tu política de privacidad o en el pie de tu sitio web."
+      },
+      "intakeConfig": {
+        "title": "Configuración del formulario de recepción",
+        "description": "Personaliza los campos que aparecen en tu portal público de ejercicio de derechos y configura los correos de acuse de recibo automáticos. El formulario empieza desactivado. Activa «Formulario público activo» cuando quieras empezar a recibir solicitudes; mientras está desactivado, el enlace muestra tu contacto de privacidad.",
+        "settingsLabel": "Ajustes del portal",
+        "settingsDesc": "Configúralo desde Privacidad > Ejercicio de derechos > pestaña Configuración",
+        "items": {
+          "autoAck": {
+            "label": "Acuse de recibo automático",
+            "desc": "Envía un correo de confirmación al recibir la solicitud"
+          },
+          "types": {
+            "label": "Tipos de solicitud",
+            "desc": "Elige qué derechos ofrecer"
+          },
+          "custom": {
+            "label": "Campos personalizados",
+            "desc": "Añade campos de recepción específicos de la organización"
+          }
+        }
+      }
+    },
+    "shell": {
+      "userGuide": "Documentación",
+      "sourceAndLicence": "Código fuente y licencia",
+      "menu": "Menú de la documentación"
+    },
+    "mockup": {
+      "uiPreview": "Vista previa de la interfaz"
+    },
+    "roleAccess": {
+      "intro": "Cada miembro de una organización tiene un rol, y cada rol puede hacer todo lo que pueden los roles inferiores. La tabla muestra qué puede hacer cada rol. Debajo se explican los departamentos y lo que solo pueden hacer algunos roles.",
+      "columns": {
+        "role": "Rol",
+        "sees": "Ve",
+        "edits": "Crea y edita",
+        "exports": "Exporta",
+        "manages": "Miembros y ajustes",
+        "deletesOrg": "Elimina la organización"
+      },
+      "rows": {
+        "OWNER": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todo, y elimina registros",
+          "exports": "Todo, incluidos el Registro de Actividades de Tratamiento y la lista de solicitudes de derechos",
+          "manages": "Invita y retira miembros, también propietarios; cambia roles; ajustes y departamentos",
+          "deletesOrg": "Sí"
+        },
+        "ADMIN": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todo, y elimina registros",
+          "exports": "Todo, incluidos el Registro de Actividades de Tratamiento y la lista de solicitudes de derechos",
+          "manages": "Invita y retira miembros que no son propietarios; ajustes y departamentos",
+          "deletesOrg": "No"
+        },
+        "PRIVACY_OFFICER": {
+          "sees": "Todo, incluidas todas las solicitudes de derechos y el registro de actividad",
+          "edits": "Todos los módulos de privacidad; gestiona las solicitudes de derechos y abre y gestiona las brechas",
+          "exports": "Informes, registros y el registro de actividad",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "MEMBER": {
+          "sees": "Actividades de tratamiento, sistemas, proveedores, transferencias y brechas; una solicitud de derechos solo si tiene una tarea en ella",
+          "edits": "Actividades de tratamiento, sistemas, proveedores y transferencias; tareas y entradas de la cronología de las brechas",
+          "exports": "Informes y registros",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "VIEWER": {
+          "sees": "Lo mismo que un miembro",
+          "edits": "Nada",
+          "exports": "Informes y registros",
+          "manages": "No",
+          "deletesOrg": "No"
+        }
+      },
+      "departments": {
+        "title": "Departamentos",
+        "body": "Un propietario o un administrador puede limitar a cualquier miembro, sea cual sea su rol, a uno o varios departamentos. Quien queda limitado así solo ve y edita las actividades de tratamiento y los sistemas de esos departamentos, y lo que depende de ellos. No ve las cifras generales de la organización en el resumen. Un límite por departamento nunca amplía lo que permite el rol."
+      },
+      "limits": {
+        "title": "Reservado a algunos roles",
+        "items": {
+          "auditLog": "El registro de actividad, y su exportación, son para propietarios, administradores y responsables de privacidad.",
+          "owners": "Solo un propietario puede nombrar a otro propietario, cambiar el rol de un miembro o retirar a un propietario. Al último propietario no se le puede retirar ni cambiar el rol.",
+          "deleteOrg": "Solo un propietario puede eliminar la organización, escribiendo su nombre para confirmarlo.",
+          "viewers": "Un lector no puede crear, cambiar ni eliminar nada."
+        }
+      }
+    }
+  },
+  "ai": {
+    "notificationEditor": {
+      "edit": "Editar borrador",
+      "save": "Guardar borrador",
+      "cancel": "Cancelar",
+      "placeholder": "Contenido de la notificación…",
+      "saved": "Borrador de notificación guardado"
+    }
+  },
+  "errorPage": {
+    "title": "Algo ha fallado",
+    "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",
+    "transient": "Estamos reconectando con el servicio. Vuelve a intentarlo en un momento.",
+    "tryAgain": "Volver a intentarlo",
+    "backDashboard": "Volver al panel",
+    "backHome": "Volver a la página de inicio",
+    "backSignIn": "Volver al inicio de sesión",
+    "reference": "Referencia: {reference}",
+    "referenceHelp": "Si vuelve a ocurrir, notifícalo indicando esta referencia.",
+    "help": "Cómo notificar un problema"
+  },
+  "views": {
+    "filter": {
+      "any": "Cualquiera",
+      "unassigned": "Sin departamento",
+      "department": "Departamento",
+      "assetType": "Tipo",
+      "status": "Estado",
+      "riskTier": "Riesgo",
+      "type": "Tipo",
+      "severity": "Gravedad",
+      "clear": "Limpiar ({count})"
+    },
+    "saved": {
+      "label": "Vistas guardadas",
+      "save": "Guardar vista",
+      "created": "Vista guardada",
+      "remove": "Quitar {name}",
+      "dialogTitle": "Guardar esta vista",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "p. ej., proveedores de alto riesgo",
+      "cancel": "Cancelar",
+      "confirm": "Guardar"
+    },
+    "departmentSwitch": {
+      "label": "Para mi departamento",
+      "wholeOrg": "Toda la organización"
+    },
+    "field": {
+      "dataSubjects": "Interesados",
+      "categories": "Categorías de datos",
+      "recipients": "Destinatarios",
+      "retention": "Plazo de conservación"
+    }
+  },
+  "departments": {
+    "title": "Departamentos",
+    "description": "Agrupa los registros y sistemas por departamento, asigna un responsable a cada uno y limita quién ve qué.",
+    "empty": "Aún no hay departamentos.",
+    "counts": "{records} registros · {systems} sistemas · {members} miembros",
+    "ownedBy": "a cargo de {name}",
+    "edit": "Editar departamento",
+    "delete": "Eliminar departamento",
+    "addLabel": "Añadir un departamento",
+    "namePlaceholder": "Nombre del departamento",
+    "parent": "Departamento superior",
+    "owner": "Responsable",
+    "noParent": "Sin departamento superior",
+    "noOwner": "Sin responsable",
+    "add": "Añadir",
+    "created": "Departamento creado",
+    "updated": "Departamento actualizado",
+    "deleted": "Departamento eliminado",
+    "deleteTitle": "¿Eliminar este departamento?",
+    "deleteConfirm": "Los registros de «{name}» conservan sus datos y pierden el departamento. Esto no se puede deshacer.",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "name": "Nombre",
+    "editTitle": "Editar departamento",
+    "access": {
+      "title": "Acceso de los miembros",
+      "description": "Limita a un miembro a uno o varios departamentos. Sin límite significa toda la organización.",
+      "wholeOrg": "Toda la organización",
+      "limited": "{count, plural, one {# departamento} other {# departamentos}}",
+      "saved": "Acceso actualizado"
+    }
+  },
+  "serverErrors": {
+    "exact": {
+      "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
+      "dsarReadRestricted": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas",
+      "aDepartmentCannotBeItsOwnParent": "Un departamento no puede ser su propio departamento superior.",
+      "alreadyRedacted": "Los datos personales ya se han suprimido.",
+      "anOrganizationWithThisSlugAlreadyExists": "Ya existe una organización con este identificador.",
+      "cannotChangeTheRoleOfTheLastOwner": "No se puede cambiar el rol del último propietario de una organización.",
+      "cannotRemoveTheLastOwnerOfAnOrganization": "No se puede quitar al último propietario de una organización.",
+      "contractNotFound": "No se ha encontrado el contrato.",
+      "dsarRequestNotFound": "No se ha encontrado la solicitud de ejercicio de derechos.",
+      "dataAssetNotFound": "No se ha encontrado el sistema.",
+      "dataElementNotFound": "No se ha encontrado el elemento de datos.",
+      "dataFlowNotFound": "No se ha encontrado el flujo de datos.",
+      "dataTransferNotFound": "No se ha encontrado la transferencia de datos.",
+      "departmentNotFound": "No se ha encontrado el departamento.",
+      "departmentsNestOneLevelOnly": "Los departamentos solo admiten un nivel de anidación.",
+      "incidentNotFound": "No se ha encontrado el incidente.",
+      "intakeFormNotAvailableForThisOrganization": "El formulario de recepción no está disponible para esta organización.",
+      "jurisdictionNotFoundInCatalog": "No se ha encontrado la jurisdicción en el catálogo.",
+      "jurisdictionNotFound": "No se ha encontrado la jurisdicción.",
+      "memberNotFoundInThisOrganization": "No se ha encontrado al miembro en esta organización.",
+      "memberNotFound": "No se ha encontrado al miembro.",
+      "noUserFoundWithThisEmailTheyMust": "No hay ningún usuario con este correo electrónico. Primero tiene que registrarse.",
+      "notificationNotFound": "No se ha encontrado la notificación.",
+      "onlyCompletedOrCancelledRequestsCanBeDeleted": "Solo se pueden eliminar las solicitudes completadas o canceladas.",
+      "onlyCompletedCancelledOrRejectedRequestsCanBe": "Solo se pueden suprimir los datos personales de las solicitudes completadas, canceladas o rechazadas.",
+      "onlyOwnersAndAdminsCanManageDepartments": "Solo los propietarios y los administradores pueden gestionar los departamentos.",
+      "onlyOwnersCanChangeMemberRoles": "Solo los propietarios pueden cambiar los roles de los miembros.",
+      "onlyOwnersCanInviteAnOwner": "Solo los propietarios pueden invitar a un propietario.",
+      "onlyOwnersCanRemoveAnOwner": "Solo los propietarios pueden quitar a un propietario.",
+      "thatDepartmentIsOutsideYourAccess": "Ese departamento queda fuera de tu acceso.",
+      "chooseOneOfYourDepartments": "Elige uno de tus departamentos para este registro.",
+      "linkTransferToYourActivity": "Vincula esta transferencia a una actividad de tratamiento de tu departamento.",
+      "organizationIdIsRequired": "Falta el identificador de la organización.",
+      "organizationNotFound": "No se ha encontrado la organización.",
+      "organizationOrIntakeFormNotFound": "No se ha encontrado la organización o el formulario de recepción.",
+      "platformAdminAccessRequired": "Se necesita acceso de administrador de la plataforma.",
+      "processingActivityNotFound": "No se ha encontrado la actividad de tratamiento.",
+      "publicEmailDomainsEGGmailComCannot": "Los dominios de correo públicos (p. ej., gmail.com) no se pueden usar como dominios de la organización.",
+      "requestNotFound": "No se ha encontrado la solicitud.",
+      "reviewNotFound": "No se ha encontrado la revisión.",
+      "savedViewNotFound": "No se ha encontrado la vista guardada.",
+      "taskNotFound": "No se ha encontrado la tarea.",
+      "thisOrganisationCouldNotBeCreatedPleaseTry": "No se ha podido crear esta organización. Vuelve a intentarlo con un nombre algo distinto.",
+      "theDeadlineAlreadyRunsToTheLongestPeriod": "El plazo ya llega al máximo que permite la norma.",
+      "thePrimaryJurisdictionsLawAllowsNoExtension": "La norma de la jurisdicción principal no permite prórrogas.",
+      "thisRequestIsAlreadyFinalisedAndCannotBe": "Esta solicitud ya está finalizada y no se puede retirar.",
+      "thisRequestIsClosedItsDeadlineCannotBe": "Esta solicitud está cerrada; su plazo no se puede prorrogar.",
+      "thisUserIsAlreadyAMemberOfThe": "Este usuario ya es miembro de la organización.",
+      "transferNotFound": "No se ha encontrado la transferencia.",
+      "unknownDepartmentInTheList": "Hay un departamento desconocido en la lista.",
+      "unknownDepartment": "Departamento desconocido.",
+      "unknownOwner": "Propietario desconocido.",
+      "unknownParentDepartment": "Departamento superior desconocido.",
+      "userNotFound": "No se ha encontrado el usuario.",
+      "vendorNotFound": "No se ha encontrado el proveedor.",
+      "youDoNotHaveAccessToThisOrganization": "No tienes acceso a esta organización.",
+      "youDoNotHavePermissionToAddMembers": "No tienes permiso para añadir miembros.",
+      "youDoNotHavePermissionToManageJurisdictions": "No tienes permiso para gestionar jurisdicciones.",
+      "youDoNotHavePermissionToPerformThis": "No tienes permiso para realizar esta acción.",
+      "youDoNotHavePermissionToRemoveMembers": "No tienes permiso para quitar miembros.",
+      "youDoNotHavePermissionToRemoveTemplate": "No tienes permiso para quitar elementos de la plantilla.",
+      "youDoNotHavePermissionToUpdateThis": "No tienes permiso para actualizar esta organización.",
+      "youHaveReachedTheMaximumNumberOfSaved": "Has alcanzado el número máximo de vistas guardadas.",
+      "yourAccountHasNoEmailAddress": "Tu cuenta no tiene dirección de correo electrónico.",
+      "assigneeNotFound": "No se ha encontrado a la persona asignada.",
+      "reviewerNotFound": "No se ha encontrado a la persona revisora.",
+      "anUnexpectedErrorOccurredPleaseTryAgain": "Se ha producido un error inesperado. Vuelve a intentarlo.",
+      "weReReconnectingToTheServicePleaseTry": "Estamos volviendo a conectar con el servicio. Vuelve a intentarlo en un momento.",
+      "dsarIntakeNotAccepted": "No hemos podido aceptar esta solicitud. Vuelve a cargar la página y envíala de nuevo.",
+      "dsarIntakeTooFast": "Tómate un momento para revisar tu solicitud y vuelve a enviarla.",
+      "dsarIntakeTooMany": "Hoy se han enviado demasiadas solicitudes desde aquí. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
+      "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
+      "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización.",
+      "dsarUnfilledPlaceholders": "Completa todos los campos entre llaves del mensaje antes de enviarlo.",
+      "invalidPeriod": "Periodo no válido.",
+      "sayWhyRecordedInError": "Indica por qué el incidente se registró por error.",
+      "sendingTimeOnlyWithSent": "La hora de envío solo se registra con el estado Enviada.",
+      "sendingTimeNotInFuture": "La hora de envío no puede ser futura.",
+      "invitationNotFound": "No se ha encontrado la invitación.",
+      "webAddressOnly": "Usa una dirección web que empiece por https:// o http://.",
+      "orgDeletionNameMismatch": "El nombre escrito no coincide con el de la organización."
+    },
+    "pattern": {}
+  },
+  "licenses": {
+    "heading": "Licencia y código fuente",
+    "intro": "Avisos legales de este programa, tal como exige la GNU Affero General Public License.",
+    "licensed": "Distribuido con la GNU Affero General Public License, versión 3 o posterior (AGPL-3.0-or-later).",
+    "noWarranty": "Este programa se ofrece SIN NINGUNA GARANTÍA.",
+    "freeSoftware": "Es software libre y puedes redistribuirlo en las condiciones de la AGPL-3.0-or-later. Consulta el texto completo de la licencia en el archivo <file>LICENSE</file> que se distribuye con el código fuente.",
+    "sourceTitle": "Código fuente correspondiente completo",
+    "sourcePublic": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de esta instancia está disponible en:",
+    "sourceOnRequest": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de la versión que se ejecuta aquí{commit} está a tu disposición sin coste. Solicítalo escribiendo a <mail>{email}</mail>.",
+    "commit": " (commit {commit})",
+    "back": "Volver a DPO Central",
+    "edition": "DPO Central, edición comunitaria",
+    "editionTitle": "Qué contiene esta edición",
+    "editionBody": "Esta es la edición comunitaria de DPO Central: el inventario de datos y el Registro de Actividades de Tratamiento, las solicitudes de derechos, los proveedores y el registro de brechas. Si ejecutas una versión modificada como servicio en red, la sección 13 de la AGPL-3.0 te obliga a ofrecer a sus usuarios el código fuente correspondiente de tu versión."
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "No se ha encontrado esta página",
+    "body": "Puede que la dirección esté mal escrita o que la página se haya movido. Tus registros guardados no se ven afectados.",
+    "home": "Ir a la página de inicio",
+    "dashboard": "Ir a tu panel"
+  },
+  "dsarModule": {
+    "off": "Las solicitudes de derechos están desactivadas en esta instalación.",
+    "exportBody": "Puedes seguir descargando los registros de solicitudes de derechos que tu organización ya tiene.",
+    "exportLink": "Descargar los registros (JSON)"
+  },
+  "jurisdictionPicker": {
+    "includedWith": "incluida con {place}",
+    "group": {
+      "europe": "Europa",
+      "us": "Estados Unidos",
+      "other": "Resto del mundo"
+    },
+    "placeCount": "{count, plural, one {# lugar} other {# lugares}}",
+    "chosenCount": "{count, plural, one {# elegido} other {# elegidos}}"
+  },
+  "auditTrail": {
+    "title": "Registro de auditoría",
+    "subtitle": "Todos los cambios registrados, del más reciente al más antiguo: quién, sobre qué y cuándo. El registro lo escriben las propias acciones y aquí no puede modificarse.",
+    "restricted": "El registro de auditoría está disponible para propietarios, administradores y responsables de privacidad.",
+    "empty": "Todavía no hay nada registrado en esta organización.",
+    "emptyFiltered": "Ninguna entrada coincide con estos filtros.",
+    "filters": {
+      "area": "Área",
+      "action": "Acción",
+      "actor": "Persona",
+      "from": "Desde",
+      "to": "Hasta",
+      "all": "Todo",
+      "clear": "Quitar filtros"
+    },
+    "columns": {
+      "when": "Cuándo",
+      "who": "Quién",
+      "action": "Acción",
+      "entity": "Registro",
+      "detail": "Detalle registrado"
+    },
+    "export": "Exportar en CSV",
+    "exportHint": "La exportación sigue los filtros de arriba e incluye la hora de generación y la versión de la aplicación, de modo que el fichero puede incorporarse a un registro de entrega.",
+    "loadMore": "Cargar más",
+    "showing": "Se muestran {count} de {total} entradas",
+    "showingFiltered": "Se muestran {count} entradas que coinciden",
+    "since": "El registro empieza el {date}",
+    "actorRemoved": "Cuenta eliminada",
+    "noDetail": "Sin detalle registrado",
+    "reference": "Referencia {reference}",
+    "rightsRequestWithheld": "Solicitud de derechos: el contenido no se muestra en el registro. Abre la solicitud para leerlo.",
+    "areas": {
+      "Organization": "Organización",
+      "OrganizationMember": "Equipo",
+      "OrganizationJurisdiction": "Jurisdicciones",
+      "OrganizationAiSettings": "Ajustes de IA",
+      "BusinessUnit": "Departamentos",
+      "DataAsset": "Inventario de datos",
+      "DataFlow": "Flujos de datos",
+      "DataTransfer": "Transferencias",
+      "ProcessingActivity": "Actividades de tratamiento",
+      "Vendor": "Proveedores",
+      "VendorContract": "Contratos con proveedores",
+      "Incident": "Incidentes",
+      "IncidentNotification": "Notificaciones de incidentes",
+      "DSARRequest": "Solicitudes de derechos",
+      "Report": "Informes",
+      "AuditLog": "Registro de auditoría"
+    },
+    "actions": {
+      "REOPEN": "Reabierta como nueva revisión",
+      "CREATE": "Creado",
+      "UPDATE": "Actualizado",
+      "DELETE": "Eliminado",
+      "SUBMIT": "Presentado",
+      "SUBMIT_AND_APPROVE": "Presentado y aprobado",
+      "APPROVAL_APPROVED": "Aprobado",
+      "APPROVAL_REJECTED": "Rechazado",
+      "AUTO_CREATE": "Creado automáticamente",
+      "AUTO_JOIN": "Incorporación automática",
+      "EXPORT_PDF": "Exportado en PDF",
+      "EXPORT_AUDIT_TRAIL": "Registro de auditoría exportado",
+      "CONFIRM": "Confirmado",
+      "VIEWED": "Consultado",
+      "STATUS_CHANGED": "Estado cambiado",
+      "DEADLINE_EXTENDED": "Plazo prorrogado",
+      "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
+      "INVITE": "Invitación creada",
+      "INVITE_CANCELLED": "Invitación cancelada",
+      "JOIN_BY_INVITATION": "Se ha unido por invitación",
+      "RECORDED_IN_ERROR": "Registrada por error",
+      "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
+      "TASKS_GENERATED": "Tareas generadas",
+      "PII_REDACTED": "Datos personales ocultados",
+      "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
+      "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
+      "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "UPDATE_CHECKLIST": "Lista de comprobación de la transferencia actualizada",
+      "REQUEST_CREATED": "Solicitud creada",
+      "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal",
+      "EXPORT_BOARD_REPORT": "Informe ejecutivo exportado",
+      "SAVE_BOARD_REPORT": "Informe ejecutivo guardado",
+      "EXPORT_ROPA": "Registro de actividades de tratamiento exportado",
+      "EXPORT_BREACH_REGISTER": "Registro de brechas exportado",
+      "EXPORT_VENDOR_REGISTER": "Registro de proveedores exportado",
+      "EXPORT_PRIVACY_PROGRAM": "Informe del programa de privacidad exportado",
+      "EXPORT_PROGRAMME": "Programa exportado",
+      "IMPORT_PROGRAMME": "Programa importado",
+      "IMPORT_REGISTER": "Registro importado desde una hoja de cálculo",
+      "RESPONSE_LINK_SET": "Enlace de respuesta añadido",
+      "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado",
+      "EXPORT_ORGANIZATION_DATA": "Archivo completo de datos exportado",
+      "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas",
+      "AI_KEY_SET": "Clave de API de inferencia añadida",
+      "AI_KEY_REMOVED": "Clave de API de inferencia quitada"
+    }
+  },
+  "dsarGeneratedTask": {
+    "title": "Buscar y extraer los datos de {asset}",
+    "description": "Identificar y extraer los datos personales de {requester} que hay en {asset}."
+  },
+  "ccpaRequests": {
+    "groupCcpa": "California (CCPA)",
+    "groupOther": "RGPD y otras leyes",
+    "clockNote": "El plazo de 45 días empieza el día en que se recibe la solicitud, aunque se esté verificando la identidad. Confirma la recepción en un plazo de 10 días hábiles e indica cómo se tramitará la solicitud y cuándo cabe esperar respuesta.",
+    "know": {
+      "label": "Derecho a saber",
+      "desc": "Qué información personal ha recogido, usado, vendido o compartido la empresa sobre el consumidor, incluidos los datos concretos."
+    },
+    "delete": {
+      "label": "Derecho de eliminación",
+      "desc": "Eliminar la información personal que la empresa ostenta sobre el consumidor."
+    },
+    "correct": {
+      "label": "Derecho de corrección",
+      "desc": "Corregir la información personal inexacta que la empresa conserva sobre el consumidor."
+    },
+    "clock45": "45 días naturales desde la recepción; prorrogable una vez por otros 45 días cuando sea razonablemente necesario, si se informa al consumidor dentro de los primeros 45.",
+    "optOut": {
+      "label": "Excluirse de la venta o el intercambio",
+      "desc": "Dejar de vender o compartir la información personal del consumidor. La empresa no puede exigir una solicitud verificable del consumidor."
+    },
+    "limit": {
+      "label": "Limitar el uso de la información personal sensible",
+      "desc": "Limitar el uso y la comunicación de la información personal sensible del consumidor. La empresa no puede exigir una solicitud verificable del consumidor."
+    },
+    "clock15": "Lo antes posible y, como máximo, en 15 días hábiles desde la recepción; sin prórroga."
+  },
+  "controllerDetails": {
+    "title": "Datos del responsable para el RAT",
+    "description": "Aparecen en la portada de cada registro de actividades de tratamiento (artículo 30 del RGPD). Como encargado, los mismos datos te identifican en el RAT como encargado.",
+    "groups": {
+      "controller": "Responsable del tratamiento",
+      "dpo": "Delegado de protección de datos",
+      "representative": "Representante en la Unión",
+      "security": "Medidas de seguridad"
+    },
+    "fields": {
+      "controllerLegalName": "Nombre o razón social",
+      "controllerTaxId": "NIF",
+      "controllerAddress": "Dirección",
+      "controllerEmail": "Correo electrónico de contacto",
+      "controllerPhone": "Teléfono",
+      "dpoName": "Nombre",
+      "dpoContact": "Datos de contacto",
+      "euRepresentativeName": "Nombre",
+      "euRepresentativeContact": "Datos de contacto",
+      "securityMeasures": "Descripción general de las medidas técnicas y organizativas"
+    },
+    "placeholders": {
+      "controllerLegalName": "Empresa de Ejemplo, S.L.",
+      "controllerTaxId": "Por ejemplo: B12345678",
+      "controllerAddress": "Calle, número, código postal, ciudad, país",
+      "controllerEmail": "privacidad@ejemplo.es",
+      "controllerPhone": "+34 900 000 000",
+      "dpoName": "Déjalo vacío si no hay delegado de protección de datos designado",
+      "dpoContact": "Correo electrónico, teléfono o dirección",
+      "euRepresentativeName": "Déjalo vacío si no es necesario",
+      "euRepresentativeContact": "Correo electrónico, teléfono o dirección",
+      "securityMeasures": "Por ejemplo: cifrado, control de acceso por perfiles, copias de seguridad, formación del personal, procedimiento de incidentes"
+    },
+    "prefilled": "Rellenado con lo que DPO Central ya sabe. Revísalo y guárdalo.",
+    "representativeHelp": "Solo para un responsable establecido fuera de la Unión (artículo 27 del RGPD).",
+    "securityHelp": "Se aplica a cada actividad que no describe sus propias medidas (artículos 30.1.g y 32 del RGPD).",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "saved": "Se han guardado los datos del responsable"
+  },
+  "overview": {
+    "systems": "{count, plural, =0 {Aún no hay sistemas registrados} one {# sistema registrado} other {# sistemas registrados}}",
+    "activities": "{count, plural, =0 {Aún no hay actividades de tratamiento} one {# actividad de tratamiento} other {# actividades de tratamiento}}",
+    "openRequests": "{count, plural, =0 {No hay solicitudes abiertas} one {# solicitud abierta} other {# solicitudes abiertas}}{overdue, plural, =0 {} one {, # vencida} other {, # vencidas}}",
+    "vendors": "{count, plural, =0 {Aún no hay proveedores} one {# proveedor} other {# proveedores}}{count, plural, =0 {} other {, {active} activos}}",
+    "openIncidents": "{count, plural, =0 {No hay incidentes abiertos} one {# incidente abierto} other {# incidentes abiertos}}"
+  }
+}

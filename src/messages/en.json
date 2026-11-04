@@ -1,0 +1,3966 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "add": "Add",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "actions": "Actions",
+    "status": "Status",
+    "name": "Name",
+    "description": "Description",
+    "date": "Date",
+    "type": "Type",
+    "details": "Details",
+    "notes": "Notes",
+    "more": "More",
+    "less": "Less",
+    "showAll": "Show all",
+    "viewDetails": "View details",
+    "sortLabel": "Sort",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "sortName": "Name (A-Z)",
+    "notStated": "Not stated",
+    "recordBelongsTo": "This record belongs to {client}. Switching to that client..."
+  },
+  "pages": {
+    "newVendor": {
+      "title": "Add vendor",
+      "subtitle": "Register a new third-party vendor",
+      "info": {
+        "title": "Vendor information",
+        "subtitle": "Basic details about the vendor",
+        "name": "Vendor name *",
+        "namePlaceholder": "e.g., Acme Cloud Services",
+        "website": "Website",
+        "websitePlaceholder": "https://example.com",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the vendor and services provided...",
+        "contactName": "Contact name",
+        "contactNamePlaceholder": "John Smith",
+        "contactEmail": "Contact Email",
+        "contactEmailPlaceholder": "contact@vendor.com"
+      },
+      "categoriesRisk": {
+        "title": "Categories & risk",
+        "subtitle": "Classify the vendor and assess risk level",
+        "serviceCategories": "Service categories",
+        "riskTier": "Risk Tier",
+        "selectRisk": "Select risk tier"
+      },
+      "dataProcessing": {
+        "title": "Data processing",
+        "subtitle": "What data does this vendor process?",
+        "dataCategories": "Data categories processed",
+        "countries": "Countries (data transfer)",
+        "countriesPlaceholder": "e.g., United States",
+        "addCountry": "Add"
+      },
+      "usage": {
+        "title": "Use",
+        "status": "Status",
+        "inUse": "In use",
+        "considering": "Being considered",
+        "activity": "Used by which processing activity? (optional)",
+        "noActivity": "Not now",
+        "activityHint": "The vendor is added to that activity's recipients, so it appears in the record of processing."
+      },
+      "errorPrefix": "Error: {message}",
+      "creating": "Creating...",
+      "submit": "Create vendor",
+      "category": {
+        "CLOUD_SERVICES": "Cloud services",
+        "DATA_PROCESSING": "Data processing",
+        "ANALYTICS": "Analytics",
+        "MARKETING": "Marketing",
+        "HR_SERVICES": "HR services",
+        "PAYMENT_PROCESSING": "Payment processing",
+        "CUSTOMER_SUPPORT": "Customer support",
+        "IT_SECURITY": "IT security",
+        "LEGAL": "Legal",
+        "OTHER": "Other"
+      },
+      "riskTierOption": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment"
+      },
+      "openInNewTab": "Open in new tab"
+    },
+    "newIncident": {
+      "title": "Report incident",
+      "subtitle": "Document a security incident or data breach",
+      "highSeverityTitle": "High/Critical severity selected",
+      "highSeverityBody": "This incident may require regulatory notification within 72 hours (GDPR) or other timeframes.",
+      "details": "Incident details",
+      "detailsSubtitle": "Describe the incident and its discovery",
+      "incidentTitle": "Incident title *",
+      "titlePlaceholder": "Brief description of the incident",
+      "type": "Incident type *",
+      "typePlaceholder": "Select type",
+      "severity": "Severity *",
+      "severityPlaceholder": "Select severity",
+      "description": "Full description",
+      "descriptionPlaceholder": "Provide detailed information about what happened...",
+      "discovery": "Discovery information",
+      "discoverySubtitle": "When and how was the incident discovered?",
+      "discoveredAt": "Discovery date *",
+      "discoveryMethod": "Discovery method",
+      "discoveryMethodPlaceholder": "How was it discovered?",
+      "discoveredBy": "Discovered By",
+      "discoveredByPlaceholder": "Name or role of person/system that discovered the incident",
+      "impact": "Impact assessment",
+      "impactSubtitle": "Estimate the scope and nature of affected data",
+      "affectedRecords": "Estimated affected records",
+      "affectedRecordsPlaceholder": "e.g., 1000",
+      "dataCategoriesLabel": "Data categories affected",
+      "affectedSubjectsLabel": "Affected data subjects",
+      "affectedSubjectsHint": "Select categories of people affected, and/or add your own.",
+      "affectedSubjectsAdd": "Add",
+      "affectedSubjectsCustomPlaceholder": "Add another category (e.g. Donors)",
+      "jurisdiction": "Primary jurisdiction",
+      "jurisdictionHint": "Determines the regulatory notification deadline (e.g. 72 hours for GDPR). In Spain, the GDPR applies together with the LOPDGDD: choose GDPR.",
+      "jurisdictionPlaceholder": "Select jurisdiction",
+      "errorPrefix": "Error: {message}",
+      "reporting": "Reporting...",
+      "submit": "Report incident",
+      "incidentType": {
+        "DATA_BREACH": "Data breach",
+        "UNAUTHORIZED_ACCESS": "Unauthorized access",
+        "DATA_LOSS": "Data loss",
+        "SYSTEM_COMPROMISE": "System compromise",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Insider threat",
+        "PHYSICAL_SECURITY": "Physical security",
+        "VENDOR_INCIDENT": "Vendor incident",
+        "OTHER": "Other"
+      },
+      "severityOption": {
+        "LOW": "Low",
+        "LOW_desc": "Minimal impact, no data exposed",
+        "MEDIUM": "Medium",
+        "MEDIUM_desc": "Limited impact, some data at risk",
+        "HIGH": "High",
+        "HIGH_desc": "Significant impact, sensitive data exposed",
+        "CRITICAL": "Critical",
+        "CRITICAL_desc": "Severe impact, major breach"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identifiers (name, email, ID)",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial data",
+        "HEALTH": "Health information",
+        "BIOMETRIC": "Biometric data",
+        "LOCATION": "Location data",
+        "BEHAVIORAL": "Behavioral data",
+        "EMPLOYMENT": "Employment data",
+        "CRIMINAL": "Criminal records",
+        "OTHER": "Other"
+      },
+      "discoveryMethodOption": {
+        "INTERNAL_MONITORING": "Internal monitoring",
+        "EMPLOYEE_REPORT": "Employee report",
+        "CUSTOMER_REPORT": "Customer report",
+        "THIRD_PARTY": "Third party notification",
+        "SECURITY_AUDIT": "Security audit",
+        "LAW_ENFORCEMENT": "Law enforcement",
+        "OTHER": "Other"
+      },
+      "affectedSubject": {
+        "CUSTOMERS": "Customers",
+        "EMPLOYEES": "Employees",
+        "JOB_APPLICANTS": "Job applicants",
+        "SUPPLIERS": "Suppliers",
+        "WEBSITE_VISITORS": "Website visitors",
+        "CHILDREN": "Children",
+        "PATIENTS": "Patients",
+        "STUDENTS": "Students"
+      }
+    },
+    "editAsset": {
+      "title": "Edit system",
+      "subtitle": "Update this system's details",
+      "saving": "Saving...",
+      "save": "Save changes"
+    },
+    "editElement": {
+      "title": "Edit data element",
+      "subtitle": "Update this data element's metadata",
+      "saving": "Saving...",
+      "save": "Save changes"
+    },
+    "editActivity": {
+      "title": "Edit processing activity",
+      "subtitle": "Update this processing activity's details",
+      "saving": "Saving...",
+      "save": "Save changes"
+    },
+    "editIncident": {
+      "title": "Edit incident",
+      "subtitle": "Update this incident's details",
+      "saving": "Saving...",
+      "save": "Save changes",
+      "investigation": "Investigation & resolution",
+      "investigationSubtitle": "Root cause analysis, containment, and lessons learned",
+      "rootCauseCategory": "Root cause category",
+      "rootCauseCategoryPlaceholder": "e.g., Human error, Misconfiguration",
+      "rootCause": "Root Cause",
+      "rootCausePlaceholder": "Detailed analysis of what caused this incident",
+      "containmentActions": "Containment actions",
+      "containmentActionsPlaceholder": "Actions taken to contain the incident",
+      "resolutionNotes": "Resolution notes",
+      "resolutionNotesPlaceholder": "How the incident was resolved",
+      "lessonsLearned": "Lessons learned",
+      "lessonsLearnedPlaceholder": "What we'll do differently going forward",
+      "errorPrefix": "Error: {message}"
+    },
+    "editElementExt": {
+      "name": "Name",
+      "category": "Category",
+      "description": "Description",
+      "sensitivity": "Sensitivity",
+      "retentionDays": "Retention (days)",
+      "legalBasis": "Legal basis",
+      "notSpecified": "Not specified",
+      "personalDataToggle": "This element contains personal data",
+      "specialCategoryToggle": "Special category data (GDPR Art. 9)",
+      "errorPrefix": "Error: {message}",
+      "backToAsset": "← Back to parent system",
+      "category_option": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
+      },
+      "sensitivity_option": {
+        "PUBLIC": "Public",
+        "INTERNAL": "Internal",
+        "CONFIDENTIAL": "Confidential",
+        "RESTRICTED": "Restricted",
+        "SPECIAL_CATEGORY": "Special category"
+      },
+      "legalBasis_option": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal obligation",
+        "VITAL_INTERESTS": "Vital interests",
+        "PUBLIC_TASK": "Public task",
+        "LEGITIMATE_INTERESTS": "Legitimate interests"
+      }
+    },
+    "editActivityExt": {
+      "basics": "Basics",
+      "basicsSubtitle": "Name, purpose and legal basis",
+      "name": "Name *",
+      "legalBasis": "Legal basis *",
+      "legalBasisPlaceholder": "Select...",
+      "purpose": "Purpose *",
+      "legalBasisDetail": "Legal basis detail",
+      "legalBasisDetailPlaceholder": "Additional notes on the legal basis",
+      "description": "Description",
+      "subjectsAndCategories": "Data subjects & categories",
+      "subjectsAndCategoriesSubtitle": "Who is affected and what data is processed",
+      "dataSubjects": "Data subjects",
+      "dataSubjectsPlaceholder": "e.g., Customers, Employees, Patients",
+      "add": "Add",
+      "dataCategories": "Data Categories",
+      "recipients": "Recipients",
+      "recipientsHelp": "Categories of internal/external recipients with whom data is shared.",
+      "recipientsPlaceholder": "e.g., Marketing team, Auditors, Payment processor",
+      "retentionAndAutomation": "Retention & automation",
+      "retentionAndAutomationSubtitle": "How long data is kept and whether decisions are automated",
+      "retentionPeriod": "Retention period (description)",
+      "retentionPeriodPlaceholder": "e.g., 7 years after contract end",
+      "retentionDays": "Retention (days)",
+      "automatedDecisionMaking": "Involves automated decision-making (GDPR Art. 22)",
+      "automatedDecisionDetail": "Automated decision-making details",
+      "automatedDecisionDetailPlaceholder": "Logic involved, significance, consequences for data subjects...",
+      "isActive": "Activity is active (included in ROPA exports)",
+      "errorPrefix": "Error: {message}",
+      "category_option": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
+      },
+      "legalBasis_option": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal obligation",
+        "VITAL_INTERESTS": "Vital interests",
+        "PUBLIC_TASK": "Public task",
+        "LEGITIMATE_INTERESTS": "Legitimate interests"
+      },
+      "roleAndSecurity": "Role and security",
+      "roleAndSecuritySubtitle": "How you take part in this processing, and how the data is protected (GDPR Article 30)",
+      "role": "Your role",
+      "role_option": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "roleHelp": "As processor, the activity goes in the record as processor (Article 30(2)) instead of the record as controller.",
+      "jointControllerDetails": "Joint controller: name and contact details",
+      "jointControllerDetailsPlaceholder": "For example: Example Partner Ltd, privacy@partner.example",
+      "clientHelp": "The controller on whose behalf you carry out this processing.",
+      "clientControllerName": "Controller",
+      "clientControllerContact": "Controller contact details",
+      "clientRepresentative": "Controller's representative in the Union",
+      "clientDpo": "Controller's data protection officer",
+      "securityMeasures": "Technical and organizational security measures",
+      "securityMeasuresPlaceholder": "For example: encryption at rest and in transit, access by role, logs kept for 12 months",
+      "securityMeasuresHelp": "Leave empty to use the organization's general description.",
+      "securityMeasuresLink": "Edit the general description",
+      "lastReviewedAt": "Last reviewed",
+      "nextReviewAt": "Next review",
+      "reviewHelp": "Both dates are printed in the record of processing. An activity never reviewed counts as pending review."
+    },
+    "transfers": {
+      "list": {
+        "title": "Transfers",
+        "subtitle": "International (cross-border) data transfers and the safeguard each relies on, under GDPR Chapter V (Art. 44 to 49)",
+        "add": "Add transfer",
+        "addFirst": "Add your first transfer",
+        "total": "Total",
+        "compliant": "Compliant",
+        "needsReview": "Needs review",
+        "nonCompliant": "Non-Compliant",
+        "expiring30d": "Expiring 30d",
+        "tiaWarning": "{count, plural, one {<b>#</b> SCC-based transfer has} other {<b>#</b> SCC-based transfers have}} no Transfer Impact Assessment yet. After Schrems II, SCCs require a TIA.",
+        "all": "All transfers",
+        "allSubtitle": "Click a transfer to review compliance details and the Schrems II checklist.",
+        "empty": "No transfers recorded yet",
+        "emptySubtitle": "Add a cross-border data transfer to start tracking GDPR Chapter V compliance.",
+        "linkedTo": "linked to {name}",
+        "tiaDone": "TIA done",
+        "tiaPending": "TIA pending",
+        "suggestedStatus": "{status} (suggested)",
+        "suggestedNote": "{count, plural, one {# transfer has no recorded status: the status shown is suggested from its current data.} other {# transfers have no recorded status: the statuses shown are suggested from their current data.}}",
+        "sccExpires": "SCC expires {date}",
+        "create": "Create",
+        "descriptionLabel": "Description"
+      },
+      "detail": {
+        "back": "Back",
+        "edit": "Edit",
+        "adequateCountry": "Adequate country",
+        "tiaDone": "TIA done",
+        "tiaPending": "TIA pending",
+        "suggestedStatus": "{status} (suggested)",
+        "adequacyTitle": "Adequacy decision in force",
+        "adequacyBody": "{country} has an EU adequacy decision (adopted {date}).",
+        "adequacyPartial": " ⚠ Partial: see notes.",
+        "adequacyNotes": {
+          "CA": "Limited to commercial organisations subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organisations.",
+          "JP": "Based on the Act on Protection of Personal Information (APPI) with supplementary rules for EU-sourced data.",
+          "KR": "Based on the Personal Information Protection Act (PIPA). Confirmed by the Commission's first review in July 2026.",
+          "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission on 19 December 2025; valid until 27 December 2031.",
+          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov.",
+          "BR": "Based on the General Data Protection Law (LGPD). Covers the public and private sectors; excludes transfers made only for public security, national defence, state security or criminal investigation and prosecution."
+        },
+        "complianceStatus": "Compliance status",
+        "suggestedFromData": "Suggested from current data: <b>{status}</b>",
+        "required": "Required",
+        "category_technical": "Technical",
+        "category_contractual": "Contractual",
+        "category_organizational": "Organizational",
+        "measuresActive": "{count, plural, one {# measure active} other {# measures active}}",
+        "sccExpires": "SCC expires {date}.",
+        "sccExpired": "This SCC has already expired. Renew it now.",
+        "sccExpiringSoon": "{count, plural, one {Only # day left: schedule a renewal.} other {Only # days left: schedule a renewal.}}",
+        "sccRemaining": "{count, plural, one {# day remaining.} other {# days remaining.}}",
+        "withinEea": "Within the EEA (not a restricted transfer)",
+        "partialUnconfirmedBadge": "Partial adequacy: not confirmed",
+        "partialUnconfirmedBody": "This record does not say the recipient is within that scope, so the decision does not cover the transfer: the safeguard recorded below applies (with SCCs, a transfer impact assessment is needed).",
+        "recordScope": "Record the recipient's status",
+        "scopeCheckedOn": "Checked on {date}.",
+        "scopeReference": "Reference: {reference}",
+        "activityLink": "Processing activity: {name}",
+        "noActivity": "No processing activity linked",
+        "vendorLink": "Vendor: {name}",
+        "noVendor": "No vendor linked",
+        "checklistCategories": {
+          "know": "Know your transfers",
+          "tool": "Identify the transfer tool",
+          "law": "Assess the destination country's law",
+          "measures": "Supplementary measures",
+          "procedural": "Procedural steps",
+          "monitor": "Monitor developments"
+        },
+        "checklistState": {
+          "DONE": "Done",
+          "NA": "Not applicable",
+          "PENDING": "Pending"
+        },
+        "checklistSummary": "{pending, plural, =0 {Every point is answered.} one {# point pending out of {total}.} other {# points pending out of {total}.}}",
+        "checklistNote": "Note (optional)",
+        "checklistNoteSave": "Save note"
+      },
+      "edit": {
+        "title": "Edit transfer compliance",
+        "complianceStatus": "Compliance status",
+        "complianceStatusSubtitle": "Manual override for the transfer's compliance status",
+        "status": "Status",
+        "tia": "Transfer impact assessment",
+        "tiaSubtitle": "Required for SCC-based transfers to non-adequate jurisdictions (Schrems II).",
+        "tiaCompleted": "TIA completed",
+        "tiaDate": "TIA completion date",
+        "sccAndSafeguards": "SCC & safeguards",
+        "sccAndSafeguardsSubtitle": "SCC validity and any additional safeguards",
+        "sccExpiry": "SCC expiry date",
+        "sccExpiryHelp": "Date the contractual clauses expire. Transfers expiring within 30 days show on the compliance dashboard.",
+        "safeguards": "Safeguards (description)",
+        "safeguardsPlaceholder": "e.g., EU SCCs 2021 module 2 + encryption at rest + DPIA",
+        "saving": "Saving...",
+        "save": "Save changes",
+        "errorPrefix": "Error: {message}",
+        "links": "Activity and vendor",
+        "linksSubtitle": "The processing activity the transfer belongs to (it then appears in the record of processing) and the vendor that receives the data.",
+        "adequacyScope": "Partial adequacy decision"
+      },
+      "status_option": {
+        "COMPLIANT": "Compliant",
+        "NEEDS_REVIEW": "Needs review",
+        "NON_COMPLIANT": "Non-Compliant",
+        "PENDING": "Pending"
+      },
+      "adequacy": {
+        "withinEea": "{country} is in the EEA: not a restricted transfer, no Chapter V safeguard needed.",
+        "none": "{country} has no EU adequacy decision: choose a safeguard (for example SCCs) and complete a transfer impact assessment.",
+        "full": "{country} has an EU adequacy decision: no further safeguard is needed for this transfer.",
+        "partialTitle": "{country}: the adequacy decision covers some recipients only",
+        "partialBody": {
+          "DPF": "The EU-US decision covers only recipients certified under the EU-US Data Privacy Framework (check the list at dataprivacyframework.gov).",
+          "PIPEDA": "The decision for Canada covers only commercial organisations subject to PIPEDA (the Personal Information Protection and Electronic Documents Act)."
+        },
+        "scopeQuestion": {
+          "DPF": "The recipient is certified under the EU-US Data Privacy Framework (active entry checked on the DPF list)",
+          "PIPEDA": "The recipient is a commercial organisation subject to PIPEDA"
+        },
+        "scopeReference": {
+          "DPF": "DPF list entry (link or reference)",
+          "PIPEDA": "Basis for PIPEDA coverage (optional)"
+        },
+        "scopeReferencePlaceholder": {
+          "DPF": "e.g. https://www.dataprivacyframework.gov/list",
+          "PIPEDA": "e.g. federally regulated private-sector company"
+        },
+        "scopeRecorded": {
+          "DPF": "Recipient recorded as certified under the EU-US Data Privacy Framework.",
+          "PIPEDA": "Recipient recorded as a commercial organisation subject to PIPEDA."
+        }
+      }
+    },
+    "newAsset": {
+      "title": "Add system",
+      "subtitle": "Register a new system or data store",
+      "details": "System details",
+      "detailsSubtitle": "Provide information about the system",
+      "name": "System name *",
+      "namePlaceholder": "e.g., Customer Database",
+      "type": "System type *",
+      "typePlaceholder": "Select type",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the system and its purpose...",
+      "owner": "Owner/Department",
+      "ownerPlaceholder": "e.g., Engineering",
+      "location": "Location",
+      "locationPlaceholder": "e.g., AWS US-East-1",
+      "hosting": "Hosting type",
+      "hostingPlaceholder": "Select hosting type",
+      "vendor": "Vendor (if applicable)",
+      "vendorPlaceholder": "e.g., AWS, Salesforce",
+      "production": "Production environment",
+      "errorPrefix": "Error: {message}",
+      "creating": "Creating...",
+      "submit": "Create system",
+      "assetType": {
+        "DATABASE": "Database",
+        "APPLICATION": "Application",
+        "CLOUD_SERVICE": "Cloud service",
+        "FILE_SYSTEM": "File system",
+        "THIRD_PARTY": "Third party",
+        "PHYSICAL": "Physical",
+        "OTHER": "Other"
+      },
+      "hostingType": {
+        "ON_PREMISE": "On-Premise",
+        "CLOUD": "Cloud",
+        "HYBRID": "Hybrid",
+        "SAAS": "SaaS"
+      }
+    },
+    "newDsar": {
+      "title": "New rights request",
+      "subtitle": "Log a request from a person exercising their privacy rights",
+      "type": {
+        "title": "Request type",
+        "subtitle": "Select the type of data subject request",
+        "ACCESS": "Access",
+        "ACCESS_desc": "Right to obtain a copy of personal data",
+        "RECTIFICATION": "Rectification",
+        "RECTIFICATION_desc": "Right to correct inaccurate data",
+        "ERASURE": "Erasure",
+        "ERASURE_desc": "Right to deletion (right to be forgotten)",
+        "PORTABILITY": "Portability",
+        "PORTABILITY_desc": "Right to receive data in a portable format",
+        "OBJECTION": "Objection",
+        "OBJECTION_desc": "Right to object to data processing",
+        "RESTRICTION": "Restriction",
+        "RESTRICTION_desc": "Right to restrict processing"
+      },
+      "requester": {
+        "title": "Requester information",
+        "subtitle": "Details of the data subject making the request",
+        "name": "Full name *",
+        "namePlaceholder": "e.g., John Doe",
+        "email": "Email address *",
+        "emailPlaceholder": "e.g., john@example.com",
+        "phone": "Phone number",
+        "phonePlaceholder": "e.g., +34 600 000 000",
+        "relationship": "Relationship",
+        "relationshipPlaceholder": "Select relationship",
+        "relationshipOptions": {
+          "Customer": "Customer",
+          "Employee": "Employee",
+          "Former Employee": "Former employee",
+          "Job Applicant": "Job applicant",
+          "Contractor": "Contractor",
+          "Website Visitor": "Website visitor",
+          "Other": "Other"
+        },
+        "address": "Address",
+        "addressPlaceholder": "e.g., 123 Main St, City, Country"
+      },
+      "details": {
+        "title": "Request details",
+        "subtitle": "Additional information about the request",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the request in detail...",
+        "requestedData": "Specific data requested",
+        "requestedDataPlaceholder": "e.g., All marketing communications, CRM records, billing history..."
+      },
+      "submit": "Create request"
+    },
+    "activityDetail": {
+      "back": "Processing activities",
+      "backToInventory": "Back to data inventory",
+      "notFound": "Processing activity not found",
+      "inactive": "Inactive",
+      "edit": "Edit",
+      "purpose": "Purpose",
+      "description": "Description",
+      "legalBasisDetail": "Legal basis detail",
+      "dataSubjects": "Data subjects",
+      "noDataSubjects": "No data subjects specified",
+      "dataCategories": "Data Categories",
+      "noCategories": "No categories specified",
+      "retentionPeriod": "Retention period",
+      "automatedDecisionMaking": "Automated decision-Making",
+      "recipients": "Recipients",
+      "linkedAssets": "Linked Systems ({count})",
+      "generateFlows": "Generate flows",
+      "manageAssets": "Manage systems",
+      "elementCount": "{count, plural, one {# element} other {# elements}}",
+      "elementCountOf": "{count}/{total} elements",
+      "notLinked": "+{count} not linked",
+      "noLinkedAssets": "No systems linked to this activity",
+      "transfers": "Data Transfers ({count})",
+      "linkDialog": {
+        "title": "Link systems",
+        "description": "Select which systems and elements are processed by this activity.",
+        "assetMeta": "{type}: {count, plural, one {# element} other {# elements}}",
+        "hide": "Hide",
+        "elements": "Elements",
+        "allElements": "All elements",
+        "noAssets": "No systems in this organization yet",
+        "selected": "{count, plural, one {# system selected} other {# systems selected}}"
+      },
+      "retentionDays": "{count, plural, one {# day} other {# days}}",
+      "notSpecified": "Not specified",
+      "role": "Role",
+      "roleOption": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "jointController": "Joint controller",
+      "clientController": "Controller on whose behalf we act",
+      "securityMeasures": "Security measures",
+      "securityInherited": "The organization's general description of security measures applies.",
+      "lastReviewed": "Last reviewed",
+      "nextReview": "Next Review",
+      "neverReviewed": "Never reviewed"
+    },
+    "assetDetail": {
+      "notFound": "System not found",
+      "back": "Back to inventory",
+      "production": "Production",
+      "edit": "Edit",
+      "delete": "Delete",
+      "overview": {
+        "title": "Overview",
+        "noDescription": "No description provided",
+        "owner": "Owner",
+        "location": "Location",
+        "hosting": "Hosting",
+        "vendor": "Vendor",
+        "notSpecified": "Not specified",
+        "na": "N/A"
+      },
+      "stats": {
+        "title": "Statistics",
+        "elements": "Data elements",
+        "activities": "Processing activities",
+        "lastUpdated": "Last updated"
+      },
+      "tabs": {
+        "elements": "Data elements",
+        "activities": "Processing activities",
+        "flows": "Data flows"
+      },
+      "elements": {
+        "title": "Data elements",
+        "subtitle": "Fields and data points stored in this system",
+        "addElement": "Add element",
+        "personalData": "Personal data",
+        "emptyTitle": "No data elements defined yet",
+        "emptySub": "Add data elements to document what data is stored"
+      },
+      "activities": {
+        "title": "Linked processing activities",
+        "subtitle": "Activities that use data from this system",
+        "manage": "Manage activities",
+        "elementCount": "{used, plural, one {# element} other {# elements}}",
+        "elementCountFiltered": "{used}/{total} {used, plural, one {element} other {elements}}",
+        "notLinked": "+{count} not linked",
+        "empty": "No linked processing activities"
+      },
+      "addElement": {
+        "title": "Add data element",
+        "subtitle": "Add a new data field or element to this system",
+        "nameLabel": "Element name *",
+        "namePlaceholder": "e.g., email_address, phone_number",
+        "descLabel": "Description",
+        "descPlaceholder": "Brief description of this data element",
+        "categoryLabel": "Category *",
+        "sensitivityLabel": "Sensitivity *",
+        "retentionLabel": "Retention Period (days)",
+        "retentionPlaceholder": "e.g., 365",
+        "isPersonal": "Is personal data",
+        "isSpecial": "Is special category",
+        "errorPrefix": "Error: {message}",
+        "adding": "Adding...",
+        "submit": "Add element"
+      },
+      "linkActivities": {
+        "title": "Link processing activities",
+        "subtitle": "Select which activities use data from this system, and which elements they process.",
+        "elements": "Elements",
+        "hide": "Hide",
+        "allElements": "All elements",
+        "empty": "No processing activities in this organization yet",
+        "selectedCount": "{count, plural, one {# activity selected} other {# activities selected}}",
+        "save": "Save"
+      },
+      "category": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
+      },
+      "sensitivity": {
+        "PUBLIC": "Public",
+        "INTERNAL": "Internal",
+        "CONFIDENTIAL": "Confidential",
+        "RESTRICTED": "Restricted",
+        "SPECIAL_CATEGORY": "Special category"
+      }
+    },
+    "incidentDetail": {
+      "recordedInError": {
+        "action": "Recorded in error",
+        "undo": "Undo \"recorded in error\"",
+        "dialogTitle": "Mark as recorded in error?",
+        "dialogBody": "For an entry made by mistake, such as a test or a duplicate. The incident is not deleted: it stays in the breach register, marked, with your reason, and leaves every count and report figure. You can undo this.",
+        "reasonLabel": "Why was it recorded in error?",
+        "reasonPlaceholder": "For example: a duplicate of another incident, or a test entry",
+        "confirm": "Mark as recorded in error",
+        "marked": "Incident marked as recorded in error",
+        "undone": "Incident counted again",
+        "noticeTitle": "Recorded in error on {date}",
+        "noticeReason": "Reason: {reason}.",
+        "noticeBody": "It stays in the breach register, marked, and is left out of every count.",
+        "badge": "Recorded in error"
+      },
+      "notFound": "Incident not found",
+      "back": "Back to incidents",
+      "close": "Close incident",
+      "updateStatus": "Update status",
+      "notifBanner": {
+        "title": "Regulatory notification required",
+        "deadline": "Deadline: {date}",
+        "overdue": "OVERDUE: was due {date}",
+        "create": "Create notification"
+      },
+      "windowClock": {
+        "open": "72-hour window ends {date}. Decide whether to notify.",
+        "ended": "72-hour window ended {date}. No notification is recorded."
+      },
+      "stats": {
+        "discovered": "Discovered",
+        "affectedRecords": "Affected Records",
+        "unknown": "Unknown",
+        "affectedSubjects": "Affected Subjects",
+        "subjectTypesCount": "{count, plural, one {# type} other {# types}}",
+        "notifications": "Notifications",
+        "notifyAuthority": "Notify the authority: {state}",
+        "notifyAuthorityState": {
+          "REQUIRED": "Yes",
+          "NOT_REQUIRED": "No",
+          "NOT_ASSESSED": "Not yet assessed"
+        }
+      },
+      "tabs": {
+        "details": "Details",
+        "timelineWithCount": "Timeline ({count})",
+        "tasksWithCount": "Tasks ({count})",
+        "notificationsWithCount": "Notifications ({count})",
+        "documents": "Documents"
+      },
+      "details": {
+        "description": "Description",
+        "noDescription": "No description provided",
+        "discovery": "Discovery",
+        "discoveredBy": "Discovered by:",
+        "discoveryMethod": "Discovery method:",
+        "notSpecified": "Not specified",
+        "dataCategories": "Data categories affected",
+        "dataCategoriesEmpty": "No categories specified",
+        "rootCause": "Root Cause",
+        "lessonsLearned": "Lessons learned"
+      },
+      "timeline": {
+        "addEntry": "Add entry",
+        "empty": "No timeline entries yet",
+        "createdBy": " by {name}",
+        "system": {
+          "reported": "Incident reported",
+          "reportedBody": "Incident \"{title}\" was reported",
+          "statusChanged": "Status changed to {status}",
+          "notificationCreated": "{recipient} notification created ({jurisdiction})",
+          "notificationStatus": "{recipient} notification {status}",
+          "markedInError": "Marked as recorded in error",
+          "unmarkedInError": "No longer marked as recorded in error",
+          "notificationNowRequired": "Notification to the authority now marked as required",
+          "notificationNoLongerRequired": "Notification to the authority no longer marked as required",
+          "notificationDeadlineRecalculated": "Notification deadline recalculated"
+        }
+      },
+      "tasks": {
+        "addTask": "Add task",
+        "empty": "No tasks assigned",
+        "priority": "Priority {value}"
+      },
+      "notifications": {
+        "due": "Due: {date}",
+        "noFixedDeadline": "No fixed deadline under this law",
+        "sent": "Sent on {date}",
+        "authority": "Authority: {authority}",
+        "overdue": "OVERDUE",
+        "empty": "No notifications created",
+        "createDpa": "Create DPA notification",
+        "create": "Create notification",
+        "voluntaryHint": "No notification is required for this incident. You can still create one voluntarily.",
+        "undecidedHint": "You have not yet decided whether this incident must be notified. If you decide to notify it, create the notification here.",
+        "recipient": {
+          "DPA": "DPA",
+          "DATA_SUBJECT": "Data subjects",
+          "LAW_ENFORCEMENT": "Law enforcement",
+          "INTERNAL": "Internal"
+        }
+      },
+      "documents": {
+        "title": "Document uploads coming soon",
+        "subtitle": "Attach evidence, reports, and communications to incidents."
+      },
+      "statusDialog": {
+        "title": "Update incident status",
+        "subtitle": "Transition this incident through the response workflow. A timeline entry will be recorded.",
+        "newStatus": "New status",
+        "selectStatus": "Select status",
+        "submit": "Update"
+      },
+      "timelineDialog": {
+        "title": "Add timeline entry",
+        "subtitle": "Record an observation, action, or decision taken during the incident response.",
+        "entryType": "Entry type",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Short summary of the entry",
+        "descLabel": "Description",
+        "descPlaceholder": "Details: what happened, who was involved, what evidence",
+        "submit": "Add entry",
+        "type": {
+          "OBSERVATION": "Observation",
+          "ACTION": "Action taken",
+          "EVIDENCE": "Evidence",
+          "COMMUNICATION": "Communication",
+          "DECISION": "Decision",
+          "NOTE": "Note",
+          "STATUS_CHANGE": "Status change",
+          "NOTIFICATION": "Notification"
+        }
+      },
+      "taskDialog": {
+        "title": "Add task",
+        "subtitle": "Create a response task to track remediation work for this incident.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "What needs to be done",
+        "descLabel": "Description",
+        "descPlaceholder": "Optional details",
+        "priority": "Priority",
+        "dueDate": "Due date",
+        "submit": "Create task",
+        "priorities": {
+          "LOW": "Low",
+          "MEDIUM": "Medium",
+          "HIGH": "High",
+          "URGENT": "Urgent"
+        }
+      },
+      "notifDialog": {
+        "title": "Create regulatory notification",
+        "subtitle": "The deadline is computed from the jurisdiction's breach notification window.",
+        "jurisdiction": "Jurisdiction",
+        "selectJurisdiction": "Select jurisdiction",
+        "jurisdictionWindow": "{name} ({hours, plural, =0 {no fixed hour limit} other {#h window}})",
+        "noJurisdictions": "No jurisdictions applied to this organization",
+        "noJurisdictionsHint": "No jurisdictions are applied to this organization yet.",
+        "goToRegulations": "Add the places where you operate in Settings",
+        "recipient": "Recipient type",
+        "recipientType": {
+          "DPA": "Data protection authority (DPA)",
+          "DATA_SUBJECT": "Affected data subjects",
+          "LAW_ENFORCEMENT": "Law enforcement",
+          "INTERNAL": "Internal stakeholders"
+        },
+        "submit": "Create"
+      }
+    },
+    "vendorDetail": {
+      "notFound": "Vendor not found",
+      "back": "Back to vendors",
+      "delete": "Delete",
+      "edit": "Edit vendor",
+      "riskBadge": "{level} Risk",
+      "noCategories": "No categories",
+      "info": {
+        "website": "Website",
+        "contact": "Contact",
+        "email": "Email",
+        "added": "Added",
+        "empty": "-"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "contractsWithCount": "Contracts ({count})",
+        "reviews": "Reviews"
+      },
+      "overview": {
+        "description": "Description",
+        "dataProcessing": "Data processing",
+        "dataProcessingDesc": "Categories of data this vendor processes",
+        "dataEmpty": "No data categories specified",
+        "countries": "Countries",
+        "countriesDesc": "Data transfer locations",
+        "countriesEmpty": "No countries specified",
+        "certifications": "Certifications",
+        "certificationsDesc": "Security and compliance certifications",
+        "certificationsEmpty": "No certifications recorded",
+        "privacyTech": "Privacy technologies",
+        "privacyTechDesc": "Privacy enhancing technologies used by this vendor"
+      },
+      "contracts": {
+        "add": "Add contract",
+        "start": "Start: {date}",
+        "endSuffix": " · End: {date}",
+        "open": "Open",
+        "noDocument": "No document",
+        "empty": "No contracts recorded"
+      },
+      "reviews": {
+        "empty": "No reviews scheduled",
+        "schedule": "Schedule review",
+        "reviewLabel": "{type} review",
+        "completed": "Completed",
+        "overdue": "Overdue",
+        "scheduled": "Scheduled",
+        "risk": "Risk: {level}",
+        "unassigned": "Unassigned",
+        "completedOn": "Completed {date}",
+        "scheduledFor": "Scheduled for {date}",
+        "markComplete": "Mark complete"
+      },
+      "editDialog": {
+        "title": "Edit vendor",
+        "subtitle": "Update core vendor details.",
+        "nameLabel": "Name *",
+        "descLabel": "Description",
+        "websiteLabel": "Website",
+        "websitePlaceholder": "https://…",
+        "statusLabel": "Status",
+        "riskLabel": "Risk tier",
+        "riskNotSet": "Not set",
+        "contactLabel": "Primary contact",
+        "emailLabel": "Contact email",
+        "save": "Save"
+      },
+      "contractDialog": {
+        "title": "Add contract",
+        "subtitle": "Record a contract, DPA, or SCC for this vendor.",
+        "nameLabel": "Name *",
+        "namePlaceholder": "e.g., Master Services Agreement 2026",
+        "typeLabel": "Type *",
+        "type": {
+          "DPA": "DPA (data processing agreement)",
+          "SCC": "SCC (Standard Contractual Clauses)",
+          "MSA": "MSA (master services agreement)",
+          "NDA": "NDA",
+          "OTHER": "Other"
+        },
+        "descLabel": "Description",
+        "urlLabel": "Document URL",
+        "urlPlaceholder": "https://…",
+        "startLabel": "Start date",
+        "endLabel": "End date",
+        "submit": "Add"
+      },
+      "reviewDialog": {
+        "title": "Schedule review",
+        "subtitle": "Assign a reviewer and date for this vendor's next review.",
+        "reviewerLabel": "Reviewer *",
+        "reviewerPlaceholder": "Select reviewer",
+        "typeLabel": "Review type",
+        "type": {
+          "PERIODIC": "Periodic",
+          "INITIAL": "Initial",
+          "INCIDENT_TRIGGERED": "Incident-triggered",
+          "CONTRACT_RENEWAL": "Contract renewal"
+        },
+        "dateLabel": "Scheduled date *",
+        "submit": "Schedule"
+      }
+    },
+    "dsarDetail": {
+      "notFound": "Request not found",
+      "back": "Back to DSAR",
+      "complete": "Complete",
+      "progress": {
+        "title": "Progress",
+        "tasksCompleted": "{completed} of {total} tasks completed",
+        "noTasks": "No tasks yet. Generate them under Tasks below."
+      },
+      "sla": {
+        "title": "SLA status",
+        "overdue": "OVERDUE",
+        "completed": "COMPLETED",
+        "daysShort": "{count, plural, one {# day} other {# days}}",
+        "closed": "Closed",
+        "due": "Due"
+      },
+      "extend": {
+        "button": "Extend deadline",
+        "title": "Extend the deadline",
+        "description": "The law of your primary jurisdiction allows one extension. The new deadline will be {newDate}.",
+        "tellBy": "You must tell the person about the extension, with the reasons for the delay, no later than {date}, within the first period.",
+        "reasonLabel": "Reason for the extension",
+        "reasonPlaceholder": "For example: the request is complex and covers several systems.",
+        "reasonHint": "Recorded in the audit log of this request.",
+        "confirm": "Extend to {newDate}",
+        "done": "Deadline extended to {newDate}. Remember to tell the person.",
+        "reasonShown": "Reason: {reason}",
+        "unavailable": {
+          "no_extension": "The law of your primary jurisdiction allows no extension.",
+          "already_extended": "This deadline has already been extended."
+        },
+        "doneNotified": "Deadline extended to {newDate}. The person has been told of the new date by e-mail; send them the reasons."
+      },
+      "requester": {
+        "title": "Requester information",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "relationship": "Relationship",
+        "details": "Request details",
+        "empty": "-"
+      },
+      "responseLink": {
+        "title": "Response download link",
+        "description": "Paste a secure URL where the requester can download their response. Visible to them on the public status page.",
+        "urlLabel": "Download URL",
+        "urlPlaceholder": "https://...",
+        "expiresLabel": "Expires (optional)",
+        "save": "Save link",
+        "clear": "Remove link",
+        "saved": "Response link saved",
+        "cleared": "Response link removed"
+      },
+      "tabs": {
+        "tasks": "Tasks ({count})",
+        "communications": "Communications ({count})",
+        "audit": "Audit log"
+      },
+      "tasks": {
+        "title": "Data collection tasks",
+        "subtitle": "Tasks for each data source",
+        "autoGenerate": "Auto-Generate",
+        "addTask": "Add task",
+        "assignedTo": "Assigned to: {name}",
+        "unassigned": "Unassigned",
+        "empty": "No tasks yet",
+        "emptySub": "Add tasks or auto-generate from systems",
+        "status": {
+          "PENDING": "Pending",
+          "IN_PROGRESS": "In Progress",
+          "COMPLETED": "Completed",
+          "BLOCKED": "Blocked",
+          "NOT_APPLICABLE": "N/A"
+        }
+      },
+      "comms": {
+        "title": "Communications",
+        "subtitle": "Message history with the requester",
+        "send": "Send message",
+        "team": "Privacy team",
+        "sent": "Sent",
+        "received": "Received",
+        "empty": "No communications yet"
+      },
+      "audit": {
+        "title": "Audit log",
+        "subtitle": "Complete history of actions taken",
+        "empty": "No audit entries"
+      },
+      "addTask": {
+        "title": "Add task",
+        "subtitle": "Create a new data collection task",
+        "titleLabel": "Task title *",
+        "titlePlaceholder": "e.g., Search Marketing CRM",
+        "descLabel": "Description",
+        "descPlaceholder": "Task details...",
+        "submit": "Add task"
+      },
+      "sendMessage": {
+        "title": "Send message",
+        "subtitle": "Send a message to {name}",
+        "subjectLabel": "Subject",
+        "subjectPlaceholder": "Message subject",
+        "messageLabel": "Message *",
+        "messagePlaceholder": "Write your message...",
+        "submit": "Send"
+      },
+      "repeatAccess": {
+        "title": "Repeated access request",
+        "body": "This e-mail address made {count, plural, one {another access request} other {# other access requests}} in the six months before this one (the last on {date}). Under article 13.3 of the Spanish data protection act (LOPDGDD), access exercised more than once within six months may be considered repetitive, unless there is a legitimate reason. The decision is yours."
+      },
+      "modelReplies": {
+        "label": "Model reply",
+        "placeholder": "Choose a model reply",
+        "languageLabel": "Language of the reply",
+        "languages": {
+          "en": "English",
+          "es": "Spanish"
+        },
+        "hint": "Inserting a model reply replaces the subject and the message. Names, reference, dates and links are filled in; complete the rest.",
+        "remaining": "Complete these before sending: {list}",
+        "names": {
+          "acknowledgement": "Acknowledgement of receipt",
+          "identity": "Request for information to confirm identity",
+          "extension": "Extension of the time limit",
+          "refusal": "Refusal",
+          "favourable-access": "Favorable reply: access",
+          "favourable-rectification": "Favorable reply: rectification",
+          "favourable-erasure": "Favorable reply: erasure",
+          "favourable-erasure-blocked": "Favorable reply: erasure, with some data blocked",
+          "favourable-objection": "Favorable reply: objection",
+          "favourable-restriction": "Favorable reply: restriction",
+          "favourable-portability": "Favorable reply: portability",
+          "repetitive": "Repetitive request (access within six months)"
+        }
+      },
+      "completeConfirm": {
+        "title": "Close the request with tasks still open?",
+        "description": "{count, plural, one {# task is still open.} other {# tasks are still open.}} If you close it now, the request is recorded as completed.",
+        "confirm": "Close anyway"
+      }
+    },
+    "incidents": {
+      "title": "Breach register",
+      "subtitle": "Security incidents and personal data breaches (incident management)",
+      "exportRegister": "Export register",
+      "exportPdf": "Download as PDF",
+      "exportCsv": "Download as CSV",
+      "reportIncident": "Report incident",
+      "search": "Search incidents...",
+      "stats": {
+        "total": "Total",
+        "open": "Open",
+        "critical": "Critical",
+        "pendingDpa": "Pending DPA"
+      },
+      "tabs": {
+        "all": "All",
+        "open": "Open",
+        "critical": "Critical",
+        "closed": "Closed"
+      },
+      "card": {
+        "records": "Records",
+        "recordsShort": "{count, plural, one {# record} other {# records}}"
+      },
+      "type": {
+        "DATA_BREACH": "Data breach",
+        "UNAUTHORIZED_ACCESS": "Unauthorized access",
+        "DATA_LOSS": "Data loss",
+        "SYSTEM_COMPROMISE": "System compromise",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Insider threat",
+        "PHYSICAL_SECURITY": "Physical security",
+        "VENDOR_INCIDENT": "Vendor incident",
+        "OTHER": "Other"
+      },
+      "status": {
+        "REPORTED": "Reported",
+        "INVESTIGATING": "Investigating",
+        "CONTAINED": "Contained",
+        "ERADICATED": "Eradicated",
+        "RECOVERING": "Recovering",
+        "CLOSED": "Closed",
+        "FALSE_POSITIVE": "False positive"
+      },
+      "severity": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "emptyAll": {
+        "title": "No incidents reported",
+        "subtitle": "Report security incidents and data breaches here"
+      },
+      "emptyOpen": "No open incidents",
+      "emptyCritical": "No critical incidents",
+      "emptyClosed": "No closed incidents",
+      "emptyFiltered": "No incidents match these filters"
+    },
+    "vendors": {
+      "title": "Vendors and processors",
+      "subtitle": "Third-party vendors and the processors that handle personal data for you (vendor management)",
+      "missingDpa": "Missing: a DPA. Open a vendor and, on its Contracts tab, add the signed data processing agreement.",
+      "exportRegister": "Export register",
+      "exportPdf": "Download as PDF",
+      "exportCsv": "Download as CSV",
+      "addVendor": "Add vendor",
+      "addVendorShort": "Add",
+      "search": "Search vendors...",
+      "stats": {
+        "total": "Total vendors",
+        "active": "Active vendors",
+        "highRisk": "High risk",
+        "pendingReview": "Pending review"
+      },
+      "tabs": {
+        "all": "All",
+        "active": "Active",
+        "review": "Under review",
+        "highRisk": "High risk"
+      },
+      "card": {
+        "noCategories": "No categories",
+        "dataProcessed": "Data Processed",
+        "moreItems": "+{count} more",
+        "added": "Added: {date}",
+        "riskBadge": "{level} Risk"
+      },
+      "status": {
+        "PROSPECTIVE": "Prospective",
+        "ACTIVE": "Active",
+        "UNDER_REVIEW": "Under review",
+        "SUSPENDED": "Suspended",
+        "TERMINATED": "Terminated"
+      },
+      "riskTier": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "emptyAll": {
+        "title": "No vendors yet",
+        "subtitle": "Add your first vendor to track third-party risk"
+      },
+      "emptyActive": "No active vendors",
+      "emptyReview": "No vendors under review",
+      "emptyHighRisk": "No high risk vendors",
+      "emptyFiltered": "No vendors match these filters"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your account, organization, and team.",
+      "profile": {
+        "title": "Profile",
+        "description": "Your account information",
+        "name": "Name",
+        "email": "Email",
+        "emailHint": "Your email is set by your identity provider and cannot be changed here.",
+        "save": "Save name",
+        "cancel": "Cancel",
+        "updated": "Profile updated"
+      },
+      "language": {
+        "title": "Language",
+        "description": "Change the interface language. Affects all pages."
+      },
+      "organization": {
+        "title": "Organization",
+        "descriptionAdmin": "Rename your organization or set its domain. Only owners and admins can edit these.",
+        "descriptionViewer": "Read-only: only owners and admins can change these values.",
+        "name": "Name",
+        "domain": "Domain",
+        "domainHint": "Only the domain of the owner's own sign-in address is accepted. Public email domains (gmail.com etc.) are not allowed. A colleague who signs in with an address at this domain joins as a viewer (read only) until an owner or admin gives them a role on the team page.",
+        "domainNotAccepted": "The domain was not saved: it must match the domain of the owner's own sign-in address.",
+        "save": "Save organization",
+        "cancel": "Cancel",
+        "updated": "Organization updated"
+      },
+      "members": {
+        "title": "Team members",
+        "descriptionAdmin": "Add teammates to collaborate on your privacy program.",
+        "descriptionViewer": "Only owners and admins can manage members.",
+        "inviteLabel": "Add a teammate",
+        "inviteHelp": "Enter a colleague's e-mail address and choose a role. Someone who has not signed in yet gets an invitation e-mail and joins when they first sign in with that address.",
+        "invitedSent": "Invitation sent to {email}",
+        "invitedNoEmail": "Invitation saved. No e-mail service is set up here: ask them to sign in with this address at {url}",
+        "pendingTitle": "Invitations waiting for a first sign-in",
+        "pendingSince": "invited {date}",
+        "cancelInvite": "Cancel invitation",
+        "cancelInviteAria": "Cancel the invitation for {email}",
+        "inviteCancelled": "Invitation cancelled",
+        "inviteEmailPlaceholder": "teammate@example.com",
+        "add": "Add",
+        "added": "Member added",
+        "roleUpdated": "Role updated",
+        "removed": "Member removed",
+        "you": "(you)",
+        "removeAria": "Remove member",
+        "removeConfirmTitle": "Remove {name}?",
+        "removeConfirmDescription": "They will lose access to this organization immediately. You can add them again later.",
+        "removeConfirm": "Remove",
+        "rolesLegend": "Roles: OWNER (full control) · ADMIN (manage modules and members) · PRIVACY_OFFICER (manage records) · MEMBER (create and edit) · VIEWER (read only)",
+        "scoped": {
+          "title": "People in {organization}",
+          "descriptionAdmin": "People you add here see and work only in {organization}, not in your other organisations.",
+          "inviteLabel": "Add someone to {organization}",
+          "inviteHelp": "Enter their e-mail address and choose a role. Someone who has not signed in yet gets an invitation e-mail and joins when they first sign in with that address. To give a client's staff access, add them here while that client is selected."
+        }
+      },
+      "deleteOrganization": {
+        "title": "Delete this organization",
+        "description": "Deletes only the organization open now, {name}, and everything recorded in it. Your account and your other organizations stay. Only an owner can do it.",
+        "start": "Delete this organization…",
+        "whatGoes": "Everything recorded here goes: activities, systems, vendors, incidents, rights requests with their messages, the activity log, members and pending invitations.",
+        "whatStays": "Only one entry remains, with no content: the date of the deletion and who asked for it.",
+        "accounts": "Members keep their own accounts and their other organizations.",
+        "noUndo": "It is deleted at once. There is no waiting period, and you cannot undo it or restore it.",
+        "confirmLabel": "To confirm, type the organization's name: {name}",
+        "confirm": "Delete for good",
+        "cancel": "Cancel",
+        "deleted": "The organization has been deleted."
+      },
+      "jurisdictions": {
+        "title": "Where your organization operates",
+        "description": "The laws of the places you choose set the deadlines for rights requests and breach notifications.",
+        "save": "Save",
+        "saved": "Saved"
+      }
+    },
+    "dsar": {
+      "title": "Rights requests",
+      "subtitle": "Data subject requests (DSARs) and their deadlines",
+      "exportReport": "Export report",
+      "settings": "Settings",
+      "comingSoon": "Coming soon",
+      "newRequest": "New request",
+      "newRequestShort": "New",
+      "stats": {
+        "total": "Total requests",
+        "open": "Open",
+        "overdue": "Overdue",
+        "atRisk": "At Risk"
+      },
+      "search": "Search requests...",
+      "tabs": {
+        "all": "All",
+        "open": "Open",
+        "overdue": "Overdue",
+        "completed": "Completed"
+      },
+      "card": {
+        "tasks": "Tasks",
+        "tasksShort": "{count, plural, one {# task} other {# tasks}}",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "due": "Due: {date}",
+        "naDate": "N/A",
+        "dueToday": "Due today",
+        "daysLeft": "{count, plural, one {# day left} other {# days left}}",
+        "daysLeftShort": "{count}d left",
+        "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+        "daysOverdueShort": "{count}d overdue"
+      },
+      "type": {
+        "ACCESS": "Access",
+        "RECTIFICATION": "Rectification",
+        "ERASURE": "Erasure",
+        "PORTABILITY": "Portability",
+        "OBJECTION": "Objection",
+        "RESTRICTION": "Restriction",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information",
+        "AUTOMATED_DECISION": "Automated decision",
+        "WITHDRAW_CONSENT": "Withdraw consent",
+        "OTHER": "Other"
+      },
+      "status": {
+        "SUBMITTED": "Submitted",
+        "IDENTITY_PENDING": "Identity pending",
+        "IDENTITY_VERIFIED": "Identity verified",
+        "IN_PROGRESS": "In Progress",
+        "DATA_COLLECTED": "Data collected",
+        "REVIEW_PENDING": "Review pending",
+        "COMPLETED": "Completed",
+        "REJECTED": "Rejected"
+      },
+      "emptyAll": {
+        "title": "No data subject requests yet",
+        "subtitle": "Create a request or set up a public intake form"
+      },
+      "emptyOpen": "No open requests",
+      "emptyOverdue": "No overdue requests",
+      "emptyCompleted": "No completed requests",
+      "emptyFiltered": "No requests match these filters",
+      "restricted": {
+        "title": "Rights requests are restricted",
+        "body": "Rights requests contain the personal data of the people who made them, so only privacy officers, admins and owners can open them. You can open a request when you are assigned one of its tasks. The figures above are open to every member.",
+        "emptyAssigned": "You are not assigned to a task on any request",
+        "detailTitle": "You cannot open this request",
+        "detailBody": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks. Ask a privacy officer to assign you a task if you need to work on it.",
+        "backToList": "Back to rights requests",
+        "actionBody": "Only privacy officers, admins and owners can create requests or open the request settings."
+      },
+      "publicPortal": {
+        "title": "Public intake portal",
+        "subtitle": "Share this link with data subjects",
+        "comingSoonSubtitle": "A public-facing portal for data subjects to submit GDPR requests. Currently under development.",
+        "open": "Open portal"
+      }
+    },
+    "dataInventory": {
+      "title": "Data inventory",
+      "subtitle": "Your systems: where personal data is held, and the data elements in each",
+      "export": "Export",
+      "exportRopa": "ROPA export",
+      "addAsset": "Add system",
+      "addAssetShort": "Add",
+      "addActivity": "Add activity",
+      "addTransfer": "Add transfer",
+      "search": "Search systems...",
+      "filters": "Filters",
+      "tabs": {
+        "assets": "Systems ({count})",
+        "activities": "Activities ({count})",
+        "flows": "Data flows",
+        "transfers": "Transfers",
+        "transfersWithCount": "Transfers ({count})"
+      },
+      "asset": {
+        "ownerEmpty": "No owner",
+        "elements": "{count, plural, one {# element} other {# elements}}",
+        "activities": "{count, plural, one {# activity} other {# activities}}",
+        "locationEmpty": "No location specified"
+      },
+      "activity": {
+        "noBasis": "No basis",
+        "noSubjects": "No subjects",
+        "assetsCount": "{count, plural, one {# system} other {# systems}}",
+        "details": "Details",
+        "viewDetails": "View details"
+      },
+      "loadMore": "Load more",
+      "emptyAssets": {
+        "title": "No systems yet",
+        "subtitle": "Start by adding your first system"
+      },
+      "emptyActivities": {
+        "title": "No processing activities yet",
+        "subtitle": "Document your data processing activities for ROPA compliance"
+      },
+      "emptyTransfers": {
+        "title": "No international transfers recorded",
+        "subtitle": "Document cross-border data transfers and safeguards (GDPR Art. 44 to 49)"
+      },
+      "transfer": {
+        "tiaCompleted": "TIA completed",
+        "tiaPending": "TIA pending"
+      },
+      "activityDialog": {
+        "title": "Add processing activity",
+        "description": "Document a data processing activity for your ROPA (Record of Processing Activities).",
+        "nameLabel": "Activity name",
+        "namePlaceholder": "e.g. Customer Onboarding",
+        "purposeLabel": "Purpose",
+        "purposePlaceholder": "e.g. Collect and verify customer identity for account creation",
+        "legalBasisLabel": "Legal basis",
+        "legalBasisPlaceholder": "Select legal basis...",
+        "subjectsLabel": "Data subjects",
+        "subjectsPlaceholder": "e.g. Customers, Employees, Website visitors",
+        "subjectsHelp": "Comma-separated list"
+      },
+      "transferDialog": {
+        "title": "Add international transfer",
+        "description": "Record a cross-border data transfer under GDPR Art. 44 to 49.",
+        "nameLabel": "Transfer name",
+        "namePlaceholder": "e.g. Customer data to US analytics provider",
+        "countryLabel": "Destination country",
+        "countryPlaceholder": "Choose a country",
+        "orgLabel": "Receiving organization",
+        "orgPlaceholder": "e.g. Stripe Inc.",
+        "mechanismLabel": "Transfer mechanism",
+        "mechanismPlaceholder": "Select mechanism...",
+        "safeguardsLabel": "Safeguards",
+        "safeguardsPlaceholder": "e.g. EU SCCs (2021) + supplementary measures",
+        "descriptionLabel": "Description",
+        "create": "Create",
+        "countryHint": "Stored as its ISO 3166 two-letter code (for example IN for India).",
+        "vendorLabel": "Vendor",
+        "vendorPlaceholder": "Choose a vendor",
+        "noneOption": "None",
+        "activityLabel": "Processing activity",
+        "activityPlaceholder": "Choose an activity",
+        "activityHint": "Linked to an activity, the transfer appears in its record of processing (Art. 30(1)(e))."
+      },
+      "legalBasis": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal obligation",
+        "VITAL_INTERESTS": "Vital interests",
+        "PUBLIC_TASK": "Public task",
+        "LEGITIMATE_INTERESTS": "Legitimate interests"
+      },
+      "mechanism": {
+        "ADEQUACY_DECISION": "Adequacy decision",
+        "STANDARD_CONTRACTUAL_CLAUSES": "SCCs",
+        "BINDING_CORPORATE_RULES": "BCRs",
+        "DEROGATION": "Derogation",
+        "CERTIFICATION": "Certification",
+        "CODE_OF_CONDUCT": "Code of conduct",
+        "OTHER": "Other"
+      }
+    },
+    "dashboard": {
+      "subtitle": "Privacy dashboard",
+      "newOrgDialog": {
+        "title": "New organization",
+        "nameLabel": "Organization name",
+        "namePlaceholder": "e.g., Acme Corporation",
+        "creating": "Creating...",
+        "create": "Create"
+      }
+    },
+    "processingActivities": {
+      "back": "Back",
+      "title": "Records of processing",
+      "subtitle": "Your processing activities: the record of processing activities (ROPA, GDPR Article 30)",
+      "exportRopa": "Export ROPA",
+      "downloadPdf": "Download as PDF",
+      "downloadCsv": "Download as CSV",
+      "downloadJson": "Download as JSON",
+      "addActivity": "Add activity",
+      "stats": {
+        "total": "Total activities",
+        "active": "Active",
+        "consent": "Consent-Based",
+        "transfers": "With Transfers"
+      },
+      "searchPlaceholder": "Search activities...",
+      "inactive": "Inactive",
+      "assetsCount": "{count, plural, one {# system} other {# systems}}",
+      "subjectTypesCount": "{count, plural, one {# subject type} other {# subject types}}",
+      "categoriesCount": "{count, plural, one {# data category} other {# data categories}}",
+      "dataSubjects": "Data subjects",
+      "empty": {
+        "title": "No processing activities found",
+        "body": "Document your data processing activities for ROPA compliance"
+      },
+      "about": {
+        "title": "About ROPA",
+        "description": "Record of Processing Activities requirements under GDPR Article 30",
+        "requiredTitle": "Required information",
+        "required": {
+          "controller": "Name and contact details of controller",
+          "purposes": "Purposes of processing",
+          "categories": "Categories of data subjects and personal data",
+          "recipients": "Categories of recipients",
+          "transfers": "Transfers to third countries",
+          "retention": "Retention periods",
+          "security": "Security measures"
+        },
+        "whenTitle": "When ROPA is Required",
+        "when": {
+          "employees": "Organizations with 250+ employees",
+          "risk": "Processing likely to result in risk to rights",
+          "notOccasional": "Processing is not occasional",
+          "specialCategory": "Processing includes special category data",
+          "criminal": "Processing includes criminal conviction data"
+        },
+        "controllerDetailsLink": "Controller, data protection officer, representative and security measures: set them in Settings"
+      },
+      "downloadXlsx": "Download as Excel (XLSX)",
+      "processorRecord": "Record as processor (Article 30(2))"
+    },
+    "elementDetail": {
+      "notFound": "Data element not found",
+      "notFoundBody": "It may have been deleted or you may not have access.",
+      "backToInventory": "Back to data inventory",
+      "back": "Back",
+      "personalData": "Personal data",
+      "specialCategory": "Special category",
+      "edit": "Edit",
+      "overview": "Overview",
+      "noDescription": "No description provided",
+      "retention": "Retention",
+      "retentionDays": "{days, plural, one {# day} other {# days}}",
+      "notSpecified": "Not specified",
+      "legalBasis": "Legal basis",
+      "parentAsset": "Parent system",
+      "linkedTitle": "Linked processing activities",
+      "linkedDescription": "Activities that explicitly process this data element",
+      "inactive": "Inactive",
+      "noLinked": "No processing activities linked to this element",
+      "noLinkedHint": "Open the parent system and use “Manage Activities” to link one"
+    },
+    "dataMap": {
+      "title": "Data map",
+      "subtitle": "Your systems, the data flows between them, the vendors and the transfers outside the EEA with their safeguard and status.",
+      "transfers": "Transfers"
+    }
+  },
+  "confirms": {
+    "deleteAssetTitle": "Delete system?",
+    "deleteAssetDesc": "This will permanently delete the system and all linked elements. This cannot be undone.",
+    "deleteElementTitle": "Delete element?",
+    "deleteElementDesc": "Delete \"{name}\"? This cannot be undone.",
+    "deleteVendorTitle": "Delete vendor?",
+    "deleteVendorDesc": "This will remove the vendor and unlink it from any systems or activities. This cannot be undone.",
+    "deleteFlowTitle": "Delete data flow?",
+    "deleteFlowDesc": "Delete flow \"{name}\"? This cannot be undone.",
+    "deleteActivityTitle": "Delete processing activity?",
+    "deleteActivityDesc": "Delete \"{name}\"? Its links to systems and the flows suggested from them go with it. Transfers that refer to it are kept. This cannot be undone.",
+    "deleteTransferTitle": "Delete transfer?",
+    "deleteTransferDesc": "Delete \"{name}\"? This cannot be undone."
+  },
+  "auth": {
+    "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
+    "signIn": "Sign In",
+    "signOut": "Sign out",
+    "signUp": "Sign up",
+    "email": "Email address",
+    "password": "Password",
+    "enterEmail": "Enter your email to receive a magic link",
+    "continueWithEmail": "Continue with email",
+    "continueWithGoogle": "Continue with Google",
+    "orContinueWith": "Or continue with",
+    "noPasswordNeeded": "No password needed. We'll send you a secure link.",
+    "checkEmail": "Check your email",
+    "magicLinkSent": "We've sent a magic link to {email}. Click the link in the email to sign in.",
+    "didntReceive": "Didn't receive it?",
+    "tryAgain": "Try again",
+    "sendingLink": "Sending...",
+    "signingIn": "Signing in...",
+    "bySigningIn": "By signing in, you agree to our",
+    "termsOfUse": "Terms of use",
+    "and": "and",
+    "privacyPolicy": "Privacy policy",
+    "developmentMode": "Development mode",
+    "devSignIn": "Dev sign in (instant)",
+    "termsOfService": "Terms of service",
+    "emailPlaceholder": "you@company.com",
+    "devEmailPlaceholder": "dev@example.com",
+    "failedToSendLink": "Failed to send magic link. Please try again.",
+    "unexpectedError": "An unexpected error occurred.",
+    "devSignInFailed": "Dev sign-in failed.",
+    "localSignInTitle": "Local sign-in",
+    "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere).",
+    "signedOut": "You have been signed out. Sign in again to continue.",
+    "signInToContinue": "Sign in to continue. You will return to the page you were on.",
+    "noSignInMethod": "No sign-in method is set up on this server. The administrator can turn on local sign-in, an e-mail key or Google sign-in.",
+    "error": {
+      "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
+      "OAuthCallback": "Google sign-in failed. Please try again.",
+      "OAuthSignin": "Could not start Google sign-in. Please try again.",
+      "Default": "Sign-in failed. Please try again."
+    },
+    "authErrorPage": {
+      "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
+      "title": "Authentication error",
+      "titleAccountExists": "Account already exists",
+      "body": "Something went wrong during sign-in. The link may have expired or already been used.",
+      "bodyAccountExists": "An account with this email already exists using a different sign-in method. Please sign in using your original method (email magic link or Google) to access your account.",
+      "bodyFallback": "Something went wrong during sign-in.",
+      "cta": "Try again",
+      "ctaAccountExists": "Sign in with original method"
+    },
+    "verifyRequestPage": {
+      "body": "A sign-in link has been sent to your email address. Click the link to sign in."
+    },
+    "signOutPage": {
+      "title": "Sign out",
+      "body": "You will be signed out of DPO Central in this browser.",
+      "confirm": "Sign out",
+      "leaving": "Signing out…",
+      "cancel": "Stay signed in"
+    },
+    "signInEmail": {
+      "subject": "Sign in to {brand}",
+      "body": "Click the button below to sign in to your {brand} account:",
+      "button": "Sign in to {brand}",
+      "ignore": "If you didn’t request this email, you can safely ignore it."
+    }
+  },
+  "nav": {
+    "openMenu": "Open menu",
+    "feedback": "Feedback",
+    "signOut": "Sign out"
+  },
+  "dataFlow": {
+    "filters": {
+      "all": "All",
+      "special": "Special cat.",
+      "personal": "Higher risk",
+      "general": "Other personal",
+      "autoGen": "To confirm",
+      "showAutoGenerated": "Show flows to confirm",
+      "hideAutoGenerated": "Hide flows to confirm",
+      "categories": "Categories",
+      "clearCategories": "Clear categories",
+      "clearAll": "Clear all filters",
+      "flowCount": "{shown} / {total} flows",
+      "unclassified": "Uncategorised",
+      "activity": "Activity",
+      "allActivities": "All activities"
+    },
+    "node": {
+      "production": "PROD",
+      "productionTitle": "Production environment",
+      "inbound": "in",
+      "outbound": "out",
+      "location": "Location",
+      "outsideEea": "Outside the EEA: {countries}",
+      "outsideEeaTitle": "{count, plural, one {Open the transfer record} other {Open the # transfer records}}",
+      "transferLine": "{country}: {mechanism} ({status})",
+      "noMechanism": "No safeguard recorded",
+      "outsideEeaStatus": "Outside the EEA: {countries} · {status}",
+      "unrecorded": "No transfer record: {countries}",
+      "unrecordedTitle": "The vendor operates or stores data in these countries outside the EEA, and no transfer record covers them. Open Transfers to record one.",
+      "moreCategories": "{count, plural, one {# more category} other {# more categories}}",
+      "noFlows": "No flow recorded yet",
+      "vendor": "Vendor",
+      "outsideEeaCountry": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "suggestedStatus": "{status} (suggested)"
+    },
+    "sheet": {
+      "createTitle": "Create data flow",
+      "editTitle": "Edit data flow",
+      "createDescription": "Define how data moves between systems",
+      "editDescription": "Update how data moves between systems",
+      "name": "Flow name *",
+      "namePlaceholder": "e.g., User sync to analytics",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the purpose of this data flow",
+      "source": "Source system *",
+      "sourcePlaceholder": "Select source system",
+      "destination": "Destination system *",
+      "destinationPlaceholder": "Select destination system",
+      "categories": "Data categories",
+      "categoriesSelected": "{count} selected",
+      "frequency": "Frequency",
+      "frequencyPlaceholder": "How often the data moves",
+      "volume": "Data volume",
+      "volumePlaceholder": "e.g., ~10,000 records/day",
+      "encryption": "Encryption method",
+      "encryptionPlaceholder": "e.g., TLS 1.3, AES-256",
+      "cancel": "Cancel",
+      "automated": "Automated flow",
+      "saving": "Saving…",
+      "creating": "Creating…",
+      "saveChanges": "Save changes",
+      "createFlow": "Create flow"
+    },
+    "empty": {
+      "loading": "Loading data flow visualization…",
+      "noAssetsTitle": "No systems found",
+      "noAssetsBody": "Add systems first to visualize data flows",
+      "noFlowsTitle": "No data flows defined yet",
+      "noFlowsBody": "Create flows to visualize how data moves between systems",
+      "noAssetFlowsTitle": "No data flows connected to this system",
+      "noAssetFlowsBody": "Create a flow to connect this system to other systems",
+      "noFlowsHint": "Your systems are shown. Add a flow between two of them, or link systems to a processing activity to get draft flows to confirm."
+    },
+    "actions": {
+      "addAsset": "Add system",
+      "addFlow": "Add flow"
+    },
+    "frequencyOptions": {
+      "realTime": "Real-time",
+      "hourly": "Hourly",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "onDemand": "On-demand",
+      "batch": "Batch",
+      "continuous": "Continuous",
+      "onRequest": "On request"
+    },
+    "details": {
+      "automated": "Automated",
+      "noDescription": "No description provided",
+      "direction": "Data flow direction",
+      "noCategories": "No categories specified",
+      "title": "Flow details",
+      "volume": "Volume",
+      "encryption": "Encryption",
+      "noDetails": "No additional details",
+      "generated": "Suggested from the systems linked to a processing activity. It is a draft, left out of the PDF reports, until you confirm it or edit it.",
+      "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
+      "confirm": "Confirm flow",
+      "confirmed": "Flow confirmed",
+      "draftBadge": "To confirm",
+      "transfersTitle": "Transfers outside the EEA from the destination"
+    },
+    "legend": {
+      "title": "Key",
+      "inbound": "incoming flows",
+      "outbound": "outgoing flows",
+      "lineSpecial": "special categories (Arts. 9 and 10)",
+      "lineHigherRisk": "higher-risk personal data",
+      "lineOther": "other personal data",
+      "lineUnclassified": "no category recorded",
+      "dashed": "flow to confirm (suggested from an activity)",
+      "thickness": "thicker line: more frequent",
+      "stripe": "System type",
+      "transfers": "Transfers",
+      "transferLine": "transfer to a country outside the EEA (safeguard and status on the label)",
+      "outsideEeaShort": "Outside EEA",
+      "unrecorded": "vendor country with no transfer record"
+    },
+    "abbr": {
+      "IDENTIFIERS": "ID",
+      "DEMOGRAPHICS": "DEM",
+      "FINANCIAL": "FIN",
+      "HEALTH": "HLT",
+      "BIOMETRIC": "BIO",
+      "LOCATION": "LOC",
+      "BEHAVIORAL": "BHV",
+      "EMPLOYMENT": "EMP",
+      "EDUCATION": "EDU",
+      "POLITICAL": "POL",
+      "RELIGIOUS": "REL",
+      "GENETIC": "GEN",
+      "SEXUAL_ORIENTATION": "SEX",
+      "CRIMINAL": "CRI",
+      "OTHER": "OTH"
+    },
+    "edge": {
+      "fallback": "Flow",
+      "open": "Open the flow {name}"
+    },
+    "summary": {
+      "counts": "{systems, plural, one {# system} other {# systems}} ({isolated} without flows) · {flows, plural, one {# flow} other {# flows}} · {transfers, plural, one {# transfer} other {# transfers}} outside the EEA to {countries, plural, one {# country} other {# countries}} · {vendors, plural, one {# vendor} other {# vendors}} with no system"
+    },
+    "view": {
+      "label": "View",
+      "map": "Map",
+      "list": "List",
+      "canvasLabel": "Data map with {systems} systems and {flows} flows. Use Tab to move between systems and flows, and Enter to open one. The list view shows the same records."
+    },
+    "list": {
+      "flowsTitle": "{count, plural, one {# flow} other {# flows}}",
+      "systemsTitle": "{count, plural, one {# system} other {# systems}}",
+      "transfersTitle": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "vendorsTitle": "{count, plural, one {# vendor with no system} other {# vendors with no system}}",
+      "to": "to",
+      "flowCounts": "{inbound} incoming, {outbound} outgoing"
+    }
+  },
+  "metadata": {
+    "tagline": "Privacy Management Made Simple",
+    "description": "Data inventory and records of processing, rights requests, breach register and vendor management for privacy programs.",
+    "licenses": {
+      "title": "License & source",
+      "description": "The DPO Central community edition is open source under AGPL-3.0. Read the license and get the complete corresponding source."
+    },
+    "pageTitles": {
+      "signIn": "Sign in",
+      "authError": "Sign-in problem",
+      "verifyRequest": "Check your email",
+      "signOut": "Sign out",
+      "notFound": "Page not found"
+    }
+  },
+  "enums": {
+    "assessmentRiskStatus": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
+    "mitigationStatus": {
+      "IDENTIFIED": "Identified",
+      "PLANNED": "Planned",
+      "IN_PROGRESS": "In progress",
+      "IMPLEMENTED": "Implemented",
+      "VERIFIED": "Verified",
+      "NOT_REQUIRED": "Not required"
+    },
+    "vendorCategory": {
+      "CLOUD_SERVICES": "Cloud services",
+      "DATA_PROCESSING": "Data processing",
+      "ANALYTICS": "Analytics",
+      "MARKETING": "Marketing",
+      "HR_SERVICES": "HR services",
+      "PAYMENT_PROCESSING": "Payment processing",
+      "CUSTOMER_SUPPORT": "Customer support",
+      "IT_SECURITY": "IT security",
+      "LEGAL": "Legal",
+      "OTHER": "Other"
+    },
+    "vendorCatalogCategory": {
+      "Cloud_Infrastructure": "Cloud infrastructure",
+      "Data_Warehouse_Integration": "Data warehouse & integration",
+      "Analytics_BI": "Analytics & BI",
+      "Customer_Data_Platform": "Customer data platform",
+      "CRM_Sales": "CRM & sales",
+      "Marketing_Automation": "Marketing automation",
+      "Advertising": "Advertising",
+      "Content_Management": "Content management",
+      "E_commerce": "E-commerce",
+      "Payment_Processing": "Payment processing",
+      "Communication": "Communication",
+      "Customer_Support": "Customer support",
+      "Personalization_Engagement": "Personalization & engagement",
+      "HR_People": "HR & people",
+      "Productivity_Collaboration": "Productivity & collaboration",
+      "Developer_Tools": "Developer tools",
+      "Security_Identity": "Security & identity",
+      "Privacy_Consent": "Privacy & consent",
+      "AI_Machine_Learning": "AI & machine learning",
+      "Legal_Compliance": "Legal & compliance",
+      "Design_Creative": "Design & creative",
+      "Surveys_Research": "Surveys & research",
+      "Collaboration": "Collaboration",
+      "Knowledge_Management": "Knowledge management",
+      "Data_Analytics": "Data analytics",
+      "Database_Hosting": "Database hosting",
+      "Electronic_Health_Records": "Electronic health records",
+      "Project_Management": "Project management",
+      "Sales_Automation": "Sales automation",
+      "Email_Marketing": "Email marketing",
+      "eSignature": "eSignature",
+      "Advertising_Technology": "Advertising technology",
+      "Platform_as_a_Service": "Platform as a Service",
+      "Podcast_Hosting": "Podcast hosting",
+      "IT_Support": "IT support",
+      "ERP": "ERP",
+      "AML_CFT": "AML/CFT",
+      "CRM": "CRM",
+      "Financial_Infrastructure": "Financial infrastructure",
+      "Analytics": "Analytics",
+      "Video_Conferencing": "Video conferencing",
+      "Content_Distribution": "Content distribution",
+      "Privacy_Technology": "Privacy technology",
+      "Cloud_Storage": "Cloud storage",
+      "Insurance_Communication": "Insurance communication",
+      "Crypto_Compliance": "Crypto compliance",
+      "Financial_Management": "Financial management",
+      "Telemedicine": "Telemedicine",
+      "Identity_Verification": "Identity verification",
+      "Help_Desk": "Help desk",
+      "E_commerce_Platform": "E-commerce platform",
+      "Managed_Services": "Managed services",
+      "DevOps": "DevOps",
+      "Billing": "Billing",
+      "Accounting": "Accounting",
+      "Messaging": "Messaging",
+      "Document_Management": "Document management",
+      "Privacy": "Privacy",
+      "Healthcare_Exchange": "Healthcare exchange",
+      "Medical_Imaging": "Medical imaging",
+      "Laboratory_Services": "Laboratory services",
+      "Video_Communication": "Video communication",
+      "Warehouse_Management": "Warehouse management",
+      "Blockchain_Analytics": "Blockchain analytics",
+      "HR_Management": "HR management",
+      "Productivity": "Productivity",
+      "PACS": "PACS",
+      "Cloud_Platform": "Cloud platform",
+      "Consent_Management": "Consent management",
+      "KYC_AML": "KYC/AML",
+      "Diagnostics": "Diagnostics",
+      "Contract_Management": "Contract management",
+      "Pharmacy_Management": "Pharmacy management",
+      "ITSM": "ITSM",
+      "Compliance_Technology": "Compliance technology",
+      "Subscription_Management": "Subscription management",
+      "SMS_Marketing": "SMS marketing",
+      "Communications": "Communications",
+      "Payroll": "Payroll",
+      "Sales": "Sales",
+      "Hosting": "Hosting",
+      "Fraud_Detection": "Fraud detection",
+      "Ad_Serving": "Ad serving",
+      "Product_Intelligence": "Product intelligence",
+      "Monitoring": "Monitoring",
+      "2FA_MFA": "2FA/MFA"
+    },
+    "dataCategory": {
+      "IDENTIFIERS": "Identifiers",
+      "DEMOGRAPHICS": "Demographics",
+      "FINANCIAL": "Financial",
+      "HEALTH": "Health",
+      "BIOMETRIC": "Biometric",
+      "LOCATION": "Location",
+      "BEHAVIORAL": "Behavioral",
+      "EMPLOYMENT": "Employment",
+      "EDUCATION": "Education",
+      "POLITICAL": "Political opinions",
+      "RELIGIOUS": "Religious beliefs",
+      "GENETIC": "Genetic",
+      "SEXUAL_ORIENTATION": "Sexual orientation",
+      "CRIMINAL": "Criminal records",
+      "OTHER": "Other"
+    },
+    "assessmentType": {
+      "DPIA": "DPIA",
+      "PIA": "PIA",
+      "TIA": "TIA",
+      "LIA": "LIA",
+      "VENDOR": "Vendor assessment",
+      "CUSTOM": "Custom"
+    },
+    "assessmentStatus": {
+      "DRAFT": "Draft",
+      "IN_PROGRESS": "In progress",
+      "PENDING_REVIEW": "Pending review",
+      "PENDING_APPROVAL": "Pending approval",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "ARCHIVED": "Archived"
+    },
+    "approvalStatus": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "DELEGATED": "Delegated"
+    },
+    "dsarType": {
+      "ACCESS": "Access",
+      "RECTIFICATION": "Rectification",
+      "ERASURE": "Erasure",
+      "PORTABILITY": "Portability",
+      "OBJECTION": "Objection",
+      "RESTRICTION": "Restriction",
+      "AUTOMATED_DECISION": "Automated decision",
+      "WITHDRAW_CONSENT": "Withdraw consent",
+      "OTHER": "Other",
+      "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+      "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
+    },
+    "dsarStatus": {
+      "SUBMITTED": "Submitted",
+      "IDENTITY_PENDING": "Identity pending",
+      "IDENTITY_VERIFIED": "Identity verified",
+      "IN_PROGRESS": "In progress",
+      "DATA_COLLECTED": "Data collected",
+      "REVIEW_PENDING": "Review pending",
+      "APPROVED": "Approved",
+      "COMPLETED": "Completed",
+      "REJECTED": "Rejected",
+      "CANCELLED": "Canceled"
+    },
+    "dsarTaskStatus": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "BLOCKED": "Blocked",
+      "NOT_APPLICABLE": "Not applicable"
+    },
+    "incidentSeverity": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "incidentStatus": {
+      "REPORTED": "Reported",
+      "INVESTIGATING": "Investigating",
+      "CONTAINED": "Contained",
+      "ERADICATED": "Eradicated",
+      "RECOVERING": "Recovering",
+      "CLOSED": "Closed",
+      "FALSE_POSITIVE": "False positive"
+    },
+    "incidentType": {
+      "DATA_BREACH": "Data breach",
+      "UNAUTHORIZED_ACCESS": "Unauthorised access",
+      "DATA_LOSS": "Data loss",
+      "SYSTEM_COMPROMISE": "System compromise",
+      "PHISHING": "Phishing",
+      "RANSOMWARE": "Ransomware",
+      "INSIDER_THREAT": "Insider threat",
+      "PHYSICAL_SECURITY": "Physical security",
+      "VENDOR_INCIDENT": "Vendor incident",
+      "OTHER": "Other"
+    },
+    "transferMechanism": {
+      "ADEQUACY_DECISION": "Adequacy decision",
+      "STANDARD_CONTRACTUAL_CLAUSES": "Standard contractual clauses",
+      "BINDING_CORPORATE_RULES": "Binding corporate rules",
+      "DEROGATION": "Derogation",
+      "CERTIFICATION": "Certification",
+      "CODE_OF_CONDUCT": "Code of conduct",
+      "OTHER": "Other"
+    },
+    "transferStatus": {
+      "COMPLIANT": "Compliant",
+      "NEEDS_REVIEW": "Needs review",
+      "NON_COMPLIANT": "Non-compliant",
+      "PENDING": "Pending"
+    },
+    "riskLevel": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "legalBasis": {
+      "CONSENT": "Consent",
+      "CONTRACT": "Contract",
+      "LEGAL_OBLIGATION": "Legal obligation",
+      "VITAL_INTERESTS": "Vital interests",
+      "PUBLIC_TASK": "Public task",
+      "LEGITIMATE_INTERESTS": "Legitimate interests"
+    },
+    "vendorStatus": {
+      "PROSPECTIVE": "Prospective",
+      "ACTIVE": "Active",
+      "UNDER_REVIEW": "Under review",
+      "SUSPENDED": "Suspended",
+      "TERMINATED": "Terminated"
+    },
+    "contractType": {
+      "DPA": "DPA",
+      "MSA": "MSA",
+      "NDA": "NDA",
+      "SCC": "SCC",
+      "SUBPROCESSOR": "Subprocessor",
+      "OTHER": "Other"
+    },
+    "contractStatus": {
+      "DRAFT": "Draft",
+      "PENDING_SIGNATURE": "Pending signature",
+      "ACTIVE": "Active",
+      "EXPIRED": "Expired",
+      "TERMINATED": "Terminated",
+      "RENEWED": "Renewed"
+    },
+    "dataAssetType": {
+      "DATABASE": "Database",
+      "APPLICATION": "Application",
+      "FILE_SYSTEM": "File system",
+      "CLOUD_SERVICE": "Cloud service",
+      "THIRD_PARTY": "Third party",
+      "PHYSICAL": "Physical",
+      "OTHER": "Other"
+    },
+    "dataSensitivity": {
+      "PUBLIC": "Public",
+      "INTERNAL": "Internal",
+      "CONFIDENTIAL": "Confidential",
+      "RESTRICTED": "Restricted",
+      "SPECIAL_CATEGORY": "Special category"
+    },
+    "notificationStatus": {
+      "PENDING": "Pending",
+      "SENT": "Sent",
+      "NOT_REQUIRED": "Not required",
+      "OVERDUE": "Overdue",
+      "ACKNOWLEDGED": "Acknowledged",
+      "DRAFTED": "Drafted",
+      "FOLLOW_UP_REQUIRED": "Follow-up required",
+      "CLOSED": "Closed"
+    },
+    "reviewType": {
+      "SECURITY": "Security",
+      "PRIVACY": "Privacy",
+      "COMPLIANCE": "Compliance",
+      "DUE_DILIGENCE": "Due diligence",
+      "ANNUAL": "Annual",
+      "OTHER": "Other"
+    },
+    "role": {
+      "OWNER": "Owner",
+      "ADMIN": "Admin",
+      "PRIVACY_OFFICER": "Privacy officer",
+      "MEMBER": "Member",
+      "VIEWER": "Viewer"
+    },
+    "auditAction": {
+      "REOPEN": "Reopened as a new revision",
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted",
+      "VIEW": "Viewed",
+      "SUBMIT": "Submitted",
+      "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "STATUS_CHANGED": "Status changed",
+      "DEADLINE_EXTENDED": "Deadline extended",
+      "DEADLINE_REMINDER_SENT": "Deadline reminder sent",
+      "INVITE": "Invitation created",
+      "INVITE_CANCELLED": "Invitation cancelled",
+      "JOIN_BY_INVITATION": "Joined by invitation",
+      "RECORDED_IN_ERROR": "Recorded in error",
+      "RECORDED_IN_ERROR_UNDONE": "No longer recorded in error",
+      "TASKS_GENERATED": "Tasks generated",
+      "PII_REDACTED": "Personal data redacted",
+      "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
+      "VIEWED": "Opened",
+      "GENERATE_DPA": "Data processing agreement generated",
+      "UPDATE_COMPLIANCE": "Compliance updated",
+      "UPDATE_CHECKLIST": "Transfer checklist updated",
+      "EXPORT_TO_AI_SENTINEL": "Exported to an external register",
+      "REQUEST_CREATED": "Request created",
+      "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal",
+      "SUPPORT": "Read by support",
+      "INACTIVITY_NOTICE_SENT": "Deletion notice sent to the owners and administrators",
+      "DSAR_PUBLIC_SUBMISSION": "Request received through the public form",
+      "DSAR_DELETED_INACTIVE": "Deleted after 30 days without activity"
+    },
+    "auditEntity": {
+      "Organization": "Organization",
+      "OrganizationMember": "Team member",
+      "OrganizationJurisdiction": "Jurisdiction",
+      "OrganizationAiSettings": "AI settings",
+      "DataAsset": "System",
+      "ProcessingActivity": "Processing activity",
+      "DataFlow": "Data flow",
+      "DataTransfer": "Transfer",
+      "Vendor": "Vendor",
+      "VendorContract": "Vendor contract",
+      "Assessment": "Assessment",
+      "DSARRequest": "Rights request",
+      "Incident": "Incident",
+      "IncidentNotification": "Breach notification",
+      "AISystem": "AI system"
+    }
+  },
+  "footer": {
+    "serviceBy": "{brandName} is a {companyName} service.",
+    "disclaimer": "DPO Central provides informational tools and templates. Verify with qualified counsel before relying on outputs.",
+    "userGuide": "Docs",
+    "sourceAndLicence": "Source & license",
+    "termsOfService": "Terms of service",
+    "privacyPolicy": "Privacy policy",
+    "dataSecurity": "Data security",
+    "docs": "Docs",
+    "howItWorks": "How it works",
+    "signIn": "Sign In",
+    "communityEdition": "{brandName} community edition"
+  },
+  "organization": {
+    "welcome": "Welcome to {brandName}",
+    "createOrg": "Create your organization to get started with privacy management",
+    "orgName": "Organization name",
+    "orgNamePlaceholder": "e.g., Acme Corporation",
+    "createOrganization": "Create organization",
+    "creating": "Creating...",
+    "switchOrg": "Switch organization",
+    "dpaAccept": "I accept the <link>data processing agreement</link>",
+    "dpaStepTitle": "Data processing agreement",
+    "dpaStepBody": "Before you continue, accept the data processing agreement for {name} on behalf of the organization. You only need to do this once.",
+    "dpaStepContinue": "Accept and continue",
+    "dpaPendingNote": "An owner or administrator of this organization needs to accept the <link>data processing agreement</link> (version {version})."
+  },
+  "dashboard": {
+    "title": "Privacy dashboard",
+    "overview": "Overview",
+    "recentActivity": "Recent activity",
+    "quickActions": "Quick actions",
+    "metrics": {
+      "totalAssets": "Total systems",
+      "activeRequests": "Active requests",
+      "openIncidents": "Open incidents"
+    }
+  },
+  "dsarReminderEmail": {
+    "subject": "{kind, select, DAYS_7 {{orgName}: rights request due in 7 days} DAYS_3 {{orgName}: rights request due in 3 days} DAYS_1 {{orgName}: rights request due within 1 day} other {{orgName}: rights request overdue}}",
+    "heading": "{kind, select, DAYS_7 {Due in 7 days} DAYS_3 {Due in 3 days} DAYS_1 {Due within 1 day} other {Overdue}}",
+    "body": "{kind, select, OVERDUE {The deadline of a rights request at {orgName} passed on {dueDate}, and the request is still open.} other {A rights request at {orgName} must be answered by {dueDate}.}}",
+    "referenceLabel": "Reference",
+    "typeLabel": "Type",
+    "receivedLabel": "Received",
+    "dueLabel": "Deadline",
+    "ctaText": "Open the request",
+    "whyYou": "You receive this because you are assigned a task on this request or, when nobody is, because you are a privacy officer, administrator or owner of {orgName}.",
+    "switchOff": "An administrator can switch these reminders off in the DSAR intake settings."
+  },
+  "dsarSettings": {
+    "title": "DSAR intake settings",
+    "subtitle": "Configure your public data subject request portal",
+    "back": "Back",
+    "portalCard": {
+      "title": "Public portal",
+      "description": "Share this link with data subjects to submit requests",
+      "copyUrl": "Copy URL",
+      "openInNewTab": "Open in new tab",
+      "activeLabel": "Public form active",
+      "publishedHint": "The form is published and takes requests. Link this address from your privacy policy so people can exercise their rights.",
+      "unpublishedHint": "The form is not published yet. Anyone who opens the link sees your privacy contact instead. Switch it on when you are ready to take requests.",
+      "confirmHint": "This form was published before DPO Central asked you to confirm it. Confirm it to record that you have reviewed it.",
+      "confirmPublish": "Confirm and publish",
+      "publishedToast": "The public form is published",
+      "unpublishedToast": "The public form is switched off"
+    },
+    "formCard": {
+      "title": "Form configuration",
+      "description": "Customize the intake form appearance",
+      "name": "Form name (internal)",
+      "slug": "URL slug",
+      "publicTitle": "Form title (public)",
+      "formDescription": "Form description",
+      "thankYou": "Thank you message"
+    },
+    "typesCard": {
+      "title": "Enabled request types",
+      "description": "Select which types of requests can be submitted"
+    },
+    "typeDescriptions": {
+      "ACCESS": "Request to access personal data",
+      "RECTIFICATION": "Request to correct data",
+      "ERASURE": "Request to delete data",
+      "PORTABILITY": "Request to export data",
+      "OBJECTION": "Object to data processing",
+      "RESTRICTION": "Restrict data processing"
+    },
+    "complianceCard": {
+      "title": "Compliance & retention",
+      "description": "Link to your privacy notice and configure how long personal data is kept",
+      "privacyNoticeUrl": "Privacy notice URL",
+      "privacyNoticeUrlHint": "Public URL of your organization's privacy notice. Shown to requesters on the intake form.",
+      "retentionDays": "Retention period (days)",
+      "retentionDaysHint": "Days after a request is completed before personal data is automatically redacted. Default 90.",
+      "privacyContactEmail": "Privacy contact e-mail",
+      "privacyContactEmailHint": "Shown on the public form when it is not taking requests, so people can still reach you."
+    },
+    "cssCard": {
+      "title": "Custom styling",
+      "description": "Add custom CSS to match your brand (optional)",
+      "label": "Custom CSS",
+      "help": "Applied to the public request form. Leave empty to use the default styling."
+    },
+    "remindersCard": {
+      "title": "Deadline reminders",
+      "description": "Emails before a request's deadline",
+      "label": "Send reminder emails",
+      "hint": "An email goes to the people assigned to the request's open tasks (or, if nobody is assigned, to the privacy officers, administrators and owners) 7, 3 and 1 day before the deadline, and once when it becomes overdue. Closed requests get none. Saved as soon as you change it.",
+      "savedOn": "Reminder emails switched on",
+      "savedOff": "Reminder emails switched off"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save settings",
+      "errorPrefix": "Error: {message}",
+      "saved": "Settings saved"
+    },
+    "defaultFormName": "DSAR intake form"
+  },
+  "dsarPublic": {
+    "form": {
+      "loadingError": {
+        "title": "Request form not available",
+        "description": "We couldn't find an active data subject request form for this organization.",
+        "hint": "Please check the link you used, or contact the organization directly."
+      },
+      "header": {
+        "fallbackDescription": "Submit a request regarding your personal data held by {orgName}",
+        "defaultTitle": "Data Subject Request",
+        "defaultDescription": "Submit a request regarding your personal data"
+      },
+      "card": {
+        "title": "Your request",
+        "description": "Please provide the information below so we can process your request"
+      },
+      "fields": {
+        "requestTypeLabel": "What would you like to do?",
+        "requestTypePlaceholder": "Select request type",
+        "name": "Full name",
+        "namePlaceholder": "John Smith",
+        "email": "Email address",
+        "emailPlaceholder": "you@example.com",
+        "phone": "Phone number",
+        "phonePlaceholder": "+1 (555) 123-4567",
+        "relationshipLabel": "Relationship",
+        "relationshipPlaceholder": "Select relationship",
+        "details": "Additional details",
+        "detailsPlaceholder": "Please provide any additional information that may help us process your request..."
+      },
+      "relationship": {
+        "customer": "Customer",
+        "employee": "Employee",
+        "jobApplicant": "Job applicant",
+        "websiteVisitor": "Website visitor",
+        "other": "Other"
+      },
+      "consent": {
+        "retention": "Your contact details will be processed solely to verify your identity and fulfill this data subject request. Your personal data will be retained for the duration of request processing and automatically redacted within {days} days of completion.",
+        "privacyNoticeLink": "See our privacy notice for full details.",
+        "checkbox": "I understand that my contact details will be processed to fulfill this request and consent to this processing."
+      },
+      "submit": "Submit request",
+      "submitting": "Submitting...",
+      "requiredMark": "*",
+      "types": {
+        "ACCESS": {
+          "label": "Access my data",
+          "description": "Get a copy of the personal data held about you"
+        },
+        "ERASURE": {
+          "label": "Delete my data",
+          "description": "Request deletion of your personal data"
+        },
+        "RECTIFICATION": {
+          "label": "Correct my data",
+          "description": "Request correction of inaccurate personal data"
+        },
+        "PORTABILITY": {
+          "label": "Export my data",
+          "description": "Receive your data in a portable format"
+        },
+        "OBJECTION": {
+          "label": "Object to processing",
+          "description": "Object to how your data is processed"
+        },
+        "RESTRICTION": {
+          "label": "Restrict processing",
+          "description": "Limit how your data is used"
+        },
+        "AUTOMATED_DECISION": {
+          "label": "Automated decisions",
+          "description": "Request human review of automated decisions"
+        },
+        "WITHDRAW_CONSENT": {
+          "label": "Withdraw consent",
+          "description": "Withdraw previously given consent"
+        },
+        "OTHER": {
+          "label": "Other request",
+          "description": "A different data protection request"
+        }
+      },
+      "success": {
+        "title": "Request submitted",
+        "fallbackDescription": "Your data subject request has been received",
+        "referenceLabel": "Reference number",
+        "copyAriaLabel": "Copy reference number",
+        "copiedAriaLabel": "Copied",
+        "emailSentLead": "We sent a confirmation to ",
+        "emailSentTrail": " with this reference and a link to track progress. Save it: you'll need it to check status.",
+        "checkStatus": "Check request status",
+        "defaultThankYou": "Thank you for your request. We will process it within the legally required timeframe.",
+        "noEmailNote": "Keep this reference: you will need it to check the status of your request. No confirmation e-mail was sent this time."
+      },
+      "languageSwitcher": "Language",
+      "closed": {
+        "title": "This form is not taking requests at the moment",
+        "withContact": "Please write to {orgName} at <mail>{email}</mail>.",
+        "withoutContact": "Please contact {orgName} directly."
+      }
+    },
+    "status": {
+      "loadingError": {
+        "title": "Request not found",
+        "description": "We couldn't find a request matching this reference number.",
+        "hint": "Please check the reference number from your confirmation email."
+      },
+      "header": {
+        "title": "Request status",
+        "fallbackDescription": "Track the progress of your data subject request",
+        "trackingDescription": "Tracking your {requestType} with {orgName}"
+      },
+      "overallProgress": "Overall progress",
+      "currentlyProcessing": "We are currently processing your request",
+      "rejectedNotice": "This request was rejected. Please contact the organization for details.",
+      "cancelledNotice": "This request was canceled. Please contact the organization for details.",
+      "expectedCompletion": "Expected completion",
+      "completedLabel": "Completed",
+      "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+      "daysRemaining": "{count, plural, one {# day remaining} other {# days remaining}}",
+      "keyDates": "Key dates",
+      "requestReceived": "Request received",
+      "acknowledged": "Acknowledged",
+      "completedDate": "Completed",
+      "timeline": {
+        "submitted": "Submitted",
+        "identityVerified": "Identity verified",
+        "inProgress": "In Progress",
+        "dataCollected": "Data collected",
+        "completed": "Completed"
+      },
+      "typeLabels": {
+        "ACCESS": "Data access request",
+        "ERASURE": "Data erasure request",
+        "RECTIFICATION": "Data rectification request",
+        "PORTABILITY": "Data portability request",
+        "OBJECTION": "Data processing objection",
+        "RESTRICTION": "Processing restriction request",
+        "AUTOMATED_DECISION": "Automated decision review",
+        "WITHDRAW_CONSENT": "Consent withdrawal",
+        "OTHER": "Data subject request",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
+      },
+      "withdraw": {
+        "button": "Withdraw this request",
+        "dialogTitle": "Withdraw your request?",
+        "dialogDescription": "If you no longer need this request, we'll cancel it. This action cannot be undone, but you can submit a new request anytime.",
+        "confirm": "Yes, withdraw",
+        "cancel": "Keep request open",
+        "successTitle": "Request withdrawn",
+        "successDescription": "Your request has been canceled."
+      },
+      "download": {
+        "title": "Your data is ready",
+        "description": "The organization has uploaded your response. You can download it from the link below.",
+        "download": "Download response",
+        "expiresOn": "Available until {date}"
+      },
+      "unavailable": {
+        "title": "This page is not available",
+        "description": "Please contact the organization directly."
+      }
+    },
+    "email": {
+      "subject": "{orgName}: We received your data request",
+      "greeting": "Hello,",
+      "body": "{orgName} has received your {requestType}. We will respond by {dueDate}.",
+      "referenceLabel": "Reference number",
+      "ctaText": "Check request status",
+      "footer": "Save this email or bookmark the link above to track progress. We may contact you at this address if we need to verify your identity. Your contact details will be used solely to fulfill this request, never for marketing."
+    },
+    "communicationEmail": {
+      "subject": "{orgName}: Update on your data request",
+      "subjectWithCustom": "{orgName}: {subject}",
+      "greeting": "Hello,",
+      "intro": "{orgName} has sent you a message regarding your data request:",
+      "referenceLabel": "Reference number",
+      "ctaText": "View request status",
+      "footer": "If you have questions, reply to this email or use the link above to check your request status."
+    },
+    "extensionEmail": {
+      "subject": "{orgName}: new date for your request",
+      "greeting": "Hello,",
+      "body": "{orgName} has extended the time to answer your request. The new date is {newDate}.",
+      "reasons": "{orgName} will send you the reasons for the extension.",
+      "referenceLabel": "Reference number",
+      "statusLabel": "Check the status of your request"
+    }
+  },
+  "toasts": {
+    "generic": {
+      "somethingWentWrong": "Something went wrong. Please try again."
+    },
+    "organization": {
+      "created": "Created \"{name}\"",
+      "updated": "Organization updated",
+      "deleted": "Deleted \"{name}\""
+    },
+    "dataFlow": {
+      "created": "Data flow created",
+      "updated": "Data flow updated",
+      "deleted": "Data flow deleted",
+      "createFailed": "Failed to create data flow",
+      "updateFailed": "Failed to update data flow",
+      "deleteFailed": "Failed to delete data flow"
+    },
+    "asset": {
+      "created": "System created",
+      "updated": "System updated",
+      "deleted": "System deleted",
+      "elementAdded": "Data element added",
+      "elementUpdated": "Data element updated",
+      "elementDeleted": "Element deleted",
+      "activitiesUpdated": "Activities updated",
+      "activitiesUpdatedWithFlows": "Activities updated: {count, plural, one {# data flow suggested} other {# data flows suggested}}, to confirm on the map"
+    },
+    "activity": {
+      "created": "Processing activity created",
+      "updated": "Processing activity updated",
+      "deleted": "Processing activity deleted",
+      "assetsLinked": "Linked systems updated",
+      "assetsLinkedWithFlows": "Linked systems: {count, plural, one {# data flow suggested} other {# data flows suggested}}, to confirm on the map",
+      "flowsGenerated": "{count, plural, one {# new data flow suggested} other {# new data flows suggested}}, to confirm on the map",
+      "noNewFlows": "No new flows to generate: the existing map already covers this activity"
+    },
+    "vendor": {
+      "created": "Vendor created",
+      "updated": "Vendor updated",
+      "deleted": "Vendor deleted",
+      "contractAdded": "Contract added",
+      "reviewScheduled": "Review scheduled",
+      "reviewCompleted": "Review marked complete"
+    },
+    "transfer": {
+      "created": "Transfer created",
+      "updated": "Transfer updated",
+      "complianceUpdated": "Compliance updated",
+      "deleted": "Transfer deleted"
+    },
+    "incident": {
+      "created": "Incident reported",
+      "updated": "Incident updated",
+      "deleted": "Incident deleted",
+      "statusUpdated": "Incident status updated",
+      "timelineAdded": "Timeline entry added",
+      "taskCreated": "Task created",
+      "notificationCreated": "Notification created",
+      "statusUpdateFailed": "Failed to update status",
+      "timelineAddFailed": "Failed to add entry",
+      "taskCreateFailed": "Failed to create task",
+      "notificationCreateFailed": "Failed to create notification"
+    },
+    "dsar": {
+      "created": "DSAR request created",
+      "statusUpdated": "Request status updated",
+      "taskAdded": "Task added",
+      "taskUpdated": "Task updated",
+      "tasksGenerated": "Tasks generated from systems",
+      "messageSent": "Message sent"
+    }
+  },
+  "pdf": {
+    "common": {
+      "brand": "DPO Central",
+      "brandUppercase": "DPO CENTRAL",
+      "confidential": "CONFIDENTIAL",
+      "generated": "Generated {date}",
+      "confidentialBody": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request."
+    },
+    "enum": {
+      "assetType": {
+        "APPLICATION": "Application",
+        "CLOUD_SERVICE": "Cloud service",
+        "DATABASE": "Database",
+        "FILE_SYSTEM": "File system",
+        "THIRD_PARTY": "Third party",
+        "PHYSICAL": "Physical",
+        "OTHER": "Other"
+      },
+      "legalBasis": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal obligation",
+        "VITAL_INTERESTS": "Vital interests",
+        "PUBLIC_TASK": "Public task",
+        "LEGITIMATE_INTERESTS": "Legitimate interests"
+      },
+      "riskTier": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "aiRisk": {
+        "UNACCEPTABLE": "Unacceptable",
+        "HIGH_RISK": "High risk",
+        "LIMITED": "Limited",
+        "MINIMAL": "Minimal"
+      },
+      "vendorStatus": {
+        "PROSPECTIVE": "Prospective",
+        "ACTIVE": "Active",
+        "UNDER_REVIEW": "Under review",
+        "SUSPENDED": "Suspended",
+        "TERMINATED": "Terminated"
+      },
+      "contractStatus": {
+        "DRAFT": "Draft",
+        "ACTIVE": "Active",
+        "EXPIRED": "Expired",
+        "TERMINATED": "Terminated",
+        "PENDING": "Pending",
+        "PENDING_SIGNATURE": "Pending signature",
+        "RENEWED": "Renewed"
+      },
+      "aiSystemStatus": {
+        "DRAFT": "Draft",
+        "REGISTERED": "Registered",
+        "UNDER_REVIEW": "Under review",
+        "COMPLIANT": "Compliant",
+        "NON_COMPLIANT": "Non-compliant",
+        "DECOMMISSIONED": "Decommissioned"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
+      }
+    },
+    "ropaReport": {
+      "eyebrow": "Record of processing",
+      "coverTitle": "Record of processing",
+      "coverSubtitle": "Article 30 register",
+      "coverReference": "GDPR · Article 30",
+      "stats": {
+        "processingActivities": "Processing activities",
+        "intlTransfers": "Int'l transfers",
+        "automatedDecisions": "Automated decisions",
+        "needingReview": "Needing review",
+        "incomplete": "Incomplete"
+      },
+      "byLegalBasis": "By legal basis",
+      "dataFlowMap": "Data flow map",
+      "dataFlowMapLead": "Each processing activity is shown as a bordered group containing the assets it touches. Lines are recorded or confirmed flows; flows suggested from activity-asset links appear once someone confirms them in the app.",
+      "processingActivities": "Processing activities",
+      "incomplete": "INCOMPLETE",
+      "activity": {
+        "purpose": "Purpose",
+        "legalBasis": "Legal basis",
+        "dataSubjects": "Data subjects",
+        "dataCategories": "Data Categories",
+        "recipients": "Recipients",
+        "retentionPeriod": "Retention period",
+        "automatedDecisions": "Automated decisions",
+        "automatedYes": "Yes: {detail}",
+        "automatedNoDetails": "No details",
+        "automatedNo": "No",
+        "lastReviewed": "Last reviewed",
+        "nextReview": "Next Review",
+        "systems": "Systems / assets",
+        "systemsColumns": {
+          "system": "System",
+          "type": "Type",
+          "location": "Location",
+          "elements": "Elements"
+        },
+        "transfers": "International transfers",
+        "transfersColumns": {
+          "destination": "Destination",
+          "organization": "Organization",
+          "mechanism": "Mechanism",
+          "safeguards": "Safeguards"
+        },
+        "warningPrefix": "Warning: ",
+        "description": "Description",
+        "role": "Role",
+        "jointController": "Joint controller",
+        "securityMeasures": "Security measures",
+        "securityInherited": "The general description of security measures applies (see above).",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "securityTitle": "Security measures",
+      "securityLead": "General description of the technical and organizational security measures (GDPR Article 32), which applies to every activity that does not describe its own.",
+      "unassignedTransfers": "Transfers not linked to an activity",
+      "unassignedTransfersLead": "International transfers recorded for the organization but not yet linked to a processing activity. Link each one to its activity.",
+      "empty": "There are no active processing activities as controller.",
+      "processor": {
+        "eyebrow": "Record of processing as processor",
+        "coverTitle": "Record of processing as processor",
+        "coverSubtitle": "Article 30(2) register",
+        "coverReference": "GDPR · Article 30(2)",
+        "activities": "Processing carried out on behalf of each controller",
+        "empty": "There are no active processing activities carried out as processor."
+      }
+    },
+    "dsarPerformance": {
+      "pageTitle": "DSAR performance",
+      "coverTitle": "DSAR performance report",
+      "coverSubtitle": "Data Subject Access Request Compliance & Metrics",
+      "coverGenerated": "Generated: {date}",
+      "coverConfidential": "CONFIDENTIAL. This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
+      "executiveSummary": "Executive summary",
+      "stats": {
+        "totalRequests": "Total requests",
+        "onTimeRate": "On-Time rate",
+        "avgResolution": "Avg resolution",
+        "overdue": "Overdue",
+        "notAvailable": "N/A"
+      },
+      "meta": {
+        "organization": "Organization",
+        "reportDate": "Report date",
+        "primaryJurisdiction": "Primary jurisdiction",
+        "primaryJurisdictionNotSet": "Not set",
+        "defaultDeadline": "Default deadline",
+        "defaultDeadlineDays": "{count} days",
+        "defaultDeadlineMonths": "{count, plural, one {# month} other {# months}}",
+        "totalRequests": "Total requests",
+        "completed": "Completed",
+        "currentlyOpen": "Currently open",
+        "completedLast30Days": "Completed (last 30 days)",
+        "autoRedacted": "Auto-Redacted"
+      },
+      "privacyByDesign": "Privacy by design",
+      "privacyByDesignBody": "This report contains no individual personal data. All metrics are aggregated. Completed DSAR records are automatically redacted after the configured retention period to minimize data protection risk.",
+      "requestAnalysis": "Request analysis",
+      "byType": "By request type",
+      "byTypeDesc": "Distribution of data subject requests by type of right exercised",
+      "typeColumns": {
+        "type": "Request type",
+        "count": "Count",
+        "percentage": "Percentage"
+      },
+      "byStatus": "By Status",
+      "byStatusDesc": "Current status distribution of all requests",
+      "statusColumns": {
+        "status": "Status",
+        "count": "Count",
+        "percentage": "Percentage"
+      },
+      "slaCompliance": "SLA compliance by jurisdiction",
+      "slaDesc": "DSAR response deadlines vary by jurisdiction. Where multiple jurisdictions apply, the strictest deadline should prevail. Each request carries its own deadline: the status reads \"Meeting\" only when every request measured was answered by it, and \"Not met\" when any was answered late or is still open past it.",
+      "slaColumns": {
+        "jurisdiction": "Jurisdiction",
+        "deadline": "Deadline",
+        "avgResolution": "Avg resolution",
+        "status": "Status"
+      },
+      "slaDays": "{days} days",
+      "slaMonths": "{months, plural, one {# month} other {# months}}",
+      "monthlyTrend": "Monthly trend",
+      "monthlyTrendDesc": "Request volume and completion rate over the last 12 months. Monitoring trends helps anticipate resource needs and identify seasonal patterns.",
+      "monthlyColumns": {
+        "month": "Month",
+        "received": "Received",
+        "completed": "Completed",
+        "backlog": "Backlog"
+      },
+      "openRequestAging": "Open request aging",
+      "agingDesc": "Requests aged beyond the jurisdiction's deadline require immediate attention. Aging analysis helps prioritize workload and identify bottlenecks in the fulfillment process.",
+      "agingColumns": {
+        "band": "Age band",
+        "open": "Open requests",
+        "risk": "Risk level"
+      },
+      "riskCritical": "Critical: likely overdue",
+      "riskAtRisk": "At risk",
+      "slaStatusMeeting": "Meeting",
+      "slaStatusNoData": "No data",
+      "riskOnTrack": "On track",
+      "agingBands": {
+        "d0to7": "0 to 7 days",
+        "d7to14": "7 to 14 days",
+        "d14to30": "14 to 30 days",
+        "over30": "More than 30 days"
+      },
+      "dsarTypes": {
+        "ACCESS": "Access (right of access)",
+        "ERASURE": "Erasure (Right to be Forgotten)",
+        "RECTIFICATION": "Rectification",
+        "PORTABILITY": "Data portability",
+        "OBJECTION": "Objection to processing",
+        "RESTRICTION": "Restriction of processing",
+        "WITHDRAW_CONSENT": "Withdraw consent",
+        "AUTOMATED_DECISION": "Automated decision review",
+        "OTHER": "Other",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
+      },
+      "slaStatusNotMet": "Not met"
+    },
+    "breachRegister": {
+      "recordedInErrorPrefix": "[Recorded in error]",
+      "pageTitle": "Breach register",
+      "coverTitle": "Breach / incident register",
+      "coverSubtitle": "GDPR Article 33(5)",
+      "summary": "Summary",
+      "stats": {
+        "totalIncidents": "Total incidents",
+        "critical": "Critical",
+        "high": "High",
+        "pendingNotifications": "Pending DPA notifications"
+      },
+      "byStatus": "By Status",
+      "allIncidents": "All incidents",
+      "unknown": "Unknown",
+      "overviewColumns": {
+        "id": "ID",
+        "title": "Title",
+        "type": "Type",
+        "severity": "Severity",
+        "status": "Status",
+        "discovered": "Discovered",
+        "affectedRecords": "Affected Records"
+      },
+      "statusColumns": {
+        "status": "Status",
+        "count": "Count"
+      },
+      "meta": {
+        "incidentId": "Incident ID",
+        "type": "Type",
+        "discovered": "Discovered",
+        "discoveredBy": "Discovered By",
+        "discoveryMethod": "Discovery method",
+        "affectedRecords": "Affected Records",
+        "affectedSubjects": "Affected Subjects",
+        "dataCategories": "Data Categories",
+        "containedAt": "Contained At",
+        "resolvedAt": "Resolved At",
+        "notificationRequired": "DPA notification required",
+        "notificationDeadline": "Notification Deadline",
+        "yes": "Yes",
+        "no": "No",
+        "notAssessed": "Not yet assessed"
+      },
+      "subsections": {
+        "description": "Description",
+        "containmentActions": "Containment actions",
+        "rootCause": "Root Cause",
+        "lessonsLearned": "Lessons learned",
+        "dpaNotifications": "DPA notifications",
+        "timeline": "Timeline",
+        "notifications": "Notifications",
+        "resolutionNotes": "Resolution notes"
+      },
+      "notificationColumns": {
+        "jurisdiction": "Jurisdiction",
+        "status": "Status",
+        "date": "Date",
+        "recipient": "Recipient",
+        "deadline": "Deadline",
+        "noFixedDeadline": "No fixed deadline under this law",
+        "reference": "Reference",
+        "recipientType": {
+          "DPA": "Supervisory authority",
+          "DATA_SUBJECT": "Affected data subjects",
+          "LAW_ENFORCEMENT": "Law enforcement",
+          "INTERNAL": "Internal stakeholders"
+        }
+      },
+      "timelineColumns": {
+        "timestamp": "Timestamp",
+        "event": "Event",
+        "by": "By"
+      },
+      "timelineSystem": "System",
+      "overdue": "Notification deadline passed and the authority has not been notified"
+    },
+    "vendorRegister": {
+      "eyebrow": "Vendor register",
+      "coverTitle": "Vendor register",
+      "coverSubtitle": "Processor & sub-processor inventory",
+      "coverReference": "GDPR · Article 28",
+      "stats": {
+        "totalVendors": "Total vendors",
+        "active": "Active",
+        "highCritical": "High / critical",
+        "contractsExpiring": "Contracts expiring 30d"
+      },
+      "criticality": "Criticality",
+      "coverage": "Coverage",
+      "coverageDpa": "DPA in force",
+      "coverageCertified": "Certified",
+      "certificationsTop": "Certifications: top",
+      "directory": "Directory",
+      "directoryLead": "All vendors grouped by primary category. Risk tier and DPA status are shown inline; certifications appear as chips.",
+      "columns": {
+        "vendor": "Vendor",
+        "status": "Status",
+        "risk": "Risk",
+        "countries": "Countries",
+        "certifications": "Certifications",
+        "dpa": "DPA",
+        "nextReview": "Next Review",
+        "service": "Service",
+        "dataProcessed": "Data Processed",
+        "contract": "Data processing agreement"
+      },
+      "dpaMissing": "MISSING",
+      "uncategorized": "Uncategorized",
+      "details": "Processing details",
+      "detailsLead": "What each vendor does, the personal data it processes, where, and the data processing agreement that governs it (GDPR Articles 28 and 30).",
+      "dateRangeJoin": " to ",
+      "noDpa": "No DPA"
+    },
+    "chrome": {
+      "generatedBy": "Generated by DPO Central",
+      "noRecords": "No records",
+      "notStated": "Not stated"
+    },
+    "csv": {
+      "words": {
+        "notSpecified": "Not specified",
+        "yes": "Yes",
+        "no": "No",
+        "notAssessed": "Not yet assessed",
+        "none": "None",
+        "noDpa": "No DPA"
+      },
+      "vendors": {
+        "name": "Name",
+        "status": "Status",
+        "riskTier": "Risk Tier",
+        "riskScore": "Risk Score",
+        "website": "Website",
+        "primaryContact": "Primary Contact",
+        "contactEmail": "Contact Email",
+        "categories": "Categories",
+        "dataProcessed": "Data Processed",
+        "countries": "Countries",
+        "certifications": "Certifications",
+        "lastAssessed": "Last Assessed",
+        "nextReview": "Next Review",
+        "contractNames": "Contract Names",
+        "dpaStatus": "DPA Status"
+      },
+      "breaches": {
+        "id": "ID",
+        "title": "Title",
+        "type": "Type",
+        "severity": "Severity",
+        "status": "Status",
+        "description": "Description",
+        "discoveredAt": "Discovered At",
+        "discoveredBy": "Discovered By",
+        "affectedRecords": "Affected Records",
+        "affectedSubjects": "Affected Subjects",
+        "dataCategories": "Data Categories",
+        "containedAt": "Contained At",
+        "rootCause": "Root Cause",
+        "resolvedAt": "Resolved At",
+        "notificationRequired": "Notification Required",
+        "notificationDeadline": "Notification Deadline"
+      }
+    },
+    "ropaRecord": {
+      "role": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor"
+      },
+      "controller": {
+        "title": "Controller (GDPR Article 30(1)(a))",
+        "processorTitle": "Processor (GDPR Article 30(2)(a))",
+        "name": "Controller",
+        "processorName": "Processor",
+        "taxId": "Tax ID",
+        "address": "Address",
+        "email": "E-mail",
+        "phone": "Phone",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union (Article 27)",
+        "securityMeasures": "General description of security measures"
+      },
+      "columns": {
+        "activity": "Processing activity",
+        "controller": "Controller",
+        "controllerContact": "Controller contact details",
+        "jointController": "Joint controller",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union",
+        "purpose": "Purposes of the processing",
+        "legalBasis": "Legal basis",
+        "dataSubjects": "Categories of data subjects",
+        "dataCategories": "Categories of personal data",
+        "specialCategories": "Special categories (Articles 9 and 10)",
+        "recipients": "Categories of recipients",
+        "transfers": "International transfers and safeguards",
+        "retention": "Time limits for erasure",
+        "security": "Technical and organizational security measures",
+        "role": "Role",
+        "description": "Description",
+        "automatedDecisions": "Automated decision-making",
+        "systems": "Systems",
+        "lastReviewed": "Last reviewed",
+        "nextReview": "Next Review",
+        "processor": "Processor",
+        "processorContact": "Processor contact details",
+        "clientController": "Controller on whose behalf we act",
+        "clientControllerContact": "Controller contact details",
+        "clientRepresentative": "Controller's representative",
+        "clientDpo": "Controller's data protection officer",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "warnings": {
+        "retentionMissing": "Retention period not specified",
+        "recipientsMissing": "No recipients specified",
+        "dataSubjectsMissing": "No categories of data subjects",
+        "categoriesMissing": "No categories of personal data",
+        "securityMissing": "No description of security measures",
+        "noSystems": "No systems linked",
+        "neverReviewed": "Never reviewed",
+        "reviewOverdue": "Review date has passed",
+        "automatedNoDetail": "Automated decision-making without details",
+        "clientControllerMissing": "The controller on whose behalf this is done is not named"
+      },
+      "words": {
+        "notSpecified": "Not specified",
+        "notDesignated": "Not designated",
+        "yes": "Yes",
+        "no": "No",
+        "none": "None",
+        "noTransfers": "No international transfers",
+        "neverReviewed": "Never reviewed",
+        "days": "{count, plural, one {# day} other {# days}}",
+        "tiaDone": "Transfer impact assessment done",
+        "tiaOn": "Transfer impact assessment done on {date}"
+      },
+      "sheets": {
+        "record": "Record of processing",
+        "processorRecord": "Processor record",
+        "controller": "Controller",
+        "processor": "Processor",
+        "field": "Field",
+        "value": "Value"
+      }
+    }
+  },
+  "docs": {
+    "toc": {
+      "gettingStarted": {
+        "label": "Getting started"
+      },
+      "dataInventory": {
+        "label": "Data inventory",
+        "items": {
+          "assets": "Systems",
+          "elements": "Data elements",
+          "activities": "Processing activities",
+          "flows": "Data flows",
+          "transfers": "Cross-Border transfers"
+        }
+      },
+      "dsar": {
+        "label": "DSAR management",
+        "items": {
+          "creating": "Creating requests",
+          "tasks": "Task management",
+          "sla": "SLA tracking",
+          "portal": "Public portal",
+          "intakeConfig": "Intake form config"
+        }
+      },
+      "incidents": {
+        "label": "Incidents",
+        "items": {
+          "reporting": "Reporting",
+          "timeline": "Timeline",
+          "notifications": "DPA notifications",
+          "tasks": "Response tasks"
+        }
+      },
+      "vendors": {
+        "label": "Vendor management",
+        "items": {
+          "adding": "Adding vendors",
+          "contracts": "Contracts",
+          "questionnaires": "Due diligence",
+          "riskReviews": "Risk reviews"
+        }
+      }
+    },
+    "common": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "gettingStarted": {
+      "title": "Getting started",
+      "roles": {
+        "title": "User roles",
+        "description": "What each role can do, departments and approvals."
+      },
+      "communitySubtitle": "This guide describes the modules of the community edition: the data inventory and the records of processing, rights requests, the breach register and vendors.",
+      "modulesTitle": "Modules",
+      "modulesDescription": "One guide per module."
+    },
+    "incidents": {
+      "title": "Incident management",
+      "subtitle": "Track and manage data breaches and security incidents from detection through resolution. The incident module helps you meet regulatory notification requirements and maintain a complete audit trail.",
+      "reporting": {
+        "title": "Reporting incidents",
+        "description": "Log incidents as soon as they are discovered. The system captures key details and starts tracking timelines automatically.",
+        "statsMockupTitle": "Incident stats",
+        "cardsMockupTitle": "Incident cards",
+        "stats": {
+          "total": "Total incidents",
+          "open": "Open",
+          "critical": "Critical",
+          "pendingDpa": "Pending DPA"
+        },
+        "cards": {
+          "email": "Unauthorized email access",
+          "export": "Customer data export error",
+          "api": "Third-party API data leak",
+          "usb": "Lost USB drive"
+        },
+        "reportedLabel": "Reported {date}",
+        "steps": {
+          "report": {
+            "title": "Report the incident",
+            "description": "Navigate to Incidents and click 'Report Incident'. Provide a title, description, severity, and category."
+          },
+          "assess": {
+            "title": "Assess severity",
+            "description": "Classify the severity (LOW, MEDIUM, HIGH, CRITICAL) based on data types affected, number of subjects, and potential harm."
+          },
+          "assign": {
+            "title": "Assign the response team",
+            "description": "Add team members to the incident and assign response tasks."
+          },
+          "investigate": {
+            "title": "Investigate and contain",
+            "description": "Document findings in the timeline. Update status as the incident progresses through INVESTIGATING → CONTAINED."
+          },
+          "notify": {
+            "title": "Notify if required",
+            "description": "Determine if DPA notification is needed. If so, use the notification workflow (see below)."
+          },
+          "resolve": {
+            "title": "Resolve and close",
+            "description": "Document root cause, remediation actions, and lessons learned. Move to RESOLVED → CLOSED."
+          }
+        }
+      },
+      "timeline": {
+        "title": "Incident timeline",
+        "description": "Every incident has a chronological timeline that captures all actions, status changes, and communications.",
+        "mockupTitle": "Timeline view",
+        "entries": {
+          "reported": "Incident reported",
+          "severity": "Severity set to CRITICAL",
+          "investigation": "Investigation started",
+          "rootCause": "Root cause identified: API misconfiguration",
+          "notification": "DPA notification initiated"
+        }
+      },
+      "notifications": {
+        "title": "DPA notifications",
+        "description": "When an incident involves a personal data breach, you may need to notify the Data Protection Authority.",
+        "warningTitle": "72-Hour Notification requirement",
+        "warningBody": "Under GDPR Article 33, you must notify your supervisory authority within 72 hours of becoming aware of a personal data breach (unless the breach is unlikely to result in a risk to individuals' rights and freedoms). The system tracks this deadline from the moment the incident is reported.",
+        "tipTitle": "Notification workflow",
+        "tipBody": "When you flag an incident as requiring DPA notification, the system creates a notification task with the 72-hour deadline, pre-fills the notification form with incident details, and tracks the submission status."
+      },
+      "tasks": {
+        "title": "Response tasks",
+        "description": "Break down incident response into assignable tasks with deadlines.",
+        "mockupTitle": "Task list",
+        "items": {
+          "identify": "Identify affected data subjects",
+          "contain": "Contain the data leak",
+          "prepare": "Prepare DPA notification",
+          "notifyIndividuals": "Notify affected individuals",
+          "document": "Document lessons learned"
+        },
+        "assignees": {
+          "dpo": "DPO",
+          "itSecurity": "IT security",
+          "communications": "Communications"
+        }
+      }
+    },
+    "vendors": {
+      "title": "Vendor management",
+      "subtitle": "Manage third-party vendors that process personal data on your behalf. Track contracts and reviews, and monitor risk levels across your vendors.",
+      "adding": {
+        "title": "Adding vendors",
+        "description": "Register vendors and capture key details about their data processing relationship with your organization.",
+        "statsMockupTitle": "Vendor stats",
+        "stats": {
+          "total": "Total vendors",
+          "active": "Active",
+          "highRisk": "High risk",
+          "pendingReview": "Pending review"
+        },
+        "cardsMockupTitle": "Vendor cards",
+        "categories": {
+          "cloudInfra": "Cloud infrastructure",
+          "analytics": "Analytics",
+          "email": "Email service",
+          "crm": "CRM"
+        },
+        "riskSuffix": "Risk",
+        "statusLabels": {
+          "ACTIVE": "ACTIVE",
+          "UNDER_REVIEW": "UNDER REVIEW",
+          "SUSPENDED": "SUSPENDED"
+        },
+        "steps": {
+          "navigate": {
+            "title": "Navigate to vendors",
+            "description": "In the left menu, open stage 3, Know your data, and choose Vendors and processors."
+          },
+          "click": {
+            "title": "Click 'add vendor'",
+            "description": "Open the vendor creation form."
+          },
+          "details": {
+            "title": "Enter vendor details",
+            "description": "Provide the vendor name, category, description, contact information, and data processing details."
+          },
+          "risk": {
+            "title": "Set risk tier",
+            "description": "Assign an initial risk tier (LOW, MEDIUM, HIGH, CRITICAL) based on the type and volume of data they process."
+          },
+          "contract": {
+            "title": "Upload contract",
+            "description": "Attach the Data Processing Agreement (DPA) or other relevant contracts."
+          }
+        }
+      },
+      "contracts": {
+        "title": "Contracts",
+        "description": "Track Data Processing Agreements (DPAs) and other contracts with each vendor.",
+        "mockupTitle": "Contract tracking",
+        "dateRangeSeparator": "to",
+        "statuses": {
+          "Active": "Active",
+          "ExpiringSoon": "Expiring soon",
+          "Expired": "Expired"
+        },
+        "calloutTitle": "Contract expiry tracking",
+        "calloutBody": "Contracts that expire within 30 days are counted in the compliance report's risk indicators, so you have time to renew or renegotiate terms.",
+        "types": {
+          "DPA": "DPA",
+          "DPA_SCC": "DPA + SCC"
+        }
+      },
+      "riskReviews": {
+        "title": "Risk reviews",
+        "description": "Periodically review vendor risk levels based on questionnaire results, incident history, and contract compliance.",
+        "infoTitle": "Review frequency",
+        "infoBody": "The recommended review frequency depends on the vendor's risk tier: CRITICAL vendors quarterly, HIGH vendors semi-annually, MEDIUM vendors annually, and LOW vendors every two years."
+      }
+    },
+    "dataInventory": {
+      "title": "Data inventory",
+      "subtitle": "The Data Inventory module is the foundation of your privacy program. It tracks what personal data you hold, where it flows, and how it's processed, and it forms the basis for your Record of Processing Activities (ROPA).",
+      "assets": {
+        "title": "Systems",
+        "description": "Systems are the databases, applications and services that store personal data.",
+        "mockupTitle": "System cards",
+        "elementsLabel": "{count} data elements",
+        "activitiesLabel": "{count} activities",
+        "steps": {
+          "navigate": {
+            "title": "Navigate to data inventory",
+            "description": "In the left menu, open stage 3, Know your data, and choose Data inventory."
+          },
+          "add": {
+            "title": "Click 'add system'",
+            "description": "Use the button in the top-right to open the system creation form."
+          },
+          "details": {
+            "title": "Fill in details",
+            "description": "Enter the system name, type (Database, Application, Cloud Service, etc.), description, and data owner."
+          },
+          "link": {
+            "title": "Link data elements",
+            "description": "Add the personal data elements this system stores (see Data Elements section)."
+          },
+          "save": {
+            "title": "Save the system",
+            "description": "The system will appear in your inventory and can be linked to processing activities."
+          }
+        }
+      },
+      "elements": {
+        "title": "Data elements",
+        "description": "Data elements are the specific types of personal data you process (e.g., email addresses, IP addresses, health records).",
+        "mockupTitle": "Data element sensitivity scale",
+        "items": {
+          "company": "Company name",
+          "email": "Email address",
+          "address": "Home address",
+          "nationalId": "National ID number",
+          "health": "Health records"
+        },
+        "calloutTitle": "GDPR special category data",
+        "calloutBody": "Data classified as SPECIAL_CATEGORY (Article 9 data) requires explicit consent or another specific legal basis. The system flags these elements for additional review in assessments."
+      },
+      "activities": {
+        "title": "Processing activities",
+        "description": "Processing activities describe how and why personal data is used. Each activity links to systems, elements, and a legal basis.",
+        "mockupTitle": "Processing activity card",
+        "sampleTitle": "Customer support correspondence",
+        "sampleDesc": "Processing support tickets and follow-ups",
+        "sampleElements": {
+          "email": "Email address",
+          "name": "Full name",
+          "history": "Support history"
+        },
+        "assetsLabel": "2 systems",
+        "elementsLabel": "3 data elements",
+        "retentionLabel": "Retention: 3 years",
+        "calloutTitle": "Legal basis",
+        "calloutBody": "Each processing activity must have a documented legal basis: Consent, Contract, Legal Obligation, Vital Interest, Public Task, or Legitimate Interest."
+      },
+      "flows": {
+        "title": "Data flows",
+        "description": "Data flows visualize how personal data moves between systems. Linking systems to a processing activity suggests flows between them, drawn dashed until you confirm them.",
+        "mockupTitle": "Data flow diagram",
+        "nodes": {
+          "crm": "CRM",
+          "marketing": "Marketing",
+          "analytics": "Analytics (EU)"
+        },
+        "body1Bold": "You don't have to draw the map.",
+        "body1Rest": " Whenever you link a processing activity to two or more systems (via the ",
+        "body1ManageAssets": "Manage systems",
+        "body1Mid": " button on the activity detail page, or ",
+        "body1ManageActivities": "Manage activities",
+        "body1End": " on the activity's page), DPO Central automatically creates DataFlow records connecting them in a sensible order, based on the typical position of each system type in a data pipeline (input applications first, then ingest services, then databases, then file storage, then third-party sinks).",
+        "body2Start": "You can re-trigger generation at any time with the ",
+        "body2GenerateFlows": "Generate flows",
+        "body2End": " button on an activity detail page. Existing flows are deduped: anything you've manually edited is preserved, and only new connections are added.",
+        "tipTitle": "Bidirectional flows",
+        "tipBody": "Many real systems are bidirectional (a CRM both receives and returns customer data). Record one flow in each direction: the map draws the outbound and return lines as separate curves so they don't overlap."
+      },
+      "transfers": {
+        "title": "Cross-Border transfers",
+        "description": "Track international data transfers and the safeguards in place for each.",
+        "mockupTitle": "Transfer records",
+        "statuses": {
+          "Active": "Active",
+          "UnderReview": "Under review"
+        },
+        "warningTitle": "Schrems II compliance",
+        "warningBody": "International transfers require a valid transfer mechanism. If your transfer impact assessment (TIA) identifies risks, additional safeguards may be needed.",
+        "tipTitle": "ROPA export",
+        "tipBody": "You can export your complete Record of Processing Activities (ROPA) from the Data Inventory list view. The export includes all systems, elements, activities, legal bases, and transfer records."
+      }
+    },
+    "dsar": {
+      "title": "DSAR management",
+      "subtitle": "Manage Data Subject Access Requests (DSARs) end-to-end: from intake through a public portal to task assignment, SLA tracking, and fulfillment.",
+      "creating": {
+        "title": "Creating requests",
+        "description": "DSARs can be created manually by staff or submitted by data subjects through the public portal.",
+        "mockupTitle": "DSAR list view",
+        "daysLeftSuffix": "d left",
+        "typesLabel": "Request types",
+        "typesCaption": "These correspond to GDPR Articles 15-22 data subject rights."
+      },
+      "tasks": {
+        "title": "Task management",
+        "description": "Each DSAR can have multiple tasks assigned to different team members.",
+        "steps": {
+          "verify": {
+            "title": "Verify identity",
+            "description": "Confirm the data subject's identity before processing. The system tracks identity verification status."
+          },
+          "scope": {
+            "title": "Assess scope",
+            "description": "Determine which systems and processing activities are relevant to the request."
+          },
+          "assign": {
+            "title": "Assign tasks",
+            "description": "Create subtasks for each department or system that holds relevant data. Assign team members with deadlines."
+          },
+          "collect": {
+            "title": "Collect data",
+            "description": "Each task assignee gathers and prepares their portion of the response."
+          },
+          "review": {
+            "title": "Review and respond",
+            "description": "Review all collected data, compile the response, and send it to the data subject."
+          },
+          "close": {
+            "title": "Close the request",
+            "description": "Mark the DSAR as completed. The system logs the completion date for compliance records."
+          }
+        }
+      },
+      "sla": {
+        "title": "SLA tracking",
+        "description": "DPO Central automatically tracks SLA deadlines, flags requests that are close to their deadline and sends reminder emails before it passes.",
+        "mockupTitle": "SLA progress indicators",
+        "overdueLabel": "Overdue",
+        "daysRemaining": "{count} days remaining",
+        "warningTitle": "SLA deadlines",
+        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). Requests due within 7 days are flagged as at risk, and overdue requests are flagged as overdue. Reminder emails go to the people assigned to the request's open tasks (or, if nobody is assigned, to the privacy officers, administrators and owners) 7, 3 and 1 day before the deadline, and once when it becomes overdue; an administrator can switch them off in the DSAR intake settings. Where the law allows an extension, the Extend deadline button on the request applies it once and records your reason; you must still tell the person within the first period."
+      },
+      "portal": {
+        "title": "Public portal",
+        "description": "The DSAR public portal allows data subjects to submit requests without contacting you directly.",
+        "mockupTitle": "Public portal intake",
+        "cardTitle": "Submit a data request",
+        "cardSubtitle": "Exercise your data protection rights",
+        "sampleType": "Access my data",
+        "samplePlaceholder": "I would like a copy of all personal data...",
+        "submitButton": "Submit request",
+        "tipTitle": "Shareable link",
+        "tipPrefix": "Each organization gets a unique public portal URL (e.g., ",
+        "tipSuffix": "). Share this link on your privacy policy page or website footer."
+      },
+      "intakeConfig": {
+        "title": "Intake form configuration",
+        "description": "Customize which fields appear on your public DSAR portal and configure auto-acknowledgment emails. The form starts switched off. Switch on \"Public form active\" when you are ready to take requests; while it is off, the link shows your privacy contact.",
+        "settingsLabel": "Portal settings",
+        "settingsDesc": "Configure from Privacy > DSAR > Settings tab",
+        "items": {
+          "autoAck": {
+            "label": "Auto-acknowledgment",
+            "desc": "Send confirmation email on submission"
+          },
+          "types": {
+            "label": "Request types",
+            "desc": "Choose which rights to offer"
+          },
+          "custom": {
+            "label": "Custom fields",
+            "desc": "Add organization-specific intake fields"
+          }
+        }
+      }
+    },
+    "shell": {
+      "userGuide": "Docs",
+      "sourceAndLicence": "Source & license",
+      "menu": "Documentation menu"
+    },
+    "mockup": {
+      "uiPreview": "UI preview"
+    },
+    "roleAccess": {
+      "intro": "Each member of an organization has one role, and each role can do everything the roles below it can. The table shows what each role can do. Below it: departments and the few things only some roles can do.",
+      "columns": {
+        "role": "Role",
+        "sees": "Sees",
+        "edits": "Creates and edits",
+        "exports": "Exports",
+        "manages": "Members and settings",
+        "deletesOrg": "Deletes the organization"
+      },
+      "rows": {
+        "OWNER": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Everything, and deletes records",
+          "exports": "Everything, including the records of processing and the list of rights requests",
+          "manages": "Invites and removes members, including owners; changes roles; settings and departments",
+          "deletesOrg": "Yes"
+        },
+        "ADMIN": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Everything, and deletes records",
+          "exports": "Everything, including the records of processing and the list of rights requests",
+          "manages": "Invites and removes members other than owners; settings and departments",
+          "deletesOrg": "No"
+        },
+        "PRIVACY_OFFICER": {
+          "sees": "Everything, including every rights request and the activity log",
+          "edits": "Every privacy module; handles rights requests, opens and manages breaches",
+          "exports": "Reports, registers and the activity log",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "MEMBER": {
+          "sees": "Records, systems, vendors, transfers and breaches; a rights request only when they have a task on it",
+          "edits": "Records, systems, vendors and transfers; tasks and timeline entries on breaches",
+          "exports": "Reports and registers",
+          "manages": "No",
+          "deletesOrg": "No"
+        },
+        "VIEWER": {
+          "sees": "The same as a member",
+          "edits": "Nothing",
+          "exports": "Reports and registers",
+          "manages": "No",
+          "deletesOrg": "No"
+        }
+      },
+      "departments": {
+        "title": "Departments",
+        "body": "An owner or administrator can limit any member, whatever their role, to one or more departments. A member limited this way sees and edits only the processing records and systems of those departments, and what depends on them. They do not see the organization's overall figures on the overview. A department limit never widens what the role allows."
+      },
+      "limits": {
+        "title": "Reserved to some roles",
+        "items": {
+          "auditLog": "The activity log, and its export, are for owners, administrators and privacy officers.",
+          "owners": "Only an owner can make someone an owner, change a member's role or remove an owner. The last owner cannot be removed or given another role.",
+          "deleteOrg": "Only an owner can delete the organization, by typing its name to confirm.",
+          "viewers": "A viewer cannot create, change or delete anything."
+        }
+      }
+    }
+  },
+  "ai": {
+    "notificationEditor": {
+      "edit": "Edit draft",
+      "save": "Save draft",
+      "cancel": "Cancel",
+      "placeholder": "Notification content…",
+      "saved": "Notification draft saved"
+    }
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "This page could not be shown. Your saved records are not affected.",
+    "transient": "We're reconnecting to the service. Please try again in a moment.",
+    "tryAgain": "Try again",
+    "backDashboard": "Back to the dashboard",
+    "backHome": "Back to the home page",
+    "backSignIn": "Back to sign-in",
+    "reference": "Reference: {reference}",
+    "referenceHelp": "If it happens again, report it and quote this reference.",
+    "help": "How to report a problem"
+  },
+  "views": {
+    "filter": {
+      "any": "Any",
+      "unassigned": "No department",
+      "department": "Department",
+      "assetType": "Type",
+      "status": "Status",
+      "riskTier": "Risk",
+      "type": "Type",
+      "severity": "Severity",
+      "clear": "Clear ({count})"
+    },
+    "saved": {
+      "label": "Saved views",
+      "save": "Save view",
+      "created": "View saved",
+      "remove": "Remove {name}",
+      "dialogTitle": "Save this view",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. High-risk vendors",
+      "cancel": "Cancel",
+      "confirm": "Save"
+    },
+    "departmentSwitch": {
+      "label": "For my department",
+      "wholeOrg": "Whole organization"
+    },
+    "field": {
+      "dataSubjects": "Data subjects",
+      "categories": "Data categories",
+      "recipients": "Recipients",
+      "retention": "Retention period"
+    }
+  },
+  "departments": {
+    "title": "Departments",
+    "description": "Group records and systems by department, give each an owner, and limit who sees what.",
+    "empty": "No departments yet.",
+    "counts": "{records} records · {systems} systems · {members} members",
+    "ownedBy": "owned by {name}",
+    "edit": "Edit department",
+    "delete": "Delete department",
+    "addLabel": "Add a department",
+    "namePlaceholder": "Department name",
+    "parent": "Parent department",
+    "owner": "Owner",
+    "noParent": "No parent",
+    "noOwner": "No owner",
+    "add": "Add",
+    "created": "Department created",
+    "updated": "Department updated",
+    "deleted": "Department deleted",
+    "deleteTitle": "Delete this department?",
+    "deleteConfirm": "Records in \"{name}\" keep their data and lose the department. This cannot be undone.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "name": "Name",
+    "editTitle": "Edit department",
+    "access": {
+      "title": "Member access",
+      "description": "Limit a member to one or more departments. No limit means the whole organization.",
+      "wholeOrg": "Whole organization",
+      "limited": "{count, plural, one {# department} other {# departments}}",
+      "saved": "Access updated"
+    }
+  },
+  "serverErrors": {
+    "exact": {
+      "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
+      "dsarReadRestricted": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
+      "aDepartmentCannotBeItsOwnParent": "A department cannot be its own parent.",
+      "alreadyRedacted": "Already redacted",
+      "anOrganizationWithThisSlugAlreadyExists": "An organization with this slug already exists",
+      "cannotChangeTheRoleOfTheLastOwner": "Cannot change the role of the last owner of an organization",
+      "cannotRemoveTheLastOwnerOfAnOrganization": "Cannot remove the last owner of an organization",
+      "contractNotFound": "Contract not found",
+      "dsarRequestNotFound": "DSAR request not found",
+      "dataAssetNotFound": "System not found",
+      "dataElementNotFound": "Data element not found",
+      "dataFlowNotFound": "Data flow not found",
+      "dataTransferNotFound": "Data transfer not found",
+      "departmentNotFound": "Department not found",
+      "departmentsNestOneLevelOnly": "Departments nest one level only.",
+      "incidentNotFound": "Incident not found",
+      "intakeFormNotAvailableForThisOrganization": "Intake form not available for this organization",
+      "jurisdictionNotFoundInCatalog": "Jurisdiction not found in catalog",
+      "jurisdictionNotFound": "Jurisdiction not found",
+      "memberNotFoundInThisOrganization": "Member not found in this organization",
+      "memberNotFound": "Member not found",
+      "noUserFoundWithThisEmailTheyMust": "No user found with this email. They must sign up first.",
+      "notificationNotFound": "Notification not found",
+      "onlyCompletedOrCancelledRequestsCanBeDeleted": "Only completed or canceled requests can be deleted",
+      "onlyCompletedCancelledOrRejectedRequestsCanBe": "Only completed, canceled, or rejected requests can be redacted",
+      "onlyOwnersAndAdminsCanManageDepartments": "Only owners and admins can manage departments.",
+      "onlyOwnersCanChangeMemberRoles": "Only owners can change member roles",
+      "onlyOwnersCanInviteAnOwner": "Only owners can invite an owner",
+      "onlyOwnersCanRemoveAnOwner": "Only owners can remove an owner",
+      "thatDepartmentIsOutsideYourAccess": "That department is outside your access.",
+      "chooseOneOfYourDepartments": "Choose one of your departments for this record.",
+      "linkTransferToYourActivity": "Link this transfer to a processing activity of your department.",
+      "organizationIdIsRequired": "Organization ID is required",
+      "organizationNotFound": "Organization not found",
+      "organizationOrIntakeFormNotFound": "Organization or intake form not found",
+      "platformAdminAccessRequired": "Platform admin access required",
+      "processingActivityNotFound": "Processing activity not found",
+      "publicEmailDomainsEGGmailComCannot": "Public email domains (e.g. gmail.com) cannot be used as organization domains",
+      "requestNotFound": "Request not found",
+      "reviewNotFound": "Review not found",
+      "savedViewNotFound": "Saved view not found",
+      "taskNotFound": "Task not found",
+      "thisOrganisationCouldNotBeCreatedPleaseTry": "This organization could not be created. Please try again with a slightly different name.",
+      "theDeadlineAlreadyRunsToTheLongestPeriod": "The deadline already runs to the longest period the law allows",
+      "thePrimaryJurisdictionsLawAllowsNoExtension": "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days",
+      "thisRequestIsAlreadyFinalisedAndCannotBe": "This request is already finalized and cannot be withdrawn.",
+      "thisRequestIsClosedItsDeadlineCannotBe": "This request is closed; its deadline cannot be extended",
+      "thisUserIsAlreadyAMemberOfThe": "This user is already a member of the organization",
+      "transferNotFound": "Transfer not found",
+      "unknownDepartmentInTheList": "Unknown department in the list.",
+      "unknownDepartment": "Unknown department.",
+      "unknownOwner": "Unknown owner.",
+      "unknownParentDepartment": "Unknown parent department.",
+      "userNotFound": "User not found",
+      "vendorNotFound": "Vendor not found",
+      "youDoNotHaveAccessToThisOrganization": "You do not have access to this organization",
+      "youDoNotHavePermissionToAddMembers": "You do not have permission to add members",
+      "youDoNotHavePermissionToManageJurisdictions": "You do not have permission to manage jurisdictions",
+      "youDoNotHavePermissionToPerformThis": "You do not have permission to perform this action",
+      "youDoNotHavePermissionToRemoveMembers": "You do not have permission to remove members",
+      "youDoNotHavePermissionToRemoveTemplate": "You do not have permission to remove template items",
+      "youDoNotHavePermissionToUpdateThis": "You do not have permission to update this organization",
+      "youHaveReachedTheMaximumNumberOfSaved": "You have reached the maximum number of saved views.",
+      "yourAccountHasNoEmailAddress": "Your account has no email address",
+      "assigneeNotFound": "Assignee not found",
+      "reviewerNotFound": "Reviewer not found",
+      "anUnexpectedErrorOccurredPleaseTryAgain": "An unexpected error occurred. Please try again.",
+      "weReReconnectingToTheServicePleaseTry": "We're reconnecting to the service. Please try again in a moment.",
+      "dsarIntakeNotAccepted": "We could not accept this request. Please reload the page and submit it again.",
+      "dsarIntakeTooFast": "Please take a moment to check your request, then submit it again.",
+      "dsarIntakeTooMany": "Too many requests have been sent from here today. Please try again tomorrow, or contact the organization directly.",
+      "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly.",
+      "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly.",
+      "dsarUnfilledPlaceholders": "Complete every placeholder in braces in the message before sending it.",
+      "invalidPeriod": "Invalid period",
+      "sayWhyRecordedInError": "Say why the incident was recorded in error",
+      "sendingTimeOnlyWithSent": "A sending time is recorded only with the status SENT.",
+      "sendingTimeNotInFuture": "The sending time cannot be in the future.",
+      "invitationNotFound": "Invitation not found",
+      "webAddressOnly": "Use a web address that starts with https:// or http://.",
+      "orgDeletionNameMismatch": "The name typed does not match the organization's name."
+    },
+    "pattern": {}
+  },
+  "licenses": {
+    "heading": "License & source",
+    "intro": "Legal notices for this program, as required by the GNU Affero General Public License.",
+    "licensed": "Licensed under the GNU Affero General Public License, version 3 or later (AGPL-3.0-or-later).",
+    "noWarranty": "This program comes with ABSOLUTELY NO WARRANTY.",
+    "freeSoftware": "This is free software, and you are welcome to redistribute it under the conditions of the AGPL-3.0-or-later. See the full license text in the <file>LICENSE</file> file distributed with the source.",
+    "sourceTitle": "Complete corresponding source code",
+    "sourcePublic": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for this running instance is available at:",
+    "sourceOnRequest": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for the version running here{commit} is available to you at no charge. Request it by e-mailing <mail>{email}</mail>.",
+    "commit": " (commit {commit})",
+    "back": "Back to DPO Central",
+    "edition": "DPO Central community edition",
+    "editionTitle": "What this edition contains",
+    "editionBody": "This is the community edition of DPO Central: the data inventory and the records of processing, rights requests, vendors and the breach register. If you run a modified version as a network service, section 13 of the AGPL-3.0 requires you to offer its users the corresponding source of your version."
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "This page could not be found",
+    "body": "The address may be mistyped, or the page may have moved. Your saved records are not affected.",
+    "home": "Go to the home page",
+    "dashboard": "Go to your dashboard"
+  },
+  "dsarModule": {
+    "off": "Rights requests are switched off in this installation.",
+    "exportBody": "The rights-request records your organization already holds can still be downloaded.",
+    "exportLink": "Download the records (JSON)"
+  },
+  "jurisdictionPicker": {
+    "includedWith": "included with {place}",
+    "group": {
+      "europe": "Europe",
+      "us": "United States",
+      "other": "Rest of the world"
+    },
+    "placeCount": "{count, plural, one {# place} other {# places}}",
+    "chosenCount": "{count} chosen"
+  },
+  "auditTrail": {
+    "title": "Audit trail",
+    "subtitle": "Every recorded change, newest first: who did it, to what, and when. The trail is written by the actions themselves and cannot be edited here.",
+    "restricted": "The audit trail is available to owners, admins and privacy officers.",
+    "empty": "Nothing recorded yet for this organization.",
+    "emptyFiltered": "No entries match these filters.",
+    "filters": {
+      "area": "Area",
+      "action": "Action",
+      "actor": "Person",
+      "from": "From",
+      "to": "To",
+      "all": "All",
+      "clear": "Clear filters"
+    },
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "entity": "Record",
+      "detail": "Recorded detail"
+    },
+    "export": "Export as CSV",
+    "exportHint": "The export follows the filters above and carries the generation time and the application version, so the file can be placed in a production log.",
+    "loadMore": "Load more",
+    "showing": "Showing {count} of {total} entries",
+    "showingFiltered": "{count} matching entries shown",
+    "since": "Trail starts {date}",
+    "actorRemoved": "Account removed",
+    "noDetail": "No detail recorded",
+    "reference": "Reference {reference}",
+    "rightsRequestWithheld": "Rights request: the content is not shown in the trail. Open the request to read it.",
+    "areas": {
+      "Organization": "Organization",
+      "OrganizationMember": "Team",
+      "OrganizationJurisdiction": "Jurisdictions",
+      "OrganizationAiSettings": "AI settings",
+      "BusinessUnit": "Departments",
+      "DataAsset": "Data inventory",
+      "DataFlow": "Data flows",
+      "DataTransfer": "Transfers",
+      "ProcessingActivity": "Processing activities",
+      "Vendor": "Vendors",
+      "VendorContract": "Vendor contracts",
+      "Incident": "Incidents",
+      "IncidentNotification": "Incident notifications",
+      "DSARRequest": "Rights requests",
+      "Report": "Reports",
+      "AuditLog": "Audit trail"
+    },
+    "actions": {
+      "REOPEN": "Reopened as a new revision",
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted",
+      "SUBMIT": "Submitted",
+      "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "APPROVAL_APPROVED": "Approved",
+      "APPROVAL_REJECTED": "Rejected",
+      "AUTO_CREATE": "Created automatically",
+      "AUTO_JOIN": "Joined automatically",
+      "EXPORT_PDF": "Exported as PDF",
+      "EXPORT_AUDIT_TRAIL": "Audit trail exported",
+      "CONFIRM": "Confirmed",
+      "VIEWED": "Viewed",
+      "STATUS_CHANGED": "Status changed",
+      "DEADLINE_EXTENDED": "Deadline extended",
+      "DEADLINE_REMINDER_SENT": "Deadline reminder sent",
+      "INVITE": "Invitation created",
+      "INVITE_CANCELLED": "Invitation cancelled",
+      "JOIN_BY_INVITATION": "Joined by invitation",
+      "RECORDED_IN_ERROR": "Recorded in error",
+      "RECORDED_IN_ERROR_UNDONE": "No longer recorded in error",
+      "TASKS_GENERATED": "Tasks generated",
+      "PII_REDACTED": "Personal data redacted",
+      "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
+      "GENERATE_DPA": "Data processing agreement generated",
+      "UPDATE_COMPLIANCE": "Compliance updated",
+      "UPDATE_CHECKLIST": "Transfer checklist updated",
+      "REQUEST_CREATED": "Request created",
+      "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal",
+      "EXPORT_BOARD_REPORT": "Executive report exported",
+      "SAVE_BOARD_REPORT": "Executive report saved",
+      "EXPORT_ROPA": "Records of processing exported",
+      "EXPORT_BREACH_REGISTER": "Breach register exported",
+      "EXPORT_VENDOR_REGISTER": "Vendor register exported",
+      "EXPORT_PRIVACY_PROGRAM": "Privacy program report exported",
+      "EXPORT_PROGRAMME": "Program exported",
+      "IMPORT_PROGRAMME": "Program imported",
+      "IMPORT_REGISTER": "Register imported from a spreadsheet",
+      "RESPONSE_LINK_SET": "Response link set",
+      "RESPONSE_LINK_CLEARED": "Response link removed",
+      "EXPORT_ORGANIZATION_DATA": "Full data file exported",
+      "EXPORT_RIGHTS_REQUESTS": "Rights requests exported",
+      "AI_KEY_SET": "API inference key added",
+      "AI_KEY_REMOVED": "API inference key removed"
+    }
+  },
+  "dsarGeneratedTask": {
+    "title": "Search and extract data from {asset}",
+    "description": "Identify and extract the personal data of {requester} held in {asset}."
+  },
+  "ccpaRequests": {
+    "groupCcpa": "California (CCPA)",
+    "groupOther": "GDPR and other laws",
+    "clockNote": "The 45-day period starts on the day the request is received, even while identity is being verified. Confirm receipt within 10 business days and say how the request will be handled and when to expect an answer.",
+    "know": {
+      "label": "Right to know",
+      "desc": "What personal information the business collected, used, sold or shared about the consumer, including the specific pieces."
+    },
+    "delete": {
+      "label": "Right to delete",
+      "desc": "Delete the personal information the business holds about the consumer."
+    },
+    "correct": {
+      "label": "Right to correct",
+      "desc": "Correct inaccurate personal information the business maintains about the consumer."
+    },
+    "clock45": "45 calendar days from receipt; extendable once by 45 more days when reasonably necessary, if the consumer is told within the first 45 days.",
+    "optOut": {
+      "label": "Opt out of sale or sharing",
+      "desc": "Stop selling or sharing the consumer's personal information. The business may not require a verifiable consumer request."
+    },
+    "limit": {
+      "label": "Limit use of sensitive personal information",
+      "desc": "Limit the use and disclosure of the consumer's sensitive personal information. The business may not require a verifiable consumer request."
+    },
+    "clock15": "As soon as feasibly possible and no later than 15 business days from receipt; no extension."
+  },
+  "controllerDetails": {
+    "title": "Controller details for the record of processing",
+    "description": "Printed on the cover of every record of processing (GDPR Article 30). As processor, the same details identify you in the record as processor.",
+    "groups": {
+      "controller": "Controller",
+      "dpo": "Data protection officer",
+      "representative": "Representative in the Union",
+      "security": "Security measures"
+    },
+    "fields": {
+      "controllerLegalName": "Name or company name",
+      "controllerTaxId": "Tax ID",
+      "controllerAddress": "Address",
+      "controllerEmail": "Contact e-mail",
+      "controllerPhone": "Phone",
+      "dpoName": "Name",
+      "dpoContact": "Contact details",
+      "euRepresentativeName": "Name",
+      "euRepresentativeContact": "Contact details",
+      "securityMeasures": "General description of technical and organizational measures"
+    },
+    "placeholders": {
+      "controllerLegalName": "Example company Ltd",
+      "controllerTaxId": "For example: B12345678",
+      "controllerAddress": "Street, number, postal code, city, country",
+      "controllerEmail": "privacy@example.com",
+      "controllerPhone": "+34 900 000 000",
+      "dpoName": "Leave empty if no data protection officer is designated",
+      "dpoContact": "E-mail, phone or address",
+      "euRepresentativeName": "Leave empty if not required",
+      "euRepresentativeContact": "E-mail, phone or address",
+      "securityMeasures": "For example: encryption, access control by role, backups, staff training, incident procedure"
+    },
+    "prefilled": "Filled in from what DPO Central already knows. Check it and save.",
+    "representativeHelp": "Only for a controller established outside the Union (GDPR Article 27).",
+    "securityHelp": "Applies to every activity that does not describe its own measures (GDPR Articles 30(1)(g) and 32).",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Controller details saved"
+  },
+  "overview": {
+    "systems": "{count, plural, =0 {No systems recorded yet} one {# system recorded} other {# systems recorded}}",
+    "activities": "{count, plural, =0 {No processing activities yet} one {# processing activity} other {# processing activities}}",
+    "openRequests": "{count, plural, =0 {No open requests} one {# open request} other {# open requests}}{overdue, plural, =0 {} other {, # overdue}}",
+    "vendors": "{count, plural, =0 {No vendors yet} one {# vendor} other {# vendors}}{count, plural, =0 {} other {, {active} active}}",
+    "openIncidents": "{count, plural, =0 {No open incidents} one {# open incident} other {# open incidents}}"
+  }
+}

@@ -1,0 +1,18 @@
+# DPO Central community edition
+
+> Open-source privacy program records for GDPR, UK GDPR, CCPA and other US state laws: data inventory and records of processing (ROPA), rights requests (DSAR), vendor register and breach register. Self-hosted, AGPL-3.0-or-later.
+
+The DPO Central community edition is software you install and run yourself (Docker or Node.js with PostgreSQL). It keeps the records a privacy program runs on, in English and Spanish:
+
+- Data inventory: systems, data elements, processing activities, data flows and a data map; cross-border transfers with their mechanism and status.
+- Records of processing (GDPR Art. 30): controller and processor records, exported as PDF, CSV, XLSX or JSON.
+- Rights requests: a public request form per organization, deadlines by jurisdiction, tasks, messages and retention-based redaction.
+- Vendors: vendor register, contracts and periodic reviews, exported as PDF or CSV.
+- Breach register: incidents, timelines, notification deadlines by jurisdiction and the register export.
+- Organizations with members, five roles and departments; an audit trail.
+
+It provides informational tools, not legal advice: verify outputs with qualified counsel before relying on them.
+
+## Source
+
+- [Source code](https://github.com/RINDOGATAN/dpocentral): AGPL-3.0-or-later. Installation in README.md (Docker in deploy/docker).

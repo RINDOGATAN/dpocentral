@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
+import { AlertTriangle, Clock, Bell, CheckSquare } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { DocSection } from "@/components/docs/doc-section";
+import { StepList } from "@/components/docs/step-list";
+import { FeatureMockup } from "@/components/docs/feature-mockup";
+import { InfoCallout } from "@/components/docs/info-callout";
+import { isDsarModuleEnabled } from "@/config/features";
+import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForRiskTier, type StatusTone } from "@/config/status-tone";
+
+// The documentation shows the same tones the product paints.
+const statusTone: Record<string, StatusTone> = {
+  REPORTED: "info",
+  INVESTIGATING: "warning",
+  CONTAINED: "warning",
+  CLOSED: "neutral",
+};
+
+export default async function DocsIncidentsPage() {
+  const t = await getTranslations("docs.incidents");
+  const toc = await getTranslations("docs.toc");
+  const tEnum = await getTranslations("enums");
+  const locale = await getLocale();
+
+  const statCards: { key: string; value: string; icon: typeof AlertTriangle }[] = [
+    { key: "total", value: "7", icon: AlertTriangle },
+    { key: "open", value: "2", icon: Clock },
+    { key: "critical", value: "1", icon: AlertTriangle },
+    { key: "pendingDpa", value: "1", icon: Bell },
+  ];
+
+  const incidentCards: { key: string; severity: string; status: string; date: string }[] = [
+    { key: "email", severity: "HIGH", status: "INVESTIGATING", date: "2025-01-15" },
+    { key: "export", severity: "MEDIUM", status: "CONTAINED", date: "2025-01-10" },
+    { key: "api", severity: "CRITICAL", status: "REPORTED", date: "2025-01-18" },
+    { key: "usb", severity: "LOW", status: "CLOSED", date: "2024-12-20" },
+  ];
+
+  const stepKeys = ["report", "assess", "assign", "investigate", "notify", "resolve"] as const;
+
+  const timelineEntries: { time: string; key: string; user: string }[] = [
+    // Example times, written in the reader's language (UTC, so they never shift).
+    { time: "2025-01-18T09:30:00Z", key: "reported", user: "admin@acme.com" },
+    { time: "2025-01-18T09:45:00Z", key: "severity", user: "admin@acme.com" },
+    { time: "2025-01-18T10:00:00Z", key: "investigation", user: "dpo@acme.com" },
+    { time: "2025-01-18T11:30:00Z", key: "rootCause", user: "dpo@acme.com" },
+    { time: "2025-01-18T14:00:00Z", key: "notification", user: "admin@acme.com" },
+  ];
+
+  const tasks: { key: string; assigneeKey: string; done: boolean }[] = [
+    { key: "identify", assigneeKey: "dpo", done: true },
+    { key: "contain", assigneeKey: "itSecurity", done: true },
+    { key: "prepare", assigneeKey: "dpo", done: false },
+    { key: "notifyIndividuals", assigneeKey: "communications", done: false },
+    { key: "document", assigneeKey: "dpo", done: false },
+  ];
+
+  return (
+    <div className="space-y-10">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
+      </div>
+
+      <DocSection id="reporting" title={t("reporting.title")} description={t("reporting.description")}>
+        <FeatureMockup title={t("reporting.statsMockupTitle")}>
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+            {statCards.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={stat.key} className="hover:translate-y-0">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
+                    <CardTitle className="text-xs font-medium">{t(`reporting.stats.${stat.key}`)}</CardTitle>
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="text-xl font-bold text-primary">{stat.value}</div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </FeatureMockup>
+
+        <FeatureMockup title={t("reporting.cardsMockupTitle")}>
+          <div className="space-y-2">
+            {incidentCards.map((incident) => (
+              <div key={incident.key} className="flex items-center justify-between rounded-md border px-3 py-2.5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{t(`reporting.cards.${incident.key}`)}</span>
+                    <StatusChip tone={toneForRiskTier(incident.severity)} className="text-[10px]">
+                      {tEnum(`incidentSeverity.${incident.severity}` as "incidentSeverity.LOW")}
+                    </StatusChip>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {t("reporting.reportedLabel", { date: formatDateIn(incident.date, locale) })}
+                  </p>
+                </div>
+                <StatusChip tone={statusTone[incident.status] ?? "neutral"} className="text-[10px]">
+                  {tEnum(`incidentStatus.${incident.status}` as "incidentStatus.REPORTED")}
+                </StatusChip>
+              </div>
+            ))}
+          </div>
+        </FeatureMockup>
+
+        <StepList
+          steps={stepKeys.map((k) => ({
+            title: t(`reporting.steps.${k}.title`),
+            description: t(`reporting.steps.${k}.description`),
+          }))}
+        />
+      </DocSection>
+
+      <DocSection id="timeline" title={t("timeline.title")} description={t("timeline.description")}>
+        <FeatureMockup title={t("timeline.mockupTitle")}>
+          <div className="space-y-3 border-l-2 border-primary/30 ml-4 pl-4">
+            {timelineEntries.map((entry, i) => (
+              <div key={i} className="relative">
+                <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background" />
+                <p className="text-xs text-muted-foreground">{formatDateTimeIn(entry.time, locale, "UTC")} · {entry.user}</p>
+                <p className="text-sm">{t(`timeline.entries.${entry.key}`)}</p>
+              </div>
+            ))}
+          </div>
+        </FeatureMockup>
+      </DocSection>
+
+      <DocSection id="notifications" title={t("notifications.title")} description={t("notifications.description")}>
+        <InfoCallout type="warning" title={t("notifications.warningTitle")}>
+          {t("notifications.warningBody")}
+        </InfoCallout>
+        <InfoCallout type="tip" title={t("notifications.tipTitle")}>
+          {t("notifications.tipBody")}
+        </InfoCallout>
+      </DocSection>
+
+      <DocSection id="tasks" title={t("tasks.title")} description={t("tasks.description")}>
+        <FeatureMockup title={t("tasks.mockupTitle")}>
+          <div className="space-y-2">
+            {tasks.map((item, i) => (
+              <div key={i} className="flex items-center justify-between rounded-md border px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <CheckSquare className={`h-4 w-4 ${item.done ? "text-primary" : "text-muted-foreground"}`} />
+                  <span className={`text-sm ${item.done ? "line-through text-muted-foreground" : ""}`}>
+                    {t(`tasks.items.${item.key}`)}
+                  </span>
+                </div>
+                <Badge variant="secondary" className="text-[10px]">{t(`tasks.assignees.${item.assigneeKey}`)}</Badge>
+              </div>
+            ))}
+          </div>
+        </FeatureMockup>
+      </DocSection>
+
+      <DocNavFooter
+        previous={
+          isDsarModuleEnabled()
+            ? { title: toc("dsar.label"), href: "/privacy/docs/dsar" }
+            : { title: toc("dataInventory.label"), href: "/privacy/docs/data-inventory" }
+        }
+        next={{ title: toc("vendors.label"), href: "/privacy/docs/vendors" }}
+      />
+    </div>
+  );
+}
