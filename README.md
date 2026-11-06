@@ -75,6 +75,13 @@ rights requests run from two routes that a daily job calls with
 See [SECURITY.md](SECURITY.md) for what this edition enforces, and how to
 report a vulnerability.
 
+## Other ways to run it
+
+[todo.law](https://www.todo.law) offers the same software in other forms: a
+consultant mode for professionals who manage privacy for several clients, an
+isolated instance run for you, and a licensed self-hosted build with every
+module.
+
 ## License
 
 AGPL-3.0-or-later, see [LICENSE](LICENSE). Copyright (C) 2025-2026
